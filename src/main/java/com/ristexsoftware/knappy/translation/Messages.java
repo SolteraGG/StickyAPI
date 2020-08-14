@@ -43,7 +43,7 @@ public class Messages {
     //FIXME: add proper description 
 
     /**
-     * For LanguageCode detection, language files should match the following pattern: .[ISO LANG CODE].
+     * For LanguageCode detection, language files should match the following pattern: <code>file-name.[ISO LANG CODE].yml</code>
      * @param folderPath The absolute folder path for your langauge files.
      */
     public Messages(File folderPath) throws IOException {

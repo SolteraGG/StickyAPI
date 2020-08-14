@@ -294,7 +294,7 @@ public class Translation {
      * Example:
      * 
      * <pre>
-     * TranslationUtil.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
+     * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
      * </pre>
      * 
      * @param message The message to filter

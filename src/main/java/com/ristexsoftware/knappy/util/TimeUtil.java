@@ -178,7 +178,7 @@ public class TimeUtil {
      * @param t Number of seconds since unix epoch
      * @return A string with the format "EEE, MMM d yyyy HH:mm:ss"
      * @deprecated Use the
-     *             {@link com.ristexsoftware.lolbans.Translation.TranslationUtil}
+     *             {@link com.ristexsoftware.knappy.translation.Translation}
      *             functions for converting timestamps to human readable strings.
      *             {@link java.text.SimpleDateFormat}
      */
@@ -193,7 +193,7 @@ public class TimeUtil {
      * @param ts The time as a Timestamp object
      * @return A string with the format "EEE, MMM d yyyy HH:mm:ss"
      * @deprecated Use the
-     *             {@link com.ristexsoftware.lolbans.Translation.TranslationUtil}
+     *             {@link com.ristexsoftware.knappy.translation.Translation}
      *             functions for converting timestamps to human readable strings.
      *             {@link java.text.SimpleDateFormat}
      */

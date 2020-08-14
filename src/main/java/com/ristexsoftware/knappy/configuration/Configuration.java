@@ -22,7 +22,9 @@ package com.ristexsoftware.knappy.configuration;
 import java.util.Map;
 
 /**
- * Represents a source of configurable options and settings
+ * Represents a source of configurable options and settings.
+ * This is identical to <code>org.bukkit</code>'s configuration API
+ * and this can be used on things like bungeecord!
  */
 public interface Configuration extends ConfigurationSection {
     /**
