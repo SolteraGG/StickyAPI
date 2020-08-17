@@ -71,8 +71,10 @@ public class Debugger {
      * @param message The object to print.
      */
     public void print(Object message) {
-        logger.info(COLOR + "(" + ++logCount + ") " + "(" + clazz.getSimpleName()
-                + ".class) \u00A7r" + message + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ");
+        if (enabled) {
+            logger.info(COLOR + "(" + ++logCount + ") " + "(" + clazz.getSimpleName()
+                    + ".class) \u00A7r" + message + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ");
+        }
     }
 
     /**

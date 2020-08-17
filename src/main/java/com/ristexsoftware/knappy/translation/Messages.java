@@ -28,6 +28,15 @@ import java.util.Map;
 import com.ristexsoftware.knappy.configuration.file.FileConfiguration;
 import com.ristexsoftware.knappy.configuration.file.YamlConfiguration;
 
+/*
+
+new Localization(pathToFile)
+
+new LocaleProvider();
+
+*/
+
+
 public class Messages {
 
     public static enum LanguageCode {

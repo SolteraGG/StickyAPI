@@ -15,9 +15,15 @@ Support for incremental task IDs for the cancellation of tasks
 
 ### Localization
 
-- `LocaleProvider` - class for accessing the current localization, will interface with a default locale when none is set explicitly
+#### LocaleProvider`
+
+Class for accessing the current localization, will interface with a default locale when none is set explicitly
 
 - setLocale
 - getLocale
 
-- `Locale` - constructable class that wraps a configuration file to provide localization values
+#### Locale 
+
+Constructable class that wraps a configuration file to provide localization values
+
+- get()
