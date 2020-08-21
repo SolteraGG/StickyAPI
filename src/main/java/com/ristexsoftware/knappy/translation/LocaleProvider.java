@@ -106,8 +106,26 @@ public class LocaleProvider {
     /**
      * Register a default translation to be inserted into the vars object when calling `translate`.
      */
-    public void registerDefaultTranslation(String key, String value) {
+    public void registerRawTranslation(String key, String value) {
         defaultTranslations.put(key, value);
+    }
+
+    /**
+     * Register a locale node as a default translation.
+     */
+    public void registerFallbackTranslation(String node) {
+        defaultTranslations.put(node, get(node));
+    }
+
+    public void registerFallbackTranslation(String node, String translationName) {
+        defaultTranslations.put(translationName, get(node));
+    }
+
+    /**
+     * Register a locale node, or a default value as a default translation.
+     */
+    public void registerFallbackTranslation(String node, String translationName, String defaultValue) {
+        defaultTranslations.put(translationName, get(node) == null ? defaultValue : get(node));
     }
 
     /**
