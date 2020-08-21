@@ -23,6 +23,7 @@ import java.io.File;
 
 import com.ristexsoftware.knappy.configuration.file.FileConfiguration;
 import com.ristexsoftware.knappy.configuration.file.YamlConfiguration;
+import com.ristexsoftware.knappy.util.Debugger;
 
 import lombok.Getter;
 
@@ -30,6 +31,7 @@ import lombok.Getter;
  * Represents a wrapper around a locale configuration file.
  */
 public class Locale {
+    private Debugger debug = new Debugger(getClass());
 
     @Getter
     Boolean isValid = false;
@@ -55,6 +57,9 @@ public class Locale {
      * Get a locale value.
      */
     public String get(String node) {
+        debug.reset().print("fetching node " + node);
+        debug.print("node value: " + localeConfig.getString(node));
+
         return localeConfig.getString(node);
     }
 

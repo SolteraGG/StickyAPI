@@ -114,15 +114,21 @@ public class LocaleProvider {
      * Translate a localization with the given variables.
      */
     public String translate(String node, Map<String, String> vars) {
-        if (node == null || node.equals(""))
+        debug.reset();
+
+        if (node == null || node.equals("")) {
+            debug.print("invalid node name");
             return null;
+        }
 
         String message = get(node);
-        if (message == null)
+        if (message == null) {
+            debug.print("node does not exist");
             return null;
+        }
         
         defaultTranslations.forEach((k,v) -> vars.put(k, v));
-        return Translation.translate(node, "&", vars);
+        return Translation.translate(message, "&", vars);
     }
 
     /**
