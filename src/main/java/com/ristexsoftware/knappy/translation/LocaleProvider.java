@@ -42,9 +42,9 @@ public class LocaleProvider {
     public LocaleProvider(File localeFolder) {
         this.localeFolder = localeFolder;
         if (!localeFolder.exists())
-            localeFolder.mkdir();   
+            localeFolder.mkdir();
     }
-    
+
     /**
      * Load a locale with the given name.
      */
@@ -71,16 +71,16 @@ public class LocaleProvider {
             debug.print("Skipping loading locale - already loaded");
             return false;
         }
-        
+
         Locale locale = new Locale(file);
         if (!locale.getIsValid()) {
             debug.print("Encountered an error while loading the locale configuration - skipping load");
             return false;
         }
 
-        loadedLocales.put(file.getName().substring(0, file.getName().length() - 4), locale);        
+        loadedLocales.put(file.getName().substring(0, file.getName().length() - 4), locale);
         debug.print("Successfully loaded locale '" + file.getName().substring(0, file.getName().length() - 4) + "'");
-        
+
         return true;
     }
 
@@ -142,8 +142,8 @@ public class LocaleProvider {
             debug.print("node does not exist");
             return null;
         }
-        
-        defaultTranslations.forEach((k,v) -> vars.put(k, v));
+
+        defaultTranslations.forEach((k, v) -> vars.put(k, v));
         return Translation.translate(message, "&", vars);
     }
 
@@ -157,8 +157,8 @@ public class LocaleProvider {
         String message = get(node);
         if (message == null)
             return null;
-        
-        defaultTranslations.forEach((k,v) -> vars.put(k, v));
+
+        defaultTranslations.forEach((k, v) -> vars.put(k, v));
         return Translation.translateVariables(message, vars);
     }
 
@@ -182,6 +182,13 @@ public class LocaleProvider {
     public String get(String name, String node) throws IllegalArgumentException {
         checkForLoadedLocale(name);
         return loadedLocales.get(name).get(node);
+    }
+
+    /**
+     * Get a default var idk blame zach AGAIN FFS WHY DO I HAVE TO WRITE THIS TWICE
+     */
+    public String getDefault(String name, String defaultValue) {
+        return get(name) == null ? defaultValue : get(name);
     }
 
     /**
@@ -210,20 +217,21 @@ public class LocaleProvider {
     /**
      * Save an internal resource to the data file.
      */
-    public void writeLocaleStream(InputStream in, String resourcePath, boolean replace) throws IllegalArgumentException, IOException {
+    public void writeLocaleStream(InputStream in, String resourcePath, boolean replace)
+            throws IllegalArgumentException, IOException {
         if (resourcePath == null || resourcePath.equals("")) {
             throw new IllegalArgumentException("Resource path cannot be null or empty");
         }
-        
+
         resourcePath = resourcePath.replace('\\', '/');
         if (in == null) {
             throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found");
         }
-        
+
         File outFile = new File(localeFolder, resourcePath);
         int lastIndex = resourcePath.lastIndexOf('/');
         File outDir = new File(localeFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
-        
+
         if (!outDir.exists()) {
             outDir.mkdirs();
         }
@@ -242,7 +250,7 @@ public class LocaleProvider {
         out.close();
         in.close();
     }
-    
+
     /**
      * Checks if a locale with the given name is loaded. Throws `IllegalArgumentException` if not found.
      */
@@ -250,5 +258,4 @@ public class LocaleProvider {
         if (!loadedLocales.containsKey(name))
             throw new IllegalArgumentException("Locale " + name + " is not loaded");
     }
-
 }
