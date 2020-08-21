@@ -110,22 +110,20 @@ public class LocaleProvider {
         defaultTranslations.put(key, value);
     }
 
-    /**
-     * Register a locale node as a default translation.
-     */
-    public void registerFallbackTranslation(String node) {
-        defaultTranslations.put(node, Translation.translateColors("&", get(node)));
-    }
-
-    public void registerFallbackTranslation(String node, String translationName) {
+    public void registerDefaultTransition(String node, String translationName) {
         defaultTranslations.put(translationName, Translation.translateColors("&", get(node)));
     }
 
     /**
      * Register a locale node, or a default value as a default translation.
      */
-    public void registerFallbackTranslation(String node, String translationName, String defaultValue) {
-        defaultTranslations.put(translationName, Translation.translateColors("&", get(node) == null ? defaultValue : get(node)));
+    public void registerDefaultTransition(String node, String translationName, String defaultValue) {
+        defaultTranslations.put(translationName,
+                Translation.translateColors("&", get(node) == null ? defaultValue : get(node)));
+    }
+
+    public String getDefaultTransition(String translationName) {
+        return defaultTranslations.get(translationName);
     }
 
     /**
