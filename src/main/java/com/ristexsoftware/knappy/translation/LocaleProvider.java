@@ -1,6 +1,10 @@
 package com.ristexsoftware.knappy.translation;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -176,11 +180,47 @@ public class LocaleProvider {
         } catch (IllegalArgumentException e) {
             return false;
         }
-   
+
         defaultLocale = loadedLocales.get(name);
         return true;
     }
 
+    /**
+     * Save an internal resource to the data file.
+     */
+    public void writeLocaleStream(InputStream in, String resourcePath, boolean replace) throws IllegalArgumentException, IOException {
+        if (resourcePath == null || resourcePath.equals("")) {
+            throw new IllegalArgumentException("Resource path cannot be null or empty");
+        }
+        
+        resourcePath = resourcePath.replace('\\', '/');
+        if (in == null) {
+            throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found");
+        }
+        
+        File outFile = new File(localeFolder, resourcePath);
+        int lastIndex = resourcePath.lastIndexOf('/');
+        File outDir = new File(localeFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+        
+        if (!outDir.exists()) {
+            outDir.mkdirs();
+        }
+
+        if (outFile.exists() && !replace) {
+            System.out.println("resource already exists");
+            return;
+        }
+
+        OutputStream out = new FileOutputStream(outFile);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        out.close();
+        in.close();
+    }
+    
     /**
      * Checks if a locale with the given name is loaded. Throws `IllegalArgumentException` if not found.
      */
