@@ -19,10 +19,16 @@
 
 package com.ristexsoftware.knappy.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 @SuppressWarnings({"unchecked", "deprecation"})
 public class ReflectionUtil {
@@ -134,5 +140,50 @@ public class ReflectionUtil {
             System.out.println("*** " + c.getName() + "." + method + "(): " + ex);
             return null;
         }
+    }
+
+    /**
+     * Recursively retrieve all classes in the specified package.
+     */
+    public static Class<?>[] getTopLevelClasses(String packageName) throws ClassNotFoundException, IOException {
+        // fetch the class loader - might break.
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        assert classLoader != null;
+
+        String path = packageName.replace('.', '/');
+        Enumeration<URL> resources = classLoader.getResources(path);
+        List<File> dirs = new ArrayList<File>();
+
+        while (resources.hasMoreElements()) {
+            URL resource = resources.nextElement();
+            dirs.add(new File(resource.getFile()));
+        }
+
+        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+        for (File directory : dirs) {
+            classes.addAll(getClassesInDirectory(directory, packageName));
+        }
+
+        return classes.toArray(new Class[classes.size()]);
+    }
+
+    /**
+     * Retrieve all classes in a given directory.
+     */
+    public static List<Class<?>> getClassesInDirectory(File directory, String packageName) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        if (!directory.exists()) {
+            return classes;
+        }
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                assert !file.getName().contains(".");
+                classes.addAll(getClassesInDirectory(file, packageName + "." + file.getName()));
+            } else if (file.getName().endsWith(".class")) {
+                classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+            }
+        }
+        return classes;
     }
 }
