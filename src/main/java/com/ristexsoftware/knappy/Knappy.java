@@ -19,9 +19,11 @@
 
 package com.ristexsoftware.knappy;
 
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class Knappy {
     
@@ -30,4 +32,8 @@ public class Knappy {
 
     @Getter
     public Logger logger = Logger.getLogger("knappy");
+
+    @Getter
+    @Setter
+    private ExecutorService pool;
 }
