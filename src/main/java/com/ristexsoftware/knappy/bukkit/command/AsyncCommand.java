@@ -1,7 +1,10 @@
-package com.ristexsoftware.knappy.bukkit;
+package com.ristexsoftware.knappy.bukkit.command;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,12 +12,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
 
-/**
- * This class is designed to handle execution of commands given by a user or the
- * console, it runs the command code synchronously with the server thread and
- * can cause tick lag if the command takes too long.
- */
-public abstract class Command extends org.bukkit.command.Command implements PluginIdentifiableCommand {
+import com.ristexsoftware.knappy.Knappy;
+
+public abstract class AsyncCommand extends Command implements PluginIdentifiableCommand {
     private Plugin owner;
     private TabCompleter completer;
 
@@ -24,7 +24,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @param commandName The name of the command the user will execute
      * @param owner       The plugin that owns this command.
      */
-    public Command(String commandName, Plugin owner) {
+    public AsyncCommand(String commandName, Plugin owner) {
         super(commandName);
         this.owner = owner;
     }
@@ -39,15 +39,32 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
     public abstract void onSyntaxError(CommandSender sender, String label, String[] args);
 
     /**
+     * Show a permission denied error when the user does not have permission to execute the command
+     * 
+     * @param sender Who failed the command
+     * @param label  The command itself
+     * @param args   Arguments provided to the command
+     */
+    public abstract void onPermissionDenied(CommandSender sender, String label, String[] args);
+
+    /**
+     * Show a error when the command fails to execute
+     * 
+     * @param sender Who failed the command
+     * @param label  The command itself
+     * @param args   Arguments provided to the command
+     */
+    public abstract void onError(CommandSender sender, String label, String[] args);
+
+    /**
      * Execute the command itself (part of the derived class)
      * 
      * @param sender       Who is executing the command
      * @param commandLabel The command string triggering this command
      * @param args         The arguments provided to this command
-     * @return Whether or not the command succeeded, returning false will trigger
-     *         onSyntaxError()
+     * @return The exit code for the command
      */
-    public abstract boolean Execute(CommandSender sender, String commandLabel, String[] args);
+    public abstract ExitCode executeCommand(Sender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -60,8 +77,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @param sender       The person executing the command
      * @param commandLabel The command that was executed
      * @param args         The arguments given to the command.
-     * @return True if the command succeeded, otherwise it will execute
-     *         onSyntaxError().
+     * @return True if the command succeeded
      */
     @Override
     public final boolean execute(CommandSender sender, String commandLabel, String[] args) {
@@ -69,18 +85,34 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
             throw new CommandException(String.format("Cannot execute command \"%s\" in plugin %s - plugin is disabled.",
                     commandLabel, this.owner.getDescription().getFullName()));
 
-        boolean success = false;
+        AsyncCommand self = this;
+        FutureTask<Boolean> t = new FutureTask<>(new Callable<Boolean>() {
+            @Override
+            public Boolean call() {
+                try {
+                    switch (self.executeCommand((Sender) sender, commandLabel, args)) {
+                        case SUCCESS:
+                            return true;
+                        case INVALID_SYNTAX:
+                            self.onSyntaxError(sender, commandLabel, args);
+                        case PERMISSION_DENIED:
+                            self.onPermissionDenied(sender, commandLabel, args);
+                        case ERROR:
+                            self.onError(sender, commandLabel, args);
+                        case OUT_OF_RANGE:
+                        default:
+                    }
+                } catch (Throwable ex) {
+                    throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
+                            + self.owner.getDescription().getFullName(), ex);
+                }
+                return true;
+            }
+        });
 
-        try {
-            success = this.Execute(sender, commandLabel, args);
-            if (!success)
-                this.onSyntaxError(sender, commandLabel, args);
-        } catch (Throwable ex) {
-            throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
-                    + this.owner.getDescription().getFullName(), ex);
-        }
+        Knappy.getKnappy().getPool().execute(t);
 
-        return success;
+        return true;
     }
 
     /**
