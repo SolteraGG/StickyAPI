@@ -258,4 +258,12 @@ public class LocaleProvider {
         if (!loadedLocales.containsKey(name))
             throw new IllegalArgumentException("Locale " + name + " is not loaded");
     }
+
+    /**
+     * Convenience function for getting a new TreeMap 
+     * @return {@link java.util.TreeMap}
+     */
+    public TreeMap<String, String> newVariables() {
+        return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+    }
 }
