@@ -65,7 +65,9 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @param args         The arguments provided to this command
      * @return The exit code for the command
      */
-    public abstract int executeCommand(Sender sender, String commandLabel, String[] args);
+    // public abstract int executeCommand(Sender sender, String commandLabel, String[] args);
+
+    public abstract int executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -91,23 +93,27 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
             @Override
             public Boolean call() {
                 try {
-                    switch (self.executeCommand((Sender) sender, commandLabel, args)) {
+                    switch (self.executeCommand(sender, commandLabel, args)) {
                         case 0:
-                            return true;
+                            break;
                         case 1:
                             self.onSyntaxError(sender, commandLabel, args);
+                            break;
                         case 2:
                             self.onPermissionDenied(sender, commandLabel, args);
+                            break;
                         case 3:
                             self.onError(sender, commandLabel, args);
+                            break;
                         default:
                             throw new IllegalArgumentException("The exit code "
-                                    + self.executeCommand((Sender) sender, commandLabel, args) + " is out of range");
+                                    + self.executeCommand(sender, commandLabel, args) + " is out of range");
                     }
                 } catch (Throwable ex) {
                     throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
                             + self.owner.getDescription().getFullName(), ex);
                 }
+                return true;
             }
         });
 
