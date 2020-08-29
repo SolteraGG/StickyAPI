@@ -39,7 +39,8 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
     public abstract void onSyntaxError(CommandSender sender, String label, String[] args);
 
     /**
-     * Show a permission denied error when the user does not have permission to execute the command
+     * Show a permission denied error when the user does not have permission to
+     * execute the command
      * 
      * @param sender Who failed the command
      * @param label  The command itself
@@ -65,7 +66,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @return Whether or not the command succeeded, returning false will trigger
      *         onSyntaxError()
      */
-    public abstract ExitCode executeCommand(Sender sender, String commandLabel, String[] args);
+    public abstract int executeCommand(Sender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -89,23 +90,22 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
 
         try {
             switch (this.executeCommand((Sender) sender, commandLabel, args)) {
-                case SUCCESS:
+                case 0:
                     return true;
-                case INVALID_SYNTAX:
+                case 1:
                     this.onSyntaxError(sender, commandLabel, args);
-                case PERMISSION_DENIED:
+                case 2:
                     this.onPermissionDenied(sender, commandLabel, args);
-                case ERROR:
+                case 3:
                     this.onError(sender, commandLabel, args);
-                case OUT_OF_RANGE:
                 default:
+                    throw new IllegalArgumentException("The exit code "
+                            + this.executeCommand((Sender) sender, commandLabel, args) + " is out of range");
             }
         } catch (Throwable ex) {
             throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
                     + this.owner.getDescription().getFullName(), ex);
         }
-        return true;
-
     }
 
     /**

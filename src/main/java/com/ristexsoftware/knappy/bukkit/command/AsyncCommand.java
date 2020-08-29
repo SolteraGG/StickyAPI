@@ -39,7 +39,8 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
     public abstract void onSyntaxError(CommandSender sender, String label, String[] args);
 
     /**
-     * Show a permission denied error when the user does not have permission to execute the command
+     * Show a permission denied error when the user does not have permission to
+     * execute the command
      * 
      * @param sender Who failed the command
      * @param label  The command itself
@@ -64,7 +65,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @param args         The arguments provided to this command
      * @return The exit code for the command
      */
-    public abstract ExitCode executeCommand(Sender sender, String commandLabel, String[] args);
+    public abstract int executeCommand(Sender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -91,22 +92,22 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
             public Boolean call() {
                 try {
                     switch (self.executeCommand((Sender) sender, commandLabel, args)) {
-                        case SUCCESS:
+                        case 0:
                             return true;
-                        case INVALID_SYNTAX:
+                        case 1:
                             self.onSyntaxError(sender, commandLabel, args);
-                        case PERMISSION_DENIED:
+                        case 2:
                             self.onPermissionDenied(sender, commandLabel, args);
-                        case ERROR:
+                        case 3:
                             self.onError(sender, commandLabel, args);
-                        case OUT_OF_RANGE:
                         default:
+                            throw new IllegalArgumentException("The exit code "
+                                    + self.executeCommand((Sender) sender, commandLabel, args) + " is out of range");
                     }
                 } catch (Throwable ex) {
                     throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
                             + self.owner.getDescription().getFullName(), ex);
                 }
-                return true;
             }
         });
 
