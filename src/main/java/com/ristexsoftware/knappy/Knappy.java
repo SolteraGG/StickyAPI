@@ -20,6 +20,7 @@
 package com.ristexsoftware.knappy;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import lombok.Getter;
@@ -35,5 +36,5 @@ public class Knappy {
 
     @Getter
     @Setter
-    private ExecutorService pool;
+    private ExecutorService pool = Executors.newFixedThreadPool(3);
 }
