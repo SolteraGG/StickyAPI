@@ -206,9 +206,9 @@ public class YamlConfiguration extends FileConfiguration {
             config.load(file);
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
-            Knappy.getKnappy().getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            Knappy.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
         } catch (InvalidConfigurationException ex) {
-            Knappy.getKnappy().getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            Knappy.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
         }
 
         return config;
@@ -236,9 +236,9 @@ public class YamlConfiguration extends FileConfiguration {
         try {
             config.load(reader);
         } catch (IOException ex) {
-            Knappy.getKnappy().getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+            Knappy.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         } catch (InvalidConfigurationException ex) {
-            Knappy.getKnappy().getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+            Knappy.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         }
 
         return config;

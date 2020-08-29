@@ -111,7 +111,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
             }
         });
 
-        Knappy.getKnappy().getPool().execute(t);
+        Knappy.getPool().execute(t);
 
         return true;
     }

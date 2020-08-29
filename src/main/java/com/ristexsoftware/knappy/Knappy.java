@@ -26,15 +26,11 @@ import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
+// TODO: fix this when i'm not really tired
 public class Knappy {
-    
     @Getter
-    public static Knappy knappy;
+    public static Logger logger = Logger.getLogger("knappy");
 
-    @Getter
-    public Logger logger = Logger.getLogger("knappy");
-
-    @Getter
-    @Setter
-    private ExecutorService pool = Executors.newFixedThreadPool(3);
+    @Getter @Setter
+    private static ExecutorService pool = Executors.newFixedThreadPool(3);
 }
