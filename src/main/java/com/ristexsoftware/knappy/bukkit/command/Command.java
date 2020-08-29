@@ -87,23 +87,22 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
             throw new CommandException(String.format("Cannot execute command \"%s\" in plugin %s - plugin is disabled.",
                     commandLabel, this.owner.getDescription().getFullName()));
 
-        Command self = this;
         try {
-            switch (self.executeCommand((Sender) sender, commandLabel, args)) {
+            switch (this.executeCommand((Sender) sender, commandLabel, args)) {
                 case SUCCESS:
                     return true;
                 case INVALID_SYNTAX:
-                    self.onSyntaxError(sender, commandLabel, args);
+                    this.onSyntaxError(sender, commandLabel, args);
                 case PERMISSION_DENIED:
-                    self.onPermissionDenied(sender, commandLabel, args);
+                    this.onPermissionDenied(sender, commandLabel, args);
                 case ERROR:
-                    self.onError(sender, commandLabel, args);
+                    this.onError(sender, commandLabel, args);
                 case OUT_OF_RANGE:
                 default:
             }
         } catch (Throwable ex) {
             throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
-                    + self.owner.getDescription().getFullName(), ex);
+                    + this.owner.getDescription().getFullName(), ex);
         }
         return true;
 
