@@ -110,16 +110,21 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
                                     + self.executeCommand(sender, commandLabel, args) + " is out of range");
                     }
                 } catch (Throwable ex) {
+                    ex.printStackTrace();
                     throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
-                            + self.owner.getDescription().getFullName(), ex);
+                    + self.owner.getDescription().getFullName(), ex);
                 }
                 return true;
             }
         });
 
         Knappy.getPool().execute(t);
-
-        return true;
+        try {
+            return t.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true; // we always return true, the above code is to ensure a stacktrace prints on command error
     }
 
     /**

@@ -92,6 +92,7 @@ public class Translation {
                 return lvalue == null || lvalue == "" ? "Never"
                         : (new SimpleDateFormat(args)).format(Timestamp.valueOf(lvalue));
             });
+            // FIXME: Allow for timestamps AND longs, for now, use longs!
             put("duration", (String lvalue, String unused) -> {
                 return lvalue == null || lvalue == "" ? "Never" : TimeUtil.durationString(Long.valueOf(lvalue));
             });
