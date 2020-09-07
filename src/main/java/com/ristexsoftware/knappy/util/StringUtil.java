@@ -1,6 +1,23 @@
 package com.ristexsoftware.knappy.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StringUtil {
+
+    private static HashMap<String, String> leetReplace = new HashMap<>();
+
+    static {
+        leetReplace.put("0", "o");
+        leetReplace.put("1", "i");
+        leetReplace.put("3", "e");
+        leetReplace.put("4", "a");
+        leetReplace.put("5", "s");
+        leetReplace.put("6", "d");
+        leetReplace.put("7", "t");
+        leetReplace.put("_", "");
+    }
+
 
     /**
      * Create a horizontal progress bar, similar to how htop does it.
@@ -19,7 +36,7 @@ public class StringUtil {
                     bar+="▍";
                 else
                     bar+="|";
-            else 
+            else
                 bar+=" ";
         }
         if (includeeBrackets)
@@ -59,5 +76,42 @@ public class StringUtil {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Replace a word with asterisks.
+     * @param word The word to censor
+     * @return The censored word
+     */
+    public static String censorWord(String word) {
+        StringBuilder asterisks = new StringBuilder();
+
+        for (int i = 0; i < word.length(); i++) {
+            asterisks.append("*");
+        }
+
+        return asterisks.toString();
+    }
+
+    /**
+     * Filter "Leet Speak" out of a message
+     * <p>
+     * Example:
+     * 
+     * <pre>
+     * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
+     * </pre>
+     * 
+     * @param message The message to filter
+     * @return The filtered message
+     */
+    public static String replaceLeet(String message) {
+        if (message.trim().isEmpty())
+            return message;
+
+        for (Map.Entry<String, String> entry : leetReplace.entrySet())
+            message = message.replaceAll(entry.getKey(), entry.getValue());
+
+        return message;
     }
 }

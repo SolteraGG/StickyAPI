@@ -274,42 +274,6 @@ public class Translation {
         retstr = Translation.translateVariables(retstr, Variables);
         return retstr;
     }
-    /**
-     * Replace a word with asterisks.
-     * @param word The word to censor
-     * @return The censored word
-     */
-    public static String censorWord(String word) {
-        StringBuilder asterisks = new StringBuilder();
-
-        for (int i = 0; i < word.length(); i++) {
-            asterisks.append("*");
-        }
-
-        return asterisks.toString();
-    }
-
-    /**
-     * Filter "Leet Speak" out of a message
-     * <p>
-     * Example:
-     * 
-     * <pre>
-     * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
-     * </pre>
-     * 
-     * @param message The message to filter
-     * @return The filtered message
-     */
-    public static String replaceLeet(String message) {
-        if (message.trim().isEmpty())
-            return message;
-
-        for (Map.Entry<String, String> entry : leetReplace.entrySet())
-            message = message.replaceAll(entry.getKey(), entry.getValue());
-
-        return message;
-    }
 
     /**
      * Check if many strings equal a single comparison string
