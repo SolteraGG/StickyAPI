@@ -123,7 +123,7 @@ public class LocaleProvider {
     }
 
     public String getDefaultTranslation(String translationName) {
-        return defaultTranslations.get(translationName);
+        return translate(defaultTranslations.get(translationName), newVariables());
     }
 
     /**

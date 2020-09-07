@@ -122,7 +122,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
         try {
             return t.get();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getCause().printStackTrace();
         }
         return true; // we always return true, the above code is to ensure a stacktrace prints on command error
     }
