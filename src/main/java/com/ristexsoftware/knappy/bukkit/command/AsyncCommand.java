@@ -119,12 +119,8 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
         });
 
         Knappy.getPool().execute(t);
-        try {
-            return t.get();
-        } catch (Exception e) {
-            e.getCause().printStackTrace();
-        }
-        return true; // we always return true, the above code is to ensure a stacktrace prints on command error
+
+        return true; // we always return true, we don't care what bukkit thinks
     }
 
     /**
