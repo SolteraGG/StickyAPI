@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>com.ristexsoftware</groupId>
-    <artifactId>knappy</artifactId>
+    <artifactId>koffee</artifactId>
     <version>0.3.0</version>
 
-    <name>knappy</name>
+    <name>koffee</name>
 
     <description>A collection of utilities I commonly use</description>
 
