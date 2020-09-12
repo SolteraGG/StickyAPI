@@ -111,7 +111,7 @@ public class LocaleProvider {
     }
 
     public void registerDefaultTranslation(String node, String translationName) {
-        defaultTranslations.put(translationName, Translation.translateColors("&", get(node)));
+        defaultTranslations.put(translationName, translate(node, defaultTranslations));
     }
 
     /**
@@ -123,7 +123,7 @@ public class LocaleProvider {
     }
 
     public String getDefaultTranslation(String translationName) {
-        return translate(defaultTranslations.get(translationName), newVariables());
+        return defaultTranslations.get(translationName);
     }
 
     /**

@@ -17,79 +17,101 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// package com.ristexsoftware.koffee.scheduler;
+package com.ristexsoftware.koffee.scheduler;
 
-// import java.util.concurrent.Callable;
-// import java.util.concurrent.ExecutorService;
-// import java.util.concurrent.Future;
-// import java.util.concurrent.FutureTask;
-// import java.util.TimerTask;
-// import java.util.concurrent.ConcurrentHashMap;
-// import java.util.Timer;
+import java.time.DateTimeException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.TimerTask;
+import java.util.Timer;
+import java.util.Date;
+import java.util.Queue;
+import java.util.ArrayDeque;
 
-// import com.ristexsoftware.koffee.util.Debugger;
+import com.ristexsoftware.koffee.util.Debugger;
 
-// import lombok.Getter;
-// import lombok.Setter;
+import lombok.Getter;
+import lombok.Setter;
 
-// public class Scheduler {
+public class Scheduler 
+{
+	/**
+	 * Array of tasks to be run on the main thread or synchronously
+	 */
+	@Getter
+	protected Queue<RunnableFuture<?>> Synchronous = new ArrayDeque<RunnableFuture<?>>();
+	/**
+	 * Array of tasks to be run as part of a thread pool.
+	 */
+	@Getter
+	protected Queue<RunnableFuture<?>> Asynchronous = new ArrayDeque<RunnableFuture<?>>();
 
-//     /**
-//      * Stores a hashmap of currently active tasks.
-//      */
-//     @Getter
-//     private ConcurrentHashMap<Integer, Future<?>> tasks = new ConcurrentHashMap<>();
+    private Debugger debug = new Debugger(this.getClass());
 
-//     @Getter
-//     private Integer nextTaskId = 0;
+    /**
+     * The thread pool to use for executing tasks.
+     */
+    @Setter
+    protected ScheduledThreadPoolExecutor pool;
 
-//     private Debugger debug = new Debugger(this.getClass());
+	public Scheduler(int poolsz) 
+	{
+		this.pool = new ScheduledThreadPoolExecutor(poolsz);
+	}
 
-//     /**
-//      * The thread pool to use for executing tasks.
-//      */
-//     @Setter
-//     private ExecutorService pool;
+	/**
+	 * Execute a function/task immediately asynchronously
+	 */
+	public <V> Future<V> ScheduleThreaded(Callable<V> task)
+	{
+		RunnableFuture<V> t = new FutureTask<V>(task);
+		this.pool.execute(t);
+		return (FutureTask<V>)t;
+	}
 
-//     public Scheduler() { }
-    
-//     /**
-//      * Run a task asynchronously.
-//      */
-//     public <T> Future<T> runTask(Callable<T> task) {
-//         return pool.submit(task);
-//     }
+	public <T> Future<T> ScheduleThreaded(Callable<T> task, Date exectime)
+	{
+		long future = exectime.getTime();
+		long now = System.currentTimeMillis();
+		if (future <= now)
+			throw new DateTimeException("Get the time machine, morty! We're going back to the future!");
 
-//     /**
-//      * Schedule a task to be run later.
-//      */
-//     public int schedule(Callable<?> task, Long offset) {
+		long delay = future - now;
+		return this.pool.schedule(task, delay, TimeUnit.MILLISECONDS);
+	}
 
-//         Callable<?> taskToSubmit = new Callable<?>() {
-//             public T call() throws Exception {
-//                 Thread.sleep(offset);
-//                 return task.call();
-//             }
-//         };
+	/**
+	 * Execute a task in the synchronous thread, scheduled for the next available tick.
+	 */
+	public <T> Future<T> ScheduleSynchronous(Callable<T> task)
+	{
+		FutureTask<T> t = new FutureTask<T>(task);
+		this.Synchronous.add(t);
+		return t;
+	}
 
-//         Future<?> futureTask = pool.submit(taskToSubmit);
-//         tasks.set(++nextTaskId, futureTask);
+	public <T> Future<T> ScheduleSynchronous(Callable<T> task, Date exectime)
+	{
+		// TODO: Make synchronous version of this?
+		return new FutureTask<T>(task);
+	}
 
-//         return ++nextTaskId;
-//     }
+	/**
+	 * Run all pending synchronous calls until they're finished.
+	 * NOTE: This should be called in the application's eventloop
+	 * or in a single thread.
+	 */
+	public void Schedule()
+	{
+		RunnableFuture<?> task = null;
+		while ((task = this.Synchronous.poll()) != null)
+			task.run();
+	}
 
-//     /**
-//      * Run a timer task.
-//      */
-//     public void scheduleTimerTask(TimerTask task) {
-//         runTask(new Callable<Void>() {
-//             @Override
-//             public Void call() {
-//                 task.run();
-//                 return null;
-//             }
-//         });
-//         return;
-//     }
-
-// }
+}
