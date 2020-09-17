@@ -39,44 +39,40 @@ import com.ristexsoftware.koffee.util.Debugger;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Scheduler 
-{
+public class Scheduler {
 	/**
 	 * Array of tasks to be run on the main thread or synchronously
 	 */
 	@Getter
-	protected Queue<RunnableFuture<?>> Synchronous = new ArrayDeque<RunnableFuture<?>>();
+	protected Queue<RunnableFuture<?>> synchronous = new ArrayDeque<RunnableFuture<?>>();
 	/**
 	 * Array of tasks to be run as part of a thread pool.
 	 */
 	@Getter
-	protected Queue<RunnableFuture<?>> Asynchronous = new ArrayDeque<RunnableFuture<?>>();
+	protected Queue<RunnableFuture<?>> asynchronous = new ArrayDeque<RunnableFuture<?>>();
 
-    private Debugger debug = new Debugger(this.getClass());
+	private Debugger debug = new Debugger(this.getClass());
 
-    /**
-     * The thread pool to use for executing tasks.
-     */
-    @Setter
-    protected ScheduledThreadPoolExecutor pool;
+	/**
+	 * The thread pool to use for executing tasks.
+	 */
+	@Setter
+	protected ScheduledThreadPoolExecutor pool;
 
-	public Scheduler(int poolsz) 
-	{
+	public Scheduler(int poolsz) {
 		this.pool = new ScheduledThreadPoolExecutor(poolsz);
 	}
 
 	/**
 	 * Execute a function/task immediately asynchronously
 	 */
-	public <V> Future<V> ScheduleThreaded(Callable<V> task)
-	{
+	public <V> Future<V> scheduleThreaded(Callable<V> task) {
 		RunnableFuture<V> t = new FutureTask<V>(task);
 		this.pool.execute(t);
-		return (FutureTask<V>)t;
+		return (FutureTask<V>) t;
 	}
 
-	public <T> Future<T> ScheduleThreaded(Callable<T> task, Date exectime)
-	{
+	public <T> Future<T> scheduleThreaded(Callable<T> task, Date exectime) {
 		long future = exectime.getTime();
 		long now = System.currentTimeMillis();
 		if (future <= now)
@@ -87,30 +83,27 @@ public class Scheduler
 	}
 
 	/**
-	 * Execute a task in the synchronous thread, scheduled for the next available tick.
+	 * Execute a task in the synchronous thread, scheduled for the next available
+	 * tick.
 	 */
-	public <T> Future<T> ScheduleSynchronous(Callable<T> task)
-	{
+	public <T> Future<T> scheduleSynchronous(Callable<T> task) {
 		FutureTask<T> t = new FutureTask<T>(task);
-		this.Synchronous.add(t);
+		this.synchronous.add(t);
 		return t;
 	}
 
-	public <T> Future<T> ScheduleSynchronous(Callable<T> task, Date exectime)
-	{
+	public <T> Future<T> scheduleSynchronous(Callable<T> task, Date exectime) {
 		// TODO: Make synchronous version of this?
 		return new FutureTask<T>(task);
 	}
 
 	/**
-	 * Run all pending synchronous calls until they're finished.
-	 * NOTE: This should be called in the application's eventloop
-	 * or in a single thread.
+	 * Run all pending synchronous calls until they're finished. NOTE: This should
+	 * be called in the application's eventloop or in a single thread.
 	 */
-	public void Schedule()
-	{
+	public void schedule() {
 		RunnableFuture<?> task = null;
-		while ((task = this.Synchronous.poll()) != null)
+		while ((task = this.synchronous.poll()) != null)
 			task.run();
 	}
 
