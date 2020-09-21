@@ -33,12 +33,6 @@ public class LocaleProvider {
     @Getter
     private Locale defaultLocale;
 
-    /**
-     * Default translation variables.
-     */
-    @Getter
-    private TreeMap<String, String> defaultTranslations = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
     public LocaleProvider(File localeFolder) {
         this.localeFolder = localeFolder;
         if (!localeFolder.exists())
@@ -104,29 +98,6 @@ public class LocaleProvider {
     }
 
     /**
-     * Register a default translation to be inserted into the vars object when calling `translate`.
-     */
-    public void registerRawTranslation(String key, String value) {
-        defaultTranslations.put(key, value);
-    }
-
-    public void registerDefaultTranslation(String node, String translationName) {
-        defaultTranslations.put(translationName, translate(node, defaultTranslations));
-    }
-
-    /**
-     * Register a locale node, or a default value as a default translation.
-     */
-    public void registerDefaultTranslation(String node, String translationName, String defaultValue) {
-        defaultTranslations.put(translationName,
-                Translation.translateColors("&", get(node) == null ? defaultValue : get(node)));
-    }
-
-    public String getDefaultTranslation(String translationName) {
-        return defaultTranslations.get(translationName);
-    }
-
-    /**
      * Translate a localization with the given variables.
      */
     public String translate(String node, Map<String, String> vars) {
@@ -143,8 +114,7 @@ public class LocaleProvider {
             return null;
         }
 
-        defaultTranslations.forEach((k, v) -> vars.put(k, v));
-        return Translation.translate(message, "&", vars);
+        return Translation.translate(this, message, "&", vars);
     }
 
     /**
@@ -158,8 +128,7 @@ public class LocaleProvider {
         if (message == null)
             return null;
 
-        defaultTranslations.forEach((k, v) -> vars.put(k, v));
-        return Translation.translateVariables(message, vars);
+        return Translation.translateVariables(this, message, vars);
     }
 
     /**

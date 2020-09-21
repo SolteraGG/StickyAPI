@@ -205,12 +205,13 @@ public class Translation {
      * Replace all placeholders in a string, executing placeholder functions in the
      * process to format strings with variables provided.
      * 
+     * @param locale    The LocaleProvider context
      * @param message   The message to have placeholders replaced
      * @param Variables The variables to be utilized in this message for the
      *                  placeholders and their functions
      * @return Formatted string with all placeholders from Variables replaced.
      */
-    public static String translateVariables(String message, Map<String, String> Variables) {
+    public static String translateVariables(LocaleProvider locale, String message, Map<String, String> Variables) {
         // If it doesn't have the starting char for variables, skip it.
         if (!message.contains("{") || Variables == null)
             return message;
@@ -232,22 +233,34 @@ public class Translation {
             // functions are stored as a hashmap and only take one string argument
             // ("dereferenced" value of the lvalue map name.). This allows us to do things
             // like conditionally pluralize words and such in the config.
-            if (variable.contains("|")) {
+            if (variable.contains("|")) 
+            {
                 String values[] = variable.split("\\|");
-                String rvalue = values[1], lvalue = values[0];
+                String rvalue = values[1], lvalue = values[0].trim();
 
-                if (rvalue.contains(":")) {
+                // Allow recursive locale nodes.
+                String value = Variables.get(lvalue);
+                if (value == null)
+                    value = locale.get(lvalue);
+
+                if (rvalue.contains(":")) 
+                {
                     int nextsplit = rvalue.indexOf(":");
                     rvalue = rvalue.substring(0, nextsplit);
                     String argument = values[1].substring(nextsplit + 2, values[1].length() - 1);
 
-                    replacement = functions.get(rvalue.trim()).apply(Variables.get(lvalue.trim()), argument);
+                    replacement = functions.get(rvalue.trim()).apply(value, argument);
                 } else // (Functions.containsKey(rvalue.trim()) &&
                        // Variables.containsKey(lvalue.trim()))
-                    replacement = functions.get(rvalue.trim()).apply(Variables.get(lvalue.trim()), "");
-            } else if (Variables.containsKey(variable)) {
+                    replacement = functions.get(rvalue.trim()).apply(value, "");
+            } 
+            else if (Variables.containsKey(variable) || locale.get(variable) != null) 
+            {
                 // Now we replace it with our value from the map.
-                replacement = Variables.get(variable);
+                if (Variables.containsKey(variable))
+                    replacement = Variables.get(variable);
+                else
+                    replacement = locale.get(variable);
             }
 
             if (replacement != null)
@@ -260,6 +273,7 @@ public class Translation {
      * Translate the preformatted string to a fully formatted string ready for
      * players to see, switching out color codes and placeholders.
      * 
+     * @param locale     The LocaleProvider context
      * @param message    The message containing placeholders and untranslated color
      *                   code sequences
      * @param ColorChars The character used as the prefix for color strings
@@ -269,9 +283,9 @@ public class Translation {
      *         formatted message ready for the player.
      * @see TranslateVariables
      */
-    public static String translate(String message, String ColorChars, Map<String, String> Variables) {
-        String retstr = Translation.translateColors(ColorChars, message);
-        retstr = Translation.translateVariables(retstr, Variables);
+    public static String translate(LocaleProvider locale, String message, String ColorChars, Map<String, String> Variables) {
+        String retstr = Translation.translateVariables(locale, message, Variables);
+        retstr = Translation.translateColors(ColorChars, retstr);
         return retstr;
     }
 
