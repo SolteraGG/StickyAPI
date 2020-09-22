@@ -6,7 +6,7 @@
     
     <groupId>com.ristexsoftware</groupId>
     <artifactId>koffee</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
 
     <name>koffee</name>
 
@@ -112,6 +112,12 @@
             <artifactId>spigot-api</artifactId>
             <version>1.14.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
