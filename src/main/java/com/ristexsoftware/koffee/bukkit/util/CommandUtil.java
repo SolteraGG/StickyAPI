@@ -18,7 +18,7 @@ public class CommandUtil {
      * @param command The command to register
      * @return False if something went wrong
      */
-    public boolean registerCommand(Server server, Command command) {
+    public static boolean registerCommand(Server server, Command command) {
         try {
             CommandMap cmap = ReflectionUtil.getProtectedValue(server, "commandMap");
             cmap.register(server.getName().toLowerCase(), command);
@@ -35,7 +35,7 @@ public class CommandUtil {
      * @param commands The command to register
      * @return False if something went wrong
      */
-    public boolean registerCommands(Server server, List<Command> commands) {
+    public static boolean registerCommands(Server server, List<Command> commands) {
         try {
             CommandMap cmap = ReflectionUtil.getProtectedValue(server, "commandMap");
             cmap.registerAll(server.getName().toLowerCase(), commands);
@@ -53,7 +53,7 @@ public class CommandUtil {
      * @return False if something went horribly wrong
      * @deprecated This method uses reflection and is prone to error in later Java versions
      */
-    public boolean registerCommandPackage(Server server, String pkg) {
+    public static boolean registerCommandPackage(Server server, String pkg) {
         List<String> classNames;
         try (ScanResult scanResult = new ClassGraph().acceptPackages(pkg).enableClassInfo().scan()) {
             classNames = scanResult.getAllClasses().getNames();

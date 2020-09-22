@@ -13,7 +13,7 @@ public class StartupUtil {
      * @param plugin The plugin's main class
      * @return False if something went wrong
      */
-    public boolean setupConfig(JavaPlugin plugin) {
+    public static boolean setupConfig(JavaPlugin plugin) {
         try {
             if (!plugin.getDataFolder().exists()) {
                 plugin.getLogger().info("Error: No folder was found! Creating...");
@@ -36,7 +36,7 @@ public class StartupUtil {
      * @param localeProvider The plugin's locale provider
      * @return False if something went wrong
      */
-    public boolean setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
+    public static boolean setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
         localeProvider = new LocaleProvider(new File(plugin.getDataFolder(), "locale"));
         int loadedLocales = localeProvider.loadAllLocales();
         Boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");
