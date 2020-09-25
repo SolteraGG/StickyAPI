@@ -36,7 +36,7 @@ public class StartupUtil {
      * @param localeProvider The plugin's locale provider
      * @return False if something went wrong
      */
-    public static boolean setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
+    public static LocaleProvider setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
         localeProvider = new LocaleProvider(new File(plugin.getDataFolder(), "locale"));
         int loadedLocales = localeProvider.loadAllLocales();
         Boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");
@@ -50,7 +50,7 @@ public class StartupUtil {
             } catch (Exception e) {
                 e.printStackTrace();
                 plugin.getLogger().severe("Something went horribly wrong while saving the default locale.");
-                return false;
+                return null;
             }
 
             localeProvider.loadAllLocales();
@@ -58,6 +58,6 @@ public class StartupUtil {
         } else
             plugin.getLogger().info("Loaded " + String.valueOf(loadedLocales) + " localizations");
 
-        return true;
+        return localeProvider;
     }
 }
