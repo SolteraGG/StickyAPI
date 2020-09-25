@@ -60,7 +60,7 @@ public class CommandUtil {
         }
         try {
             for (String className : classNames) {
-                Class<?> clazz = Class.forName(pkg+"."+className);
+                Class<?> clazz = Class.forName(className);
                 Object command = clazz.newInstance();
                 CommandMap cmap = ReflectionUtil.getProtectedValue(server, "commandMap");
                 cmap.register(server.getName().toLowerCase(), (Command)command);
