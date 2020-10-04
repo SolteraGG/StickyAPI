@@ -1,5 +1,6 @@
 /* 
  *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
  *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
  *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
  *  
@@ -25,6 +26,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+/**
+ * A class for abusing Java and using reflection to unprotect methods and constructors, use this with a lot of care and try not to break things!
+ */
 @SuppressWarnings({"unchecked", "deprecation"})
 public class ReflectionUtil {
     public static void setProtectedValue(Object o, String field, Object newValue) {

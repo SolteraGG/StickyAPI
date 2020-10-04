@@ -6,7 +6,7 @@
     
     <groupId>com.ristexsoftware</groupId>
     <artifactId>koffee</artifactId>
-    <version>0.8.3</version>
+    <version>0.9.1</version>
 
     <name>koffee</name>
 
@@ -66,11 +66,8 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <show>private</show>  <!--javadoc shows all classes and members-->
-                </configuration>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
             </plugin>
         </plugins>
         <resources>
@@ -163,7 +160,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
-            </plugin>
+                <configuration>
+                    <skip>false</skip>
+                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                </configuration>
+              </plugin>
         </plugins>
     </reporting>
 </project>  

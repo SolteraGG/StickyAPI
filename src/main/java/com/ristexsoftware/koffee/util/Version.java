@@ -1,5 +1,6 @@
 /* 
  *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
  *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
  *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
  *  
@@ -29,6 +30,7 @@ public final class Version {
 
     /**
      * Retrieve the type of server this method was called by.
+     * @return The type of the server running when this method is evaluated.
      */
     public static ServerType getServerType() {
         if (isBukkit()) {
@@ -50,6 +52,7 @@ public final class Version {
 
     /**
      * Returns true if the server is running paper.
+     * @return Whether or not the server is running paper
      */
     public static boolean isPaper() {
         try {
@@ -61,6 +64,7 @@ public final class Version {
 
     /**
      * Returns true if the server is running spigot.
+     * @return Whether or not the server is running spigot
      */
     public static boolean isSpigot() {
          try {
@@ -72,6 +76,7 @@ public final class Version {
 
     /**
      * Returns true if the server is running bukkit.
+     * @return Whether or not the server is running bukkit
      */
     public static boolean isBukkit() {
         try {
@@ -83,6 +88,7 @@ public final class Version {
     
     /**
      * Returns true if the server is running waterfall.
+     * @return Whether or not the server is running waterfall
      */
     public static boolean isWaterfall() {
         try {
@@ -94,6 +100,7 @@ public final class Version {
 
     /**
      * Returns true if the server is running bungee.
+     * @return Whether or not the server is running bungeecord
      */
     public static boolean isBungee() {
         try {
@@ -104,14 +111,8 @@ public final class Version {
     }
 
     /**
-     * Retrieve the MC server version.
-     */
-    // public static String getServerVersion() {}
-
-    /**
-     * Get the current version of bukkit.
-     * 
-     * This method is valid for both Bukkit, Spigot, and Paper.
+     * Get the current version of bukkit. This method is valid for both Bukkit, Spigot, and Paper.
+     * @return The current version of bukkit
      */
     public static String getBukkitVersion() {
         try {
@@ -123,6 +124,7 @@ public final class Version {
 
     /**
      * Get the current version of bungee.
+     * @return The current version of bungee
      */
     public static String getBungeeVersion() {
         try {

@@ -1,3 +1,23 @@
+/* 
+ *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
+ *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
+ *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.ristexsoftware.koffee.arguments;
 
 import java.sql.Timestamp;
@@ -26,18 +46,29 @@ public class Arguments {
         debug.print("Invalidated by argument " + name);
         valid = false;
     }
-
+ 
+    /**
+     * Are these arguments valid?
+     * @return Whether or not the arguments are valid
+     */
     public boolean valid() {
         return valid;
     }
 
-
+    /**
+     * Construct a new argument class with the given input.
+     * @param args Arguments to parse
+     * @return New argument instance
+     */
     public Arguments(String[] args) {
         unparsedArgs = new ArrayList<String>(Arrays.asList(args));
     }
 
     /**
      * Create an optional flag.
+     * @param name The name of this flag
+     * @param flag The flag to register
+     * @return The arguments object
      */
     public Arguments optionalFlag(String name, String flag) {
         debug.print("Looking for optional flag " + name + "...");
@@ -57,6 +88,9 @@ public class Arguments {
 
     /**
      * Create a required flag.
+     * @param name The name of this flag
+     * @param flag The flag to register
+     * @return The arguments object
      */
     public Arguments requiredFlag(String name, String flag) {
         debug.print("Looking for required flag " + name + "...");
@@ -79,6 +113,8 @@ public class Arguments {
 
     /**
      * Create a required string argument.
+     * @param name The name of this string
+     * @return The arguments object
      */
     public Arguments optionalString(String name) {
         debug.print("Looking for optional string " + name + "...");
@@ -94,6 +130,8 @@ public class Arguments {
 
     /**
      * Create a required string argument.
+     * @param name The name of this string
+     * @return The arguments object
      */
     public Arguments requiredString(String name) {
         debug.print("Looking for required string " + name + "...");
@@ -113,6 +151,8 @@ public class Arguments {
     /**
      * Create an optional sentence argument, with its length defaulting to the remaining length of
      * current unparsed arguments.
+     * @param name The name of this sentence
+     * @return The arguments object
      */
     public Arguments optionalSentence(String name) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
@@ -121,6 +161,9 @@ public class Arguments {
 
     /**
      * Create an optional sentence with the given length.
+     * @param name The name of the sentence to createa
+     * @param length The length of the sentence
+     * @return The arguments object
      */
     public Arguments optionalSentence(String name, int length) {
         int end = position + length;
@@ -150,6 +193,8 @@ public class Arguments {
 
     /**
      * Create a required sentence argument, its length defaulting to that of any remaining unparsed arguments.
+     * @param name Name of the argument
+     * @return The arguments object
      */
     public Arguments requiredSentence(String name) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
@@ -158,6 +203,9 @@ public class Arguments {
 
     /**
      * Create a required sentence argument with the given length.
+     * @param name Name of the argument
+     * @param length Maximum length in words of the sentence
+     * @return The arguments object
      */
     public Arguments requiredSentence(String name, int length) {
         int end = position + length;
@@ -188,6 +236,8 @@ public class Arguments {
 
     /**
      * Create an optional timestamp argument.
+     * @param name Name of the argument
+     * @return The arguments object
      */
     public Arguments optionalTimestamp(String name) {
         debug.print("Looking for optional timestamp " + name + "...");
@@ -203,6 +253,8 @@ public class Arguments {
 
     /**
      * Create an optional timestamp argument.
+     * @param name Name of the argument
+     * @return The arguments object
      */
     public Arguments requiredTimestamp(String name) {
         debug.print("Looking for required timestamp " + name + "...");
@@ -219,6 +271,8 @@ public class Arguments {
 
     /**
      * Create an optional integer argument.
+     * @param name Name of the argument
+     * @return The arguments object
      */
     public Arguments optionalInt(String name) {
         debug.print("Looking for optional int " + name + "...");
@@ -233,6 +287,11 @@ public class Arguments {
         return this;
     }
 
+    /**
+     * Create a required integer
+     * @param name The name of the integer to create
+     * @return The arguments object
+     */
     public Arguments requiredInt(String name) {
         debug.print("Looking for optional required " + name + "...");
 
@@ -250,6 +309,8 @@ public class Arguments {
 
     /**
      * Create an optional duration argument.
+     * @param name The name of the duration to create
+     * @return The arguments object
      */
     public Arguments optionalDuration(String name) {
         debug.print("Looking for optional duration " + name + "...");
@@ -266,6 +327,8 @@ public class Arguments {
 
     /**
      * Create a required duration argument.
+     * @param name The name of the duration to create
+     * @return The arguments object
      */
     public Arguments requiredDuration(String name) {
         debug.print("Looking for required duration " + name + "...");
@@ -284,6 +347,8 @@ public class Arguments {
 
     /**
      * Fetch a parsed argument from this arguments object.
+     * @param name The name of the argument to fetch
+     * @return The argument, if it exists
      */
     public String get(String name) {
         return parsedArgs.get(name);
@@ -291,6 +356,8 @@ public class Arguments {
 
     /**
      * Fetch a timestamp.
+     * @param name The name of the timestamp to fetch
+     * @return The argument as a timestamp, if it exists
      */
     public Timestamp getTimestamp(String name) {
         if (parsedArgs.get(name) == null) {
@@ -301,6 +368,8 @@ public class Arguments {
 
     /**
      * Fetch an integer.
+     * @param name The name of the integer to fetch\
+     * @return The argument as an integer, if it exists
      */
     public Integer getInt(String name) {
         try {
@@ -312,6 +381,8 @@ public class Arguments {
 
     /**
      * Return whether an argument exists.
+     * @param name The name of the argument to check for
+     * @return True if it exists
      */
     public Boolean exists(String name) {
         return parsedArgs.get(name) != null;
@@ -319,6 +390,8 @@ public class Arguments {
 
     /**
      * Return whether a flag is set.
+     * @param name The name of the flag to fetch
+     * @return True if it is set
      */
     public Boolean getFlag(String name) {
         return exists(name);
@@ -326,6 +399,8 @@ public class Arguments {
 
     /**
      * Fetch a boolean value (usually a flag).
+     * @param name The name of the boolean to fetch
+     * @return The argument as a boolean, if it exists
      */
     public Boolean getBoolean(String name) {
         return Boolean.valueOf(parsedArgs.get(name));
@@ -333,6 +408,8 @@ public class Arguments {
 
     /**
      * Fetch a duration value.
+     * @param name The name of the duration to fetch
+     * @return The argument as a duration (long), if it exists
      */
     public Long getDuration(String name) {
         return TimeUtil.duration(parsedArgs.get(name)).get();

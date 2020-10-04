@@ -19,8 +19,6 @@
  */
 
 /**
- * Classes dedicated to facilitating
- * {@link org.bukkit.configuration.Configuration configurations} to be read and
- * stored on the filesystem.
+ * Koffee's Bukkit utility package
  */
-package com.ristexsoftware.koffee.configuration.file;
+package com.ristexsoftware.koffee.bukkit;

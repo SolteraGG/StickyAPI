@@ -1,5 +1,6 @@
 /* 
  *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
  *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
  *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
  *  
@@ -76,24 +77,39 @@ public final class NumberUtil {
         return Float.valueOf(df.format((x/z)*100));
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static int floor(double num) {
         final int floor = (int) num;
         return floor == num ? floor : floor - (int) (Double.doubleToRawLongBits(num) >>> 63);
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static int ceil(final double num) {
         final int floor = (int) num;
         return floor == num ? floor : floor + (int) (~Double.doubleToRawLongBits(num) >>> 63);
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static int round(double num) {
         return floor(num + 0.5d);
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static double square(double num) {
         return num * num;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static int toInt(@Nullable Object object) {
         if (object instanceof Number) {
             return ((Number) object).intValue();
@@ -107,6 +123,9 @@ public final class NumberUtil {
         return 0;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static float toFloat(@Nullable Object object) {
         if (object instanceof Number) {
             return ((Number) object).floatValue();
@@ -120,6 +139,9 @@ public final class NumberUtil {
         return 0;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static double toDouble(@Nullable Object object) {
         if (object instanceof Number) {
             return ((Number) object).doubleValue();
@@ -133,6 +155,9 @@ public final class NumberUtil {
         return 0;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static long toLong(@Nullable Object object) {
         if (object instanceof Number) {
             return ((Number) object).longValue();
@@ -146,6 +171,9 @@ public final class NumberUtil {
         return 0;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static short toShort(@Nullable Object object) {
         if (object instanceof Number) {
             return ((Number) object).shortValue();
@@ -159,6 +187,9 @@ public final class NumberUtil {
         return 0;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static byte toByte(@Nullable Object object) {
         if (object instanceof Number) {
             return ((Number) object).byteValue();
@@ -172,20 +203,32 @@ public final class NumberUtil {
         return 0;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static boolean isFinite(double d) {
         return Math.abs(d) <= Double.MAX_VALUE;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static boolean isFinite(float f) {
         return Math.abs(f) <= Float.MAX_VALUE;
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static void checkFinite(double d, @NotNull String message) {
         if (!isFinite(d)) {
             throw new IllegalArgumentException(message);
         }
     }
 
+    /**
+     * @deprecated This will be removed in a future release
+     */
     public static void checkFinite(float d, @NotNull String message) {
         if (!isFinite(d)) {
             throw new IllegalArgumentException(message);

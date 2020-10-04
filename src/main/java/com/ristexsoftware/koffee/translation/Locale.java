@@ -1,5 +1,6 @@
 /* 
  *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
  *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
  *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
  *  
@@ -42,6 +43,11 @@ public class Locale {
     @Getter
     FileConfiguration localeConfig = new YamlConfiguration();
 
+    /**
+     * Create a new locale object
+     * @param localeFile The locale file to use
+     * @return The new locale object
+     */
     public Locale(File localeFile) {
         this.localeFile = localeFile;
         try {
@@ -55,6 +61,8 @@ public class Locale {
 
     /**
      * Get a locale value.
+     * @param The node to get
+     * @return The node if it exists
      */
     public String get(String node) {
         debug.reset().print("fetching node " + node);

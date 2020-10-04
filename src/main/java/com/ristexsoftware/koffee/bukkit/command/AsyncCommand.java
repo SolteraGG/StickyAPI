@@ -1,3 +1,23 @@
+/* 
+ *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
+ *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
+ *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.ristexsoftware.koffee.bukkit.command;
 
 import java.util.List;
@@ -14,6 +34,12 @@ import org.bukkit.command.TabCompleter;
 
 import com.ristexsoftware.koffee.Koffee;
 
+/**
+ * This class is designed to handle execution of commands given by a user or the
+ * console, it runs the command code asynchronously from the server thread and
+ * will not cause tick lag if the command takes too long.
+ * Please use the with caution!
+ */
 public abstract class AsyncCommand extends Command implements PluginIdentifiableCommand {
     private Plugin owner;
     private TabCompleter completer;

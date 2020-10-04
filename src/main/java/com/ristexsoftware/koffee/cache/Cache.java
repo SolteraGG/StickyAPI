@@ -1,5 +1,6 @@
 /* 
  *  Koffee - A simple collection of utilities I commonly use
+ *  Copyright (C) 2019-2020 Justin Crawford <justin@Stacksmash.net>
  *  Copyright (C) 2019-2020 Zachery Coleman <Zachery@Stacksmash.net>
  *  Copyright (C) 2019-2020 Skye Elliot <actuallyori@gmail.com>
  *  
@@ -30,8 +31,17 @@ import com.ristexsoftware.koffee.util.MemoryUtil;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * General purpose cache for caching things that should be cached.
+ */
 public class Cache<T extends Cacheable> {
     public interface CacheTester<T extends Cacheable> {
+        /**
+         * Matching function that should evaluate to true if a given object matches 
+         * any necessary criteria.
+         * @param object The object being tested
+         * @return True if this object matches the necessary criteria.
+         */
         boolean match(T object);
     }
 
@@ -74,6 +84,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Return the size of this cache.
+     * @return The size of this cache.
      */
     public int size() {
         return objects.size();
@@ -81,6 +92,8 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Get the memory usage of this cache, specifying the units of the returned value.
+     * @param units The units the result
+     * @return Approximate memory usage
      */
     public Double memoryUsage(MemoryUtil.Unit units) {
         return MemoryUtil.formatBits(memoryUsage, units);
@@ -88,6 +101,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Get the approximate memory usage of this cache in kilobytes.
+     * @return Approximate memory usage
      */
     public Double memoryUsage() {
         return memoryUsage(MemoryUtil.Unit.KILOBYTES);
@@ -95,6 +109,8 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Retrieve an object from the cache.
+     * @param key The key of the object
+     * @return The requested object, if it exists
      */
     public T get(String key) {
         debug.reset();
@@ -106,12 +122,18 @@ public class Cache<T extends Cacheable> {
         return object;
     }
 
+    /**
+     * Return all values in the cache.
+     * @return All values in the cache
+     */
     public Collection<T> getAll() {
         return objects.values();
     }
 
     /**
      * Find an object using the given tester lambda.
+     * @param tester A cache tester implemented for any necessary criteria you are looking for
+     * @return The first object that evaluates the tester to true, if there is one
      */
     public T find(CacheTester<T> tester) {
         debug.reset();
@@ -127,6 +149,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Store an object in the cache.
+     * @param object The object to store
      */
     public void put(T object) {
         debug.reset();
@@ -172,6 +195,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Update a value in the cache - bypasses not-null check!
+     * @param object The object to update
      */
     public void update(T object) {
         if (objects.containsKey(object.getKey())) {
@@ -182,6 +206,8 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Remove an object from the cache, returning the old object.
+     * @param object The object to remove
+     * @return The removed object, if it exists
      */
     public T remove(T object) {
         debug.reset();
@@ -200,6 +226,11 @@ public class Cache<T extends Cacheable> {
         return didRemove;
     }
 
+    /**
+     * Remove an oibject from the cache using its key.
+     * @param key The key to remove
+     * @return The removed object, if it exists
+     */
     public T removeKey(String key) {
         T object = objects.get(key);
         if (object == null) {
@@ -211,6 +242,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Fetch the oldest entry in the cache.
+     * @return The oldest entry in the cache, if it exists
      */
     public T getOldestEntry() {
         String oldest = null;
@@ -228,6 +260,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Remove the oldest entry from the cache.
+     * @return The oldest entry in the cache, if it exists  
      */
     public T removeOldestEntry() {
         return remove(getOldestEntry());
