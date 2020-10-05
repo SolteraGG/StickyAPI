@@ -20,6 +20,7 @@
 
 package com.ristexsoftware.koffee.util;
 
+import java.util.Random;
 import java.util.zip.CRC32;
 
 class Luhn {
@@ -78,17 +79,45 @@ class Luhn {
 }
 
 /**
- * Class for generating small unique IDs
+ * Class for generating small semi-unique IDs
  */
-public class GenID {
+public class ShortID {
+
+    private String id;
+
+    public ShortID() {
+        Random r = new Random();
+        this.id = generate(r.nextInt());
+    }
+
+    protected ShortID(String name) {
+        this.id = name;
+    }
+
+    public String toString() {
+        return id;
+    }
+
     /**
-     * Generate a punishment ID unique for the punishment.
+     * Create a ShortID from a string
+     * @param name 
+     * Returns a ShortID object from the string inputed
+     * @throws IllegalArgumentException If name does not conform to the string representation as described in toString
+     */
+    public static ShortID fromString(String name) throws IllegalArgumentException {
+        if (!validateID(name))
+            throw new IllegalArgumentException("The provided String is not a valid Luhn-parseable ShortID");
+        return new ShortID((name));
+    }
+
+    /**
+     * Generate a short semi-unique ID
      * 
      * @param key An identifier to start the ID with (usually the position in a
      *            SQL table)
      * @return a Luhn-passable identifier
      */
-    public static String generateID(int key) {
+    public static String generate(int key) {
         CRC32 crc = new CRC32();
 
         crc.update((int) (System.currentTimeMillis() / 1000L));
@@ -104,11 +133,11 @@ public class GenID {
     }
 
     /**
-     * Generate a punishment ID unique for the punishment.
+     * Generate a short semi-unique ID
      * 
      * @return a Luhn-passable identifier
      */
-    public static String generateID() {
+    public static String generate() {
         CRC32 crc = new CRC32();
 
         crc.update((int) (System.nanoTime()));

@@ -32,7 +32,7 @@ public class StringUtil {
 
     static {
         leetReplace.put("0", "o");
-        leetReplace.put("1", "i");
+        leetReplace.put("1", "l");
         leetReplace.put("3", "e");
         leetReplace.put("4", "a");
         leetReplace.put("5", "s");
