@@ -18,22 +18,12 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ristexsoftware.koffee;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
-import lombok.Getter;
-import lombok.Setter;
+package com.ristexsoftware.koffee.common.cache;
 
 /**
- * a thing that exists
+ * Mark a class as being cacheable - must provide the <code>getKey()</code> method to allow
+ * for key retrieval.
  */
-public class Koffee {
-    @Getter
-    public static Logger logger = Logger.getLogger("koffee");
-
-    @Getter @Setter
-    private static ExecutorService pool = Executors.newFixedThreadPool(3);
+public interface Cacheable {
+    String getKey();
 }

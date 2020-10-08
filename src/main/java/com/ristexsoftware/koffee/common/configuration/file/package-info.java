@@ -18,22 +18,9 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ristexsoftware.koffee;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * a thing that exists
+ * Classes dedicated to facilitating
+ * {@link org.bukkit.configuration.Configuration configurations} to be read and
+ * stored on the filesystem.
  */
-public class Koffee {
-    @Getter
-    public static Logger logger = Logger.getLogger("koffee");
-
-    @Getter @Setter
-    private static ExecutorService pool = Executors.newFixedThreadPool(3);
-}
+package com.ristexsoftware.koffee.common.configuration.file;

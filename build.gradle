@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.ristexsoftware'
+version = '1.0.0'
+
+configurations {
+    jaxDoclet
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:1.18.12"
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.3-R0.1-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
+    implementation 'org.jetbrains:annotations:18.0.0'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'io.github.classgraph:classgraph:4.8.90'
+}
+
+task docs(type: Javadoc) {
+    source = sourceSets.main.allJava
+    classpath = project.sourceSets.main.runtimeClasspath
+    destinationDir = reporting.file("./docs")
+}

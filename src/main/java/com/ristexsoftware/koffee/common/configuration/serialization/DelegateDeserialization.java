@@ -18,22 +18,28 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ristexsoftware.koffee;
+package com.ristexsoftware.koffee.common.configuration.serialization;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 
 /**
- * a thing that exists
+ * Applies to a {@link ConfigurationSerializable} that will delegate all
+ * deserialization to another {@link ConfigurationSerializable}.
  */
-public class Koffee {
-    @Getter
-    public static Logger logger = Logger.getLogger("koffee");
-
-    @Getter @Setter
-    private static ExecutorService pool = Executors.newFixedThreadPool(3);
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface DelegateDeserialization {
+    /**
+     * Which class should be used as a delegate for this classes
+     * deserialization
+     *
+     * @return Delegate class
+     */
+    
+    public Class<? extends ConfigurationSerializable> value();
 }

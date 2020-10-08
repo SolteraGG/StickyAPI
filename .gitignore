@@ -22,13 +22,29 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Text files
-# *.txt
-# additional ignores
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+# don't know why this was here but it was and it wouldn't go away - should be caught
+# by *.class anyway
+bin
+
+# editor files
+.vscode
+*.iml
+.settings
 .classpath
-.factorypath
 .project
-.settings/
-.vscode/
-.idea/
-target/

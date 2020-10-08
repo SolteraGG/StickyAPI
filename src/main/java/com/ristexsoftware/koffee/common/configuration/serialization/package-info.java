@@ -18,22 +18,11 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ristexsoftware.koffee;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
- * a thing that exists
+ * Classes dedicated to being able to perform serialization specialized for
+ * the Bukkit {@link org.bukkit.configuration.Configuration configuration}
+ * implementation.
  */
-public class Koffee {
-    @Getter
-    public static Logger logger = Logger.getLogger("koffee");
+package com.ristexsoftware.koffee.common.configuration.serialization;
 
-    @Getter @Setter
-    private static ExecutorService pool = Executors.newFixedThreadPool(3);
-}
+

@@ -18,22 +18,36 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ristexsoftware.koffee;
+package com.ristexsoftware.koffee.common.configuration;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
-import lombok.Getter;
-import lombok.Setter;
 
 /**
- * a thing that exists
+ * Various settings for controlling the input and output of a {@link
+ * MemoryConfiguration}
  */
-public class Koffee {
-    @Getter
-    public static Logger logger = Logger.getLogger("koffee");
+public class MemoryConfigurationOptions extends ConfigurationOptions {
+    protected MemoryConfigurationOptions(MemoryConfiguration configuration) {
+        super(configuration);
+    }
 
-    @Getter @Setter
-    private static ExecutorService pool = Executors.newFixedThreadPool(3);
+    
+    @Override
+    public MemoryConfiguration configuration() {
+        return (MemoryConfiguration) super.configuration();
+    }
+
+    
+    @Override
+    public MemoryConfigurationOptions copyDefaults(boolean value) {
+        super.copyDefaults(value);
+        return this;
+    }
+
+    
+    @Override
+    public MemoryConfigurationOptions pathSeparator(char value) {
+        super.pathSeparator(value);
+        return this;
+    }
 }
