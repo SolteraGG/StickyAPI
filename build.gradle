@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.ristexsoftware'
+group = 'com.dumbdogdiner'
 version = '1.0.0'
 
 configurations {
