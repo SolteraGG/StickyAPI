@@ -1,6 +1,6 @@
 /* 
  *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2019-2020 DumbDogDiner <dumbdogdiner.com>
+ *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
  *  
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ public class StickyAPI {
     @Getter
     public static Logger logger = Logger.getLogger("koffee");
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private static ExecutorService pool = Executors.newFixedThreadPool(3);
 }

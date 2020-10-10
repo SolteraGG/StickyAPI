@@ -1,6 +1,6 @@
 /* 
  *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2019-2020 DumbDogDiner <dumbdogdiner.com>
+ *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
  *  
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @return Whether or not the command succeeded, returning false will trigger
      *         onSyntaxError()
      */
-    public abstract int executeCommand(CommandSender sender, String commandLabel, String[] args);
+    public abstract ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -98,8 +98,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @param sender       The person executing the command
      * @param commandLabel The command that was executed
      * @param args         The arguments given to the command.
-     * @return True if the command succeeded, otherwise it will execute
-     *         onSyntaxError().
+     * @return {@link ExitCode}
      */
     @Override
     public final boolean execute(CommandSender sender, String commandLabel, String[] args) {
@@ -108,18 +107,21 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
                     commandLabel, this.owner.getDescription().getFullName()));
 
         try {
-            switch (this.executeCommand(sender, commandLabel, args)) {
-                case 0:
+            switch (executeCommand(sender, commandLabel, args)) {
+                case EXIT_SUCCESS:
                     break;
-                case 1:
-                    this.onSyntaxError(sender, commandLabel, args);
-                case 2:
-                    this.onPermissionDenied(sender, commandLabel, args);
-                case 3:
-                    this.onError(sender, commandLabel, args);
+                case EXIT_INVALID_SYNTAX:
+                    onSyntaxError(sender, commandLabel, args);
+                    break;
+                case EXIT_PERMISSION_DENIED:
+                    onPermissionDenied(sender, commandLabel, args);
+                    break;
+                case EXIT_ERROR:
+                    onError(sender, commandLabel, args);
+                    break;
                 default:
                     throw new IllegalArgumentException("The exit code "
-                            + this.executeCommand(sender, commandLabel, args) + " is out of range");
+                            + executeCommand(sender, commandLabel, args) + " is out of range");
             }
         } catch (Exception ex) {
             throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "

@@ -1,6 +1,6 @@
 /* 
  *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2019-2020 DumbDogDiner <dumbdogdiner.com>
+ *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
  *  
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -57,7 +57,6 @@ public class Arguments {
     /**
      * Construct a new argument class with the given input.
      * @param args Arguments to parse
-     * @return A new instance of {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments(String[] args) {
         unparsedArgs = new ArrayList<String>(Arrays.asList(args));
@@ -373,6 +372,32 @@ public class Arguments {
     public Integer getInt(String name) {
         try {
             return Integer.parseInt(parsedArgs.get(name));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Fetch a double.
+     * <p>Returns the argument, if it exists
+     * @param name The name of the double to fetch\
+     */
+    public Double getDouble(String name) {
+        try {
+            return Double.parseDouble(parsedArgs.get(name));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Fetch a long.
+     * <p>Returns the argument, if it exists
+     * @param name The name of the long to fetch\
+     */
+    public Long getLong(String name) {
+        try {
+            return Long.parseLong(parsedArgs.get(name));
         } catch (NumberFormatException e) {
             return null;
         }
