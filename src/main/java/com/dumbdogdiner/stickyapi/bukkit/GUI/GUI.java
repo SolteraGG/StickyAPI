@@ -108,7 +108,7 @@ public abstract class GUI implements Listener {
     /**
      * Check whether or not a slot is valid
      * @param pSlot The slot to check
-     * @return True if the slot is a valid slot
+     * Returns true if the slot is a valid slot
      */
     protected boolean isValidSlot(int pSlot) {
         return inventory.getItem(pSlot) != null;
@@ -117,7 +117,7 @@ public abstract class GUI implements Listener {
     /**
      * Check whether or not a slot is clickable
      * @param pSlot The slot to check
-     * @return True if the slot is a clickable slot
+     * Returns true if the slot is a clickable slot
      */
     protected boolean isClickable(int pSlot) {
         return clickableMap.containsKey(pSlot);
@@ -129,7 +129,7 @@ public abstract class GUI implements Listener {
     /**
      * Create the new inventory
      * @param pTitle The title of the inventory
-     * @return The inventory you've created
+     * Returns the inventory you've created
      */
     protected Inventory makeInventory(String pTitle) {
         return this.inventory = Bukkit.createInventory(null, s, pTitle);
