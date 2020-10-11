@@ -32,19 +32,6 @@ import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
  * A class for parsing configurations
  */
 public class Translation {
-    private static HashMap<String, String> leetReplace = new HashMap<>();
-
-    static {
-        leetReplace.put("0", "o");
-        leetReplace.put("1", "i");
-        leetReplace.put("3", "e");
-        leetReplace.put("4", "a");
-        leetReplace.put("5", "s");
-        leetReplace.put("6", "d");
-        leetReplace.put("7", "t");
-        leetReplace.put("_", "");
-    }
-
     // {VARIABLE|pluralize:"y,ies"}
     private static String pluralize(String lvalue, String arg) {
         String singlar = "", plural = (arg.isEmpty() ? "s" : arg);

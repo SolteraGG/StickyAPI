@@ -99,7 +99,7 @@ public class Scheduler {
 	 * @param task to run
 	 * @param time to execute the task
 	 */
-	public <T> Future<T> scheduleSynchronous(Callable<T> task, Date exectime) {
+	public <T> Future<T> scheduleSynchronous(Callable<T> task, Date time) {
 		// TODO: Make synchronous version of this?
 		return new FutureTask<T>(task);
 	}
