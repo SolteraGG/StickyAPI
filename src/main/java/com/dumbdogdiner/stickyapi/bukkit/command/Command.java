@@ -20,6 +20,7 @@ package com.dumbdogdiner.stickyapi.bukkit.command;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -47,14 +48,16 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
         this.owner = owner;
     }
 
-    /**
+        /**
      * Show a syntax error message when the user fails to enter thr proper syntax
      * 
      * @param sender Who failed the command
      * @param label  The command itself
      * @param args   Arguments provided to the command
      */
-    public abstract void onSyntaxError(CommandSender sender, String label, String[] args);
+    protected void onSyntaxError(CommandSender sender, String label, String[] args){
+        sender.sendMessage(ChatColor.RED+"The syntax you have provided is invalid, please check the command your entered!");
+    };
 
     /**
      * Show a permission denied error when the user does not have permission to
@@ -64,7 +67,9 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @param label  The command itself
      * @param args   Arguments provided to the command
      */
-    public abstract void onPermissionDenied(CommandSender sender, String label, String[] args);
+    protected void onPermissionDenied(CommandSender sender, String label, String[] args){
+        sender.sendMessage(ChatColor.RED+"You do not have permission to perform this command!");
+    };
 
     /**
      * Show a error when the command fails to execute
@@ -73,7 +78,9 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @param label  The command itself
      * @param args   Arguments provided to the command
      */
-    public abstract void onError(CommandSender sender, String label, String[] args);
+    protected void onError(CommandSender sender, String label, String[] args){
+        sender.sendMessage(ChatColor.RED+"There was an internal server error while attempting to perform this command, ask the server administrator to read the console");
+    };
 
     /**
      * Execute the command itself (part of the derived class)

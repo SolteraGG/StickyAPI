@@ -60,6 +60,7 @@ public class Scheduler {
 
 	/**
 	 * Execute a function/task immediately asynchronously
+	 * @param task to execute
 	 */
 	public <V> Future<V> scheduleThreaded(Callable<V> task) {
 		RunnableFuture<V> t = new FutureTask<V>(task);
@@ -67,8 +68,13 @@ public class Scheduler {
 		return (FutureTask<V>) t;
 	}
 
-	public <T> Future<T> scheduleThreaded(Callable<T> task, Date exectime) {
-		long future = exectime.getTime();
+	/**
+	 * Schedule a function/task to run asynchronously at a certain datetime
+	 * @param task to run
+	 * @param time to execute the task
+	 */
+	public <T> Future<T> scheduleThreaded(Callable<T> task, Date time) {
+		long future = time.getTime();
 		long now = System.currentTimeMillis();
 		if (future <= now)
 			throw new DateTimeException("Get the time machine, morty! We're going back to the future!");
@@ -80,6 +86,7 @@ public class Scheduler {
 	/**
 	 * Execute a task in the synchronous thread, scheduled for the next available
 	 * tick.
+	 * @param task to run
 	 */
 	public <T> Future<T> scheduleSynchronous(Callable<T> task) {
 		FutureTask<T> t = new FutureTask<T>(task);
@@ -87,6 +94,11 @@ public class Scheduler {
 		return t;
 	}
 
+	/**
+	 * Schedule a function/task to run synchronously at a certain datetime
+	 * @param task to run
+	 * @param time to execute the task
+	 */
 	public <T> Future<T> scheduleSynchronous(Callable<T> task, Date exectime) {
 		// TODO: Make synchronous version of this?
 		return new FutureTask<T>(task);

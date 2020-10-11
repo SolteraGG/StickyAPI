@@ -59,7 +59,7 @@ public class Debugger {
     
     /**
      * Create a debugger instance that references the provided class. Allows for per-class debugging.
-     * @param clazz The class to reference.
+     * @param clazz to reference.
      */
     public Debugger(Class<?> clazz) {
         this.clazz = clazz;
@@ -67,12 +67,12 @@ public class Debugger {
 
     /**
      * Print a debug message.
-     * @param message The object to print.
+     * @param object to print.
      */
-    public void print(Object message) {
+    public void print(Object object) {
         if (enabled) {
             logger.info(COLOR + "(" + ++logCount + ") " + "(" + clazz.getSimpleName()
-                    + ".class) \u00A7r" + message + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ");
+                    + ".class) \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ");
         }
     }
 

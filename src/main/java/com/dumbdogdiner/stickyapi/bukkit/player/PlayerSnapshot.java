@@ -39,7 +39,7 @@ public class PlayerSnapshot {
      * Create a new {@link PlayerSnapshot}.
      * 
      * A {@link PlayerSnapshot} is an object to store the player's current state, such as their inventory, health, experience, etc.
-     * <p>This object can be used for things like minigames or "staff mode" where the player inventory needs to be changed but restored at a later date
+     * <p>This object can be used where the player inventory needs to be changed but restored at a later date
      * @param player
      */
     public PlayerSnapshot(Player player) {

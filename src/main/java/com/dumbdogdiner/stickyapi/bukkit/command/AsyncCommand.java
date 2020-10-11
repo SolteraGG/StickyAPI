@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
@@ -60,7 +61,9 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @param label  The command itself
      * @param args   Arguments provided to the command
      */
-    public abstract void onSyntaxError(CommandSender sender, String label, String[] args);
+    protected void onSyntaxError(CommandSender sender, String label, String[] args){
+        sender.sendMessage(ChatColor.RED+"The syntax you have provided is invalid, please check the command your entered!");
+    };
 
     /**
      * Show a permission denied error when the user does not have permission to
@@ -70,7 +73,9 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @param label  The command itself
      * @param args   Arguments provided to the command
      */
-    public abstract void onPermissionDenied(CommandSender sender, String label, String[] args);
+    protected void onPermissionDenied(CommandSender sender, String label, String[] args){
+        sender.sendMessage(ChatColor.RED+"You do not have permission to perform this command!");
+    };
 
     /**
      * Show a error when the command fails to execute
@@ -79,10 +84,13 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @param label  The command itself
      * @param args   Arguments provided to the command
      */
-    public abstract void onError(CommandSender sender, String label, String[] args);
+    protected void onError(CommandSender sender, String label, String[] args){
+        sender.sendMessage(ChatColor.RED+"There was an internal server error while attempting to perform this command, ask the server administrator to read the console");
+    };
 
     /**
      * Execute the command itself (part of the derived class)
+     * 
      * 
      * @param sender       Who is executing the command
      * @param commandLabel The command string triggering this command
