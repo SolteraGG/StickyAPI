@@ -48,40 +48,6 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
         this.owner = owner;
     }
 
-        /**
-     * Show a syntax error message when the user fails to enter thr proper syntax
-     * 
-     * @param sender Who failed the command
-     * @param label  The command itself
-     * @param args   Arguments provided to the command
-     */
-    protected void onSyntaxError(CommandSender sender, String label, String[] args){
-        sender.sendMessage(ChatColor.RED+"The syntax you have provided is invalid, please check the command your entered!");
-    };
-
-    /**
-     * Show a permission denied error when the user does not have permission to
-     * execute the command
-     * 
-     * @param sender Who failed the command
-     * @param label  The command itself
-     * @param args   Arguments provided to the command
-     */
-    protected void onPermissionDenied(CommandSender sender, String label, String[] args){
-        sender.sendMessage(ChatColor.RED+"You do not have permission to perform this command!");
-    };
-
-    /**
-     * Show a error when the command fails to execute
-     * 
-     * @param sender Who failed the command
-     * @param label  The command itself
-     * @param args   Arguments provided to the command
-     */
-    protected void onError(CommandSender sender, String label, String[] args){
-        sender.sendMessage(ChatColor.RED+"There was an internal server error while attempting to perform this command, ask the server administrator to read the console");
-    };
-
     /**
      * Execute the command itself (part of the derived class)
      * 
@@ -113,21 +79,14 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
                     commandLabel, this.owner.getDescription().getFullName()));
 
         try {
-            switch (executeCommand(sender, commandLabel, args)) {
-                case EXIT_SUCCESS:
-                    break;
-                case EXIT_INVALID_SYNTAX:
-                    onSyntaxError(sender, commandLabel, args);
-                    break;
-                case EXIT_PERMISSION_DENIED:
-                    onPermissionDenied(sender, commandLabel, args);
-                    break;
-                case EXIT_ERROR:
-                    onError(sender, commandLabel, args);
-                    break;
-                default:
-                    throw new IllegalArgumentException("The exit code "
-                            + executeCommand(sender, commandLabel, args) + " is out of range");
+            ExitCode resultingExitCode = executeCommand(sender, commandLabel, args);
+
+            if (resultingExitCode == null) {
+                throw new IllegalArgumentException("A null exit code was returned");
+            }
+
+            if (resultingExitCode.getMessage() != null) {
+                sender.sendMessage(ChatColor.RED + resultingExitCode.getMessage());
             }
         } catch (Exception ex) {
             throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "

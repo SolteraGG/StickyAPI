@@ -55,40 +55,6 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
     }
 
     /**
-     * Show a syntax error message when the user fails to enter thr proper syntax
-     * 
-     * @param sender Who failed the command
-     * @param label  The command itself
-     * @param args   Arguments provided to the command
-     */
-    protected void onSyntaxError(CommandSender sender, String label, String[] args){
-        sender.sendMessage(ChatColor.RED+"The syntax you have provided is invalid, please check the command your entered!");
-    };
-
-    /**
-     * Show a permission denied error when the user does not have permission to
-     * execute the command
-     * 
-     * @param sender Who failed the command
-     * @param label  The command itself
-     * @param args   Arguments provided to the command
-     */
-    protected void onPermissionDenied(CommandSender sender, String label, String[] args){
-        sender.sendMessage(ChatColor.RED+"You do not have permission to perform this command!");
-    };
-
-    /**
-     * Show a error when the command fails to execute
-     * 
-     * @param sender Who failed the command
-     * @param label  The command itself
-     * @param args   Arguments provided to the command
-     */
-    protected void onError(CommandSender sender, String label, String[] args){
-        sender.sendMessage(ChatColor.RED+"There was an internal server error while attempting to perform this command, ask the server administrator to read the console");
-    };
-
-    /**
      * Execute the command itself (part of the derived class)
      * 
      * 
@@ -126,21 +92,14 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
             @Override
             public Boolean call() {
                 try {
-                    switch (self.executeCommand(sender, commandLabel, args)) {
-                        case EXIT_SUCCESS:
-                            break;
-                        case EXIT_INVALID_SYNTAX:
-                            self.onSyntaxError(sender, commandLabel, args);
-                            break;
-                        case EXIT_PERMISSION_DENIED:
-                            self.onPermissionDenied(sender, commandLabel, args);
-                            break;
-                        case EXIT_ERROR:
-                            self.onError(sender, commandLabel, args);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("The exit code "
-                                    + self.executeCommand(sender, commandLabel, args) + " is out of range");
+                    ExitCode resultingExitCode = self.executeCommand(sender, commandLabel, args);
+
+                    if (resultingExitCode == null) {
+                        throw new IllegalArgumentException("A null exit code was returned");
+                    }
+
+                    if (resultingExitCode.getMessage() != null) {
+                        sender.sendMessage(ChatColor.RED + resultingExitCode.getMessage());
                     }
                 } catch (Throwable ex) {
                     ex.printStackTrace();
