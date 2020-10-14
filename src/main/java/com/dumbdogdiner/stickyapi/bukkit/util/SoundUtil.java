@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
  */
 public class SoundUtil {
     /**
-     * Check if the parsed sender can receive sounds.
-     * @param sender The sender to validate
-     * @return True if valid
+     * Check if the parsed sender can receive sounds. Returns true if valid.
+     * @param sender {@link org.bukkit.command.CommandSender} The sender to validate
+     * @return {@link java.lang.Boolean}
      */
     private static Boolean validate(CommandSender sender) {
         return sender instanceof Player;
@@ -25,7 +25,6 @@ public class SoundUtil {
      * @param volume The volume of the sound
      * @param pitch The pitch of the sound
      * @param delay T
-     * @return
      */
     public void queueSound(Player player, Sound sound, float volume, float pitch, Long delay) {
         StickyAPI.getPool().submit(() -> {
@@ -40,7 +39,7 @@ public class SoundUtil {
 
     /**
      * Send an info notification to the target player.
-     * @param player The target player
+     * @param player {@link org.bukkit.entity.Player} The target player
      */
     public void sendInfo(Player player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L);
@@ -49,7 +48,7 @@ public class SoundUtil {
 
     /**
      * Send a quiet notification to the target player.
-     * @param player The target player
+     * @param player {@link org.bukkit.entity.Player} The target player
      */
     public void sendQuiet(Player player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 1f,1f,0L);
@@ -59,7 +58,7 @@ public class SoundUtil {
 
     /**
      * Send an error notification to the target player.
-     * @param player The target player
+     * @param player {@link org.bukkit.entity.Player} The target player
      */
     public void sendError(Player player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1f,  0.944f, 0L);
@@ -69,7 +68,7 @@ public class SoundUtil {
 
     /**
      * Send a success notification to the target player.
-     * @param player The target player
+     * @param player {@link org.bukkit.entity.Player} The target player
      */
     public void sendSuccess(Player player) {
         queueSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 2f, 0L);
@@ -77,10 +76,10 @@ public class SoundUtil {
     }
 
     /**
-     * Send a CommandSender the specified notification, if you can.
-     * @param sender The sender
-     * @param type The type of sound
-     * @return True if the sound was played
+     * Send a CommandSender the specified notification, if you can. Returns true if the sound was played.
+     * @param sender {@link org.bukkit.command.CommandSender} The sender
+     * @param type {@link com.dumbdogdiner.stickyapi.bukkit.util.NotificationType} The type of sound
+     * @return {@link java.lang.Boolean}
      */
     public Boolean send(CommandSender sender, NotificationType type) {
         if (!validate(sender)) {
