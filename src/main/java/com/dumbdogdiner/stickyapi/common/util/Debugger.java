@@ -32,7 +32,7 @@ public class Debugger {
      * The logger to use when printing.
      */
     @Setter
-    private static Logger logger = Logger.getLogger("debugger");
+    private static Logger logger = Logger.getLogger("DEBUG");
 
     @Setter
     @Getter
@@ -69,10 +69,10 @@ public class Debugger {
      * Print a debug message.
      * @param object to print.
      */
-    public void print(Object object) {
+    public void print(Object object, Object... args) {
         if (enabled) {
-            logger.info(COLOR + "(" + ++logCount + ") " + "(" + clazz.getSimpleName()
-                    + ".class) \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ");
+            logger.info(String.format(COLOR + "[" + ++logCount + " | " + clazz.getSimpleName()
+            + ".class: "+Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps()+"] \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ", args));
         }
     }
 
@@ -83,5 +83,35 @@ public class Debugger {
         startTime = System.nanoTime();
         logCount = 0;
         return this;
+    }
+
+    /** 
+     * This methods name is ridiculous on purpose to prevent any other method
+     * names in the stack trace from potentially matching this one.
+     * 
+     * The line number of the code that called the method that called
+     * this method(Should only be called by getLineNumber()).
+     * 
+     * @return {@link java.lang.Integer}
+     * @author Brian_Entei
+     */
+    // Thanks Brian! https://stackoverflow.com/a/26410435/11988998
+    private int Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps() {
+        boolean thisOne = false;
+        int thisOneCountDown = 1;
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        for(StackTraceElement element : elements) {
+            String methodName = element.getMethodName();
+            int lineNum = element.getLineNumber();
+            if(thisOne && (thisOneCountDown == 0)) {
+                return lineNum;
+            } else if(thisOne) {
+                thisOneCountDown--;
+            }
+            if(methodName.equals("Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps")) {
+                thisOne = true;
+            }
+        }
+        return -1;
     }
 }

@@ -20,9 +20,12 @@ package com.dumbdogdiner.stickyapi.bukkit.util;
 
 import java.lang.reflect.Field;
 
+import com.destroystokyo.paper.Title;
 import com.dumbdogdiner.stickyapi.common.translation.Translation;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -33,14 +36,14 @@ public class ServerUtil {
     private static Field recentTps; 
     
     /**
-     * Get the server's TPS in the last 15 minutes (1m, 5m, 15m)
+     * Get the server's TPS over the last 15 minutes (1m, 5m, 15m)
      * @param server The {@link Server} to get the TPS of
-     * @return {@link java.lang.Double}
+     * @return {@link java.util.ArrayList}
      */
-    public static double[] getRecentTps(Server server) {        
+    public static double[] getRecentTps() {        
         try {
             if (minecraftServer == null) {
-                Field consoleField = server.getClass().getDeclaredField("console");
+                Field consoleField = Bukkit.getServer().getClass().getDeclaredField("console");
                 consoleField.setAccessible(true);
             }
             if (recentTps == null) {
@@ -59,8 +62,19 @@ public class ServerUtil {
      * @param message The message to broadcast
      * @param args The format arguments, if any
      */
-    public static void broadcastMessage(Server server, String message, String... args) {
-        server.broadcast(new TextComponent(Translation.translateColors("&", String.format(message, (Object)args))));
+    public static void broadcastMessage(String message, String... args) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            player.sendMessage(new TextComponent(Translation.translateColors("&", String.format(message, (Object)args))));
+        }
     }
-    
+
+    /**
+     * Send a title to all online players
+     * @param title The {@link com.destroystokyo.paper.Title} to send
+     */
+    public static void broadcastTitle(Title title) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            player.sendTitle(title);
+        }
+    }
 }

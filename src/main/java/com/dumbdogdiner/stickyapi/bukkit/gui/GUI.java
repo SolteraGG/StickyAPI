@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.dumbdogdiner.stickyapi.bukkit.GUI;
+package com.dumbdogdiner.stickyapi.bukkit.gui;
 
 import java.util.HashMap;
 import java.util.Map;

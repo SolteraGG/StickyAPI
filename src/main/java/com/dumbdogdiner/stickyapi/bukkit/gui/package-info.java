@@ -20,4 +20,4 @@
  * Classes for making Bukkit inventory GUIs
  */
 // TODO: Rewrite the GUI API
-package com.dumbdogdiner.stickyapi.bukkit.GUI;
+package com.dumbdogdiner.stickyapi.bukkit.gui;

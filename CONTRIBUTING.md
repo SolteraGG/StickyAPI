@@ -6,6 +6,7 @@ This project is open for all DDD developers for contribution, so it's important 
 
 - No pushing to master without opening a pull request
 - Javadoc your code according to google's [Javadoc guidlines](https://google.github.io/styleguide/javaguide.html#s7-javadoc) (Failure to do so will result in your PR being denied or commit being reverted)
+- Must be backwards compatable down to Java 11
 
 ## Pull Requests
 
