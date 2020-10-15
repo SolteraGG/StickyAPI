@@ -48,3 +48,4 @@ bin
 .settings
 .classpath
 .project
+.idea
