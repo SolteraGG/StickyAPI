@@ -25,13 +25,45 @@ import java.util.function.BiFunction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 /**
  * A class for parsing configurations
  */
 public class Translation {
+
+    private static final Pattern urlPattern = Pattern.compile("(https:\\/\\/|http:\\/\\/)((?:[-;:&=\\+\\$,\\w]+@)?[A-Za-z0-9.-]+|(www.|[-;:&=\\+\\$,\\w]+@)[A-Za-z0-9.-]+)((?:\\/[\\+~%\\/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[\\w]*))?");
+
+    /**
+     * Sub-class for easier URL formatting
+     * between methods.
+     */
+    public static class URLPair {
+        String fullPath;
+        String shortened;
+
+        public URLPair(String fullUrl, String shortenedUrl) {
+            this.fullPath = fullUrl;
+            this.shortened = shortenedUrl;
+        }
+
+        public String getShortened() {
+            return shortened;
+        }
+
+        public String getFullPath() {
+            return fullPath;
+        }
+
+    }
+
     // {VARIABLE|pluralize:"y,ies"}
     private static String pluralize(String lvalue, String arg) {
         String singlar = "", plural = (arg.isEmpty() ? "s" : arg);
@@ -276,4 +308,48 @@ public class Translation {
         retstr = Translation.translateColors(ColorChars, retstr);
         return retstr;
     }
+
+    /**
+     * Find the first URL in a given Text.
+     *
+     * @param text The text that should be checked for URLs
+     * @return A URLPair object which stores the full URL
+     *         as well as a shortened version (e.g. www.github.com)
+     */
+    public static URLPair findURL(String text) {
+        Matcher matcher = urlPattern.matcher(text);
+
+        if(matcher.find()) {
+            return new URLPair(matcher.group(0), matcher.group(2));
+        }
+        return null;
+    }
+
+    /**
+     * Converts URLs in a preformatted String to clickable
+     * JSON components.
+     *
+     * @param text The text that should be converted into
+     *             a TextComponent with formatted URLs.
+     * @return A TextComponent containing formatted and
+     *         clickable URLs.
+     */
+    public static TextComponent convertURLs(String text) {
+        TextComponent finalComp = new TextComponent();
+        for(String s : text.split(" ")) {
+            URLPair url = findURL(s + " ");
+            if((url) == null) {
+                finalComp.addExtra(s + " ");
+            } else {
+                TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
+                urlComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.getFullPath()));
+                urlComponent.setBold(true);
+                finalComp.addExtra(urlComponent);
+            }
+        }
+
+        return finalComp;
+    }
+
+
 }
