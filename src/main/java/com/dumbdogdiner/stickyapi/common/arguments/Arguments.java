@@ -46,8 +46,8 @@ public class Arguments {
     }
  
     /**
-     * Are these arguments valid?
-     * Returns true if are valid
+     * Returns true if this Arguments instance is valid.
+     * @return {@link java.lang.Boolean}
      */
     public boolean valid() {
         return valid;
@@ -346,6 +346,7 @@ public class Arguments {
      * Fetch a parsed argument from this arguments object.
      * <p>Returns the argument, if it exists
      * @param name The name of the argument to fetch
+     * @return {@link java.lang.String}
      */
     public String get(String name) {
         return parsedArgs.get(name);
@@ -355,6 +356,7 @@ public class Arguments {
      * Fetch a timestamp.
      * <p>Returns the argument, if it exists
      * @param name The name of the timestamp to fetch
+     * @return {@link java.sql.Timestamp}
      */
     public Timestamp getTimestamp(String name) {
         if (parsedArgs.get(name) == null) {
@@ -367,6 +369,7 @@ public class Arguments {
      * Fetch an integer.
      * <p>Returns the argument, if it exists
      * @param name The name of the integer to fetch\
+     * @return {@link java.lang.Integer}
      */
     public Integer getInt(String name) {
         try {
@@ -380,6 +383,7 @@ public class Arguments {
      * Fetch a double.
      * <p>Returns the argument, if it exists
      * @param name The name of the double to fetch\
+     * @return {@link java.lang.Double}
      */
     public Double getDouble(String name) {
         try {
@@ -393,6 +397,7 @@ public class Arguments {
      * Fetch a long.
      * <p>Returns the argument, if it exists
      * @param name The name of the long to fetch\
+     * @return {@link java.lang.Long}
      */
     public Long getLong(String name) {
         try {
@@ -406,6 +411,7 @@ public class Arguments {
      * Return whether an argument exists.
      * <p>Returns the argument, if it exists
      * @param name The name of the argument to check for
+     * @return {@link java.lang.Boolean}
      */
     public Boolean exists(String name) {
         return parsedArgs.get(name) != null;
@@ -415,6 +421,7 @@ public class Arguments {
      * Return whether a flag is set.
      * <p>Returns the argument, if it exists
      * @param name The name of the flag to fetch
+     * @return {@link java.lang.Boolean}
      */
     public Boolean getFlag(String name) {
         return exists(name);
@@ -424,6 +431,7 @@ public class Arguments {
      * Fetch a boolean value (usually a flag).
      * <p>Returns the argument, if it exists
      * @param name The name of the boolean to fetch
+     * @return {@link java.lang.Boolean}
      */
     public Boolean getBoolean(String name) {
         return Boolean.valueOf(parsedArgs.get(name));
@@ -433,6 +441,7 @@ public class Arguments {
      * Fetch a duration value.
      * <p>Returns the argument, if it exists
      * @param name The name of the duration to fetch
+     * @return {@link java.lang.Long}
      */
     public Long getDuration(String name) {
         return TimeUtil.duration(parsedArgs.get(name)).get();
