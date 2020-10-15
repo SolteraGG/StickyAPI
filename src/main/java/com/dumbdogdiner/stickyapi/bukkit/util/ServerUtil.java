@@ -37,7 +37,6 @@ public class ServerUtil {
     
     /**
      * Get the server's TPS over the last 15 minutes (1m, 5m, 15m)
-     * @param server The {@link Server} to get the TPS of
      * @return {@link java.util.ArrayList}
      */
     public static double[] getRecentTps() {        
@@ -58,7 +57,6 @@ public class ServerUtil {
 
     /**
      * Broadcast a colored and formatted message to a {@link Server}.
-     * @param server The {@link Server} to broadcast to
      * @param message The message to broadcast
      * @param args The format arguments, if any
      */
