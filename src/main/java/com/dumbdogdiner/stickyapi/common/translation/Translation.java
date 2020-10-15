@@ -331,7 +331,7 @@ public class Translation {
      *
      * @param text The text that should be converted into
      *             a TextComponent with formatted URLs.
-     * @return A TextComponent containing formatted &
+     * @return A TextComponent containing formatted and
      *         clickable URLs.
      */
     public static TextComponent convertURLs(String text) {
