@@ -22,7 +22,6 @@ import java.lang.Character;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.function.BiFunction;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -30,9 +29,7 @@ import java.util.regex.Pattern;
 
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 
 /**
  * A class for parsing configurations
@@ -152,9 +149,9 @@ public class Translation {
     // 9.
     /**
      * Checks if the character is a valid minecraft color code
-     * 
+     * <p>Returns true if the character is valid minecraft colorcode
      * @param ch The character to check for a valid color code char
-     * @return True if the character is valid minecraft colorcode
+     * @return {@link java.lang.Boolean}
      * @deprecated Since Minecraft 1.16 supports 32 bit colors, this function will
      *             be deprecated.
      */
@@ -186,10 +183,11 @@ public class Translation {
      * Replace the character sequence in `chars` to swap out with the minecraft
      * color char while also validating that the color code sequence is valid.
      * 
+     * <p>Returns a color formatted message for Minecraft clients
      * @param chars   Character sequence to replace with the section character
      *                minecraft uses for color codes
      * @param message Message containing sequences of `chars` in it
-     * @return A color formatted message for Minecraft clients.
+     * @return {@link java.lang.String}.
      */
     public static String translateColors(String chars, String message) {
         if (message == null)
@@ -226,11 +224,12 @@ public class Translation {
      * Replace all placeholders in a string, executing placeholder functions in the
      * process to format strings with variables provided.
      * 
+     * <p>Returns a formatted string with all placeholders from Variables replaced.
      * @param locale    The LocaleProvider context
      * @param message   The message to have placeholders replaced
      * @param Variables The variables to be utilized in this message for the
      *                  placeholders and their functions
-     * @return Formatted string with all placeholders from Variables replaced.
+     * @return {@link java.lang.String}
      */
     public static String translateVariables(LocaleProvider locale, String message, Map<String, String> Variables) {
         // If it doesn't have the starting char for variables, skip it.
@@ -293,15 +292,15 @@ public class Translation {
     /**
      * Translate the preformatted string to a fully formatted string ready for
      * players to see, switching out color codes and placeholders.
-     * 
+     * <p>Returns a string with color sequences and placeholders translated to their
+     * formatted message ready for the player.
      * @param locale     The LocaleProvider context
      * @param message    The message containing placeholders and untranslated color
      *                   code sequences
      * @param ColorChars The character used as the prefix for color strings
      *                   (bukkit/spigot use `&amp;` and so do we most of the time)
      * @param Variables  A list of variables to be parsed by the placeholder
-     * @return A string with color sequences and placeholders translated to their
-     *         formatted message ready for the player.
+     * @return {@link java.lang.String}
      */
     public static String translate(LocaleProvider locale, String message, String ColorChars, Map<String, String> Variables) {
         String retstr = Translation.translateVariables(locale, message, Variables);
@@ -311,10 +310,10 @@ public class Translation {
 
     /**
      * Find the first URL in a given Text.
-     *
+     * <p>Returns a URLPair object which stores the full URL
+     * as well as a shortened version (e.g. www.github.com)
      * @param text The text that should be checked for URLs
-     * @return A URLPair object which stores the full URL
-     *         as well as a shortened version (e.g. www.github.com)
+     * @return {@link URLPair}
      */
     public static URLPair findURL(String text) {
         Matcher matcher = urlPattern.matcher(text);
@@ -328,11 +327,11 @@ public class Translation {
     /**
      * Converts URLs in a preformatted String to clickable
      * JSON components.
-     *
+     * <p>Returns a TextComponent containing formatted and
+     * clickable URLs.
      * @param text The text that should be converted into
      *             a TextComponent with formatted URLs.
-     * @return A TextComponent containing formatted and
-     *         clickable URLs.
+     * @return {@link TextComponent}
      */
     public static TextComponent convertURLs(String text) {
         TextComponent finalComp = new TextComponent();

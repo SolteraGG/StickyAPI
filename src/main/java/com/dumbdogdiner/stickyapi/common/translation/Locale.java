@@ -43,8 +43,9 @@ public class Locale {
 
     /**
      * Create a new locale object
+     * <p>Returns the new locale object
      * @param localeFile The locale file to use
-     * Returns the new locale object
+     * @return {@link com.dumbdogdiner.stickyapi.common.translation.Locale}
      */
     public Locale(File localeFile) {
         this.localeFile = localeFile;
@@ -59,8 +60,9 @@ public class Locale {
 
     /**
      * Get a locale value.
+     * <p>Returns the node if it exists
      * @param node The node to get
-     * @return The node if it exists
+     * @return {@link java.lang.String}
      */
     public String get(String node) {
         debug.reset().print("fetching node " + node);

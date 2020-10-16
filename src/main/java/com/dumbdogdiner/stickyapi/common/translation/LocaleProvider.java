@@ -63,8 +63,9 @@ public class LocaleProvider {
 
     /**
      * Load a locale with the given name.
+     * <p>Returns  True if the load was successful
      * @param name The name of the locale to load
-     * @return True if the load was successful
+     * @return {@link java.lang.Boolean}
      */
     public boolean loadLocale(String name) {
         if (!name.endsWith(".yml"))
@@ -75,8 +76,9 @@ public class LocaleProvider {
 
     /**
      * Load a locale using a file.
+     * <p>Returns  True if the load was successful
      * @param file The file containing the locale configuration
-     * @return True if the load was successful
+     * @return {@link java.lang.Boolean}
      */
     public boolean loadLocale(File file) {
         debug.reset().print("Looking for localization in " + file.getName() + "...");
@@ -106,7 +108,8 @@ public class LocaleProvider {
 
     /**
      * Load all available locales.
-     * @return The number of new locales loaded.
+     * <p>Returns  The number of new locales loaded.
+     * @return {@link java.lang.Integer}
      */
     public int loadAllLocales() {
         int accumulator = 0;
@@ -125,9 +128,10 @@ public class LocaleProvider {
 
     /**
      * Translate a localization with the given variables.
+     * <p>Returns  The configured node string, with vars interpolated when required
      * @param node The configuration node to retrieve
      * @param vars A map of variables to interpolate into the configured node value
-     * @return The configured node string, with vars interpolated when required
+     * @return {@link java.lang.String}
      */
     public String translate(String node, Map<String, String> vars) {
         debug.reset();
@@ -148,9 +152,10 @@ public class LocaleProvider {
 
     /**
      * Translate a localization without color.
+     * <p>Returns  The configured node string without color, with vars interpolated when required
      * @param node The configuration node to retrieve
      * @param vars A map of variables to interpolate into the configured node value
-     * @return The configured node string without color, with vars interpolated when required
+     * @return {@link java.lang.String}
      */
     public String translateNoColor(String node, Map<String, String> vars) {
         if (node == null || node.equals(""))
@@ -165,8 +170,9 @@ public class LocaleProvider {
 
     /**
      * Get a localized value using the default locale.
+     * <p>Returns  A configured node string before interpolation of variables has been performed
      * @param node The configuration node to retrieve
-     * @return A configured node string before interpolation of variables has been performed
+     * @return {@link java.lang.String}
      */
     public String get(String node) {
         return defaultLocale == null ? null : defaultLocale.get(node);
@@ -174,8 +180,9 @@ public class LocaleProvider {
 
     /**
      * Get a localized value using an enum of node values.
+     * <p>Returns  A configured node string before interpolation of variables has been performed
      * @param node The configuration node to retrieve
-     * @return A configured node string before interpolation of variables has been performed
+     * @return {@link java.lang.String}
      */
     public String get(Enum<?> node) {
         return get(node.name().toLowerCase().replace("_", "-"));
@@ -183,9 +190,10 @@ public class LocaleProvider {
 
     /**
      * Get a localized value using the specified locale.
+     * <p>Returns  A configured node string before interpolation of variables has been performed
      * @param name The name of the locale to fetch from
      * @param node The configuration node to retrieve
-     * @return A configured node string before interpolation of variables has been performed
+     * @return {@link java.lang.String}
      */
     public String get(String name, String node) throws IllegalArgumentException {
         checkForLoadedLocale(name);
@@ -194,8 +202,9 @@ public class LocaleProvider {
 
     /**
      * Get a variable, falling back to its default if it doesn't exist.
+     * <p>Returns  The variable, or the default for the given name if the former does not exist
      * @param node The configuration node to retrieve
-     * @return The variable, or the default for the given name if the former does not exist
+     * @return {@link java.lang.String}
      */
     public String getDefault(String node, String defaultValue) {
         return get(node) == null ? defaultValue : get(node);
@@ -203,8 +212,9 @@ public class LocaleProvider {
 
     /**
      * Fetch a loaded locale.
+     * <p>Returns  The requested locale
      * @param name The name of the locale 
-     * @return The requested locale
+     * @return {@link com.dumbdogdiner.stickyapi.common.translation.Locale}
      */
     public Locale getLocale(String name) throws IllegalArgumentException {
         checkForLoadedLocale(name);
@@ -213,8 +223,9 @@ public class LocaleProvider {
 
     /**
      * Set the default locale to use.
+     * <p>Returns  True if the default locale was set without error.
      * @param name The name of the locale
-     * @return True if the default locale was set without error.
+     * @return {@link java.lang.Boolean}
      */
     public boolean setDefaultLocale(String name) {
         try {
@@ -277,7 +288,7 @@ public class LocaleProvider {
 
     /**
      * Convenience function for getting a new TreeMap 
-     * @return {@link java.util.TreeMap}
+     * <p>Returns  {@link java.util.TreeMap}
      */
     public TreeMap<String, String> newVariables() {
         return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
