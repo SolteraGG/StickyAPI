@@ -17,6 +17,6 @@
  */
 
 /**
- * Package for common utilities that can be used anywhere
+ * Common utility classes that can be used anywhere
  */
 package com.dumbdogdiner.stickyapi.common.util;

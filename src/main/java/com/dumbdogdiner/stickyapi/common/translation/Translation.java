@@ -155,6 +155,7 @@ public class Translation {
      * @deprecated Since Minecraft 1.16 supports 32 bit colors, this function will
      *             be deprecated.
      */
+    @Deprecated
     public static boolean isxdigit(char ch) {
         // First check if the char is a digit, Java can manage to do this one amazingly.
         if (!Character.isDigit(ch)) {

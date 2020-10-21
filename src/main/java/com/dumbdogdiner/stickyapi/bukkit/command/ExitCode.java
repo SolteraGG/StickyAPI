@@ -70,9 +70,24 @@ public enum ExitCode {
      * The message to send to the command sender in case of an error, or null if a message should not be sent
      */
     @Getter
-    private final String message;
+    private String message;
 
     ExitCode(String message) {
         this.message = message;
+    }
+
+    // Allow this message to be defined by the user!!!
+    // This allows us to not have hard-coded exit messages, for example
+    // if I want to provide an example of the syntax when I return EXIT_INVALID_SYNTAX
+    // Returning the ExitCode allows for something like
+    // return ExitCode.EXIT_SUCCESS.setMessage("yay!");
+    /**
+     * Set the message of an {@link ExitCode}
+     * @param message
+     * @return {@link ExitCode}
+     */
+    public ExitCode setMessage(String message) {
+        this.message = message;
+        return this;
     }
 }

@@ -79,6 +79,7 @@ public class CommandUtil {
      * @deprecated This method uses reflection and is prone to error in later Java
      *             versions
      */
+    @Deprecated
     public static boolean registerCommandPackage(Server server, String pkg)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         List<String> classNames;
