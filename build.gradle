@@ -3,7 +3,8 @@ plugins {
     id 'maven-publish'
 }
 group = 'com.dumbdogdiner'
-version = '1.4.3'
+
+version = '1.4.3.1'
 
 configurations {
     jaxDoclet
