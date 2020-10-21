@@ -45,7 +45,6 @@ public class Locale {
      * Create a new locale object
      * <p>Returns the new locale object
      * @param localeFile The locale file to use
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.Locale}
      */
     public Locale(File localeFile) {
         this.localeFile = localeFile;
