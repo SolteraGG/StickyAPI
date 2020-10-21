@@ -38,7 +38,7 @@ public class Arguments {
 
     private int position = 0;
     private boolean valid = true;
-    private Debugger debug = new Debugger(getClass());
+    private final Debugger debug = new Debugger(getClass());
 
     public void invalidate(String name) {
         debug.print("Invalidated by argument " + name);
@@ -107,22 +107,33 @@ public class Arguments {
         return this;
     }
 
-
     /**
-     * Create a required string argument.
+     * Create an optional string argument with a default value
      * @param name The name of this string
+     * @param fallback the default value you want for the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalString(String name) {
+    public Arguments optionalString(String name, String fallback){
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
             parsedArgs.put(name, unparsedArgs.get(position));
             unparsedArgs.remove(position);
             debug.print("Found string at position " + String.valueOf(position) + " - new args size = " + String.valueOf(unparsedArgs.size()));
-        } else 
-            debug.print("Could not find string");
+        } else {
+            debug.print("Could not find string, using default value of " + fallback);
+            parsedArgs.put(name, fallback);
+        }
 
         return this;
+    }
+
+    /**
+     * Create an optional string argument.
+     * @param name The name of this string
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalString(String name) {
+        return optionalString(name, null);
     }
 
     /**
