@@ -1,0 +1,38 @@
+name: docs
+
+on:
+  push:
+    branches:
+      - release
+  release:
+    # Type 'created' will be triggered when a NON-draft release is created and published.
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: jcxldn/openjdk-alpine:11-jdk
+    steps:
+      - name: Install dependencies
+        run: apk add --no-cache git rsync ca-certificates
+      - name: Checkout
+        uses: actions/checkout@v2.3.1 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the docs deployment to work correctly.
+        with:
+          persist-credentials: false
+      - name: Echo branch name
+        run: echo ${GITHUB_REF##*/}
+      - name: Build docs
+        run: |
+          ./gradlew javadoc
+          mkdir -p web && mv build/docs/javadoc web/${GITHUB_REF##*/}
+      - name: Deploy Docs
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          ACCESS_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: "web"
+          #CNAME: (cname)
+          CLEAN: false # don't clean so we can also use tags
+          GIT_CONFIG_NAME: "StickyAPI Docs Deployment"
+          GIT_CONFIG_EMAIL: ${{ secrets.DOCS_GH_EMAIL }}
