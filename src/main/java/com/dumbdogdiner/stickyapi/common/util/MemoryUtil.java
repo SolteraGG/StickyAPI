@@ -97,35 +97,20 @@ public final class MemoryUtil {
     }
 
     private static int getSizeOfBuiltin(Object object) {
-        Class<?> clazz = object.getClass();
-
-        // Because Java is literally fucking stupid, we can't use switch here
-        // instead we have to pull a Yandere Dev and ABUSE if/else
-        if (clazz == String.class) {
+        // We can't use a switch statement on an object, so we need to use an if-elseif chain.
+        // It may be Yandre Dev - like, but at least instanceof should be a little neater
+        if (object instanceof String)
             return ((String) (object)).length() * 8;
-        }
-
-        if (clazz == Boolean.class) {
+        else if(object instanceof Boolean)
             return 1;
-        }
-
-        if (clazz == Byte.class) {
+        else if(object instanceof Byte)
             return 8;
-        }
-
-        if (clazz == Short.class || clazz == Character.class) {
+        else if(object instanceof Short || object instanceof Character)
             return 16;
-        }
-
-        if (clazz == Integer.class || clazz == Float.class) {
-            return 32;
-        }
-
-        if (clazz == Long.class || clazz == Double.class) {
+        else if(object instanceof Long || object instanceof Double)
             return 64;
-        }
-
-        // potential for stack overflow if a field is circular!
-        return 0;
+        else
+            // potential for stack overflow if a field is circular! (maybe, but I don't see how this could happen)
+            return 0;
     }
 }
