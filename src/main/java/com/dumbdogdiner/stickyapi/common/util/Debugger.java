@@ -72,7 +72,7 @@ public class Debugger {
     public void print(Object object, Object... args) {
         if (enabled) {
             logger.info(String.format(COLOR + "[" + ++logCount + " | " + clazz.getSimpleName()
-            + ".class: "+Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps()+"] \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "μ", args));
+            + ".class: "+Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps()+"] \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "\u00B5", args));
         }
     }
 

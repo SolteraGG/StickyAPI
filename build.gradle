@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 group = 'com.dumbdogdiner'
-version = '1.4.2'
+version = '1.4.3'
 
 configurations {
     jaxDoclet
