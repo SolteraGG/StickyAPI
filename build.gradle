@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 group = 'com.dumbdogdiner'
-version = '1.4.3'
+version = '1.4.4'
 
 configurations {
     jaxDoclet
@@ -12,10 +12,8 @@ repositories {
     mavenCentral()
     jcenter()
 
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
-        url 'https://papermc.io/repo/repository/maven-public/'
-    }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
 }
 
 dependencies {
