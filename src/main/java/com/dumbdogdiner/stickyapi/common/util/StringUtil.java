@@ -61,7 +61,7 @@ public class StringUtil {
         for (double i = 0; i < size; i++) {
             if (i < barCount)
                 if (!monospace)
-                    bar += "▍";
+                    bar += "\u258D"; // ...
                 else
                     bar += "|";
             else
