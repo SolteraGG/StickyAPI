@@ -51,18 +51,18 @@ public class Debugger {
     @Getter
     private int logCount = 0;
 
-    private Class<?> clazz;
+    private final Class<?> debuggedClass;
 
-    private Random r = new Random();
+    private final Random r = new Random();
     private final String ALPHABET = "3569abcde";
     private final String COLOR = "\u00A7" + ALPHABET.charAt(r.nextInt(ALPHABET.length()));
     
     /**
      * Create a debugger instance that references the provided class. Allows for per-class debugging.
-     * @param clazz to reference.
+     * @param debuggedClass to reference.
      */
-    public Debugger(Class<?> clazz) {
-        this.clazz = clazz;
+    public Debugger(Class<?> debuggedClass) {
+        this.debuggedClass = debuggedClass;
     }
 
     /**
@@ -71,8 +71,26 @@ public class Debugger {
      */
     public void print(Object object, Object... args) {
         if (enabled) {
-            logger.info(String.format(COLOR + "[" + ++logCount + " | " + clazz.getSimpleName()
-            + ".class: "+Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps()+"] \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "\u00B5", args));
+            int result = -1;
+            boolean thisOne = false;
+            int thisOneCountDown = 1;
+            StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+            for(StackTraceElement element : elements) {
+                String methodName = element.getMethodName();
+                String methodClassName = element.getClassName();
+                int lineNum = element.getLineNumber();
+                if(thisOne && (thisOneCountDown == 0)) {
+                    result = lineNum;
+                    break;
+                } else if(thisOne) {
+                    thisOneCountDown--;
+                }
+                if(methodName.equals("print") && methodClassName.equals(getClass().getName())) {
+                    thisOne = true;
+                }
+            }
+            logger.info(String.format(COLOR + "[" + (++logCount) + " | " + debuggedClass.getSimpleName()
+            + ".class: "+ result +"] \u00A7r" + object + " | " + ((System.nanoTime() - startTime) / 1e3) + "\u00B5", args));
         }
     }
 
@@ -85,33 +103,4 @@ public class Debugger {
         return this;
     }
 
-    /** 
-     * This methods name is ridiculous on purpose to prevent any other method
-     * names in the stack trace from potentially matching this one.
-     * 
-     * The line number of the code that called the method that called
-     * this method(Should only be called by getLineNumber()).
-     * 
-     * @return {@link java.lang.Integer}
-     * @author Brian_Entei
-     */
-    // Thanks Brian! https://stackoverflow.com/a/26410435/11988998
-    private int Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps() {
-        boolean thisOne = false;
-        int thisOneCountDown = 1;
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        for(StackTraceElement element : elements) {
-            String methodName = element.getMethodName();
-            int lineNum = element.getLineNumber();
-            if(thisOne && (thisOneCountDown == 0)) {
-                return lineNum;
-            } else if(thisOne) {
-                thisOneCountDown--;
-            }
-            if(methodName.equals("Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps")) {
-                thisOne = true;
-            }
-        }
-        return -1;
-    }
 }
