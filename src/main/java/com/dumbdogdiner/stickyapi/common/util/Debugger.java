@@ -54,7 +54,7 @@ public class Debugger {
     private final Class<?> debuggedClass;
 
     private final Random r = new Random();
-    private final String ALPHABET = "3569abcde";
+    private static final String ALPHABET = "3569abcde";
     private final String COLOR = "\u00A7" + ALPHABET.charAt(r.nextInt(ALPHABET.length()));
     
     /**
@@ -77,7 +77,7 @@ public class Debugger {
             StackTraceElement[] elements = Thread.currentThread().getStackTrace();
             for(StackTraceElement element : elements) {
                 String methodName = element.getMethodName();
-                String methodClassName = element.getClassName();
+                String methodClassName = element.getClass().getCanonicalName();
                 int lineNum = element.getLineNumber();
                 if(thisOne && (thisOneCountDown == 0)) {
                     result = lineNum;
@@ -85,7 +85,7 @@ public class Debugger {
                 } else if(thisOne) {
                     thisOneCountDown--;
                 }
-                if(methodName.equals("print") && methodClassName.equals(getClass().getName())) {
+                if(methodName.equals("print") && methodClassName.equals(getClass().getCanonicalName())) {
                     thisOne = true;
                 }
             }
