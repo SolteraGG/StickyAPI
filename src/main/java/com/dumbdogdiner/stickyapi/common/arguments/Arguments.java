@@ -107,13 +107,14 @@ public class Arguments {
         return this;
     }
 
+
     /**
      * Create an optional string argument with a default value
      * @param name The name of this string
      * @param fallback the default value you want for the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalString(String name, String fallback){
+    private Arguments optionalString(String name, @SuppressWarnings("SameParameterValue") String fallback){
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
             parsedArgs.put(name, unparsedArgs.get(position));
