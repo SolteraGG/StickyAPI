@@ -1,8 +1,11 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 group = 'com.dumbdogdiner'
+
 version = '1.4.4'
+
 
 configurations {
     jaxDoclet
@@ -32,4 +35,22 @@ task docs(type: Javadoc) {
     source = sourceSets.main.allJava
     classpath = project.sourceSets.main.runtimeClasspath
     destinationDir = reporting.file("./docs")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }

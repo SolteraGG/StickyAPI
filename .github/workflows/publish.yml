@@ -1,0 +1,22 @@
+name: publish
+
+on:
+  release:
+    # Type 'created' will be triggered when a NON-draft release is created and published.
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    container:
+      image: jcxldn/openjdk-alpine:11-jdk
+    steps:
+    - uses: actions/checkout@v2
+    - name: Echo branch name
+      run: echo ${GITHUB_REF##*/}
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Publish with Gradle
+      run: ./gradlew -Pversion=${GITHUB_REF##*/} publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
