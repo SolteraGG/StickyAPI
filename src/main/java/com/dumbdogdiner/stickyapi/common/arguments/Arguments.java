@@ -28,6 +28,7 @@ import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class for handling command arguments.
@@ -108,13 +109,8 @@ public class Arguments {
     }
 
 
-    /**
-     * Create an optional string argument with a default value
-     * @param name The name of this string
-     * @param fallback the default value you want for the argument
-     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
-     */
-    private Arguments optionalString(String name, @SuppressWarnings("SameParameterValue") String fallback){
+
+    private Arguments optionalStringImplementation(String name, String fallback){
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
             parsedArgs.put(name, unparsedArgs.get(position));
@@ -129,12 +125,29 @@ public class Arguments {
     }
 
     /**
+     * Create an optional string argument with a default value
+     * @param name The name of this string
+     * @param fallback the default value you want for the argument
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalString(String name, @NotNull String fallback){
+        //noinspection ConstantConditions
+        if (fallback != null){
+            return optionalStringImplementation(name, fallback);
+        } else {
+            debug.print("Explicit fallback string of null attempted for parameter " + name + ", argument not added.");
+            return this;
+        }
+
+    }
+
+    /**
      * Create an optional string argument.
      * @param name The name of this string
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments optionalString(String name) {
-        return optionalString(name, null);
+        return optionalStringImplementation(name, null);
     }
 
     /**
