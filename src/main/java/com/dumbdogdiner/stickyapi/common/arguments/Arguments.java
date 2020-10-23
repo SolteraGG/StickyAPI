@@ -367,6 +367,8 @@ public class Arguments {
         return this;
     }
 
+
+    //TODO: Refactor to getString
     /**
      * Fetch a parsed argument from this arguments object.
      * <p>Returns the argument, if it exists
@@ -387,7 +389,7 @@ public class Arguments {
         if (parsedArgs.get(name) == null) {
             return null;
         }
-        return new Timestamp(Long.valueOf(parsedArgs.get(name)));
+        return new Timestamp(Long.parseLong(parsedArgs.get(name)));
     }
 
     /**
@@ -469,6 +471,6 @@ public class Arguments {
      * @return {@link java.lang.Long}
      */
     public Long getDuration(String name) {
-        return TimeUtil.duration(parsedArgs.get(name)).get();
+        return TimeUtil.duration(parsedArgs.get(name)).isPresent() ? TimeUtil.duration(parsedArgs.get(name)).get() : null;
     }
 }

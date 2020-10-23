@@ -20,15 +20,15 @@ repositories {
 }
 
 dependencies {
-    compileOnly "org.projectlombok:lombok:1.18.12"
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.3-R0.1-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
-    implementation 'org.jetbrains:annotations:18.0.0'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.90'
-    implementation 'com.github.seancfoley:ipaddress:5.1.0'
+    implementation 'com.github.seancfoley:ipaddress:5.3.3'
 }
 
 task docs(type: Javadoc) {
