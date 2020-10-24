@@ -33,6 +33,8 @@ import org.bukkit.command.TabCompleter;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 
+import javax.annotation.Nullable;
+
 /**
  * This class is designed to handle execution of commands given by a user or the
  * console, it runs the command code asynchronously from the server thread and
@@ -163,7 +165,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      *
      * @return TabCompleter object linked to this command
      */
-    public TabCompleter getTabCompleter() {
+    public @Nullable TabCompleter getTabCompleter() {
         return this.completer;
     }
 

@@ -28,6 +28,7 @@ import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class for handling command arguments.
@@ -38,7 +39,7 @@ public class Arguments {
 
     private int position = 0;
     private boolean valid = true;
-    private Debugger debug = new Debugger(getClass());
+    private final Debugger debug = new Debugger(getClass());
 
     public void invalidate(String name) {
         debug.print("Invalidated by argument " + name);
@@ -108,21 +109,45 @@ public class Arguments {
     }
 
 
-    /**
-     * Create a required string argument.
-     * @param name The name of this string
-     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
-     */
-    public Arguments optionalString(String name) {
+
+    private Arguments optionalStringImplementation(String name, String fallback){
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
             parsedArgs.put(name, unparsedArgs.get(position));
             unparsedArgs.remove(position);
             debug.print("Found string at position " + String.valueOf(position) + " - new args size = " + String.valueOf(unparsedArgs.size()));
-        } else 
-            debug.print("Could not find string");
+        } else {
+            debug.print("Could not find string, using default value of " + fallback);
+            parsedArgs.put(name, fallback);
+        }
 
         return this;
+    }
+
+    /**
+     * Create an optional string argument with a default value
+     * @param name The name of this string
+     * @param fallback the default value you want for the argument
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalString(String name, @NotNull String fallback){
+        //noinspection ConstantConditions
+        if (fallback != null){
+            return optionalStringImplementation(name, fallback);
+        } else {
+            debug.print("Explicit fallback string of null attempted for parameter " + name + ", argument not added.");
+            return this;
+        }
+
+    }
+
+    /**
+     * Create an optional string argument.
+     * @param name The name of this string
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalString(String name) {
+        return optionalStringImplementation(name, null);
     }
 
     /**
@@ -342,6 +367,8 @@ public class Arguments {
         return this;
     }
 
+
+    //TODO: Refactor to getString
     /**
      * Fetch a parsed argument from this arguments object.
      * <p>Returns the argument, if it exists
@@ -362,7 +389,7 @@ public class Arguments {
         if (parsedArgs.get(name) == null) {
             return null;
         }
-        return new Timestamp(Long.valueOf(parsedArgs.get(name)));
+        return new Timestamp(Long.parseLong(parsedArgs.get(name)));
     }
 
     /**
@@ -444,6 +471,6 @@ public class Arguments {
      * @return {@link java.lang.Long}
      */
     public Long getDuration(String name) {
-        return TimeUtil.duration(parsedArgs.get(name)).get();
+        return TimeUtil.duration(parsedArgs.get(name)).isPresent() ? TimeUtil.duration(parsedArgs.get(name)).get() : null;
     }
 }
