@@ -31,11 +31,16 @@ dependencies {
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
 }
 
-task docs(type: Javadoc) {
-    source = sourceSets.main.allJava
-    classpath = project.sourceSets.main.runtimeClasspath
-    destinationDir = reporting.file("./docs")
+task sources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
 }
+
+
+tasks.publish.dependsOn build, sources
+
+
+
 
 publishing {
     repositories {
@@ -51,6 +56,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             from(components.java)
+            artifact sources // Publish the output of the sources task
         }
     }
 }
