@@ -31,19 +31,13 @@ dependencies {
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
 }
 
-task docs(type: Javadoc) {
-    source = sourceSets.main.allJava
-    classpath = project.sourceSets.main.runtimeClasspath
-    destinationDir = reporting.file("./docs")
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
+task sources(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
     from sourceSets.main.allSource
 }
 
 
-tasks.publish.dependsOn build, sourcesJar
+tasks.publish.dependsOn build, sources
 
 
 
