@@ -37,6 +37,17 @@ task docs(type: Javadoc) {
     destinationDir = reporting.file("./docs")
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+
+tasks.publish.dependsOn build, sourcesJar
+
+
+
+
 publishing {
     repositories {
         maven {
