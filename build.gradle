@@ -56,6 +56,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             from(components.java)
+            artifact sources // Publish the output of the sources task
         }
     }
 }
