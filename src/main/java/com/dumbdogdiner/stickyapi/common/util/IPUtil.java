@@ -15,8 +15,10 @@ public class IPUtil {
 		
 		String subnetStr = ipAddress1+"/"+prefix;
 		IPAddress subnetAddress = new IPAddressString(subnetStr).getAddress();
+		if (subnetAddress == null) return false; // prevent NPE for invalid subnetAddress
 		IPAddress subnet = subnetAddress.toPrefixBlock();
 		IPAddress testAddress = new IPAddressString(ipAddress2).getAddress();
+		if (testAddress == null) return false; // prevent NPE for invalid testAddress
 		return subnet.contains(testAddress);
 	}
 }
