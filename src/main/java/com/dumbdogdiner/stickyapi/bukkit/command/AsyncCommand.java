@@ -67,7 +67,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      */
     // public abstract int executeCommand(Sender sender, String commandLabel, String[] args);
 
-    public abstract ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
+    public abstract ExitMessage executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -94,7 +94,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
             @Override
             public Boolean call() {
                 try {
-                    ExitCode resultingExitCode = self.executeCommand(sender, commandLabel, args);
+                    ExitMessage resultingExitCode = self.executeCommand(sender, commandLabel, args);
 
                     if (resultingExitCode == null) {
                         throw new IllegalArgumentException("A null exit code was returned");

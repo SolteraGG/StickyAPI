@@ -57,7 +57,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @return Whether or not the command succeeded, returning false will trigger
      *         onSyntaxError()
      */
-    public abstract ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
+    public abstract ExitMessage executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -79,7 +79,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
                     commandLabel, this.owner.getDescription().getFullName()));
 
         try {
-            ExitCode resultingExitCode = executeCommand(sender, commandLabel, args);
+            ExitMessage resultingExitCode = executeCommand(sender, commandLabel, args);
 
             if (resultingExitCode == null) {
                 throw new IllegalArgumentException("A null exit code was returned");
