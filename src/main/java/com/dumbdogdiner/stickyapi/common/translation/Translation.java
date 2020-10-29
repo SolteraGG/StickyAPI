@@ -21,9 +21,11 @@ package com.dumbdogdiner.stickyapi.common.translation;
 import java.lang.Character;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -218,6 +220,8 @@ public class Translation {
         return retstr.toString();
     }
 
+    private static final Pattern interopRegex = Pattern.compile("\\{([a-z]+?)(?:\\|([{}a-z]+)(?::\"(.+?)\")?)?}");
+
     // Used to replace variables inside of strings.
     // {Player} has been banned by {Executioner}: {Reason}
     // {Player has been banned by CONSOLE: fuck you.
@@ -228,66 +232,44 @@ public class Translation {
      * <p>Returns a formatted string with all placeholders from Variables replaced.
      * @param locale    The LocaleProvider context
      * @param message   The message to have placeholders replaced
-     * @param Variables The variables to be utilized in this message for the
+     * @param variables The variables to be utilized in this message for the
      *                  placeholders and their functions
      * @return {@link java.lang.String}
      */
-    public static String translateVariables(LocaleProvider locale, String message, Map<String, String> Variables) {
-        // If it doesn't have the starting char for variables, skip it.
-        if (!message.contains("{") || Variables == null)
+    public static String translateVariables(LocaleProvider locale, String message, Map<String, String> variables) {
+        var matcher = interopRegex.matcher(message);
+        if (!matcher.find()) {
             return message;
-
-        String retstr = message;
-        // Try and iterate over all our variables.
-        for (int pos = retstr.indexOf("{"), pos2 = retstr.indexOf("}", pos); pos != -1
-                && pos2 != -1; pos = retstr.indexOf("{", pos + 1), pos2 = retstr.indexOf("}", pos + 1)) {
-            // If we're longer than we should be.
-            if (pos + 1 > retstr.length() || pos2 + 1 > retstr.length())
-                break;
-
-            // Substring.
-            String variable = retstr.substring(pos + 1, pos2);
-            String replacement = null;
-
-            // If the variable contains a | (verticle bar), then we tokenize on `|` and
-            // treat the lvalue as a variable and the rvalue as a function name. The
-            // functions are stored as a hashmap and only take one string argument
-            // ("dereferenced" value of the lvalue map name.). This allows us to do things
-            // like conditionally pluralize words and such in the config.
-            if (variable.contains("|")) 
-            {
-                String values[] = variable.split("\\|");
-                String rvalue = values[1], lvalue = values[0].trim();
-
-                // Allow recursive locale nodes.
-                String value = Variables.get(lvalue);
-                if (value == null)
-                    value = locale.get(lvalue);
-
-                if (rvalue.contains(":")) 
-                {
-                    int nextsplit = rvalue.indexOf(":");
-                    rvalue = rvalue.substring(0, nextsplit);
-                    String argument = values[1].substring(nextsplit + 2, values[1].length() - 1);
-
-                    replacement = functions.get(rvalue.trim()).apply(value, argument);
-                } else // (Functions.containsKey(rvalue.trim()) &&
-                       // Variables.containsKey(lvalue.trim()))
-                    replacement = functions.get(rvalue.trim()).apply(value, "");
-            } 
-            else if (Variables.containsKey(variable) || locale.get(variable) != null) 
-            {
-                // Now we replace it with our value from the map.
-                if (Variables.containsKey(variable))
-                    replacement = Variables.get(variable);
-                else
-                    replacement = locale.get(variable);
-            }
-
-            if (replacement != null)
-                retstr = retstr.substring(0, pos) + replacement + retstr.substring(pos2 + 1);
         }
-        return retstr;
+
+        // get a list of all matches because it makes so much more sense.
+        var matches = new ArrayList<MatchResult>();
+        while (matcher.find()) {
+            matches.add(matcher.toMatchResult());
+        }
+
+        var out = new StringBuilder();
+        out.append(message, 0, matches.get(0).start());
+
+        for (var i = 0; i < matches.size(); i++) {
+            var match = matches.get(i);
+            var variable = match.group(0);
+            var function = functions.get(match.group(1));
+
+            String translatedContent = translateVariables(locale, locale.get(variable), variables);
+            if (function != null) {
+                translatedContent = function.apply(translatedContent, match.group(2));
+            }
+            out.append(translatedContent);
+
+            if (i == matches.size() - 1) {
+                continue;
+            }
+            out.append(message, match.end() , matches.get(i + 1).start());
+        }
+
+        out.append(message, matches.get(matches.size() - 1).end(), message.length());
+        return out.toString();
     }
 
     /**

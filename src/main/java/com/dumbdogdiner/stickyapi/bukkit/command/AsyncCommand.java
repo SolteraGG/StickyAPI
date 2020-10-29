@@ -75,7 +75,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * check permissions beforehand.
      * 
      * <p>
-     * This also allows us to do async commands if we so desire and it nulls the
+     * This also allows us to do async commands if we so desire and it null the
      * point of CommandExecutors because they were fucking pointless to begin with.
      * 
      * @param sender       The person executing the command
