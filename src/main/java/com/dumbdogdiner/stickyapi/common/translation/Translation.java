@@ -220,7 +220,7 @@ public class Translation {
         return retstr.toString();
     }
 
-    private static final Pattern interopRegex = Pattern.compile("\\{([a-z]+?)(?:\\|([{}a-z]+)(?::\"(.+?)\")?)?}");
+    private static final Pattern interopRegex = Pattern.compile("\\{(.+?)(?:\\|([{}a-z]+)(?::\"(.+?)\")?)?}", Pattern.DOTALL);
 
     // Used to replace variables inside of strings.
     // {Player} has been banned by {Executioner}: {Reason}
@@ -238,9 +238,6 @@ public class Translation {
      */
     public static String translateVariables(LocaleProvider locale, String message, Map<String, String> variables) {
         var matcher = interopRegex.matcher(message);
-        if (!matcher.find()) {
-            return message;
-        }
 
         // get a list of all matches because it makes so much more sense.
         var matches = new ArrayList<MatchResult>();
@@ -248,17 +245,21 @@ public class Translation {
             matches.add(matcher.toMatchResult());
         }
 
+        if (matches.size() == 0) {
+            return message;
+        }
+
         var out = new StringBuilder();
         out.append(message, 0, matches.get(0).start());
 
         for (var i = 0; i < matches.size(); i++) {
             var match = matches.get(i);
-            var variable = match.group(0);
-            var function = functions.get(match.group(1));
+            var variable = match.group(1);
+            var function = functions.get(match.group(2));
 
             String translatedContent = translateVariables(locale, locale.get(variable), variables);
             if (function != null) {
-                translatedContent = function.apply(translatedContent, match.group(2));
+                translatedContent = function.apply(translatedContent, match.group(3));
             }
             out.append(translatedContent);
 
