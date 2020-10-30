@@ -18,6 +18,7 @@
 
 package com.dumbdogdiner.stickyapi.common.util;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,9 @@ import java.util.Map;
 public class StringUtil {
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
+
+    // createProgressBar - format double percentage to no decimal places to avoid it showing as '100.0000%' or something
+    private static DecimalFormat percentageFormatter = new DecimalFormat("#");
 
     static {
         leetReplace.put("0", "o");
@@ -68,7 +72,9 @@ public class StringUtil {
                 bar += " ";
         }
         if (includeBrackets)
-            bar = includePercentage ? String.format("[%s] %e%", bar, percentage) : "[" + bar + "]";
+            // double up %s to escape them
+            bar = includePercentage ? String.format("[%s] %s%%", bar, 
+                    percentageFormatter.format(percentage)) : "[" + bar + "]";
         return bar;
     }
 
@@ -84,10 +90,15 @@ public class StringUtil {
     }
 
     /**
-     * Capitalise every letter after whitespace
+     * Capitalise every letter after whitespace.
+     * <p>
+     * This will also lowercase any uppercase characters.
      * <p>
      * Example: "hello world" == "Hello World"
+     * <p>
+     * Example: "HELLO WORLD" == "Hello World"
      * 
+     * @see Alternate (keeping uppercase): {@link #capitaliseSentenceKeepUpperCase(String)}
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
      */
@@ -100,6 +111,37 @@ public class StringUtil {
                 cnl = false;
             } else {
                 sb.append(Character.toLowerCase(c));
+            }
+            if (Character.isWhitespace(c)) {
+                cnl = true;
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Capitalise every letter after whitespace.
+     * <p>
+     * Will keep uppercase letters uppercase.
+     * <p>
+     * Example: "hello world" == "Hello World"
+     * <p>
+     * Example: "hello WORLD" == "Hello WORLD"
+     * 
+     * @since 2.0
+     * @see Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
+     * @param string The string to capitalise
+     * @return A message with capital letters after every whitespace
+     */
+    public static String capitaliseSentenceKeepUpperCase(String string) {
+        StringBuilder sb = new StringBuilder();
+        boolean cnl = true;
+        for (char c : string.toCharArray()) {
+            if (cnl && Character.isLetter(c)) {
+                sb.append(Character.toUpperCase(c));
+                cnl = false;
+            } else {
+                sb.append(c);
             }
             if (Character.isWhitespace(c)) {
                 cnl = true;
