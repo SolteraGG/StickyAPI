@@ -27,6 +27,8 @@ import java.lang.reflect.Modifier;
  * can be useful to measure the estimated size of an object.
  */
 public final class MemoryUtil {
+    private MemoryUtil() {}
+
     public enum Unit {
         BITS, BYTES, KILOBYTES, MEGABYTES
     }

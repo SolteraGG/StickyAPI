@@ -3,7 +3,9 @@ package com.dumbdogdiner.stickyapi.common.util;
 import inet.ipaddr.IPAddress;
 import inet.ipaddr.IPAddressString;
 
-public class IPUtil {
+public final class IPUtil {
+	private IPUtil() {}
+
     /**
 	 * Check if an IP falls within a CIDR range
 	 * @param ipAddress1 IP Address to check

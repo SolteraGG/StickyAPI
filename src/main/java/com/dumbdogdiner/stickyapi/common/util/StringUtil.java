@@ -25,7 +25,8 @@ import java.util.Map;
 /**
  * Operations on {@link java.lang.String}
  */
-public class StringUtil {
+public final class StringUtil {
+    private StringUtil() {}
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
