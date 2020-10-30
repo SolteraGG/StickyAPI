@@ -74,9 +74,11 @@ public final class NumberUtil {
 
     /**
      * Get a random number within a range
+     * 
      * @param min minimum value
      * @param max maximum value
-     * Returns a random integer within the specified ranged
+     * @return a random integer within the specified range
+     * @throws IllegalArgumentException when min is greater than max
      */
     public static int getRandomNumber(int min, int max) {
         if (min >= max)
