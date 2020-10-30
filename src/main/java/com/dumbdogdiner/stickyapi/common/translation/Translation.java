@@ -105,41 +105,19 @@ public class Translation {
      */
     public static TreeMap<String, BiFunction<String, String, String>> functions = new TreeMap<String, BiFunction<String, String, String>>(String.CASE_INSENSITIVE_ORDER) {
         {
-            put("pluralize", (String lvalue, String arg) -> {
-                return pluralize(lvalue, arg);
-            });
-            put("datetime", (String lvalue, String args) -> {
-                return lvalue == null || lvalue == "" ? "Never"
-                        : (new SimpleDateFormat(args)).format(Timestamp.valueOf(lvalue));
-            });
+            put("pluralize", Translation::pluralize);
+            put("datetime", (String lvalue, String args) -> lvalue == null || lvalue.equals("") ? "Never"
+                    : (new SimpleDateFormat(args)).format(Timestamp.valueOf(lvalue)));
             // FIXME: Allow for timestamps AND longs, for now, use longs!
-            put("duration", (String lvalue, String unused) -> {
-                return lvalue == null || lvalue == "" ? "Never" : TimeUtil.durationString(Long.valueOf(lvalue));
-            });
-            put("expiry", (String lvalue, String unused) -> {
-                return lvalue == null || lvalue == "" ? "Never" : TimeUtil.expires(Timestamp.valueOf(lvalue));
-            });
-            put("cut", (String lvalue, String arg) -> {
-                return lvalue.replace(arg, "");
-            });
-            put("empty_if_false", (String lvalue, String arg) -> {
-                return Boolean.valueOf(lvalue) ? arg : "";
-            });
-            put("empty_if_true", (String lvalue, String arg) -> {
-                return Boolean.valueOf(lvalue) ? "" : arg;
-            });
-            put("default_if_none", (String lvalue, String arg) -> {
-                return lvalue == null ? arg : lvalue;
-            });
-            put("lower", (String lvalue, String unused) -> {
-                return lvalue.toLowerCase();
-            });
-            put("upper", (String lvalue, String unused) -> {
-                return lvalue.toUpperCase();
-            });
-            put("yesno", (String lvalue, String arg) -> {
-                return yesno(lvalue, arg);
-            });
+            put("duration", (String lvalue, String unused) -> lvalue == null || lvalue.equals("") ? "Never" : TimeUtil.durationString(Long.parseLong(lvalue)));
+            put("expiry", (String lvalue, String unused) -> lvalue == null || lvalue.equals("") ? "Never" : TimeUtil.expires(Timestamp.valueOf(lvalue)));
+            put("cut", (String lvalue, String arg) -> lvalue.replace(arg, ""));
+            put("empty_if_false", (String lvalue, String arg) -> Boolean.parseBoolean(lvalue) ? arg : "");
+            put("empty_if_true", (String lvalue, String arg) -> Boolean.parseBoolean(lvalue) ? "" : arg);
+            put("default_if_none", (String lvalue, String arg) -> lvalue == null ? arg : lvalue);
+            put("lower", (String lvalue, String unused) -> lvalue.toLowerCase());
+            put("upper", (String lvalue, String unused) -> lvalue.toUpperCase());
+            put("yesno", (String lvalue, String arg) -> yesno(lvalue, arg));
         }
     };
 
@@ -281,14 +259,14 @@ public class Translation {
      * @param locale     The LocaleProvider context
      * @param message    The message containing placeholders and untranslated color
      *                   code sequences
-     * @param ColorChars The character used as the prefix for color strings
+     * @param colorChars The character used as the prefix for color strings
      *                   (bukkit/spigot use `&amp;` and so do we most of the time)
-     * @param Variables  A list of variables to be parsed by the placeholder
+     * @param variables  A list of variables to be parsed by the placeholder
      * @return {@link java.lang.String}
      */
-    public static String translate(LocaleProvider locale, String message, String ColorChars, Map<String, String> Variables) {
-        String retstr = Translation.translateVariables(locale, message, Variables);
-        retstr = Translation.translateColors(ColorChars, retstr);
+    public static String translate(LocaleProvider locale, String message, String colorChars, Map<String, String> variables) {
+        String retstr = Translation.translateVariables(locale, message, variables);
+        retstr = Translation.translateColors(colorChars, retstr);
         return retstr;
     }
 
