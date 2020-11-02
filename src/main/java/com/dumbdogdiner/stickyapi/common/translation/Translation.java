@@ -108,9 +108,10 @@ public class Translation {
             put("pluralize", Translation::pluralize);
             put("datetime", (String lvalue, String args) -> lvalue == null || lvalue.equals("") ? "Never"
                     : (new SimpleDateFormat(args)).format(Timestamp.valueOf(lvalue)));
-            // FIXME: Allow for timestamps AND longs, for now, use longs!
-            put("duration", (String lvalue, String unused) -> lvalue == null || lvalue.equals("") ? "Never" : TimeUtil.durationString(Long.parseLong(lvalue)));
-            put("expiry", (String lvalue, String unused) -> lvalue == null || lvalue.equals("") ? "Never" : TimeUtil.expires(Timestamp.valueOf(lvalue)));
+
+            put("duration", (String lvalue, String unused) -> lvalue == null || lvalue.equals("") ? "Never" : durationString(lvalue));
+
+            put("expiry", (String lvalue, String unused) -> lvalue == null || lvalue.equals("") ? "Never" : TimeUtil.expires(Long.parseLong(lvalue)));            
             put("cut", (String lvalue, String arg) -> lvalue.replace(arg, ""));
             put("empty_if_false", (String lvalue, String arg) -> Boolean.parseBoolean(lvalue) ? arg : "");
             put("empty_if_true", (String lvalue, String arg) -> Boolean.parseBoolean(lvalue) ? "" : arg);
@@ -120,6 +121,15 @@ public class Translation {
             put("yesno", (String lvalue, String arg) -> yesno(lvalue, arg));
         }
     };
+
+    // This is dumb, but it works lol
+    private static String durationString(String string) {
+        try {
+            return TimeUtil.durationString(Long.parseLong(string));
+        } catch (NumberFormatException e) {
+            return TimeUtil.durationString(Timestamp.valueOf(string));
+        }
+    }
 
     // Java apparently has no capabiliy to do something even a simple language like
     // C can do

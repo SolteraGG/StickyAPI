@@ -37,11 +37,7 @@ task sources(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-
 tasks.publish.dependsOn build, sources
-
-
-
 
 publishing {
     repositories {

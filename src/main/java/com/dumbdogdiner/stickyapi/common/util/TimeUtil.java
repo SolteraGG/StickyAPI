@@ -20,7 +20,10 @@ package com.dumbdogdiner.stickyapi.common.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,22 +31,6 @@ import java.util.Optional;
  */
 public class TimeUtil {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
-
-    /**
-     * A lookup table of values for multiplier characters used by
-     * TimeUtil.Duration(). In this lookup table, the indexes for the ascii values
-     * 'm' and 'M' have the value '60', the indexes for the ascii values 'D' and 'd'
-     * have a value of '86400', etc.
-     */
-    private static final long duration_multi[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 86400, 0, 0, 0, 3600, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 1, 0, 0, 0, 604800, 0,
-            31557600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 86400, 0, 0, 0, 3600, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-            604800, 0, 31557600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
     /**
      * Convert the unix timestamp to a human readable duration string
      * 
@@ -51,8 +38,26 @@ public class TimeUtil {
      * @return a human readable duration
      */
     public static String durationString(Timestamp t) {
-        return TimeUtil.durationString(t.getTime() / 1000L);
+        return TimeUtil.durationString(t.getTime());
     }
+
+
+    // 1 year 1 hours and 10 minutes
+    // 1.16h
+    // 1 day and 16 hours
+
+
+    // public static String significantDurationString(final long time) {
+    //     var t = time / 1000L;
+    //     long years = t / 31449600;
+    //     long weeks = (t / 604800) % 52;
+    //     long days = (t / 86400) % 7;
+    //     long hours = (t / 3600) % 24;
+    //     long minutes = (t / 60) % 60;
+    //     long seconds = t % 60;
+
+        
+    // }
 
     /**
      * Convert the unix timestamp to a human readable duration string
@@ -60,7 +65,8 @@ public class TimeUtil {
      * @param t unix timestamp
      * @return human readable duration
      */
-    public static String durationString(long t) {
+    public static String durationString(final long time) {
+        var t = time / 1000L;
         long years = t / 31449600;
         long weeks = (t / 604800) % 52;
         long days = (t / 86400) % 7;
@@ -68,54 +74,27 @@ public class TimeUtil {
         long minutes = (t / 60) % 60;
         long seconds = t % 60;
 
-        if (years == 0 && days == 0 && hours == 0 && minutes == 0)
-            return String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second");
-        else {
-            boolean need_comma = false;
-            String buffer = "";
-            if (years != 0) {
-                buffer = String.format("%d %s", years, years != 1 ? "years" : "year");
-                need_comma = true;
-            }
-            if (weeks != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", weeks, weeks != 1 ? "weeks" : "week");
-                need_comma = true;
-            }
-            if (days != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", days, days != 1 ? "days" : "day");
-                need_comma = true;
-            }
-            if (hours != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", hours, hours != 1 ? "hours" : "hour");
-                need_comma = true;
-            }
-            if (minutes != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", minutes, minutes != 1 ? "minutes" : "minute");
-                need_comma = true;
-            }
-            if (seconds != 0) {
-                buffer += need_comma ? ", and " : "";
-                buffer += String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second");
-            }
-            return buffer;
-        }
-    }
+        List<String> components = new ArrayList<>();
 
-    /**
-     * Convert unix timestamp to a duration forward or backward to current system
-     * time
-     * 
-     * @param ts {@link java.sql.Timestamp}
-     * @return A string stating the duration forward or backward in time.
-     */
-    public static String expires(Timestamp ts) {
-        if (ts == null)
-            return "";
-        return TimeUtil.expires(ts.getTime() / 1000L);
+        if (years != 0) {
+            components.add(String.format("%d %s", years, years != 1 ? "years" : "year"));
+        }
+        if (weeks != 0) {
+            components.add(String.format("%d %s", weeks, weeks != 1 ? "weeks" : "week"));
+        }
+        if (days != 0) {
+            components.add(String.format("%d %s", days, days != 1 ? "days" : "day"));
+        }
+        if (hours != 0) {
+            components.add(String.format("%d %s", hours, hours != 1 ? "hours" : "hour"));
+        }
+        if (minutes != 0) {
+            components.add(String.format("%d %s", minutes, minutes != 1 ? "minutes" : "minute"));
+        }
+        if (seconds != 0) {
+            components.add(String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second"));
+        }
+        return Arrays.copyOf(components.toArray(), components.size() - 1) + " and " + components.get(components.size() - 1);
     }
 
     /**
@@ -130,9 +109,25 @@ public class TimeUtil {
         if (expires == 0)
             return "never expires";
         else if (expires < CurTime)
-            return String.format("%s ago", TimeUtil.durationString(CurTime - expires));
+            return String.format("%s ago", TimeUtil.durationString(expires));
         else
-            return String.format("%s from now", TimeUtil.durationString(expires - CurTime));
+            return String.format("%s from now", TimeUtil.durationString(expires));
+    }
+
+    private static HashMap<Character, Long> durationChars = new HashMap<>();
+    static {
+        durationChars.put('Y', 31536000L);
+        durationChars.put('y', 31536000L);
+        durationChars.put('M', 2592000L);
+        durationChars.put('W', 604800L);
+        durationChars.put('w', 604800L);
+        durationChars.put('D', 86400L);
+        durationChars.put('d', 86400L);
+        durationChars.put('H', 3600L);
+        durationChars.put('h', 3600L);
+        durationChars.put('m', 60L);
+        durationChars.put('S', 1L);
+        durationChars.put('s', 1L);
     }
 
     /**
@@ -142,10 +137,10 @@ public class TimeUtil {
      * @return The duration converted to seconds
      */
     public static Optional<Long> duration(String s) {
-        long total = 0;
-        long subtotal = 0;
+        var total = 0L;
+        var subtotal = 0L;
 
-        for (int i = 0; i < s.length(); ++i) {
+        for (var i = 0; i < s.length(); ++i) {
             char ch = s.charAt(i);
             if ((ch >= '0') && (ch <= '9'))
                 subtotal = (subtotal * 10) + (ch - '0');
@@ -155,8 +150,8 @@ public class TimeUtil {
                  up number by, multiply the total and reset the built up number.
                  */
 
-                long multiplier = TimeUtil.duration_multi[ch];
-                if (multiplier == 0)
+                Long multiplier = TimeUtil.durationChars.get(ch);
+                if (multiplier == null)
                     return Optional.empty();
 
                 total += subtotal * multiplier;
@@ -165,8 +160,7 @@ public class TimeUtil {
                 subtotal = 0;
             }
         }
-
-        return Optional.of(total + subtotal);
+        return Optional.of(total);
     }
 
     /**
