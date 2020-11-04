@@ -100,9 +100,9 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
                         throw new IllegalArgumentException("A null exit code was returned");
                     }
 
-                    if (resultingExitCode.getMessage() != null) {
-                        sender.sendMessage(ChatColor.RED + resultingExitCode.getMessage());
-                    }
+                    // if (resultingExitCode.getMessage() != null) {
+                        // sender.sendMessage(ChatColor.RED + resultingExitCode.getMessage());
+                    // }
                 } catch (Throwable ex) {
                     ex.printStackTrace();
                     throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "

@@ -85,9 +85,9 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
                 throw new IllegalArgumentException("A null exit code was returned");
             }
 
-            if (resultingExitCode.getMessage() != null) {
-                sender.sendMessage(ChatColor.RED + resultingExitCode.getMessage());
-            }
+            // if (resultingExitCode.getMessage() != null) {
+                // sender.sendMessage(ChatColor.RED + resultingExitCode.getMessage());
+            // }
         } catch (Exception ex) {
             throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin "
                     + this.owner.getDescription().getFullName(), ex);
