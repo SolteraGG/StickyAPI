@@ -64,6 +64,16 @@ public class Arguments {
 
     /**
      * Create an optional flag.
+     * @since 1.4.6
+     * @param flag The name of this flag, and flag to register
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalFlag(String flag){
+        return optionalFlag(flag, flag);
+    }
+
+    /**
+     * Create an optional flag.
      * @param name The name of this flag
      * @param flag The flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
@@ -76,7 +86,7 @@ public class Arguments {
             return this;
         }
 
-        debug.print("Found flag at position " + String.valueOf(index) + " - new args size = " + String.valueOf(unparsedArgs.size()));
+        debug.print("Found flag at position " + String.valueOf(index) + " - new args size = " + unparsedArgs.size());
 
         parsedArgs.put(name, unparsedArgs.get(index));
         unparsedArgs.remove(index);
