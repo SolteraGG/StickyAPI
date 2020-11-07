@@ -64,6 +64,7 @@ public class Arguments {
 
     /**
      * Create an optional flag.
+     * @since 1.4.6
      * @param flag The name of this flag, and flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
