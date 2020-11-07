@@ -208,7 +208,7 @@ public class Translation {
         return retstr.toString();
     }
 
-    private static final Pattern interopRegex = Pattern.compile("\\{([A-z]+)(?:\\|([A-z]+):(?:\"(.+)\")?)?}", Pattern.DOTALL);
+    private static final Pattern interopRegex = Pattern.compile("\\{([A-z]+)(?:\\|([A-z]+)(?::\"(.+)\")?)?}", Pattern.DOTALL);
 
     // Used to replace variables inside of strings.
     // {Player} has been banned by {Executioner}: {Reason}
@@ -247,7 +247,7 @@ public class Translation {
 
             String translatedContent = translateVariables(locale, locale.get(variable), variables);
             if (function != null) {
-                translatedContent = function.apply(translatedContent, match.group(3));
+                translatedContent = function.apply(translatedContent, translateVariables(locale, match.group(3), variables));
             }
             out.append(translatedContent);
 
