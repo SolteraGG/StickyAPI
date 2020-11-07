@@ -196,7 +196,7 @@ public class Translation {
             if (pos + 1 > message.length())
                 break;
 
-            // Make sure the next char is valid hex as Minecraft uses a hexidecimal number
+            // Make sure the next char is valid hex as Minecraft uses a hexadecimal number
             if (Translation.isxdigit(message.charAt(pos + 1))) {
                 // Now we replace the starting char with our special char.
                 retstr.setCharAt(pos, SPECIAL_CHAR);
@@ -208,7 +208,7 @@ public class Translation {
         return retstr.toString();
     }
 
-    private static final Pattern interopRegex = Pattern.compile("\\{(.+?)(?:\\|([{}a-z]+)(?::\"(.+?)\")?)?}", Pattern.DOTALL);
+    private static final Pattern interopRegex = Pattern.compile("\\{([A-z]+)(?:\\|([A-z]+):(?:\"(.+)\")?)?}", Pattern.DOTALL);
 
     // Used to replace variables inside of strings.
     // {Player} has been banned by {Executioner}: {Reason}
@@ -321,6 +321,4 @@ public class Translation {
 
         return finalComp;
     }
-
-
 }
