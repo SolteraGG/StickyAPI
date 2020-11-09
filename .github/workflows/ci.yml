@@ -16,6 +16,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Install bash for coverage reporter (java 11 only)
+      run: apk add --no-cache bash
+      if: matrix.version == '11'
     - name: Upload code coverage (java 11 only)
       uses: codecov/codecov-action@v1
       if: matrix.version == '11'
