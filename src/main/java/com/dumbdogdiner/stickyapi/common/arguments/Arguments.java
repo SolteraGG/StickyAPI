@@ -86,7 +86,7 @@ public class Arguments {
             return this;
         }
 
-        debug.print("Found flag at position " + String.valueOf(index) + " - new args size = " + unparsedArgs.size());
+        debug.print("Found flag at position " + index + " - new args size = " + unparsedArgs.size());
 
         parsedArgs.put(name, unparsedArgs.get(index));
         unparsedArgs.remove(index);
@@ -215,8 +215,9 @@ public class Arguments {
         String concatenated = String.join(" ", Arrays.copyOfRange(unparsedArgs.toArray(new String[unparsedArgs.size()]), position, end));
         parsedArgs.put(name, concatenated);
 
-        for (int s = position; s != end; s++)
-            unparsedArgs.remove(position);
+        if (end > position) {
+            unparsedArgs.subList(position, end).clear();
+        }
         
         debug.print("Found sentence of length " + String.valueOf(length) + " - new args size = " + String.valueOf(unparsedArgs.size()));
 

@@ -38,7 +38,10 @@ public class StartupUtil {
         try {
             if (!plugin.getDataFolder().exists()) {
                 plugin.getLogger().info("Error: No folder was found! Creating...");
-                plugin.getDataFolder().mkdirs();
+                if(!plugin.getDataFolder().mkdirs()){
+                    plugin.getLogger().info("Error: Couldn't create the folder somehow??");
+                    return false;
+                }
                 plugin.saveDefaultConfig();
                 plugin.saveConfig();
                 plugin.getLogger().info("The folder was created successfully!");
@@ -60,7 +63,7 @@ public class StartupUtil {
     public static LocaleProvider setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
         localeProvider = new LocaleProvider(new File(plugin.getDataFolder(), "locale"));
         int loadedLocales = localeProvider.loadAllLocales();
-        Boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");
+        boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");
 
         if (!localeEnabled) {
             plugin.getLogger()
