@@ -5,6 +5,8 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.*;
 
+import static com.dumbdogdiner.stickyapi.common.util.NumberUtil.intHelper;
+
 @SuppressWarnings("unused")
 public class PlayerUtils {
     public static class Names {
@@ -46,8 +48,11 @@ public class PlayerUtils {
          * if o1 has a bigger number, we should return a negative number
          * if o2 has a bigger number, we should return a positive number
          * Check the following, in order, break on non-tie:
-         * lastSeen, lastLogin, firstLogin
+         * lastSeen, lastLogin, firstLogin, compare names as strings
          * if still a tie just return 0
+         * @param o1 The first {@link org.bukkit.OfflinePlayer}
+         * @param o2 The second {@link org.bukkit.OfflinePlayer}
+         * @return An integer representing if o1 is less than, equal to, or greater than o2
          */
         @Override
         public int compare(OfflinePlayer o1, OfflinePlayer o2) {
@@ -64,29 +69,9 @@ public class PlayerUtils {
                     return intHelper(diff);
                 }
             }
-            return 0;
+            return Objects.requireNonNull(o1.getName()).compareTo(Objects.requireNonNull(o2.getName()));
         }
 
-        /**
-         * Try to return long as an int, capped at int max and int min
-         * @param l the long
-         * @return the long as a capped int
-         */
-        private int intHelper(long l){
-            try {
-                return Math.toIntExact(l);
-            } catch (ArithmeticException ae){
-                switch(Long.compare(l, 0)){
-                    case 1:
-                        return Integer.MAX_VALUE;
-                    case 0:
-                        return 0;
-                    case -1:
-                        return Integer.MIN_VALUE;
-                    default:
-                        throw new ArithmeticException(); // Somehow Long.compare is broken??
-                }
-            }
-        }
+
     }
 }
