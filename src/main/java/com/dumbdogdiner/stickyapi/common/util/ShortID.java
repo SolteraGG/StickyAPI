@@ -31,7 +31,7 @@ final class Luhn {
      * @return result {@link boolean} true of false
      */
     public static boolean luhnCheck(String card) {
-        if (card == null)
+        if (card == null || card.length() == 0)
             return false;
 
         char checkDigit = card.charAt(card.length() - 1);
