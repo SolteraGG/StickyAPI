@@ -21,3 +21,13 @@ jobs:
       with:
         name: java-${{matrix.version}}
         path: build/libs/*
+  license-header-check:
+    runs-on: ubuntu-latest
+    container:
+      image: jcxldn/openjdk-alpine:11-jdk
+    steps:
+    - uses: actions/checkout@v2
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Run the license formatter checker
+      run: ./gradlew licenseMain
