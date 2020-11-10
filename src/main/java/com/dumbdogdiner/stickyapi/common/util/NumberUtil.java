@@ -21,9 +21,11 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
+/**
+ * <p>Provides extra functionality for Java Number classes.</p>
+ */
 public final class NumberUtil {
     private NumberUtil() {}
-
     /**
      * <p>Checks if the String contains only unicode digits.
      * A decimal point is not a unicode digit and returns false.</p>
