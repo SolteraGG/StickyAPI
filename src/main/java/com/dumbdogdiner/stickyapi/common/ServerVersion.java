@@ -126,11 +126,8 @@ public final class ServerVersion {
      */
     public static String getBungeeVersion() {
         try {
-            // This is dumb but whatever, it works, maybe.
-            Class<?> proxyServerClass = Class.forName("net.md_5.bungee.api.ProxyServer");
-            Object proxyServer = proxyServerClass.getDeclaredMethod("getInstance").invoke(proxyServerClass);
-            return (String)proxyServer.getClass().getDeclaredMethod("getVersion").invoke(proxyServer);
-        } catch(Exception e) {
+            return net.md_5.bungee.api.ProxyServer.getInstance().getVersion();
+        } catch(NoClassDefFoundError e) {
             return null;
         }
     }

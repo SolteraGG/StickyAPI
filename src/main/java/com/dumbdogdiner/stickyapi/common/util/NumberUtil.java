@@ -85,4 +85,26 @@ public final class NumberUtil {
             throw new IllegalArgumentException("Min may not be greater than max!");
 	    return (int) ((Math.random() * (max - min)) + min);
 	}
+
+    /**
+     * Try to return long as an int, capped at int max and int min
+     * @param l The long to convert
+     * @return Returns the long as a capped int
+     */
+    public static int intHelper(long l){
+        try {
+            return Math.toIntExact(l);
+        } catch (ArithmeticException ae){
+            switch(Long.compare(l, 0)){
+                case 1:
+                    return Integer.MAX_VALUE;
+                case 0:
+                    return 0;
+                case -1:
+                    return Integer.MIN_VALUE;
+                default:
+                    throw new ArithmeticException(); // Somehow Long.compare is broken?? This should be impossible
+            }
+        }
+    }
 }

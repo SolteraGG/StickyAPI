@@ -32,6 +32,7 @@ import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -187,9 +188,9 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @throws IllegalArgumentException if sender, alias, or args is null
      */
     @Override
-    public java.util.List<String> tabComplete(CommandSender sender, String alias, String[] args)
+    public java.util.@NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String[] args)
             throws CommandException, IllegalArgumentException {
-        if (sender == null || alias == null || args == null)
+        if (args == null)
             throw new NullPointerException("arguments to tabComplete cannot be null");
 
         List<String> completions = null;
