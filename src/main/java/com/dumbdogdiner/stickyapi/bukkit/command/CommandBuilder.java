@@ -1,56 +1,211 @@
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
-import org.bukkit.Bukkit;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.FutureTask;
+
+import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandBuilder {
-    
-    Boolean asynchronous = false;
-    String permission;
-    String name;
 
-    interface Executor {
-        public ExitCode execute(CommandSender sender, String commandLabel, String[] args);
+    Boolean asynchronous = false;
+    String name;
+    String permission;
+    String description;
+    List<String> aliases = new ArrayList<>();
+
+    Executor executor;
+    TabExecutor tabExecutor;
+
+    ErrorHandler errorHandler;
+
+    Command bukkitCommand;
+
+    @FunctionalInterface
+    public interface Executor {
+        public ExitCode apply(CommandSender sender, String commandLabel, List<String> args);
     }
-    
-    interface ErrorHandler {
-        public void handle(ExitCode exitCode);
+
+    public interface TabExecutor {
+        public java.util.List<String> apply(CommandSender sender, String commandLabel, List<String> args);
+    }
+
+    public interface ErrorHandler {
+        public void apply(ExitCode exitCode, CommandSender sender, String commandLabel, List<String> args);
     }
 
     public CommandBuilder(@NotNull String name) {
         this.name = name;
     }
-    
+
+    /**
+     * If this command should run asynchronously 
+     * @param asynchronous
+     * @return {@link CommandBuilder}
+     */
     public CommandBuilder setAsynchronous(@NotNull Boolean asynchronous) {
         this.asynchronous = asynchronous;
         return this;
     }
-    
+
+    /**
+     * Set this command to run asynchronously
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder isAsynchronous() {
+        return this.setAsynchronous(true);
+    }
+
+    /**
+     * Set the permission of the command
+     * @param permission to set
+     * @return {@link CommandBuilder}
+     */
     public CommandBuilder setPermission(@NotNull String permission) {
+        this.permission = permission;
         return this;
     }
 
+    /**
+     * Set the description of the command
+     * @param description to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder setDescription(@NotNull String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Add an alias to this command.
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder addAlias(@NotNull String... aliases) {
+        for (var alias : aliases) {
+            this.aliases.add(alias);
+        }
+        return this;
+    }
+
+    /**
+     * Set the aliases of the command
+     * @param aliases to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder setAliases(@NotNull List<String> aliases) {
+        this.aliases = aliases;
+        return this;
+    }
+
+    /**
+     * Set the executor of the command
+     * @param executor to set
+     * @return {@link CommandBuilder}
+     */
     public CommandBuilder onExecute(@NotNull Executor executor) {
+        this.executor = executor;
         return this;
     }
 
-    public CommandBuilder onError(@NotNull ErrorHandler handle) {
+    /**
+     * Set the tab complete executor of the command
+     * @param executor to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder onTabComplete(@NotNull TabExecutor executor) {
+        this.tabExecutor = executor;
         return this;
     }
 
-    public CommandBuilder onSyntaxError(@NotNull ErrorHandler handler) {
+    /**
+     * Set the error handler of the command
+     * @param handler to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder onError(@NotNull ErrorHandler handler) {
+        this.errorHandler = handler;
         return this;
     }
-    
-    public org.bukkit.command.Command build(Plugin plugin) {
-        return null;
+
+    /**
+     * Build the command!
+     * @param plugin to build it for
+     * @return {@link org.bukkit.command.Command}
+     */
+    public org.bukkit.command.Command build(@NotNull Plugin plugin) {
+        PluginCommand command;
+        try {
+            Constructor<?> c = ReflectionUtil.getProtectedConstructor(PluginCommand.class, String.class, Plugin.class);
+            command = (PluginCommand) c.newInstance(this.name, plugin);
+
+            // Some funky shit is going on.
+            if (command == null)
+                return null;
+
+            // Execute the command by creating a new CommandExecutor and passing the
+            // arguments to our executor
+            command.setExecutor(new CommandExecutor() {
+                @Override
+                public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+                    if (!asynchronous) {
+                        ExitCode exitCode = executor.apply(sender, label, Arrays.asList(args));
+                        if (exitCode != ExitCode.EXIT_SUCCESS)
+                            errorHandler.apply(exitCode, sender, label, Arrays.asList(args));
+                        return true;
+                    }
+
+                    StickyAPI.getPool().execute(new FutureTask<Boolean>(() -> { 
+                        ExitCode exitCode = executor.apply(sender, label, Arrays.asList(args));
+                        if (exitCode != ExitCode.EXIT_SUCCESS)
+                            errorHandler.apply(exitCode, sender, label, Arrays.asList(args)); 
+                        return true; 
+                    }));
+
+                    return true;
+                }
+            });
+
+            // 
+            command.setTabCompleter(new TabCompleter() {
+                @Override
+                public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+                    return tabExecutor.apply(sender, alias, Arrays.asList(args));
+                } 
+            });
+            command.setDescription(this.description);
+            if (this.aliases != null)
+                command.setAliases(this.aliases);
+            command.setPermission(this.permission);
+            this.bukkitCommand = command;
+            return command;
+
+        } catch (Exception e) {
+            // If some more funky shit happens, let's just print our stacktrace and return null, there's not much else we can do
+            // Although, in theory, we should never run into this issue, unless of course I fuck something up, which is very common from me...
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public org.bukkit.command.Command register(Plugin plugin) {
-        // var command = this.build(plugin);
-        // Bukkit.getCommandMap().register(fallbackPrefix, command);
-        return null;
+    /**
+     * Register the command with a {@link org.bukkit.plugin.Plugin}
+     * @param plugin to register with
+     */
+    public void register(@NotNull Plugin plugin) {
+        Command command = this.build(plugin);
+        CommandMap cmap = ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap");
+        cmap.register(plugin.getName(), command);
     }
 }

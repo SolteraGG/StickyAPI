@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
@@ -58,8 +59,8 @@ public class Arguments {
      * Construct a new argument class with the given input.
      * @param args Arguments to parse
      */
-    public Arguments(String[] args) {
-        unparsedArgs = new ArrayList<String>(Arrays.asList(args));
+    public Arguments(List<String> args) {
+        unparsedArgs = new ArrayList<String>(args);
     }
 
     /**
