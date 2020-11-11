@@ -56,41 +56,37 @@ public final class TimeUtil {
         long minutes = (t / 60) % 60;
         long seconds = t % 60;
 
-        if (years == 0 && days == 0 && hours == 0 && minutes == 0)
-            return String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second");
-        else {
-            boolean need_comma = false;
-            String buffer = "";
-            if (years != 0) {
-                buffer = String.format("%d %s", years, years != 1 ? "years" : "year");
-                need_comma = true;
-            }
-            if (weeks != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", weeks, weeks != 1 ? "weeks" : "week");
-                need_comma = true;
-            }
-            if (days != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", days, days != 1 ? "days" : "day");
-                need_comma = true;
-            }
-            if (hours != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", hours, hours != 1 ? "hours" : "hour");
-                need_comma = true;
-            }
-            if (minutes != 0) {
-                buffer += need_comma ? ", " : "";
-                buffer += String.format("%d %s", minutes, minutes != 1 ? "minutes" : "minute");
-                need_comma = true;
-            }
-            if (seconds != 0) {
-                buffer += need_comma ? ", and " : "";
-                buffer += String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second");
-            }
-            return buffer;
+        boolean need_comma = false;
+        String buffer = "";
+        if (years != 0) {
+            buffer = String.format("%d %s", years, years != 1 ? "years" : "year");
+            need_comma = true;
         }
+        if (weeks != 0) {
+            buffer += need_comma ? ", " : "";
+            buffer += String.format("%d %s", weeks, weeks != 1 ? "weeks" : "week");
+            need_comma = true;
+        }
+        if (days != 0) {
+            buffer += need_comma ? ", " : "";
+            buffer += String.format("%d %s", days, days != 1 ? "days" : "day");
+            need_comma = true;
+        }
+        if (hours != 0) {
+            buffer += need_comma ? ", " : "";
+            buffer += String.format("%d %s", hours, hours != 1 ? "hours" : "hour");
+            need_comma = true;
+        }
+        if (minutes != 0) {
+            buffer += need_comma ? ", " : "";
+            buffer += String.format("%d %s", minutes, minutes != 1 ? "minutes" : "minute");
+            need_comma = true;
+        }
+        if (seconds != 0) {
+            buffer += need_comma ? ", and " : "";
+            buffer += String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second");
+        }
+        return buffer;
     }
 
     /**
