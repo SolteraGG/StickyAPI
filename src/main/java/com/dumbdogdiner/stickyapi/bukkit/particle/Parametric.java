@@ -22,6 +22,8 @@ package com.dumbdogdiner.stickyapi.bukkit.particle;
  * Combining multiple parametrics allows you to create more complex shapes, while
  * those who understand how they work at a deeper level will be able to draw
  * practically anything you want.
+ * 
+ * @since 2.0
  */
 public interface Parametric {
     double x(double t);

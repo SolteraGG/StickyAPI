@@ -14,6 +14,7 @@ import org.bukkit.Particle.DustOptions;
 
 /**
  * Draws a circle.
+ * @since 2.0
  */
 public class Circle implements Shape {
     /**

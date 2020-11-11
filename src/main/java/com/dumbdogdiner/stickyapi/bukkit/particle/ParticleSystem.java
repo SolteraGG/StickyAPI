@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages the spawning and animation of particles.
+ * @since 2.0
  */
 public class ParticleSystem {
     /**

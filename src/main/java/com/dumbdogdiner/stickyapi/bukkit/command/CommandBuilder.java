@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * CommandBuilder for avoiding bukkit's terrible command API and making creating
  * new commands as simple as possible
+ * 
+ * @since 2.0
  */
 public class CommandBuilder {
 

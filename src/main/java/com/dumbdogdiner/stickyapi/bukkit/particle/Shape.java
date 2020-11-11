@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 
 /**
  * Represents a shape that can be drawn by a particle system.
+ * @since 2.0
  */
 public interface Shape {
     /**

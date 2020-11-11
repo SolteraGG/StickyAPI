@@ -44,6 +44,7 @@ public class Arguments {
     /**
      * Construct a new argument class with the given input.
      * @param args Arguments to parse
+     * @since 2.0
      */
     public Arguments(List<String> args) {
         unparsedArgs = new ArrayList<String>(args);
