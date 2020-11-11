@@ -50,29 +50,3 @@ public enum ExitCode {
      */
     EXIT_ERROR_SILENT;
 }
-
-/*
-public enum ExitCode {
-
-    EXIT_SUCCESS,
-
-    EXIT_ERROR,
-
-    EXIT_INVALID_SYNTAX("The syntax you have provided is invalid, please check the command you entered!"),
-
-    EXIT_PERMISSION_DENIED("You do not have permission to perform this command!"),
-
-    EXIT_BAD_SENDER("You cannot perform this command as this console or entity!"),
-
-    EXIT_MUST_BE_PLAYER("You must perform this command as a player!"),
-
-    EXIT_INVALID_STATE("You cannot perform this command in this state!"),
-
-    EXIT_COOLDOWN("Please wait before running this command again."),
-
-    EXIT_EXPECTED_ERROR("The command could not be performed."),
-
-    EXIT_ERROR_SILENT(null);
-}
-
-*/
