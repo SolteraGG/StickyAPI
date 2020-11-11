@@ -16,9 +16,9 @@ import lombok.Setter;
  */
 public class StickyAPI {
     @Getter
-    public static Logger logger = Logger.getLogger("koffee");
+    public static Logger logger = Logger.getLogger("StickyAPI");
 
     @Getter
     @Setter
-    private static ExecutorService pool = Executors.newFixedThreadPool(3);
+    private static ExecutorService pool = Executors.newCachedThreadPool();
 }
