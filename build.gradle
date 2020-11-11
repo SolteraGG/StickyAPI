@@ -13,7 +13,7 @@ jacoco {
 
 group = 'com.dumbdogdiner'
 
-version = '1.5.0'
+version = '2.0.0'
 
 // License Plugin Options
 license { header = file('LICENSE_HEADER') }
