@@ -1,8 +1,15 @@
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the GPLv3 license, see LICENSE for more information...
+ */
 package com.dumbdogdiner.stickyapi.common.util;
 
 import inet.ipaddr.IPAddress;
 import inet.ipaddr.IPAddressString;
 
+/**
+ * Utility class for IP Addresses
+ */
 public class IPUtil {
     /**
 	 * Check if an IP falls within a CIDR range

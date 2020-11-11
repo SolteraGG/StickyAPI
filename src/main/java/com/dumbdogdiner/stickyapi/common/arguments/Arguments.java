@@ -1,21 +1,7 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the GPLv3 license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.arguments;
 
 import java.sql.Timestamp;
@@ -64,6 +50,16 @@ public class Arguments {
 
     /**
      * Create an optional flag.
+     * @since 1.4.6
+     * @param flag The name of this flag, and flag to register
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalFlag(String flag){
+        return optionalFlag(flag, flag);
+    }
+
+    /**
+     * Create an optional flag.
      * @param name The name of this flag
      * @param flag The flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
@@ -76,7 +72,7 @@ public class Arguments {
             return this;
         }
 
-        debug.print("Found flag at position " + String.valueOf(index) + " - new args size = " + String.valueOf(unparsedArgs.size()));
+        debug.print("Found flag at position " + index + " - new args size = " + unparsedArgs.size());
 
         parsedArgs.put(name, unparsedArgs.get(index));
         unparsedArgs.remove(index);
@@ -205,8 +201,9 @@ public class Arguments {
         String concatenated = String.join(" ", Arrays.copyOfRange(unparsedArgs.toArray(new String[unparsedArgs.size()]), position, end));
         parsedArgs.put(name, concatenated);
 
-        for (int s = position; s != end; s++)
-            unparsedArgs.remove(position);
+        if (end > position) {
+            unparsedArgs.subList(position, end).clear();
+        }
         
         debug.print("Found sentence of length " + String.valueOf(length) + " - new args size = " + String.valueOf(unparsedArgs.size()));
 

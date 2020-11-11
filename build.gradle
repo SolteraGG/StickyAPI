@@ -2,11 +2,16 @@ plugins {
     id 'java'
     id 'maven-publish'
     id "io.freefair.lombok" version "5.3.0"
+    id "com.github.hierynomus.license" version "0.15.0"
 }
 group = 'com.dumbdogdiner'
 
-version = '1.4.5'
+version = '1.5.0'
 
+// License Plugin Options
+license { header = file('LICENSE_HEADER') }
+// Run the license formatter before compiling the source code.
+tasks.compileJava.dependsOn licenseFormatMain
 
 configurations {
     jaxDoclet
@@ -24,7 +29,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.3-R0.1-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'

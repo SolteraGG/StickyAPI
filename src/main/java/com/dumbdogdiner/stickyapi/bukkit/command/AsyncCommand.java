@@ -1,21 +1,7 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the GPLv3 license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
 import java.util.List;
@@ -32,6 +18,7 @@ import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -187,9 +174,9 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @throws IllegalArgumentException if sender, alias, or args is null
      */
     @Override
-    public java.util.List<String> tabComplete(CommandSender sender, String alias, String[] args)
+    public java.util.@NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String[] args)
             throws CommandException, IllegalArgumentException {
-        if (sender == null || alias == null || args == null)
+        if (args == null)
             throw new NullPointerException("arguments to tabComplete cannot be null");
 
         List<String> completions = null;
