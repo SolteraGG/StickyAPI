@@ -16,6 +16,12 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Install dependencies for coverage reporter (java 11 only)
+      run: apk add -U --no-cache bash curl ca-certificates
+      if: matrix.version == '11'
+    - name: Upload code coverage (java 11 only)
+      uses: codecov/codecov-action@v1
+      if: matrix.version == '11'
     - name: Save build artifact
       uses: actions/upload-artifact@v2
       with:
@@ -30,4 +36,4 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Run the license formatter checker
-      run: ./gradlew licenseMain
+      run: ./gradlew licenseMain licenseTest

@@ -10,7 +10,8 @@ import inet.ipaddr.IPAddressString;
 /**
  * Utility class for IP Addresses
  */
-public class IPUtil {
+public final class IPUtil {
+	private IPUtil() {}
     /**
 	 * Check if an IP falls within a CIDR range
 	 * @param ipAddress1 IP Address to check
@@ -22,8 +23,10 @@ public class IPUtil {
 		
 		String subnetStr = ipAddress1+"/"+prefix;
 		IPAddress subnetAddress = new IPAddressString(subnetStr).getAddress();
+		if (subnetAddress == null) return false; // prevent NPE for invalid subnetAddress
 		IPAddress subnet = subnetAddress.toPrefixBlock();
 		IPAddress testAddress = new IPAddressString(ipAddress2).getAddress();
+		if (testAddress == null) return false; // prevent NPE for invalid testAddress
 		return subnet.contains(testAddress);
 	}
 }

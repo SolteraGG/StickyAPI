@@ -7,7 +7,9 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.util.Random;
 import java.util.zip.CRC32;
 
-class Luhn {
+final class Luhn {
+    private Luhn() {}
+
     /**
      * Checks if the card is valid
      * 
@@ -15,7 +17,7 @@ class Luhn {
      * @return result {@link boolean} true of false
      */
     public static boolean luhnCheck(String card) {
-        if (card == null)
+        if (card == null || card.length() == 0)
             return false;
 
         char checkDigit = card.charAt(card.length() - 1);
