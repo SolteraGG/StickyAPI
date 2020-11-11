@@ -18,6 +18,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * CommandBuilder for avoiding bukkit's terrible command API and making creating
+ * new commands as simple as possible
+ */
 public class CommandBuilder {
 
     Boolean asynchronous = false;
@@ -46,12 +50,20 @@ public class CommandBuilder {
         public void apply(ExitCode exitCode, CommandSender sender, String commandLabel, List<String> args);
     }
 
+    /**
+     * Create a new [@link CommandBuilder} instance
+     * <p>
+     * Used to build and register Bukkit commands
+     * 
+     * @param name
+     */
     public CommandBuilder(@NotNull String name) {
         this.name = name;
     }
 
     /**
      * If this command should run asynchronously 
+     * 
      * @param asynchronous
      * @return {@link CommandBuilder}
      */
@@ -62,6 +74,7 @@ public class CommandBuilder {
 
     /**
      * Set this command to run asynchronously
+     * 
      * @return {@link CommandBuilder}
      */
     public CommandBuilder isAsynchronous() {
@@ -70,6 +83,7 @@ public class CommandBuilder {
 
     /**
      * Set the permission of the command
+     * 
      * @param permission to set
      * @return {@link CommandBuilder}
      */
@@ -80,6 +94,7 @@ public class CommandBuilder {
 
     /**
      * Set the description of the command
+     * 
      * @param description to set
      * @return {@link CommandBuilder}
      */
@@ -90,17 +105,20 @@ public class CommandBuilder {
 
     /**
      * Add an alias to this command.
+     * 
+     * @param alias to add
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder addAlias(@NotNull String... aliases) {
-        for (var alias : aliases) {
-            this.aliases.add(alias);
+    public CommandBuilder addAlias(@NotNull String... alias) {
+        for (var a : alias) {
+            this.aliases.add(a);
         }
         return this;
     }
 
     /**
      * Set the aliases of the command
+     * 
      * @param aliases to set
      * @return {@link CommandBuilder}
      */
@@ -111,6 +129,7 @@ public class CommandBuilder {
 
     /**
      * Set the executor of the command
+     * 
      * @param executor to set
      * @return {@link CommandBuilder}
      */
@@ -121,6 +140,7 @@ public class CommandBuilder {
 
     /**
      * Set the tab complete executor of the command
+     * 
      * @param executor to set
      * @return {@link CommandBuilder}
      */
@@ -131,6 +151,7 @@ public class CommandBuilder {
 
     /**
      * Set the error handler of the command
+     * 
      * @param handler to set
      * @return {@link CommandBuilder}
      */
@@ -141,12 +162,15 @@ public class CommandBuilder {
 
     /**
      * Build the command!
+     * 
      * @param plugin to build it for
      * @return {@link org.bukkit.command.Command}
      */
     public org.bukkit.command.Command build(@NotNull Plugin plugin) {
         PluginCommand command;
         try {
+            // PluginCommand is protected, so we need to use reflection to instantiate an instance of it...
+            // This is kind of annoying, since it involves... well... more reflection... But oh well ¯\_(ツ)_/¯
             Constructor<?> c = ReflectionUtil.getProtectedConstructor(PluginCommand.class, String.class, Plugin.class);
             command = (PluginCommand) c.newInstance(this.name, plugin);
 
@@ -193,7 +217,7 @@ public class CommandBuilder {
 
         } catch (Exception e) {
             // If some more funky shit happens, let's just print our stacktrace and return null, there's not much else we can do
-            // Although, in theory, we should never run into this issue, unless of course I fuck something up, which is very common from me...
+            // Although, in theory, we should never run into this issue.
             e.printStackTrace();
             return null;
         }
@@ -201,6 +225,7 @@ public class CommandBuilder {
 
     /**
      * Register the command with a {@link org.bukkit.plugin.Plugin}
+     * 
      * @param plugin to register with
      */
     public void register(@NotNull Plugin plugin) {
