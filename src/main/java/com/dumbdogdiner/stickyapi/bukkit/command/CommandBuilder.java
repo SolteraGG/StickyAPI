@@ -7,12 +7,15 @@ package com.dumbdogdiner.stickyapi.bukkit.command;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.common.util.StringUtil;
+import com.google.common.collect.ImmutableList;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +23,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -262,9 +266,6 @@ public class CommandBuilder {
                 @Override
                 public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
                         String[] args) {
-                    // this isn't in this scope
-                    // java is weird about it
-                    // k
                     performExecution(sender, command, label, Arrays.asList(args));
                     return true;
                 }
@@ -273,7 +274,29 @@ public class CommandBuilder {
             command.setTabCompleter(new TabCompleter() {
                 @Override
                 public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-                    return tabExecutor.apply(sender, alias, Arrays.asList(args));
+                    if (tabExecutor == null) {
+                        if (args.length == 0) {
+                            return ImmutableList.of();
+                        }
+                
+                        String lastWord = args[args.length - 1];
+                
+                        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+                
+                        ArrayList<String> matchedPlayers = new ArrayList<String>();
+                        for (Player player : sender.getServer().getOnlinePlayers()) {
+                            String name = player.getName();
+                            if ((senderPlayer == null || senderPlayer.canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
+                                matchedPlayers.add(name);
+                            }
+                        }
+                
+                        Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
+                        return matchedPlayers;
+                    } else {
+                        return tabExecutor.apply(sender, alias, Arrays.asList(args));
+
+                    }
                 }
             });
 
