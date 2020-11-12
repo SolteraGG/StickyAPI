@@ -61,6 +61,8 @@ test {
 	useJUnitPlatform()
 	testLogging {
 		events "passed", "skipped", "failed"
+        // Show System.out for code ran by tests
+        showStandardStreams = true
 	}
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
