@@ -3,8 +3,18 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/DumbDogDiner/StickyAPI/build/release?label=builds&logo=github)
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/DumbDogDiner/StickyAPI/docs/release?label=docs&logo=github)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/DumbDogDiner/StickyAPI?label=release&logo=java)
+![Code Coverage (master)](https://img.shields.io/codecov/c/gh/DumbDogDiner/StickyAPI)
 
 Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins.
+
+## Development Quotes
+
+- "_When Unsafe.java is the only safe option..._"
+
+- "_New in 2.0 - `UnsafeUtils`! Because Java is great at removing features we need, so we are forced to use a internal jre class literally called `Unsafe`._"
+
+
+- "_**MD_5 and his knobbery continues.** the CraftServer.java class has a getCommandMap() method and CommandMap is documented but there's no reasonable way to get the command map from within the server. Because MD_5 couldn't help but program like a 12 year old we now have to use reflection to get a more reasonable way to register commands._" - @NotZachery
 
 ## Packages
 

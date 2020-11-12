@@ -35,9 +35,9 @@ public class Cache<T extends Cacheable> {
 
     @Getter @Setter private Long ttl = (long) (30 * 60e3);
 
-    private int memoryUsage = 0;
-    @Getter @Setter
-    private int maxMemoryUsage = 0;
+    // private int memoryUsage = 0;
+    // @Getter @Setter
+    // private int maxMemoryUsage = 0;
 
     @Getter @Setter
     private int maxSize = 0;
@@ -75,22 +75,22 @@ public class Cache<T extends Cacheable> {
         return objects.size();
     }
 
-    /**
-     * Get the memory usage of this cache, specifying the units of the returned value.
-     * @param units The units the result
-     * @return Approximate memory usage
-     */
-    public Double memoryUsage(MemoryUtil.Unit units) {
-        return MemoryUtil.formatBits(memoryUsage, units);
-    }   
+    // /**
+    //  * Get the memory usage of this cache, specifying the units of the returned value.
+    //  * @param units The units the result
+    //  * @return Approximate memory usage
+    //  */
+    // public Double memoryUsage(MemoryUtil.Unit units) {
+    //     return MemoryUtil.formatBits(memoryUsage, units);
+    // }   
 
-    /**
-     * Get the approximate memory usage of this cache in kilobytes.
-     * @return Approximate memory usage
-     */
-    public Double memoryUsage() {
-        return memoryUsage(MemoryUtil.Unit.KILOBYTES);
-    }
+    // /**
+    //  * Get the approximate memory usage of this cache in kilobytes.
+    //  * @return Approximate memory usage
+    //  */
+    // public Double memoryUsage() {
+    //     return memoryUsage(MemoryUtil.Unit.KILOBYTES);
+    // }
 
     /**
      * Retrieve an object from the cache.
@@ -150,22 +150,25 @@ public class Cache<T extends Cacheable> {
             }
         }
 
-        int size = MemoryUtil.getSizeOf(object);
-        if (maxMemoryUsage > 0 && memoryUsage + size > maxMemoryUsage) {
-            Runnable memoryReleaser = new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (this) {
-                        while (memoryUsage + size > maxMemoryUsage) {
-                            removeOldestEntry();
-                        }
-                        memoryUsage += size;
-                        debug.print("Released memory from " + clazz.getSimpleName() +" cache");
-                    }
-                }
-            };
-            StickyAPI.getPool().submit(memoryReleaser);
-        }
+        // This causes a StackOverflow, no big deal just remove this feature!
+        // Or, you know, fix memory util but that's more work than commenting a few lines
+        // which didn't really work in the first place
+        // int size = MemoryUtil.getSizeOf(object);
+        // if (maxMemoryUsage > 0 && memoryUsage + size > maxMemoryUsage) {
+        //     Runnable memoryReleaser = new Runnable() {
+        //         @Override
+        //         public void run() {
+        //             synchronized (this) {
+        //                 while (memoryUsage + size > maxMemoryUsage) {
+        //                     removeOldestEntry();
+        //                 }
+        //                 memoryUsage += size;
+        //                 debug.print("Released memory from " + clazz.getSimpleName() +" cache");
+        //             }
+        //         }
+        //     };
+        //     StickyAPI.getPool().submit(memoryReleaser);
+        // }
 
         objects.put(object.getKey(), object);
         objectInsertionTimestamps.put(object.getKey(), System.currentTimeMillis());
@@ -197,9 +200,9 @@ public class Cache<T extends Cacheable> {
             return null;
         }
 
-        if (maxMemoryUsage > 0) {
-            memoryUsage -= MemoryUtil.getSizeOf(object);
-        }
+        // if (maxMemoryUsage > 0) {
+        //     memoryUsage -= MemoryUtil.getSizeOf(object);
+        // }
         
         debug.print("Removed entry for " + clazz.getSimpleName() + " with key " + object.getKey());
         return didRemove;
