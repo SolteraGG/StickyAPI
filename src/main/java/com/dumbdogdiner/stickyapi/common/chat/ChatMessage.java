@@ -2,7 +2,9 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the GPLv3 license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.translation;
+package com.dumbdogdiner.stickyapi.common.chat;
+
+import com.dumbdogdiner.stickyapi.common.translation.Translation;
 
 import lombok.Getter;
 import net.md_5.bungee.api.chat.ClickEvent;

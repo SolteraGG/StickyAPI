@@ -9,9 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
-import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
-import com.dumbdogdiner.stickyapi.common.util.MemoryUtil;
 
 import lombok.Getter;
 import lombok.Setter;

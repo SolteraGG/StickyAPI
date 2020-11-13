@@ -7,11 +7,15 @@ package com.dumbdogdiner.stickyapi.bukkit.command;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.common.util.StringUtil;
+import com.google.common.collect.ImmutableList;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,6 +23,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CommandBuilder {
 
-    Boolean asynchronous = false;
+    Boolean synchronous = false;
     String name;
     String permission;
     String description;
@@ -42,6 +47,8 @@ public class CommandBuilder {
     ErrorHandler errorHandler;
 
     Command bukkitCommand;
+
+    HashMap<String, CommandBuilder> subCommands = new HashMap<>();
 
     @FunctionalInterface
     public interface Executor {
@@ -68,13 +75,13 @@ public class CommandBuilder {
     }
 
     /**
-     * If this command should run asynchronously 
+     * If this command should run asynchronously
      * 
      * @param asynchronous
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder setAsynchronous(@NotNull Boolean asynchronous) {
-        this.asynchronous = asynchronous;
+    public CommandBuilder synchronous(@NotNull Boolean asynchronous) {
+        this.synchronous = asynchronous;
         return this;
     }
 
@@ -83,8 +90,8 @@ public class CommandBuilder {
      * 
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder isAsynchronous() {
-        return this.setAsynchronous(true);
+    public CommandBuilder synchronous() {
+        return this.synchronous(true);
     }
 
     /**
@@ -93,7 +100,7 @@ public class CommandBuilder {
      * @param permission to set
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder setPermission(@NotNull String permission) {
+    public CommandBuilder permission(@NotNull String permission) {
         this.permission = permission;
         return this;
     }
@@ -104,7 +111,7 @@ public class CommandBuilder {
      * @param description to set
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder setDescription(@NotNull String description) {
+    public CommandBuilder description(@NotNull String description) {
         this.description = description;
         return this;
     }
@@ -115,7 +122,7 @@ public class CommandBuilder {
      * @param alias to add
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder addAlias(@NotNull String... alias) {
+    public CommandBuilder alias(@NotNull String... alias) {
         for (var a : alias) {
             this.aliases.add(a);
         }
@@ -128,8 +135,19 @@ public class CommandBuilder {
      * @param aliases to set
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder setAliases(@NotNull List<String> aliases) {
+    public CommandBuilder aliases(@NotNull List<String> aliases) {
         this.aliases = aliases;
+        return this;
+    }
+
+    /**
+     * Add a subcommand to a command
+     * @param builder the sub command
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder subCommand(CommandBuilder builder) {
+        builder.synchronous = this.synchronous;
+        this.subCommands.put(builder.name, builder);
         return this;
     }
 
@@ -166,6 +184,57 @@ public class CommandBuilder {
         return this;
     }
 
+    private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label, List<String> args) {
+        StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
+            performExecution(sender, command, label, args);
+            return null;
+        }));
+    }
+
+    /**
+     * Execute this command. Checks for existing sub-commands, and runs the error
+     * handler if anything goes wrong.
+     */
+    private void performExecution(CommandSender sender, org.bukkit.command.Command command, String label, List<String> args) {
+        // look for subcommands
+        if (args.size() > 0 && subCommands.containsKey(args.get(0))) {
+            CommandBuilder subCommand = subCommands.get(args.get(0));
+            if (!synchronous && subCommand.synchronous) {
+                throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
+            }
+
+            // We can't modify List, so we need to make a clone of it, because java is special.
+            ArrayList<String> argsClone = new ArrayList<String>(args);
+            argsClone.remove(0);
+
+            // spawn async command from sync
+            if (synchronous && !subCommand.synchronous) {
+                subCommand.performAsynchronousExecution(sender, command, label, argsClone);
+            }
+
+            subCommand.performExecution(sender, command, label, argsClone);
+            return;
+        }
+
+        ExitCode exitCode;
+        try {
+            // If the user does not have permission to execute the sub command, don't let them execute and return permission denied
+            if (this.permission != null && !sender.hasPermission(this.permission)) {
+                exitCode = ExitCode.EXIT_PERMISSION_DENIED;
+            }
+            else {
+                exitCode = executor.apply(sender, label, args);
+            }
+        } catch (Exception e) {
+            exitCode = ExitCode.EXIT_ERROR;
+            e.printStackTrace();
+        }
+
+        // run the error handler - something went wrong!
+        if (exitCode != ExitCode.EXIT_SUCCESS)
+            errorHandler.apply(exitCode, sender, label, args);
+    }
+
     /**
      * Build the command!
      * 
@@ -174,9 +243,16 @@ public class CommandBuilder {
      */
     public org.bukkit.command.Command build(@NotNull Plugin plugin) {
         PluginCommand command;
+
+        if (this.synchronous == null) {
+            this.synchronous = false;
+        }
+
         try {
-            // PluginCommand is protected, so we need to use reflection to instantiate an instance of it...
-            // This is kind of annoying, since it involves... well... more reflection... But oh well ¯\_(ツ)_/¯
+            // PluginCommand is protected, so we need to use reflection to instantiate an
+            // instance of it...
+            // This is kind of annoying, since it involves... well... more reflection... But
+            // oh well ¯\_(ツ)_/¯
             Constructor<?> c = ReflectionUtil.getProtectedConstructor(PluginCommand.class, String.class, Plugin.class);
             command = (PluginCommand) c.newInstance(this.name, plugin);
 
@@ -188,41 +264,54 @@ public class CommandBuilder {
             // arguments to our executor
             command.setExecutor(new CommandExecutor() {
                 @Override
-                public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-                    if (!asynchronous) {
-                        ExitCode exitCode = executor.apply(sender, label, Arrays.asList(args));
-                        if (exitCode != ExitCode.EXIT_SUCCESS)
-                            errorHandler.apply(exitCode, sender, label, Arrays.asList(args));
-                        return true;
-                    }
-
-                    StickyAPI.getPool().execute(new FutureTask<Boolean>(() -> { 
-                        ExitCode exitCode = executor.apply(sender, label, Arrays.asList(args));
-                        if (exitCode != ExitCode.EXIT_SUCCESS)
-                            errorHandler.apply(exitCode, sender, label, Arrays.asList(args)); 
-                        return true; 
-                    }));
-
+                public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
+                        String[] args) {
+                    performExecution(sender, command, label, Arrays.asList(args));
                     return true;
                 }
             });
 
-            // 
             command.setTabCompleter(new TabCompleter() {
                 @Override
                 public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-                    return tabExecutor.apply(sender, alias, Arrays.asList(args));
-                } 
+                    if (tabExecutor == null) {
+                        if (args.length == 0) {
+                            return ImmutableList.of();
+                        }
+                
+                        String lastWord = args[args.length - 1];
+                
+                        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+                
+                        ArrayList<String> matchedPlayers = new ArrayList<String>();
+                        for (Player player : sender.getServer().getOnlinePlayers()) {
+                            String name = player.getName();
+                            if ((senderPlayer == null || senderPlayer.canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
+                                matchedPlayers.add(name);
+                            }
+                        }
+                
+                        Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
+                        return matchedPlayers;
+                    } else {
+                        return tabExecutor.apply(sender, alias, Arrays.asList(args));
+
+                    }
+                }
             });
+
             command.setDescription(this.description);
+
             if (this.aliases != null)
                 command.setAliases(this.aliases);
+
             command.setPermission(this.permission);
             this.bukkitCommand = command;
             return command;
 
         } catch (Exception e) {
-            // If some more funky shit happens, let's just print our stacktrace and return null, there's not much else we can do
+            // If some more funky shit happens, let's just print our stacktrace and return
+            // null, there's not much else we can do
             // Although, in theory, we should never run into this issue.
             e.printStackTrace();
             return null;

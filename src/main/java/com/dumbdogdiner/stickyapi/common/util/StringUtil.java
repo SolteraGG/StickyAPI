@@ -8,6 +8,9 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Operations on {@link java.lang.String}
  */
@@ -189,6 +192,25 @@ public final class StringUtil {
         }
 
         return false;
+    }
+
+    /**
+     * This method uses a region to check case-insensitive equality. This
+     * means the internal array does not need to be copied like a
+     * toLowerCase() call would.
+     *
+     * @param string String to check
+     * @param prefix Prefix of string to compare
+     * @return {@link Boolean}
+     * @throws NullPointerException if prefix is null
+     * @throws IllegalArgumentException if string is null
+     */
+    public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix) throws IllegalArgumentException, NullPointerException {
+        Validate.notNull(string, "Cannot check a null string for a match");
+        if (string.length() < prefix.length()) {
+            return false;
+        }
+        return string.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
 }
