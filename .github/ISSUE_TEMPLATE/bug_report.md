@@ -1,8 +1,8 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG]"
-labels: ''
+title: ""
+labels: 'p3 bug'
 assignees: ''
 
 ---
@@ -20,7 +20,7 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Console Logs**
-If applicable, give a pastebin link to the console error related to LolBans
+If applicable, give a pastebin link to the console error related to this project
 
 **Context:**
  - OS: [e.g. Linux]
