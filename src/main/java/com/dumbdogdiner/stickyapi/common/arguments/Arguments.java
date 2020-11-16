@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.arguments;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,8 +22,14 @@ import org.jetbrains.annotations.NotNull;
  * Utility class for handling command arguments.
  */
 public class Arguments {
+    @Getter
+    private List<String> rawArgs;
+    
     @Getter private ArrayList<String> unparsedArgs;
     private HashMap<String, String> parsedArgs = new HashMap<>();
+
+    @Getter
+    private String invalidatedBy;
 
     private int position = 0;
     private boolean valid = true;
@@ -30,6 +37,7 @@ public class Arguments {
 
     public void invalidate(String name) {
         debug.print("Invalidated by argument " + name);
+        invalidatedBy = name;
         valid = false;
     }
  
@@ -48,6 +56,7 @@ public class Arguments {
      */
     public Arguments(List<String> args) {
         unparsedArgs = new ArrayList<String>(args);
+        rawArgs = Collections.unmodifiableList(args);
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
@@ -52,15 +53,15 @@ public class CommandBuilder {
 
     @FunctionalInterface
     public interface Executor {
-        public ExitCode apply(CommandSender sender, String commandLabel, List<String> args);
+        public ExitCode apply(CommandSender sender, String commandLabel, Arguments args);
     }
 
     public interface TabExecutor {
-        public java.util.List<String> apply(CommandSender sender, String commandLabel, List<String> args);
+        public java.util.List<String> apply(CommandSender sender, String commandLabel, Arguments args);
     }
 
     public interface ErrorHandler {
-        public void apply(ExitCode exitCode, CommandSender sender, String commandLabel, List<String> args);
+        public void apply(ExitCode exitCode, CommandSender sender, String commandLabel, Arguments args);
     }
 
     /**
@@ -223,7 +224,7 @@ public class CommandBuilder {
                 exitCode = ExitCode.EXIT_PERMISSION_DENIED;
             }
             else {
-                exitCode = executor.apply(sender, label, args);
+                exitCode = executor.apply(sender, label, new Arguments(args));
             }
         } catch (Exception e) {
             exitCode = ExitCode.EXIT_ERROR;
@@ -232,7 +233,7 @@ public class CommandBuilder {
 
         // run the error handler - something went wrong!
         if (exitCode != ExitCode.EXIT_SUCCESS)
-            errorHandler.apply(exitCode, sender, label, args);
+            errorHandler.apply(exitCode, sender, label, new Arguments(args));
     }
 
     /**
@@ -294,8 +295,7 @@ public class CommandBuilder {
                         Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
                         return matchedPlayers;
                     } else {
-                        return tabExecutor.apply(sender, alias, Arrays.asList(args));
-
+                        return tabExecutor.apply(sender, alias, new Arguments(Arrays.asList(args)));
                     }
                 }
             });
