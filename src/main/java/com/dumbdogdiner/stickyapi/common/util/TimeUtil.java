@@ -110,7 +110,7 @@ public final class TimeUtil {
      * Convert unix timestamp to a duration forward or backward to current system
      * time
      * 
-     * @param expires A unix timestamp
+     * @param expires The amount of time in seconds to display (e.x. 300 == `5 minutes`)
      * @return A string stating the duration forward or backward in time.
      */
     public static String expires(long expires) {

@@ -106,8 +106,6 @@ public class Arguments {
         return this;
     }
 
-
-
     private Arguments optionalStringImplementation(String name, String fallback){
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
@@ -167,30 +165,14 @@ public class Arguments {
 
         return this;
     }
-    
-    /**
-     * Create an optional sentence argument, with its length defaulting to the remaining length of
-     * current unparsed arguments.
-     * @param name The name of this sentence
-     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
-     */
-    public Arguments optionalSentence(String name) {
-        debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
-        return optionalSentence(name, unparsedArgs.size() - position);
-    }
 
-    /**
-     * Create an optional sentence with the given length.
-     * @param name The name of the sentence to createa
-     * @param length The length of the sentence
-     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
-     */
-    public Arguments optionalSentence(String name, int length) {
+    private Arguments optionalSentenceImplementation(String name, String fallback, int length) {
         int end = position + length;
         debug.print("Looking for optional sentence - start = " + String.valueOf(position) + ", end = " + String.valueOf(end) + ", length = " + String.valueOf(length));
     
         if (position >= end) {
-            debug.print("Start cannot be greater than or equal to end");
+            debug.print("Start cannot be greater than or equal to end, using default value of " + fallback);
+            parsedArgs.put(name, fallback);
             return this;
         }
         
@@ -209,6 +191,54 @@ public class Arguments {
         
         debug.print("Found sentence of length " + String.valueOf(length) + " - new args size = " + String.valueOf(unparsedArgs.size()));
 
+        return this;
+    }
+    
+    /**
+     * Create an optional sentence argument, with its length defaulting to the remaining length of
+     * current unparsed arguments.
+     * @param name The name of this sentence
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalSentence(String name) {
+        debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
+        return optionalSentence(name, unparsedArgs.size() - position);
+    }
+    
+    /**
+     * Create an optional sentence argument, with its length defaulting to the remaining length of
+     * current unparsed arguments.
+     * @param name The name of this sentence
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalSentence(String name, String fallback) {
+        debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
+        return optionalSentence(name, fallback, unparsedArgs.size() - position);
+    }
+
+    /**
+     * Create an optional sentence with the given length.
+     * @param name The name of the sentence to createa
+     * @param length The length of the sentence
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalSentence(String name, String fallback, int length) {
+        if (fallback != null){
+            return optionalSentenceImplementation(name, fallback, length);
+        } else {
+            debug.print("Explicit fallback string of null attempted for parameter " + name + ", argument not added.");
+            return this;
+        }
+    }
+
+    /**
+     * Create an optional sentence with the given length.
+     * @param name The name of the sentence to createa
+     * @param length The length of the sentence
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalSentence(String name, int length) {
+        optionalSentenceImplementation(name, null, length);
         return this;
     }
 
@@ -256,11 +286,11 @@ public class Arguments {
     }
 
     /**
-     * Create an optional timestamp argument.
+     * Create an optional timestamp argument. (e.g. 1w2d5s)
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalTimestamp(String name) {
+    public Arguments optionalTimeString(String name) {
         debug.print("Looking for optional timestamp " + name + "...");
         if (unparsedArgs.size() > position && TimeUtil.toTimestamp(unparsedArgs.get(position)) != null) {
             parsedArgs.put(name, String.valueOf(TimeUtil.toTimestamp(unparsedArgs.get(position)).getTime()));
@@ -273,19 +303,35 @@ public class Arguments {
     }
 
     /**
-     * Create an optional timestamp argument.
+     * Create a required timestamp argument. (e.g. 1w2d5s)
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredTimestamp(String name) {
+    public Arguments requiredTimeString(String name) {
         debug.print("Looking for required timestamp " + name + "...");
         if (unparsedArgs.size() > position && TimeUtil.toTimestamp(unparsedArgs.get(position)) != null) {
             parsedArgs.put(name, String.valueOf(TimeUtil.toTimestamp(unparsedArgs.get(position)).getTime()));
             position++;
             debug.print("Found timestamp at position " + String.valueOf(position) + " - new args size = "
                     + String.valueOf(unparsedArgs.size()));
-        } else
+        } else {
             debug.print("Could not find timestamp");
+            invalidate(name);
+        }
+
+        return this;
+    }
+
+    private Arguments optionalIntImplementation(String name, Integer fallback){
+        debug.print("Looking for optional integer " + name + "...");
+        if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
+            parsedArgs.put(name, unparsedArgs.get(position));
+            position++;
+            debug.print("Found int at position " + String.valueOf(position) + " - new args size = " + String.valueOf(unparsedArgs.size()));
+        } else  {
+            debug.print("Could not find int, using default value of " + fallback);
+            parsedArgs.put(name, fallback.toString());
+        }
 
         return this;
     }
@@ -296,16 +342,22 @@ public class Arguments {
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments optionalInt(String name) {
-        debug.print("Looking for optional int " + name + "...");
-
-        if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
-            parsedArgs.put(name, unparsedArgs.get(position));
-            unparsedArgs.remove(position);
-            debug.print("Found int at position " + String.valueOf(position) + " - new args size = " + String.valueOf(unparsedArgs.size()));
-        } else 
-            debug.print("Could not find int");
-
+        optionalIntImplementation(name, null);
         return this;
+    }
+
+    /**
+     * Create an optional integer argument.
+     * @param name Name of the argument
+     * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
+     */
+    public Arguments optionalInt(String name, Integer fallback) {
+        if (fallback != null){
+            return optionalIntImplementation(name, fallback);
+        } else {
+            debug.print("Explicit fallback integer of null attempted for parameter " + name + ", argument not added.");
+            return this;
+        }
     }
 
     /**
