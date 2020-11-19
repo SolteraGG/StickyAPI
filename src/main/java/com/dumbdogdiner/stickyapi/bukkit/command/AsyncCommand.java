@@ -32,8 +32,9 @@ import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
 /**
  * This class is designed to handle execution of commands given by a user or the
@@ -42,7 +43,7 @@ import javax.annotation.Nullable;
  * Please use the with caution!
  */
 public abstract class AsyncCommand extends Command implements PluginIdentifiableCommand {
-    private Plugin owner;
+    private final Plugin owner;
     private TabCompleter completer;
 
     /**
@@ -123,7 +124,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @return Plugin that owns this command
      */
     @Override
-    public Plugin getPlugin() {
+    public @NotNull Plugin getPlugin() {
         return this.owner;
     }
 

@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is designed to handle execution of commands given by a user or the
@@ -73,7 +74,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @return {@link ExitCode}
      */
     @Override
-    public final boolean execute(CommandSender sender, String commandLabel, String[] args) {
+    public final boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
         if (!this.owner.isEnabled())
             throw new CommandException(String.format("Cannot execute command \"%s\" in plugin %s - plugin is disabled.",
                     commandLabel, this.owner.getDescription().getFullName()));

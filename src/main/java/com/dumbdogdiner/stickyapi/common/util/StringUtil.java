@@ -1,17 +1,17 @@
-/* 
+/*
  *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
  *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -21,12 +21,14 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Operations on {@link java.lang.String}
  */
 public final class StringUtil {
-    private StringUtil() {}
+    private StringUtil() {
+    }
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
@@ -46,7 +48,7 @@ public final class StringUtil {
 
     /**
      * Create a horizontal progress bar, similar to how htop does it.
-     * 
+     *
      * @param size              The size of the bar (inside)
      * @param percentage        The percentage to fill the bar to
      * @param monospace         If false, the bars will be a chatacter with the
@@ -60,7 +62,7 @@ public final class StringUtil {
      * @return A progress bar
      */
     public static String createProgressBar(double size, double percentage, boolean monospace, boolean includePercentage,
-            boolean includeBrackets) {
+                                           boolean includeBrackets) {
         double barCount = ((percentage / 100) * size);
         String bar = "";
         for (double i = 0; i < size; i++) {
@@ -74,14 +76,14 @@ public final class StringUtil {
         }
         if (includeBrackets)
             // double up %s to escape them
-            bar = includePercentage ? String.format("[%s] %s%%", bar, 
+            bar = includePercentage ? String.format("[%s] %s%%", bar,
                     percentageFormatter.format(percentage)) : "[" + bar + "]";
         return bar;
     }
 
     /**
      * Create a horizontal progress bar, similar to how htop does it.
-     * 
+     *
      * @param size       The size of the bar
      * @param percentage The percentage to fill the bar to
      * @return A progress bar
@@ -98,10 +100,10 @@ public final class StringUtil {
      * Example: "hello world" == "Hello World"
      * <p>
      * Example: "HELLO WORLD" == "Hello World"
-     * 
-     * @see Alternate (keeping uppercase): {@link #capitaliseSentenceKeepUpperCase(String)}
+     *
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
+     * @see Alternate (keeping uppercase): {@link #capitaliseSentenceKeepUpperCase(String)}
      */
     public static String capitaliseSentence(String string) {
         StringBuilder sb = new StringBuilder();
@@ -128,11 +130,11 @@ public final class StringUtil {
      * Example: "hello world" == "Hello World"
      * <p>
      * Example: "hello WORLD" == "Hello WORLD"
-     * 
-     * @since 2.0
-     * @see Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
+     *
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
+     * @see Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
+     * @since 2.0
      */
     public static String capitaliseSentenceKeepUpperCase(String string) {
         StringBuilder sb = new StringBuilder();
@@ -153,7 +155,7 @@ public final class StringUtil {
 
     /**
      * Replace a word with asterisks.
-     * 
+     *
      * @param word The word to censor
      * @return The censored word
      */
@@ -171,11 +173,11 @@ public final class StringUtil {
      * Filter "Leet Speak" out of a message
      * <p>
      * Example:
-     * 
+     *
      * <pre>
      * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
      * </pre>
-     * 
+     *
      * @param message The message to filter
      * @return The filtered message
      */
@@ -191,7 +193,7 @@ public final class StringUtil {
 
     /**
      * Check if many strings equal a single comparison string
-     * 
+     *
      * @param haystack the string to compare to
      * @param needles  things that may match the comparison string
      * @return Whether something matches.
@@ -205,4 +207,16 @@ public final class StringUtil {
         return false;
     }
 
+    public static UUID getUUIDFromString(String inUUID) {
+        if (inUUID.length() == 32) {
+            return UUID.fromString(
+                    inUUID.replaceFirst(  // https://stackoverflow.com/a/19399768
+                            "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                            "$1-$2-$3-$4-$5"
+                    )
+            );
+        } else {
+            return UUID.fromString(inUUID);
+        }
+    }
 }
