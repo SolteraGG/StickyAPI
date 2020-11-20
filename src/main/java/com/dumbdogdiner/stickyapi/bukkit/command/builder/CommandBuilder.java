@@ -15,6 +15,8 @@ import java.util.concurrent.FutureTask;
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bukkit.command.ExitCode;
 import com.dumbdogdiner.stickyapi.bukkit.command.PluginCommand;
+import com.dumbdogdiner.stickyapi.bukkit.util.NotificationType;
+import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
@@ -48,6 +50,7 @@ public class CommandBuilder {
     String name;
     String permission;
     String description;
+    Boolean playSound = false;
     List<String> aliases = new ArrayList<>();
     Long cooldown = 0L;
 
@@ -99,6 +102,15 @@ public class CommandBuilder {
     }
 
     /**
+     * Set this command to run asynchronously
+     * 
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder synchronous() {
+        return this.synchronous(true);
+    }
+
+    /**
      * Set the cooldown for this command
      * 
      * @param cooldown in milliseconds
@@ -107,15 +119,6 @@ public class CommandBuilder {
     public CommandBuilder cooldown(Long cooldown) {
         this.cooldown = cooldown;
         return this;
-    }
-
-    /**
-     * Set this command to run asynchronously
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder synchronous() {
-        return this.synchronous(true);
     }
 
     /**
@@ -138,6 +141,26 @@ public class CommandBuilder {
      */
     public CommandBuilder requiresPlayer() {
         return this.requiresPlayer(true);
+    }
+
+    /**
+     * If this command should play a sound upon exiting
+     * 
+     * @param playSound
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder playSound(@NotNull Boolean playSound) {
+        this.playSound = playSound;
+        return this;
+    }
+
+    /**
+     * If this command should play a sound upon exiting
+     * 
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder playSound() {
+        return this.playSound(true);
     }
 
     /**
@@ -268,7 +291,7 @@ public class CommandBuilder {
         }
 
         ExitCode exitCode;
-        Arguments shamwow = new Arguments(args);
+        Arguments a = new Arguments(args);
         var variables = new TreeMap<String, String>();
         variables.put("command", command.getName());
         variables.put("sender", sender.getName());
@@ -292,20 +315,10 @@ public class CommandBuilder {
                 // them execute and return permission denied
                 if (this.permission != null && !sender.hasPermission(this.permission)) {
                     exitCode = ExitCode.EXIT_PERMISSION_DENIED;
-                }
-
-                // Hmmm, I wish there was a better way to make sure my commands is ran by a
-                // player!
-                // Zachery here for `requiresPlayer`! The new and improved
-                // way of requiring that your command is ran by a player!
-                // Have you ever wanted a better way of ensuring the sender of your command is a
-                // player?
-                // Well, now you have that! It's null safe and easy to use, even md_5 could use
-                // it!
-                else if (this.requiresPlayer && !(sender instanceof Player)) {
+                } else if (this.requiresPlayer && !(sender instanceof Player)) {
                     exitCode = ExitCode.EXIT_MUST_BE_PLAYER;
                 } else {
-                    exitCode = executor.apply(sender, shamwow, variables);
+                    exitCode = executor.apply(sender, a, variables);
                 }
             }
         } catch (Exception e) {
@@ -314,8 +327,16 @@ public class CommandBuilder {
         }
 
         // run the error handler - something made a fucky wucky uwu
-        if (exitCode != ExitCode.EXIT_SUCCESS)
-            errorHandler.apply(exitCode, sender, shamwow, variables);
+        if (exitCode != ExitCode.EXIT_SUCCESS) {
+            if (exitCode == ExitCode.EXIT_INFO) {
+                _playSound(sender, NotificationType.INFO);
+                return;
+            }
+            errorHandler.apply(exitCode, sender, a, variables);
+            _playSound(sender, NotificationType.ERROR);
+        } else {
+            _playSound(sender, NotificationType.SUCCESS);
+        }
     }
 
     /**
@@ -390,5 +411,11 @@ public class CommandBuilder {
         Command command = this.build(plugin);
         CommandMap cmap = ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap");
         cmap.register(plugin.getName(), command);
+    }
+
+    private void _playSound(CommandSender sender, NotificationType type) {
+        if (!this.playSound)
+            return;
+        SoundUtil.send(sender, type);
     }
 }
