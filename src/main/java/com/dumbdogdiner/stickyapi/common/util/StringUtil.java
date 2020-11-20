@@ -15,11 +15,13 @@ import org.jetbrains.annotations.NotNull;
  * Operations on {@link java.lang.String}
  */
 public final class StringUtil {
-    private StringUtil() {}
+    private StringUtil() {
+    }
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
-    // createProgressBar - format double percentage to no decimal places to avoid it showing as '100.0000%' or something
+    // createProgressBar - format double percentage to no decimal places to avoid it
+    // showing as '100.0000%' or something
     private static DecimalFormat percentageFormatter = new DecimalFormat("#");
 
     static {
@@ -38,7 +40,7 @@ public final class StringUtil {
      * 
      * @param size              The size of the bar (inside)
      * @param percentage        The percentage to fill the bar to
-     * @param monospace         If false, the bars will be a chatacter with the
+     * @param monospace         If false, the bars will be a character with the
      *                          equivalent amount of pixels as a whitespace
      *                          character
      * @param includePercentage If true, the percentage will be appended inside of
@@ -63,8 +65,8 @@ public final class StringUtil {
         }
         if (includeBrackets)
             // double up %s to escape them
-            bar = includePercentage ? String.format("[%s] %s%%", bar, 
-                    percentageFormatter.format(percentage)) : "[" + bar + "]";
+            bar = includePercentage ? String.format("[%s] %s%%", bar, percentageFormatter.format(percentage))
+                    : "[" + bar + "]";
         return bar;
     }
 
@@ -88,7 +90,8 @@ public final class StringUtil {
      * <p>
      * Example: "HELLO WORLD" == "Hello World"
      * 
-     * @see Alternate (keeping uppercase): {@link #capitaliseSentenceKeepUpperCase(String)}
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
      */
@@ -195,17 +198,17 @@ public final class StringUtil {
     }
 
     /**
-     * This method uses a region to check case-insensitive equality. This
-     * means the internal array does not need to be copied like a
-     * toLowerCase() call would.
+     * This method uses a region to check case-insensitive equality. This means the
+     * internal array does not need to be copied like a toLowerCase() call would.
      *
      * @param string String to check
      * @param prefix Prefix of string to compare
      * @return {@link Boolean}
-     * @throws NullPointerException if prefix is null
+     * @throws NullPointerException     if prefix is null
      * @throws IllegalArgumentException if string is null
      */
-    public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix) throws IllegalArgumentException, NullPointerException {
+    public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix)
+            throws IllegalArgumentException, NullPointerException {
         Validate.notNull(string, "Cannot check a null string for a match");
         if (string.length() < prefix.length()) {
             return false;
