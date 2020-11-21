@@ -218,4 +218,16 @@ public final class StringUtil {
         return string.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
+    public static UUID getUUIDFromString(String inUUID) {
+        if (inUUID.length() == 32) {
+            return UUID.fromString(
+                    inUUID.replaceFirst(  // https://stackoverflow.com/a/19399768
+                            "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                            "$1-$2-$3-$4-$5"
+                    )
+            );
+        } else {
+            return UUID.fromString(inUUID);
+        }
+    }
 }

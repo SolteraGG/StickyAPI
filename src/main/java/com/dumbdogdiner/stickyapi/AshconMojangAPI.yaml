@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+# Licensed under the MIT license, see LICENSE for more information...
+#
+
 openapi: 3.0.0
 info:
   title: mojang-api
