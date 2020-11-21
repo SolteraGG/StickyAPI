@@ -62,22 +62,26 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
-    
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
+
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.90'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     compileOnly 'com.dumbdogdiner.buildtools:paper:1.16.4-266-SNAPSHOT'
 
-    compileOnly "me.clip:placeholderapi:2.10.6"
     // PAPI
+    compileOnly "me.clip:placeholderapi:2.10.6"
 
     // Luckperms
     compileOnly 'net.luckperms:api:5.2'
+
     // Vault
     compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+
+    // Apache HTTP Client
     compile 'org.apache.httpcomponents:httpclient:4.5'
+
     // JUnit 5 Testing
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
