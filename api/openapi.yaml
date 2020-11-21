@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  description: https://github.com/Electroid/mojang-api
+  title: mojang-api
+  version: 1.0.0
+servers:
+- url: https://api.ashcon.app/mojang/v2
+paths:
+  /user/{uuid}:
+    get:
+      parameters:
+      - description: mojang uuid
+        explode: false
+        in: path
+        name: uuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: successful operation
+      x-accepts: application/json
+components:
+  schemas:
+    inline_response_200_textures_cape:
+      example:
+        data: data
+        url: https://openapi-generator.tech
+      nullable: true
+      properties:
+        url:
+          format: uri
+          nullable: true
+          type: string
+        data:
+          format: byte
+          nullable: true
+          type: string
+    inline_response_200_username_history:
+      example:
+        changed_at: 2000-01-23T04:56:07.000+00:00
+        username: username
+      properties:
+        username:
+          type: string
+        changed_at:
+          format: date-time
+          nullable: true
+          type: string
+    inline_response_200_textures_skin:
+      example:
+        data: data
+        url: https://openapi-generator.tech
+      properties:
+        url:
+          format: uri
+          type: string
+        data:
+          format: byte
+          type: string
+    inline_response_200_textures_raw:
+      example:
+        signature: signature
+        value: value
+      properties:
+        value:
+          format: base64
+          type: string
+        signature:
+          format: base64
+          type: string
+    inline_response_200:
+      example:
+        textures:
+          custom: true
+          slim: true
+          skin:
+            data: data
+            url: https://openapi-generator.tech
+          raw:
+            signature: signature
+            value: value
+          cape:
+            data: data
+            url: https://openapi-generator.tech
+        created_at: 2000-01-23T04:56:07.000+00:00
+        uuid: uuid
+        username_history:
+        - changed_at: 2000-01-23T04:56:07.000+00:00
+          username: username
+        - changed_at: 2000-01-23T04:56:07.000+00:00
+          username: username
+        username: username
+      properties:
+        uuid:
+          type: string
+        username:
+          type: string
+        username_history:
+          items:
+            $ref: '#/components/schemas/inline_response_200_username_history'
+          type: array
+        textures:
+          $ref: '#/components/schemas/inline_response_200_textures'
+        created_at:
+          format: date-time
+          nullable: true
+          type: string
+    inline_response_200_textures:
+      example:
+        custom: true
+        slim: true
+        skin:
+          data: data
+          url: https://openapi-generator.tech
+        raw:
+          signature: signature
+          value: value
+        cape:
+          data: data
+          url: https://openapi-generator.tech
+      properties:
+        slim:
+          type: boolean
+        custom:
+          type: boolean
+        skin:
+          $ref: '#/components/schemas/inline_response_200_textures_skin'
+        cape:
+          $ref: '#/components/schemas/inline_response_200_textures_cape'
+        raw:
+          $ref: '#/components/schemas/inline_response_200_textures_raw'
+

@@ -1,11 +1,4 @@
-# Compiled class file
 *.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -13,39 +6,17 @@
 # Package Files #
 *.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
+
+# exclude jar for gradle wrapper
+!gradle/wrapper/*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# build files
+**/target
+target
 .gradle
-**/build/
-!src/**/build/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
-
-# don't know why this was here but it was and it wouldn't go away - should be caught
-# by *.class anyway
-bin
-
-# editor files
-.vscode
-*.iml
-.settings
-.classpath
-.project
-.idea
+build
+.idea/
