@@ -3,6 +3,7 @@
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
+
 public class TextUtil {
     // Uses info from: https://minecraft.gamepedia.com/Language#Font
     public static int getCharacterWidth(char c){
@@ -45,13 +46,5 @@ public class TextUtil {
             default:
                 return 5;
         }
-    }
-
-    public enum FormatType {
-        COLOR,
-        STYLE
-    }
-    public static void getChatColor(char colorChar){
-        
     }
 }
