@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is designed to handle execution of commands given by a user or the
@@ -57,7 +58,7 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @return Whether or not the command succeeded, returning false will trigger
      *         onSyntaxError()
      */
-    public abstract ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
+    public abstract ExitMessage executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -73,13 +74,13 @@ public abstract class Command extends org.bukkit.command.Command implements Plug
      * @return {@link ExitCode}
      */
     @Override
-    public final boolean execute(CommandSender sender, String commandLabel, String[] args) {
+    public final boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
         if (!this.owner.isEnabled())
             throw new CommandException(String.format("Cannot execute command \"%s\" in plugin %s - plugin is disabled.",
                     commandLabel, this.owner.getDescription().getFullName()));
 
         try {
-            ExitCode resultingExitCode = executeCommand(sender, commandLabel, args);
+            ExitMessage resultingExitCode = executeCommand(sender, commandLabel, args);
 
             if (resultingExitCode == null) {
                 throw new IllegalArgumentException("A null exit code was returned");

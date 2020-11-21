@@ -61,24 +61,26 @@ public final class NumberUtil {
     }
 
     /**
-     * Get the percentage of two numbers
-     * @param x First number
-     * @param y Second number
-     * @param decimalPlace
-     * @return
+     * Get a number as the percentage of another.
+     * @param x The number who's percentage of the total this method will return
+     * @param total The total
+     * @param decimalPlace The number of decimal places to return
+     * @return {@link Double}
      */
-    public static Float getPercentage(int x, int y, Double decimalPlace) {
-        Float z = Float.valueOf(String.valueOf(y) + ".0f");
-        final DecimalFormat df = new DecimalFormat(String.valueOf(decimalPlace));
-        df.setRoundingMode(RoundingMode.HALF_EVEN);
-        return Float.valueOf(df.format((x/z)*100));
+    public static Double getPercentage(int x, int total, Double decimalPlace) {
+        var percent = ((double) x / (double) total) * 100;
+        final DecimalFormat formatter = new DecimalFormat(String.valueOf(decimalPlace));
+        formatter.setRoundingMode(RoundingMode.HALF_EVEN);
+        return Double.valueOf(formatter.format(percent));
     }
 
     /**
      * Get a random number within a range
+     * 
      * @param min minimum value
      * @param max maximum value
-     * Returns a random integer within the specified ranged
+     * @return a random integer within the specified range
+     * @throws IllegalArgumentException when min is greater than max
      */
     public static int getRandomNumber(int min, int max) {
         if (min >= max)

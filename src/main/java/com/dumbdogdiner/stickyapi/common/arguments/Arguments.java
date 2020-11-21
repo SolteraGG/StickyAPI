@@ -379,15 +379,28 @@ public class Arguments {
     }
 
 
-    //TODO: Refactor to getString
     /**
      * Fetch a parsed argument from this arguments object.
      * <p>Returns the argument, if it exists
      * @param name The name of the argument to fetch
      * @return {@link java.lang.String}
+     * @since 2.0
+     * @apiNote This function was renamed in 2.0. Deprecated old name: {@link #get(String)}
      */
-    public String get(String name) {
+    public String getString(String name) {
         return parsedArgs.get(name);
+    }
+
+    /**
+     * Fetch a parsed argument from this arguments object.
+     * <p>Returns the argument, if it exists
+     * @param name The name of the argument to fetch
+     * @return {@link java.lang.String}
+     * @deprecated Renamed in 2.0, use {@link #getString(String)} instead.
+     */
+    @Deprecated
+    public String get(String name) {
+        return getString(name);
     }
 
     /**

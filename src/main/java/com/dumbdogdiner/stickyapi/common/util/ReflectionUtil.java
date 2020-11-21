@@ -28,7 +28,9 @@ import java.lang.reflect.Modifier;
  * A class for abusing Java and using reflection to unprotect methods and constructors, use this with a lot of care and try not to break things!
  */
 @SuppressWarnings({"unchecked", "deprecation"})
-public class ReflectionUtil {
+public final class ReflectionUtil {
+    private ReflectionUtil() {}
+
     public static void setProtectedValue(Object o, String field, Object newValue) {
         setProtectedValue(o.getClass(), o, field, newValue);
     }

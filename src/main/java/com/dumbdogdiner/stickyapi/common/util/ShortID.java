@@ -21,7 +21,9 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.util.Random;
 import java.util.zip.CRC32;
 
-class Luhn {
+final class Luhn {
+    private Luhn() {}
+
     /**
      * Checks if the card is valid
      * 

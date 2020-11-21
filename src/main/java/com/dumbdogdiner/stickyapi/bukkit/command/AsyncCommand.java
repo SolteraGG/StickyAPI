@@ -33,8 +33,8 @@ import org.bukkit.command.TabCompleter;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
 /**
  * This class is designed to handle execution of commands given by a user or the
@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
  * Please use the with caution!
  */
 public abstract class AsyncCommand extends Command implements PluginIdentifiableCommand {
-    private Plugin owner;
+    private final Plugin owner;
     private TabCompleter completer;
 
     /**
@@ -68,7 +68,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      */
     // public abstract int executeCommand(Sender sender, String commandLabel, String[] args);
 
-    public abstract ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
+    public abstract ExitMessage executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -95,7 +95,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
             @Override
             public Boolean call() {
                 try {
-                    ExitCode resultingExitCode = self.executeCommand(sender, commandLabel, args);
+                    ExitMessage resultingExitCode = self.executeCommand(sender, commandLabel, args);
 
                     if (resultingExitCode == null) {
                         throw new IllegalArgumentException("A null exit code was returned");
@@ -124,7 +124,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @return Plugin that owns this command
      */
     @Override
-    public Plugin getPlugin() {
+    public @NotNull Plugin getPlugin() {
         return this.owner;
     }
 
