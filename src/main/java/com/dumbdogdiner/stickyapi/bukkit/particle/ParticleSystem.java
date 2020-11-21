@@ -331,7 +331,7 @@ public class ParticleSystem {
         this.ensureDefaultParticle();
         return this.parametric(this.particle, parametric, t0, t1, stepSize, count, this.data);
     }
-
+// TODO: change these to use 3D points or something similar, for fewer arguments and better readability, or add a helper method to do the same
     /**
      * Draw a straight line between the specified relative co-ordinates.
      * @param particle The type of particle to spawn
