@@ -49,6 +49,7 @@ public class PlayerHeadGenerator {
         }
     }
 
+
     public void setTexture(URL textureURL){
         // {"textures":{"SKIN":{"url":"http://textures.minecraft.net/texture/63d621100fea5883922e78bb448056448c983e3f97841948a2da747d6b08b8ab"}}}
         class textures {

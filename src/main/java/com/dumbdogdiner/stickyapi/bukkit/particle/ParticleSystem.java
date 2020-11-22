@@ -166,6 +166,7 @@ public class ParticleSystem {
      */
     public ParticleSystem spawn(double x, double y, double z, int count) {
         this.ensureDefaultParticle();
+        assert this.particle != null;
         return this.spawn(this.particle, x, y, z, count, this.data);
     }
 
@@ -532,6 +533,7 @@ public class ParticleSystem {
      */
     public ParticleSystem shape(Shape shape) {
         this.ensureDefaultParticle();
+        assert this.particle != null;
         return this.shape(this.particle, shape, this.data);
     }
 
@@ -564,6 +566,7 @@ public class ParticleSystem {
      */
     public ParticleSystem shapeAbsolute(@NotNull Shape shape) {
         this.ensureDefaultParticle();
+        assert this.particle != null;
         return this.shapeAbsolute(this.particle, shape, this.data);
     }
 }

@@ -24,6 +24,6 @@ public class RuleBook {
         File file = new File(RULEBOOK_PATH);
         Node bookRoot  = cmparser.parseReader(new InputStreamReader(new FileInputStream(new File(RULEBOOK_PATH))));
         //TODO: Traverse all subnodes and build the relevant json, convert to nbt, create a bookmeta, create an itemstack, and return it
-        
+
     }
 }
