@@ -1,16 +1,16 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
+
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Operations on {@link java.lang.String}
@@ -91,11 +91,10 @@ public final class StringUtil {
      * <p>
      * Example: "HELLO WORLD" == "Hello World"
      * 
-     * @see Alternate (keeping uppercase):
-     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     * Alternate (keeping uppercase): @see {@link #capitaliseSentenceKeepUpperCase(String)}
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
-     * @see Alternate (keeping uppercase): {@link #capitaliseSentenceKeepUpperCase(String)}
+     * Alternate (keeping uppercase): @see {@link #capitaliseSentenceKeepUpperCase(String)}
      */
     public static String capitaliseSentence(String string) {
         StringBuilder sb = new StringBuilder();
@@ -125,7 +124,7 @@ public final class StringUtil {
      *
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
-     * @see Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
+     * Alternate (not keeping uppercase): @see {@link #capitaliseSentence(String)}
      * @since 2.0
      */
     public static String capitaliseSentenceKeepUpperCase(String string) {

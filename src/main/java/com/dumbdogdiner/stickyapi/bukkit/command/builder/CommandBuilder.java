@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.command.builder;
@@ -40,9 +40,9 @@ public class CommandBuilder {
     // and while im at it i'll make an interface that it ends up producing or something
     Boolean subCommand = false;
 
-    Boolean synchronous = false;
-    Boolean requiresPlayer = false;
-    String name;
+    protected Boolean synchronous = false;
+    protected Boolean requiresPlayer = false;
+    protected String name;
     String permission;
     String description;
     Boolean playSound = false;
@@ -120,7 +120,7 @@ public class CommandBuilder {
      * If this command requires the sender to be an instance of
      * {@link org.bukkit.entity.Player}
      * 
-     * @param requiresPlayer
+     * @param requiresPlayer If a player is required
      * @return {@link CommandBuilder}
      */
     public CommandBuilder requiresPlayer(@NotNull Boolean requiresPlayer) {
