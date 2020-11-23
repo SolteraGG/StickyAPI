@@ -116,7 +116,7 @@ public class CommandBuilder {
      * @param cooldown in milliseconds
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder cooldown(Long cooldown) {
+    public CommandBuilder cooldown(@NotNull Long cooldown) {
         this.cooldown = cooldown;
         return this;
     }
@@ -215,7 +215,7 @@ public class CommandBuilder {
      * @param builder the sub command
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder subCommand(CommandBuilder builder) {
+    public CommandBuilder subCommand(@NotNull CommandBuilder builder) {
         builder.synchronous = this.synchronous;
         builder.subCommand = true;
         this.subCommands.put(builder.name, builder);

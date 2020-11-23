@@ -8,12 +8,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * Provides a very crude method of measuring the memory consumption of Java objects. This
- * can never be 100% accurate, since the JVM creates some overhead with each new object, but
- * can be useful to measure the estimated size of an object.
+ * Provides a very crude method of measuring the memory consumption of Java
+ * objects. This can never be 100% accurate, since the JVM creates some overhead
+ * with each new object, but can be useful to measure the estimated size of an
+ * object.
  */
 public final class MemoryUtil {
-    private MemoryUtil() {}
+    private MemoryUtil() {
+    }
 
     public enum Unit {
         BITS, BYTES, KILOBYTES, MEGABYTES
@@ -40,9 +42,9 @@ public final class MemoryUtil {
                 return (double) bits / 8 / 1000;
             case MEGABYTES:
                 return (double) bits / 8 / 1000 / 1000;
-            default: 
+            default:
                 return 0.0;
-        }  
+        }
     }
 
     /**
@@ -85,20 +87,23 @@ public final class MemoryUtil {
     }
 
     private static int getSizeOfBuiltin(Object object) {
-        // We can't use a switch statement on an object, so we need to use an if-elseif chain.
-        // It may be Yandre Dev - like, but at least instanceof should be a little neater
+        // We can't use a switch statement on an object, so we need to use an if-elseif
+        // chain.
+        // It may be Yandre Dev - like, but at least instanceof should be a little
+        // neater
         if (object instanceof String)
             return ((String) (object)).length() * 8;
-        else if(object instanceof Boolean)
+        else if (object instanceof Boolean)
             return 1;
-        else if(object instanceof Byte)
+        else if (object instanceof Byte)
             return 8;
-        else if(object instanceof Short || object instanceof Character)
+        else if (object instanceof Short || object instanceof Character)
             return 16;
-        else if(object instanceof Long || object instanceof Double)
+        else if (object instanceof Long || object instanceof Double)
             return 64;
         else
-            // potential for stack overflow if a field is circular! (maybe, but I don't see how this could happen)
+            // potential for stack overflow if a field is circular! (maybe, but I don't see
+            // how this could happen)
             return 0;
     }
 }

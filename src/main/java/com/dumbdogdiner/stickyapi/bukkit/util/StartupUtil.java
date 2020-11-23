@@ -5,8 +5,12 @@
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
 import java.io.File;
+
+import javax.annotation.Nullable;
+
 import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is used for reducing code dupe on plugin startup
@@ -20,12 +24,12 @@ public class StartupUtil {
      * @param plugin The plugin's main class
      * @return False if something went wrong
      */
-    public static boolean setupConfig(JavaPlugin plugin) {
+    public static boolean setupConfig(@NotNull JavaPlugin plugin) {
         try {
             if (!plugin.getDataFolder().exists()) {
                 plugin.getLogger().info("Error: No folder was found! Creating...");
-                if(!plugin.getDataFolder().mkdirs()){
-                    plugin.getLogger().info("Error: Couldn't create the folder somehow??");
+                if (!plugin.getDataFolder().mkdirs()) {
+                    plugin.getLogger().info("Error: Unable to create data folder, are your file permissions correct?");
                     return false;
                 }
                 plugin.saveDefaultConfig();
@@ -46,7 +50,7 @@ public class StartupUtil {
      * @param localeProvider The plugin's locale provider
      * @return False if something went wrong
      */
-    public static LocaleProvider setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
+    public static LocaleProvider setupLocale(@NotNull JavaPlugin plugin, @Nullable LocaleProvider localeProvider) {
         localeProvider = new LocaleProvider(new File(plugin.getDataFolder(), "locale"));
         int loadedLocales = localeProvider.loadAllLocales();
         boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");

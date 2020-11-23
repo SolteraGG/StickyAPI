@@ -6,33 +6,35 @@ package com.dumbdogdiner.stickyapi.common.configuration.file;
 
 import com.dumbdogdiner.stickyapi.common.configuration.MemoryConfiguration;
 import com.dumbdogdiner.stickyapi.common.configuration.MemoryConfigurationOptions;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Various settings for controlling the input and output of a
- * {@link FileConfiguration}
+ * Various settings for controlling the input and output of a {@link
+ * FileConfiguration}
  */
 public class FileConfigurationOptions extends MemoryConfigurationOptions {
     private String header = null;
     private boolean copyHeader = true;
 
-    protected FileConfigurationOptions(MemoryConfiguration configuration) {
+    protected FileConfigurationOptions(@NotNull MemoryConfiguration configuration) {
         super(configuration);
     }
 
-    
+    @NotNull
     @Override
     public FileConfiguration configuration() {
         return (FileConfiguration) super.configuration();
     }
 
-    
+    @NotNull
     @Override
     public FileConfigurationOptions copyDefaults(boolean value) {
         super.copyDefaults(value);
         return this;
     }
 
-    
+    @NotNull
     @Override
     public FileConfigurationOptions pathSeparator(char value) {
         super.pathSeparator(value);
@@ -53,7 +55,7 @@ public class FileConfigurationOptions extends MemoryConfigurationOptions {
      *
      * @return Header
      */
-    
+    @Nullable
     public String header() {
         return header;
     }
@@ -73,8 +75,8 @@ public class FileConfigurationOptions extends MemoryConfigurationOptions {
      * @param value New header
      * @return This object, for chaining
      */
-    
-    public FileConfigurationOptions header(String value) {
+    @NotNull
+    public FileConfigurationOptions header(@Nullable String value) {
         this.header = value;
         return this;
     }
@@ -83,7 +85,8 @@ public class FileConfigurationOptions extends MemoryConfigurationOptions {
      * Gets whether or not the header should be copied from a default source.
      * <p>
      * If this is true, if a default {@link FileConfiguration} is passed to
-     * FileConfiguration#setDefaults(org.bukkit.configuration.Configuration)
+     * {@link
+     * FileConfiguration#setDefaults(com.dumbdogdiner.stickyapi.common.configuration.Configuration)}
      * then upon saving it will use the header from that config, instead of
      * the one provided here.
      * <p>
@@ -104,7 +107,8 @@ public class FileConfigurationOptions extends MemoryConfigurationOptions {
      * Sets whether or not the header should be copied from a default source.
      * <p>
      * If this is true, if a default {@link FileConfiguration} is passed to
-     * FileConfiguration#setDefaults(org.bukkit.configuration.Configuration)
+     * {@link
+     * FileConfiguration#setDefaults(com.dumbdogdiner.stickyapi.common.configuration.Configuration)}
      * then upon saving it will use the header from that config, instead of
      * the one provided here.
      * <p>
@@ -118,7 +122,7 @@ public class FileConfigurationOptions extends MemoryConfigurationOptions {
      * @param value Whether or not to copy the header
      * @return This object, for chaining
      */
-    
+    @NotNull
     public FileConfigurationOptions copyHeader(boolean value) {
         copyHeader = value;
 

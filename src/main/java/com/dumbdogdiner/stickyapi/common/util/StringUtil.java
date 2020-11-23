@@ -50,24 +50,35 @@ public final class StringUtil {
      *                          snuggly brackets
      * @return A progress bar
      */
-    public static String createProgressBar(double size, double percentage, boolean monospace, boolean includePercentage,
-            boolean includeBrackets) {
+    public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
+            @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
+        Validate.notNull(size, "size cannot be null");
+        Validate.notNull(percentage, "percentage cannot be null");
+        Validate.notNull(monospace, "monospace cannot be null");
+        Validate.notNull(includePercentage, "includePercentage cannot be null");
+        Validate.notNull(includeBrackets, "includeBrackets cannot be null");
         double barCount = ((percentage / 100) * size);
-        String bar = "";
+        StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
-            if (i < barCount)
+            if (i < barCount) {
                 if (!monospace)
-                    bar += "\u258D"; // ...
+                    barBuilder.append("\u258D"); // ...
                 else
-                    bar += "|";
-            else
-                bar += " ";
+                    barBuilder.append("|");
+            } else {
+                barBuilder.append(" ");
+            }
         }
-        if (includeBrackets)
-            // double up %s to escape them
-            bar = includePercentage ? String.format("[%s] %s%%", bar, percentageFormatter.format(percentage))
-                    : "[" + bar + "]";
-        return bar;
+
+        if (includeBrackets) {
+            barBuilder.insert(0, "[");
+            barBuilder.append("]");
+        }
+
+        if (includePercentage)
+            barBuilder.append(String.format(" %s%%", percentageFormatter.format(percentage)));
+
+        return barBuilder.toString();
     }
 
     /**
@@ -77,8 +88,47 @@ public final class StringUtil {
      * @param percentage The percentage to fill the bar to
      * @return A progress bar
      */
-    public static String createProgressBar(double size, double percentage) {
+    public static String createProgressBar(@NotNull double size, @NotNull double percentage) {
+        Validate.notNull(size, "size cannot be null");
+        Validate.notNull(percentage, "percentage cannot be null");
         return createProgressBar(size, percentage, false, false, true);
+    }
+
+    /**
+     * Capitalise every letter after whitespace.
+     * <p>
+     * This will also lowercase any uppercase characters.
+     * <p>
+     * Example: "hello world" == "Hello World"
+     * <p>
+     * Example: "hello WORLD" == "Hello World" || "Hello WORLD" depending on the
+     * `keepCase` input
+     * 
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     * @param string   The string to capitalise
+     * @param keepCase Whether or not to keep the uppercase characters
+     * @return A message with capital letters after every whitespace
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     */
+    public static String capitaliseSentence(@NotNull String string, @NotNull Boolean keepCase) {
+        Validate.notNull(string, "string cannot be null");
+        Validate.notNull(keepCase, "keepCase cannot be null");
+        StringBuilder sb = new StringBuilder();
+        boolean cnl = true;
+        for (char c : string.toCharArray()) {
+            if (cnl && Character.isLetter(c)) {
+                sb.append(Character.toUpperCase(c));
+                cnl = false;
+            } else {
+                sb.append(keepCase ? c : Character.toLowerCase(c));
+            }
+            if (Character.isWhitespace(c)) {
+                cnl = true;
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -94,22 +144,12 @@ public final class StringUtil {
      *      {@link #capitaliseSentenceKeepUpperCase(String)}
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
      */
-    public static String capitaliseSentence(String string) {
-        StringBuilder sb = new StringBuilder();
-        boolean cnl = true;
-        for (char c : string.toCharArray()) {
-            if (cnl && Character.isLetter(c)) {
-                sb.append(Character.toUpperCase(c));
-                cnl = false;
-            } else {
-                sb.append(Character.toLowerCase(c));
-            }
-            if (Character.isWhitespace(c)) {
-                cnl = true;
-            }
-        }
-        return sb.toString();
+    public static String capitaliseSentence(@NotNull String string) {
+        Validate.notNull(string, "string cannot be null");
+        return capitaliseSentence(string, false);
     }
 
     /**
@@ -126,37 +166,43 @@ public final class StringUtil {
      * @param string The string to capitalise
      * @return A message with capital letters after every whitespace
      */
-    public static String capitaliseSentenceKeepUpperCase(String string) {
-        StringBuilder sb = new StringBuilder();
-        boolean cnl = true;
-        for (char c : string.toCharArray()) {
-            if (cnl && Character.isLetter(c)) {
-                sb.append(Character.toUpperCase(c));
-                cnl = false;
-            } else {
-                sb.append(c);
-            }
-            if (Character.isWhitespace(c)) {
-                cnl = true;
-            }
-        }
-        return sb.toString();
+    public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
+        Validate.notNull(string, "string cannot be null");
+        return capitaliseSentence(string, true);
     }
 
     /**
      * Replace a word with asterisks.
-     * 
-     * @param word The word to censor
+     *
+     * @param word  The word to censor
+     * @param regex The characters to not censor
      * @return The censored word
      */
-    public static String censorWord(String word) {
+    public static String censorWord(@NotNull String word, @NotNull String regex) {
+        Validate.notNull(word, "word cannot be null");
+        Validate.notNull(regex, "regex cannot be null");
         StringBuilder asterisks = new StringBuilder();
 
         for (int i = 0; i < word.length(); i++) {
-            asterisks.append("*");
+            if (String.valueOf(word.charAt(i)).matches(regex)) {
+                asterisks.append(word.charAt(i));
+            } else {
+                asterisks.append("*");
+            }
         }
 
         return asterisks.toString();
+    }
+
+    /**
+     * Replace a word with asterisks.
+     *
+     * @param word The word to censor
+     * @return The censored word
+     */
+    public static String censorWord(@NotNull String word) {
+        Validate.notNull(word, "word cannot be null");
+        return censorWord(word, "[ -/:-@\\[-`{-~¡-¿]");
     }
 
     /**
@@ -171,7 +217,8 @@ public final class StringUtil {
      * @param message The message to filter
      * @return The filtered message
      */
-    public static String replaceLeet(String message) {
+    public static String replaceLeet(@NotNull String message) {
+        Validate.notNull(message, "message cannot be null");
         if (message.trim().isEmpty())
             return message;
 
@@ -188,7 +235,9 @@ public final class StringUtil {
      * @param needles  things that may match the comparison string
      * @return Whether something matches.
      */
-    public static boolean compareMany(String haystack, String[] needles) {
+    public static boolean compareMany(@NotNull String haystack, @NotNull String[] needles) {
+        Validate.notNull(haystack, "haystack cannot be null");
+        Validate.notNull(needles, "needles cannot be null");
         for (String needle : needles) {
             if (haystack.equalsIgnoreCase(needle))
                 return true;
@@ -216,4 +265,22 @@ public final class StringUtil {
         return string.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
+    /**
+     * Put hyphens into a uuid
+     * <p>
+     * e.x. de8c89e12f25424d8078c6ff58db7d6e > de8c89e1-2f25-424d-8078-c6ff58db7d6e
+     * 
+     * @param uuid to hyphenate
+     * @return {@link UUID}
+     */
+    public static UUID hyphenateUUID(@NotNull String uuid) {
+        Validate.notNull(uuid, "uuid cannot be null");
+        if (uuid.length() == 32) {
+            return UUID.fromString(uuid.replaceFirst( // https://stackoverflow.com/a/19399768
+                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                    "$1-$2-$3-$4-$5"));
+        } else {
+            return UUID.fromString(uuid);
+        }
+    }
 }

@@ -18,8 +18,6 @@ public class NumberUtilTest {
     public void testIsNumeric() {
         assertTrue(NumberUtil.isNumeric(""));
         assertTrue(NumberUtil.isNumeric("123"));
-
-        assertFalse(NumberUtil.isNumeric(null));
         assertFalse(NumberUtil.isNumeric("  "));
         assertFalse(NumberUtil.isNumeric("12 3"));
         assertFalse(NumberUtil.isNumeric("ab2c"));

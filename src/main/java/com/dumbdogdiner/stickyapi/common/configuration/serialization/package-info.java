@@ -4,9 +4,8 @@
  */
 /**
  * Classes dedicated to being able to perform serialization specialized for
- * the Bukkit {@link org.bukkit.configuration.Configuration configuration}
+ * the Bukkit {@link com.dumbdogdiner.stickyapi.common.configuration.Configuration configuration}
  * implementation.
  */
 package com.dumbdogdiner.stickyapi.common.configuration.serialization;
-
 

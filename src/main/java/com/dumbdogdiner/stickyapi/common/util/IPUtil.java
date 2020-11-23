@@ -19,8 +19,8 @@ public final class IPUtil {
 	 * <p>
 	 * true if IP is in prefix, otherwise false
 	 * 
-	 * @param address1 IP Address to check
-	 * @param address2 The second IP Address to check
+	 * @param address1 The first IP address
+	 * @param address2 The IP to compare against the first addresses range
 	 * @param prefix   The prefix to check against
 	 * @return {@link java.lang.Boolean}
 	 */

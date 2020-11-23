@@ -7,6 +7,10 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+
 import lombok.Setter;
 import lombok.Getter;
 
@@ -49,7 +53,7 @@ public class Debugger {
      * 
      * @param clazz to reference.
      */
-    public Debugger(Class<?> clazz) {
+    public Debugger(@NotNull Class<?> clazz) {
         this.clazz = clazz;
     }
 
@@ -58,7 +62,7 @@ public class Debugger {
      * 
      * @param object to print.
      */
-    public void print(Object object, Object... args) {
+    public void print(@Nullable Object object, @Nullable Object... args) {
         if (enabled) {
             logger.info(String.format(COLOR + "[" + ++logCount + " | " + clazz.getSimpleName() + ".class: "
                     + Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps() + "] \u00A7r" + object + " | "

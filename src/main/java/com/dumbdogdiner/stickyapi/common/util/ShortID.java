@@ -7,8 +7,12 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.util.Random;
 import java.util.zip.CRC32;
 
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+
 final class Luhn {
-    private Luhn() {}
+    private Luhn() {
+    }
 
     /**
      * Checks if the card is valid
@@ -86,9 +90,10 @@ public class ShortID {
 
     /**
      * Create a ShortID from a string
-     * @param name 
-     * Returns a ShortID object from the string inputed
-     * @throws IllegalArgumentException If name does not conform to the string representation as described in toString
+     * 
+     * @param name Returns a ShortID object from the string inputed
+     * @throws IllegalArgumentException If name does not conform to the string
+     *                                  representation as described in toString
      */
     public static ShortID fromString(String name) throws IllegalArgumentException {
         if (!validateID(name))
@@ -99,11 +104,12 @@ public class ShortID {
     /**
      * Generate a short semi-unique ID
      * 
-     * @param key An identifier to start the ID with (usually the position in a
-     *            SQL table)
+     * @param key An identifier to start the ID with (usually the position in a SQL
+     *            table)
      * @return a Luhn-passable identifier
      */
-    public static ShortID generate(int key) {
+    public static ShortID generate(@NotNull int key) {
+        Validate.notNull(key, "key cannot be null");
         CRC32 crc = new CRC32();
 
         crc.update((int) (System.currentTimeMillis() / 1000L));
@@ -139,10 +145,11 @@ public class ShortID {
     /**
      * Validate that a string passes the Luhn test
      * 
-     * @param id a string to test against the Luhn algorithm
+     * @param shortId a string to test against the Luhn algorithm
      * @return Whether the string passes the Luhn test
      */
-    public static boolean validateID(String id) {
-        return Luhn.luhnCheck(id);
+    public static boolean validateID(@NotNull String shortId) {
+        Validate.notNull(shortId, "shortId cannot be null");
+        return Luhn.luhnCheck(shortId);
     }
 }

@@ -5,7 +5,7 @@
 package com.dumbdogdiner.stickyapi.common.configuration.serialization;
 
 import java.util.Map;
-
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an object that may be serialized.
@@ -20,6 +20,11 @@ import java.util.Map;
  * <li>A constructor that accepts a single {@link Map}&lt;{@link String},
  * {@link Object}&gt;.</li>
  * </ul>
+ * In addition to implementing this interface, you must register the class
+ * with {@link ConfigurationSerialization#registerClass(Class)}.
+ *
+ * @see DelegateDeserialization
+ * @see SerializableAs
  */
 public interface ConfigurationSerializable {
 
@@ -31,6 +36,6 @@ public interface ConfigurationSerializable {
      *
      * @return Map containing the current state of this class
      */
-    
+    @NotNull
     public Map<String, Object> serialize();
 }

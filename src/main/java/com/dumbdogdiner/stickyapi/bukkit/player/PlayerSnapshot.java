@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerSnapshot {
 
@@ -24,11 +25,15 @@ public class PlayerSnapshot {
     /**
      * Create a new {@link PlayerSnapshot}.
      * 
-     * A {@link PlayerSnapshot} is an object to store the player's current state, such as their inventory, health, experience, etc.
-     * <p>This object can be used where the player inventory needs to be changed but restored at a later date
+     * A {@link PlayerSnapshot} is an object to store the player's current state,
+     * such as their inventory, health, experience, etc.
+     * <p>
+     * This object can be used where the player inventory needs to be changed but
+     * restored at a later date
+     * 
      * @param player
      */
-    public PlayerSnapshot(Player player) {
+    public PlayerSnapshot(@NotNull Player player) {
         location = player.getLocation();
         armor = player.getInventory().getArmorContents();
         items = player.getInventory().getContents();
@@ -43,9 +48,10 @@ public class PlayerSnapshot {
 
     /**
      * Apply this {@link PlayerSnapshot} to a {@link Player}.
+     * 
      * @param player The player to apply this {@link PlayerSnapshot} to
      */
-    public void apply(Player player) {
+    public void apply(@NotNull Player player) {
         player.teleport(location);
         player.getInventory().setArmorContents(armor);
         player.getInventory().setContents(items);

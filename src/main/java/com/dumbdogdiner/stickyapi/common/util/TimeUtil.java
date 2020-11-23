@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Utility methods for dealing with time and duration parsing.
  */
@@ -26,7 +30,7 @@ public class TimeUtil {
      * @param time in milliseconds (e.x. 1000 == 0.02/m)
      * @return {@link java.lang.String}
      */
-    public static String significantDurationString(final long time) {
+    public static String significantDurationString(@NotNull final long time) {
         StringBuilder message = new StringBuilder();
         double timeSince = (double) (System.currentTimeMillis() / 1000L)
                 - ((double) (System.currentTimeMillis() / 1000L) - (time / 1000L) + 0.0);
@@ -53,7 +57,7 @@ public class TimeUtil {
      * @param time in milliseconds (e.x. 1000 == 1 second)
      * @return {@link java.lang.String}
      */
-    public static String durationString(final long time) {
+    public static String durationString(@NotNull final long time) {
         var t = time / 1000L;
         long years = t / 31449600;
         long weeks = (t / 604800) % 52;
@@ -97,7 +101,7 @@ public class TimeUtil {
         return sb.toString();
     }
 
-    private static String expTime(long time, boolean compact) {
+    private static String expTime(@NotNull long time, @NotNull boolean compact) {
         long currentTime = System.currentTimeMillis();
         if (time == 0)
             return "never expires";
@@ -118,7 +122,7 @@ public class TimeUtil {
      * @param time in milliseconds since unix epoch
      * @return {@link java.lang.String}
      */
-    public static String expirationTime(long time) {
+    public static String expirationTime(@NotNull long time) {
         return expTime(time, false);
     }
 
@@ -131,7 +135,7 @@ public class TimeUtil {
      * @param time in milliseconds since unix epoch
      * @return {@link java.lang.String}
      */
-    public static String significantExpirationTime(long time) {
+    public static String significantExpirationTime(@NotNull long time) {
         return expTime(time, true);
     }
 
@@ -159,7 +163,7 @@ public class TimeUtil {
      * @param string the string of characters to convert to a quantity of seconds
      * @return {@link java.lang.String}
      */
-    public static Optional<Long> duration(String string) {
+    public static Optional<Long> duration(@NotNull String string) {
         var total = 0L;
         var subtotal = 0L;
 
@@ -195,7 +199,7 @@ public class TimeUtil {
      *             {@link java.text.SimpleDateFormat}
      */
     @Deprecated
-    public static String timeString(long t) {
+    public static String timeString(@Nullable long t) {
         return TimeUtil.timeString(new Timestamp(t));
     }
 
@@ -210,7 +214,7 @@ public class TimeUtil {
      *             {@link java.text.SimpleDateFormat}
      */
     @Deprecated
-    public static String timeString(Timestamp ts) {
+    public static String timeString(@Nullable Timestamp ts) {
         if (ts == null)
             return "";
         return sdf.format(ts);
@@ -222,7 +226,7 @@ public class TimeUtil {
      * @param timePeriod A duration string (eg, "2y1w10d40m6s")
      * @return {@link java.sql.Timestamp}
      */
-    public static Timestamp toTimestamp(String timePeriod) {
+    public static Timestamp toTimestamp(@NotNull String timePeriod) {
         if (StringUtil.compareMany(timePeriod, new String[] { "*", "0" }))
             return null;
 
@@ -242,9 +246,9 @@ public class TimeUtil {
         if (!StringUtil.compareMany(timePeriod, new String[] { "*", "0" })) {
             Optional<Long> dur = TimeUtil.duration(timePeriod);
             if (dur.isPresent())
-                return new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L)
-                        .getTime() >= new java.sql.Timestamp(253402261199L * 1000L).getTime() ? null
-                                : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
+                return new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L).getTime() >= (253402261199L * 1000L)
+                        ? null
+                        : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
         }
 
         return null;
