@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.chat;
@@ -55,7 +55,7 @@ public class ChatMessage {
      * Returns the edited ChatMessage object.
      *
      * @param content The new content this ChatMessage object should contain
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.ChatMessage}
+     * @return {@link com.dumbdogdiner.stickyapi.common.chat.ChatMessage}
      */
     public ChatMessage setContent(@NotNull String content) {
         this.component = new TextComponent(content);
@@ -68,7 +68,7 @@ public class ChatMessage {
      * highlighted JSON clickable component. Returns the edited ChatMessage object.
      *
      * @param apply Whether URLs should be formatted.
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.ChatMessage}
+     * @return {@link com.dumbdogdiner.stickyapi.common.chat.ChatMessage}
      */
     public ChatMessage applyURLs(@NotNull boolean apply) {
         if (apply) {
@@ -84,7 +84,7 @@ public class ChatMessage {
      * ChatMessage object.
      *
      * @param chatMessage The ChatMessage that should be added.
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.ChatMessage}
+     * @return {@link com.dumbdogdiner.stickyapi.common.chat.ChatMessage}
      */
     public ChatMessage appendMessage(@NotNull ChatMessage chatMessage) {
         if (chatMessage != null) {
@@ -101,7 +101,7 @@ public class ChatMessage {
      * @param text The String array that should be used for the tooltip content,
      *             each String represents a new line.
      *
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.ChatMessage}
+     * @return {@link com.dumbdogdiner.stickyapi.common.chat.ChatMessage}
      */
     public ChatMessage setHoverMessage(@NotNull String... text) {
         StringBuilder tooltip = new StringBuilder();
@@ -125,7 +125,7 @@ public class ChatMessage {
      * URLs within the message itself. Returns the edited ChatMessage object.
      *
      * @param url The URL this message should suggest when clicked.
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.ChatMessage}
+     * @return {@link com.dumbdogdiner.stickyapi.common.chat.ChatMessage}
      */
     public ChatMessage setLink(@NotNull String url) {
         this.component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
@@ -137,7 +137,7 @@ public class ChatMessage {
      * edited ChatMessage object.
      *
      * @param command The command that should run when message is clicked.
-     * @return {@link com.dumbdogdiner.stickyapi.common.translation.ChatMessage}
+     * @return {@link com.dumbdogdiner.stickyapi.common.chat.ChatMessage}
      */
     public ChatMessage setCommand(@NotNull String command) {
         this.component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
