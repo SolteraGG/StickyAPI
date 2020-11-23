@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
