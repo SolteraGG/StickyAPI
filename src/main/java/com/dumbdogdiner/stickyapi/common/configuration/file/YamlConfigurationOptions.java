@@ -1,24 +1,12 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.configuration.file;
 
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Various settings for controlling the input and output of a {@link
@@ -27,38 +15,38 @@ import org.apache.commons.lang.Validate;
 public class YamlConfigurationOptions extends FileConfigurationOptions {
     private int indent = 2;
 
-    protected YamlConfigurationOptions(YamlConfiguration configuration) {
+    protected YamlConfigurationOptions(@NotNull YamlConfiguration configuration) {
         super(configuration);
     }
 
-    
+    @NotNull
     @Override
     public YamlConfiguration configuration() {
         return (YamlConfiguration) super.configuration();
     }
 
-    
+    @NotNull
     @Override
     public YamlConfigurationOptions copyDefaults(boolean value) {
         super.copyDefaults(value);
         return this;
     }
 
-    
+    @NotNull
     @Override
     public YamlConfigurationOptions pathSeparator(char value) {
         super.pathSeparator(value);
         return this;
     }
 
-    
+    @NotNull
     @Override
-    public YamlConfigurationOptions header(String value) {
+    public YamlConfigurationOptions header(@Nullable String value) {
         super.header(value);
         return this;
     }
 
-    
+    @NotNull
     @Override
     public YamlConfigurationOptions copyHeader(boolean value) {
         super.copyHeader(value);
@@ -84,7 +72,7 @@ public class YamlConfigurationOptions extends FileConfigurationOptions {
      * @param value New indent
      * @return This object, for chaining
      */
-    
+    @NotNull
     public YamlConfigurationOptions indent(int value) {
         Validate.isTrue(value >= 2, "Indent must be at least 2 characters");
         Validate.isTrue(value <= 9, "Indent cannot be greater than 9 characters");

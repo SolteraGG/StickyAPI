@@ -1,24 +1,10 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.configuration;
 
-
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Various settings for controlling the input and output of a {@link
@@ -29,7 +15,7 @@ public class ConfigurationOptions {
     private boolean copyDefaults = false;
     private final Configuration configuration;
 
-    protected ConfigurationOptions(Configuration configuration) {
+    protected ConfigurationOptions(@NotNull Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -38,7 +24,7 @@ public class ConfigurationOptions {
      *
      * @return Parent configuration
      */
-    
+    @NotNull
     public Configuration configuration() {
         return configuration;
     }
@@ -66,7 +52,7 @@ public class ConfigurationOptions {
      * @param value Path separator
      * @return This object, for chaining
      */
-    
+    @NotNull
     public ConfigurationOptions pathSeparator(char value) {
         this.pathSeparator = value;
         return this;
@@ -98,14 +84,14 @@ public class ConfigurationOptions {
      * directly copied, making it impossible to distinguish between values
      * that were set and values that are provided by default. As a result,
      * {@link ConfigurationSection#contains(java.lang.String)} will always
-     * return the same value as
-     * ConfigurationSection#isSet(java.lang.String). The default value is
+     * return the same value as {@link
+     * ConfigurationSection#isSet(java.lang.String)}. The default value is
      * false.
      *
      * @param value Whether or not defaults are directly copied
      * @return This object, for chaining
      */
-    
+    @NotNull
     public ConfigurationOptions copyDefaults(boolean value) {
         this.copyDefaults = value;
         return this;

@@ -1,26 +1,16 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
 import java.io.File;
+
+import javax.annotation.Nullable;
+
 import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is used for reducing code dupe on plugin startup
@@ -34,11 +24,14 @@ public class StartupUtil {
      * @param plugin The plugin's main class
      * @return False if something went wrong
      */
-    public static boolean setupConfig(JavaPlugin plugin) {
+    public static boolean setupConfig(@NotNull JavaPlugin plugin) {
         try {
             if (!plugin.getDataFolder().exists()) {
                 plugin.getLogger().info("Error: No folder was found! Creating...");
-                plugin.getDataFolder().mkdirs();
+                if (!plugin.getDataFolder().mkdirs()) {
+                    plugin.getLogger().info("Error: Unable to create data folder, are your file permissions correct?");
+                    return false;
+                }
                 plugin.saveDefaultConfig();
                 plugin.saveConfig();
                 plugin.getLogger().info("The folder was created successfully!");
@@ -57,10 +50,10 @@ public class StartupUtil {
      * @param localeProvider The plugin's locale provider
      * @return False if something went wrong
      */
-    public static LocaleProvider setupLocale(JavaPlugin plugin, LocaleProvider localeProvider) {
+    public static LocaleProvider setupLocale(@NotNull JavaPlugin plugin, @Nullable LocaleProvider localeProvider) {
         localeProvider = new LocaleProvider(new File(plugin.getDataFolder(), "locale"));
         int loadedLocales = localeProvider.loadAllLocales();
-        Boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");
+        boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");
 
         if (!localeEnabled) {
             plugin.getLogger()

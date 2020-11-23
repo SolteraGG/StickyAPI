@@ -1,32 +1,22 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * Provides a very crude method of measuring the memory consumption of Java objects. This
- * can never be 100% accurate, since the JVM creates some overhead with each new object, but
- * can be useful to measure the estimated size of an object.
+ * Provides a very crude method of measuring the memory consumption of Java
+ * objects. This can never be 100% accurate, since the JVM creates some overhead
+ * with each new object, but can be useful to measure the estimated size of an
+ * object.
  */
 public final class MemoryUtil {
+    private MemoryUtil() {
+    }
+
     public enum Unit {
         BITS, BYTES, KILOBYTES, MEGABYTES
     }
@@ -52,9 +42,9 @@ public final class MemoryUtil {
                 return (double) bits / 8 / 1000;
             case MEGABYTES:
                 return (double) bits / 8 / 1000 / 1000;
-            default: 
+            default:
                 return 0.0;
-        }  
+        }
     }
 
     /**
@@ -97,20 +87,23 @@ public final class MemoryUtil {
     }
 
     private static int getSizeOfBuiltin(Object object) {
-        // We can't use a switch statement on an object, so we need to use an if-elseif chain.
-        // It may be Yandre Dev - like, but at least instanceof should be a little neater
+        // We can't use a switch statement on an object, so we need to use an if-elseif
+        // chain.
+        // It may be Yandre Dev - like, but at least instanceof should be a little
+        // neater
         if (object instanceof String)
             return ((String) (object)).length() * 8;
-        else if(object instanceof Boolean)
+        else if (object instanceof Boolean)
             return 1;
-        else if(object instanceof Byte)
+        else if (object instanceof Byte)
             return 8;
-        else if(object instanceof Short || object instanceof Character)
+        else if (object instanceof Short || object instanceof Character)
             return 16;
-        else if(object instanceof Long || object instanceof Double)
+        else if (object instanceof Long || object instanceof Double)
             return 64;
         else
-            // potential for stack overflow if a field is circular! (maybe, but I don't see how this could happen)
+            // potential for stack overflow if a field is circular! (maybe, but I don't see
+            // how this could happen)
             return 0;
     }
 }

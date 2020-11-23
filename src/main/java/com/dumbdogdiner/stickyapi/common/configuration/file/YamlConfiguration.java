@@ -1,21 +1,7 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.configuration.file;
 
 import java.io.File;
@@ -24,12 +10,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 import java.util.logging.Level;
-
-import com.dumbdogdiner.stickyapi.StickyAPI;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import com.dumbdogdiner.stickyapi.common.configuration.Configuration;
 import com.dumbdogdiner.stickyapi.common.configuration.ConfigurationSection;
 import com.dumbdogdiner.stickyapi.common.configuration.InvalidConfigurationException;
-
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -46,7 +32,7 @@ public class YamlConfiguration extends FileConfiguration {
     private final Representer yamlRepresenter = new YamlRepresenter();
     private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions);
 
-    
+    @NotNull
     @Override
     public String saveToString() {
         yamlOptions.setIndent(options().indent());
@@ -64,10 +50,8 @@ public class YamlConfiguration extends FileConfiguration {
     }
 
     @Override
-    public void loadFromString(String contents) throws InvalidConfigurationException {
-        if (contents == null) {
-            throw new NullPointerException("Contents cannot be null");
-        }
+    public void loadFromString(@NotNull String contents) throws InvalidConfigurationException {
+        Validate.notNull(contents, "Contents cannot be null");
 
         Map<?, ?> input;
         try {
@@ -88,7 +72,7 @@ public class YamlConfiguration extends FileConfiguration {
         }
     }
 
-    protected void convertMapsToSections(Map<?, ?> input, ConfigurationSection section) {
+    protected void convertMapsToSections(@NotNull Map<?, ?> input, @NotNull ConfigurationSection section) {
         for (Map.Entry<?, ?> entry : input.entrySet()) {
             String key = entry.getKey().toString();
             Object value = entry.getValue();
@@ -101,8 +85,8 @@ public class YamlConfiguration extends FileConfiguration {
         }
     }
 
-    
-    protected String parseHeader(String input) {
+    @NotNull
+    protected String parseHeader(@NotNull String input) {
         String[] lines = input.split("\r?\n", -1);
         StringBuilder result = new StringBuilder();
         boolean readingHeader = true;
@@ -131,7 +115,7 @@ public class YamlConfiguration extends FileConfiguration {
         return result.toString();
     }
 
-    
+    @NotNull
     @Override
     protected String buildHeader() {
         String header = options().header();
@@ -170,7 +154,7 @@ public class YamlConfiguration extends FileConfiguration {
         return builder.toString();
     }
 
-    
+    @NotNull
     @Override
     public YamlConfigurationOptions options() {
         if (options == null) {
@@ -193,11 +177,9 @@ public class YamlConfiguration extends FileConfiguration {
      * @return Resulting configuration
      * @throws IllegalArgumentException Thrown if file is null
      */
-    
-    public static YamlConfiguration loadConfiguration(File file) {
-        if (file == null) {
-            throw new NullPointerException("File cannot be null");
-        }
+    @NotNull
+    public static YamlConfiguration loadConfiguration(@NotNull File file) {
+        Validate.notNull(file, "File cannot be null");
 
         YamlConfiguration config = new YamlConfiguration();
 
@@ -205,9 +187,9 @@ public class YamlConfiguration extends FileConfiguration {
             config.load(file);
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
-            StickyAPI.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
         } catch (InvalidConfigurationException ex) {
-            StickyAPI.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
         }
 
         return config;
@@ -224,20 +206,18 @@ public class YamlConfiguration extends FileConfiguration {
      * @return resulting configuration
      * @throws IllegalArgumentException Thrown if stream is null
      */
-    
-    public static YamlConfiguration loadConfiguration(Reader reader) {
-        if (reader == null) {
-            throw new NullPointerException("Stream cannot be null");
-        }
+    @NotNull
+    public static YamlConfiguration loadConfiguration(@NotNull Reader reader) {
+        Validate.notNull(reader, "Stream cannot be null");
 
         YamlConfiguration config = new YamlConfiguration();
 
         try {
             config.load(reader);
         } catch (IOException ex) {
-            StickyAPI.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         } catch (InvalidConfigurationException ex) {
-            StickyAPI.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
+            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         }
 
         return config;

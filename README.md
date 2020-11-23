@@ -3,6 +3,7 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/DumbDogDiner/StickyAPI/build/release?label=builds&logo=github)
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/DumbDogDiner/StickyAPI/docs/release?label=docs&logo=github)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/DumbDogDiner/StickyAPI?label=release&logo=java)
+![Code Coverage (master)](https://img.shields.io/codecov/c/gh/DumbDogDiner/StickyAPI)
 
 Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins.
 
@@ -19,16 +20,16 @@ The aim of StickyAPI is to provide a base set of utilities wrapping Bukkit and i
 ### Branching
 
 - `master` - the current working branch, accepts merges for features and hotfixes
-- `stable` - release branch, accepts merges for hotfixes
+- `release` - release branch, accepts merges for hotfixes
 
 ### Important Links
 
-- [Trello](https://trello.com/c/kx7Ppznd/13-progress-checklist)
+- [GH Project](https://github.com/DumbDogDiner/StickyAPI/projects/2)
 - [Javadoc Guidelines](https://google.github.io/styleguide/javaguide.html#s7-javadoc)
 
 ## Contributing
 
-This project is the shared responsibility of all of the developers working for DDD. Before contributing, please read the [contribution guidelines](CONTRIBUTING.md), so nothing fucky wucky happens while you're working on the API.
+This project is the shared responsibility of all of the developers working for DDD, or anyone who choses to contribute. Before contributing, please read the [contribution guidelines](CONTRIBUTING.md), so nothing fucky wucky happens while you're working on the API.
 
 ## Add StickyAPI to your project
 
@@ -52,3 +53,12 @@ dependencies {
 
 # Documentation
 All javadocs are located at https://dumbdogdiner.github.io/StickyAPI/ and have earlier versions available.
+
+# Development Quotes
+
+- "_When Unsafe.java is the only safe option..._"
+
+- "_New in 2.0 - `UnsafeUtils`! Because Java is great at removing features we need, so we are forced to use a internal jre class literally called `Unsafe`._"
+
+
+- "_**MD_5 and his knobbery continues.** ... Because MD_5 couldn't help but program like a 12 year old we now have to use reflection to get a more reasonable way to register commands._"

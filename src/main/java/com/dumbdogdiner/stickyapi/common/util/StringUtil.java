@@ -1,32 +1,29 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.util;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Operations on {@link java.lang.String}
  */
-public class StringUtil {
+public final class StringUtil {
+    private StringUtil() {
+    }
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
+
+    // createProgressBar - format double percentage to no decimal places to avoid it
+    // showing as '100.0000%' or something
+    private static DecimalFormat percentageFormatter = new DecimalFormat("#");
 
     static {
         leetReplace.put("0", "o");
@@ -44,7 +41,7 @@ public class StringUtil {
      * 
      * @param size              The size of the bar (inside)
      * @param percentage        The percentage to fill the bar to
-     * @param monospace         If false, the bars will be a chatacter with the
+     * @param monospace         If false, the bars will be a character with the
      *                          equivalent amount of pixels as a whitespace
      *                          character
      * @param includePercentage If true, the percentage will be appended inside of
@@ -54,22 +51,35 @@ public class StringUtil {
      *                          snuggly brackets
      * @return A progress bar
      */
-    public static String createProgressBar(double size, double percentage, boolean monospace, boolean includePercentage,
-            boolean includeBrackets) {
+    public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
+            @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
+        Validate.notNull(size, "size cannot be null");
+        Validate.notNull(percentage, "percentage cannot be null");
+        Validate.notNull(monospace, "monospace cannot be null");
+        Validate.notNull(includePercentage, "includePercentage cannot be null");
+        Validate.notNull(includeBrackets, "includeBrackets cannot be null");
         double barCount = ((percentage / 100) * size);
-        String bar = "";
+        StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
-            if (i < barCount)
+            if (i < barCount) {
                 if (!monospace)
-                    bar += "\u258D"; // ...
+                    barBuilder.append("\u258D"); // ...
                 else
-                    bar += "|";
-            else
-                bar += " ";
+                    barBuilder.append("|");
+            } else {
+                barBuilder.append(" ");
+            }
         }
-        if (includeBrackets)
-            bar = includePercentage ? String.format("[%s] %e%", bar, percentage) : "[" + bar + "]";
-        return bar;
+
+        if (includeBrackets) {
+            barBuilder.insert(0, "[");
+            barBuilder.append("]");
+        }
+
+        if (includePercentage)
+            barBuilder.append(String.format(" %s%%", percentageFormatter.format(percentage)));
+
+        return barBuilder.toString();
     }
 
     /**
@@ -79,19 +89,33 @@ public class StringUtil {
      * @param percentage The percentage to fill the bar to
      * @return A progress bar
      */
-    public static String createProgressBar(double size, double percentage) {
+    public static String createProgressBar(@NotNull double size, @NotNull double percentage) {
+        Validate.notNull(size, "size cannot be null");
+        Validate.notNull(percentage, "percentage cannot be null");
         return createProgressBar(size, percentage, false, false, true);
     }
 
     /**
-     * Capitalise every letter after whitespace
+     * Capitalise every letter after whitespace.
+     * <p>
+     * This will also lowercase any uppercase characters.
      * <p>
      * Example: "hello world" == "Hello World"
+     * <p>
+     * Example: "hello WORLD" == "Hello World" || "Hello WORLD" depending on the
+     * `keepCase` input
      * 
-     * @param string The string to capitalise
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     * @param string   The string to capitalise
+     * @param keepCase Whether or not to keep the uppercase characters
      * @return A message with capital letters after every whitespace
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
      */
-    public static String capitaliseSentence(String string) {
+    public static String capitaliseSentence(@NotNull String string, @NotNull Boolean keepCase) {
+        Validate.notNull(string, "string cannot be null");
+        Validate.notNull(keepCase, "keepCase cannot be null");
         StringBuilder sb = new StringBuilder();
         boolean cnl = true;
         for (char c : string.toCharArray()) {
@@ -99,7 +123,7 @@ public class StringUtil {
                 sb.append(Character.toUpperCase(c));
                 cnl = false;
             } else {
-                sb.append(Character.toLowerCase(c));
+                sb.append(keepCase ? c : Character.toLowerCase(c));
             }
             if (Character.isWhitespace(c)) {
                 cnl = true;
@@ -109,19 +133,77 @@ public class StringUtil {
     }
 
     /**
-     * Replace a word with asterisks.
+     * Capitalise every letter after whitespace.
+     * <p>
+     * This will also lowercase any uppercase characters.
+     * <p>
+     * Example: "hello world" == "Hello World"
+     * <p>
+     * Example: "HELLO WORLD" == "Hello World"
      * 
-     * @param word The word to censor
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     * @param string The string to capitalise
+     * @return A message with capital letters after every whitespace
+     * @see Alternate (keeping uppercase):
+     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     */
+    public static String capitaliseSentence(@NotNull String string) {
+        Validate.notNull(string, "string cannot be null");
+        return capitaliseSentence(string, false);
+    }
+
+    /**
+     * Capitalise every letter after whitespace.
+     * <p>
+     * Will keep uppercase letters uppercase.
+     * <p>
+     * Example: "hello world" == "Hello World"
+     * <p>
+     * Example: "hello WORLD" == "Hello WORLD"
+     * 
+     * @since 2.0
+     * @see Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
+     * @param string The string to capitalise
+     * @return A message with capital letters after every whitespace
+     */
+    public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
+        Validate.notNull(string, "string cannot be null");
+        return capitaliseSentence(string, true);
+    }
+
+    /**
+     * Replace a word with asterisks.
+     *
+     * @param word  The word to censor
+     * @param regex The characters to not censor
      * @return The censored word
      */
-    public static String censorWord(String word) {
+    public static String censorWord(@NotNull String word, @NotNull String regex) {
+        Validate.notNull(word, "word cannot be null");
+        Validate.notNull(regex, "regex cannot be null");
         StringBuilder asterisks = new StringBuilder();
 
         for (int i = 0; i < word.length(); i++) {
-            asterisks.append("*");
+            if (String.valueOf(word.charAt(i)).matches(regex)) {
+                asterisks.append(word.charAt(i));
+            } else {
+                asterisks.append("*");
+            }
         }
 
         return asterisks.toString();
+    }
+
+    /**
+     * Replace a word with asterisks.
+     *
+     * @param word The word to censor
+     * @return The censored word
+     */
+    public static String censorWord(@NotNull String word) {
+        Validate.notNull(word, "word cannot be null");
+        return censorWord(word, "[ -/:-@\\[-`{-~¡-¿]");
     }
 
     /**
@@ -136,7 +218,8 @@ public class StringUtil {
      * @param message The message to filter
      * @return The filtered message
      */
-    public static String replaceLeet(String message) {
+    public static String replaceLeet(@NotNull String message) {
+        Validate.notNull(message, "message cannot be null");
         if (message.trim().isEmpty())
             return message;
 
@@ -153,7 +236,9 @@ public class StringUtil {
      * @param needles  things that may match the comparison string
      * @return Whether something matches.
      */
-    public static boolean compareMany(String haystack, String[] needles) {
+    public static boolean compareMany(@NotNull String haystack, @NotNull String[] needles) {
+        Validate.notNull(haystack, "haystack cannot be null");
+        Validate.notNull(needles, "needles cannot be null");
         for (String needle : needles) {
             if (haystack.equalsIgnoreCase(needle))
                 return true;
@@ -162,4 +247,41 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * This method uses a region to check case-insensitive equality. This means the
+     * internal array does not need to be copied like a toLowerCase() call would.
+     *
+     * @param string String to check
+     * @param prefix Prefix of string to compare
+     * @return {@link Boolean}
+     * @throws NullPointerException     if prefix is null
+     * @throws IllegalArgumentException if string is null
+     */
+    public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix)
+            throws IllegalArgumentException, NullPointerException {
+        Validate.notNull(string, "Cannot check a null string for a match");
+        if (string.length() < prefix.length()) {
+            return false;
+        }
+        return string.regionMatches(true, 0, prefix, 0, prefix.length());
+    }
+
+    /**
+     * Put hyphens into a uuid
+     * <p>
+     * e.x. de8c89e12f25424d8078c6ff58db7d6e > de8c89e1-2f25-424d-8078-c6ff58db7d6e
+     * 
+     * @param uuid to hyphenate
+     * @return {@link UUID}
+     */
+    public static UUID hyphenateUUID(@NotNull String uuid) {
+        Validate.notNull(uuid, "uuid cannot be null");
+        if (uuid.length() == 32) {
+            return UUID.fromString(uuid.replaceFirst( // https://stackoverflow.com/a/19399768
+                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                    "$1-$2-$3-$4-$5"));
+        } else {
+            return UUID.fromString(uuid);
+        }
+    }
 }

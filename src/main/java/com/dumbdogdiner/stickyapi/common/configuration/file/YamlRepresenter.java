@@ -1,30 +1,14 @@
-/* 
- *  StickyAPI - Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins
- *  Copyright (C) 2020 DumbDogDiner <dumbdogdiner.com>
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
  */
-
 package com.dumbdogdiner.stickyapi.common.configuration.file;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import com.dumbdogdiner.stickyapi.common.configuration.ConfigurationSection;
 import com.dumbdogdiner.stickyapi.common.configuration.serialization.ConfigurationSerializable;
-// import com.dumbdogdiner.stickyapi.common.configuration.serialization.ConfigurationSerialization;
-
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -37,19 +21,20 @@ public class YamlRepresenter extends Representer {
 
     private class RepresentConfigurationSection extends RepresentMap {
 
+        @NotNull
         @Override
-        public Node representData(Object data) {
+        public Node representData(@NotNull Object data) {
             return super.representData(((ConfigurationSection) data).getValues(false));
         }
     }
 
     private class RepresentConfigurationSerializable extends RepresentMap {
 
+        @NotNull
         @Override
-        public Node representData(Object data) {
+        public Node representData(@NotNull Object data) {
             ConfigurationSerializable serializable = (ConfigurationSerializable) data;
             Map<String, Object> values = new LinkedHashMap<String, Object>();
-            // values.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY, ConfigurationSerialization.getAlias(serializable.getClass()));
             values.putAll(serializable.serialize());
 
             return super.representData(values);
