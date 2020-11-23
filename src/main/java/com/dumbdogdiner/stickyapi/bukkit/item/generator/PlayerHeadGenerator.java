@@ -23,65 +23,70 @@ public class PlayerHeadGenerator {
 
     PlayerProfile ownerProfile;
 
-    public PlayerHeadGenerator(UUID playerId){
+    public PlayerHeadGenerator(UUID playerId) {
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(playerId));
         ownerProfile = Bukkit.getServer().createProfile(playerId);
     }
 
-    public PlayerHeadGenerator(Player player){
+    public PlayerHeadGenerator(Player player) {
         this(Bukkit.getOfflinePlayer(player.getUniqueId()));
     }
 
-    public PlayerHeadGenerator(OfflinePlayer player){
+    public PlayerHeadGenerator(OfflinePlayer player) {
         meta.setOwningPlayer(player);
         ownerProfile = Bukkit.createProfile(player.getUniqueId());
     }
 
-    public PlayerHeadGenerator(ItemStack head){
-        if(head.getType() != Material.PLAYER_HEAD && head.getType() != Material.PLAYER_WALL_HEAD)
+    public PlayerHeadGenerator(ItemStack head) {
+        if (head.getType() != Material.PLAYER_HEAD && head.getType() != Material.PLAYER_WALL_HEAD)
             throw new IllegalArgumentException("head must be a player head or player wall head");
         meta = (SkullMeta) head.getItemMeta();
         meta.getPlayerProfile();
-        if(!ownerProfile.hasTextures()){
-            if(!ownerProfile.complete()){
-                throw new IllegalArgumentException("Invalid player profile attached to the head, with no UUID or textures!");
+        if (!ownerProfile.hasTextures()) {
+            if (!ownerProfile.complete()) {
+                throw new IllegalArgumentException(
+                        "Invalid player profile attached to the head, with no UUID or textures!");
             }
         }
     }
 
-
-    public void setTexture(URL textureURL){
+    public void setTexture(URL textureURL) {
         // {"textures":{"SKIN":{"url":"http://textures.minecraft.net/texture/63d621100fea5883922e78bb448056448c983e3f97841948a2da747d6b08b8ab"}}}
         class textures {
             SKIN skn;
-            public textures(String url){
+
+            public textures(String url) {
                 skn = new SKIN(url);
             }
-            class SKIN{
+
+            class SKIN {
                 String url;
-                public SKIN(String s){
+
+                public SKIN(String s) {
                     url = s;
                 }
             }
         }
 
-        setTexture(new String(Base64.getEncoder().encode(new Gson().toJson(new textures(textureURL.toString())).getBytes())));
+        setTexture(new String(
+                Base64.getEncoder().encode(new Gson().toJson(new textures(textureURL.toString())).getBytes())));
     }
 
     /**
      * Set the texture with a pre-encoded string
+     * 
      * @param texture Base64 string of the json of texture location
      */
-    public void setTexture(String texture){
+    public void setTexture(String texture) {
         ownerProfile.setProperty(new ProfileProperty("texture", texture));
         meta.setPlayerProfile(ownerProfile);
     }
 
-    public ItemStack getHead(){
+    public ItemStack getHead() {
         return getHead(1);
     }
 
-    public ItemStack getHead(int amount){
+    public ItemStack getHead(int amount) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD, amount);
         head.setItemMeta(meta);
         return null;

@@ -4,14 +4,16 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import org.jetbrains.annotations.NotNull;
+
 public class TextUtil {
     // Uses info from: https://minecraft.gamepedia.com/Language#Font
-    public static int getCharacterWidth(char c){
-        if(c < 32 || c > 126){
+    public static int getCharacterWidth(@NotNull char c) {
+        if (c < 32 || c > 126) {
             // Not presently implemented, would require rendering TTF
             return -1;
         }
-        switch(c){
+        switch (c) {
             case '!':
             case ',':
             case '\'':

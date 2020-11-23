@@ -18,8 +18,8 @@ import java.util.List;
  * Cloned from bukkit to prevent reflective calls
  */
 // Fuck you reflection, and fuck you Java for changing it so much!!!
-    //I'ma fuggin rewrite bits of this so its not garbage
-public final class PluginCommand extends Command implements PluginIdentifiableCommand {
+// I'ma fuggin rewrite bits of this so its not garbage
+public final class PluginCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand {
     private final Plugin owningPlugin;
     private CommandExecutor executor;
     private TabCompleter completer;

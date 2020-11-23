@@ -15,6 +15,8 @@ import java.util.TreeMap;
 
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 
+import org.jetbrains.annotations.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,10 +40,12 @@ public class LocaleProvider {
     private Locale defaultLocale;
 
     /**
-     * Construct a new LocaleProvider using the target folder for storing/loading locales.
+     * Construct a new LocaleProvider using the target folder for storing/loading
+     * locales.
+     * 
      * @param localeFolder The target folder
      */
-    public LocaleProvider(File localeFolder) {
+    public LocaleProvider(@NotNull File localeFolder) {
         this.localeFolder = localeFolder;
         if (!localeFolder.exists())
             localeFolder.mkdir();
@@ -49,11 +53,13 @@ public class LocaleProvider {
 
     /**
      * Load a locale with the given name.
-     * <p>Returns  True if the load was successful
+     * <p>
+     * Returns True if the load was successful
+     * 
      * @param name The name of the locale to load
      * @return {@link java.lang.Boolean}
      */
-    public boolean loadLocale(String name) {
+    public boolean loadLocale(@NotNull String name) {
         if (!name.endsWith(".yml"))
             name += ".yml";
 
@@ -62,11 +68,13 @@ public class LocaleProvider {
 
     /**
      * Load a locale using a file.
-     * <p>Returns  True if the load was successful
+     * <p>
+     * Returns True if the load was successful
+     * 
      * @param file The file containing the locale configuration
      * @return {@link java.lang.Boolean}
      */
-    public boolean loadLocale(File file) {
+    public boolean loadLocale(@NotNull File file) {
         debug.reset().print("Looking for localization in " + file.getName() + "...");
 
         if (!file.exists() || file.isDirectory()) {
@@ -94,7 +102,9 @@ public class LocaleProvider {
 
     /**
      * Load all available locales.
-     * <p>Returns  The number of new locales loaded.
+     * <p>
+     * Returns The number of new locales loaded.
+     * 
      * @return {@link java.lang.Integer}
      */
     public int loadAllLocales() {
@@ -114,12 +124,14 @@ public class LocaleProvider {
 
     /**
      * Translate a localization with the given variables.
-     * <p>Returns  The configured node string, with vars interpolated when required
+     * <p>
+     * Returns The configured node string, with vars interpolated when required
+     * 
      * @param node The configuration node to retrieve
      * @param vars A map of variables to interpolate into the configured node value
      * @return {@link java.lang.String}
      */
-    public String translate(String node, Map<String, String> vars) {
+    public String translate(@NotNull String node, @NotNull Map<String, String> vars) {
         debug.reset();
 
         if (node == null || node.equals("")) {
@@ -138,12 +150,15 @@ public class LocaleProvider {
 
     /**
      * Translate a localization without color.
-     * <p>Returns  The configured node string without color, with vars interpolated when required
+     * <p>
+     * Returns The configured node string without color, with vars interpolated when
+     * required
+     * 
      * @param node The configuration node to retrieve
      * @param vars A map of variables to interpolate into the configured node value
      * @return {@link java.lang.String}
      */
-    public String translateNoColor(String node, Map<String, String> vars) {
+    public String translateNoColor(@NotNull String node, @NotNull Map<String, String> vars) {
         if (node == null || node.equals(""))
             return null;
 
@@ -156,64 +171,80 @@ public class LocaleProvider {
 
     /**
      * Get a localized value using the default locale.
-     * <p>Returns  A configured node string before interpolation of variables has been performed
+     * <p>
+     * Returns A configured node string before interpolation of variables has been
+     * performed
+     * 
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String get(String node) {
+    public String get(@NotNull String node) {
         return defaultLocale == null ? null : defaultLocale.get(node);
     }
 
     /**
      * Get a localized value using an enum of node values.
-     * <p>Returns  A configured node string before interpolation of variables has been performed
+     * <p>
+     * Returns A configured node string before interpolation of variables has been
+     * performed
+     * 
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String get(Enum<?> node) {
+    public String get(@NotNull Enum<?> node) {
         return get(node.name().toLowerCase().replace("_", "-"));
     }
 
     /**
      * Get a localized value using the specified locale.
-     * <p>Returns  A configured node string before interpolation of variables has been performed
+     * <p>
+     * Returns A configured node string before interpolation of variables has been
+     * performed
+     * 
      * @param name The name of the locale to fetch from
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String get(String name, String node) throws IllegalArgumentException {
+    public String get(@NotNull String name, @NotNull String node) throws IllegalArgumentException {
         checkForLoadedLocale(name);
         return loadedLocales.get(name).get(node);
     }
 
     /**
      * Get a variable, falling back to its default if it doesn't exist.
-     * <p>Returns  The variable, or the default for the given name if the former does not exist
+     * <p>
+     * Returns The variable, or the default for the given name if the former does
+     * not exist
+     * 
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String getDefault(String node, String defaultValue) {
+    public String getDefault(@NotNull String node, @NotNull String defaultValue) {
         return get(node) == null ? defaultValue : get(node);
     }
 
     /**
      * Fetch a loaded locale.
-     * <p>Returns  The requested locale
-     * @param name The name of the locale 
+     * <p>
+     * Returns The requested locale
+     * 
+     * @param name The name of the locale
      * @return {@link com.dumbdogdiner.stickyapi.common.translation.Locale}
      */
-    public Locale getLocale(String name) throws IllegalArgumentException {
+    public Locale getLocale(@NotNull String name) throws IllegalArgumentException {
         checkForLoadedLocale(name);
         return loadedLocales.get(name);
     }
 
     /**
      * Set the default locale to use.
-     * <p>Returns  True if the default locale was set without error.
+     * <p>
+     * Returns True if the default locale was set without error.
+     * 
      * @param name The name of the locale
      * @return {@link java.lang.Boolean}
      */
-    public boolean setDefaultLocale(String name) {
+    public boolean setDefaultLocale(@NotNull String name) {
         try {
             checkForLoadedLocale(name);
         } catch (IllegalArgumentException e) {
@@ -226,11 +257,12 @@ public class LocaleProvider {
 
     /**
      * Save an internal resource to the data file.
-     * @param in File inputstream
+     * 
+     * @param in           File inputstream
      * @param resourcePath The path to which the resource should be saved
-     * @param replace Whether or not to replace the file if it already exists
+     * @param replace      Whether or not to replace the file if it already exists
      */
-    public void writeLocaleStream(InputStream in, String resourcePath, boolean replace)
+    public void writeLocaleStream(@NotNull InputStream in, @NotNull String resourcePath, @NotNull boolean replace)
             throws IllegalArgumentException, IOException {
         if (resourcePath == null || resourcePath.equals("")) {
             throw new IllegalArgumentException("Resource path cannot be null or empty");
@@ -265,16 +297,18 @@ public class LocaleProvider {
     }
 
     /**
-     * Checks if a locale with the given name is loaded. Throws `IllegalArgumentException` if not found.
+     * Checks if a locale with the given name is loaded. Throws
+     * `IllegalArgumentException` if not found.
      */
-    private void checkForLoadedLocale(String name) throws IllegalArgumentException {
+    private void checkForLoadedLocale(@NotNull String name) throws IllegalArgumentException {
         if (!loadedLocales.containsKey(name))
             throw new IllegalArgumentException("Locale " + name + " is not loaded");
     }
 
     /**
-     * Convenience function for getting a new TreeMap 
-     * <p>Returns  {@link java.util.TreeMap}
+     * Convenience function for getting a new TreeMap
+     * <p>
+     * Returns {@link java.util.TreeMap}
      */
     public TreeMap<String, String> newVariables() {
         return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);

@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.configuration;
 
-
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Various settings for controlling the input and output of a {@link
@@ -15,7 +15,7 @@ public class ConfigurationOptions {
     private boolean copyDefaults = false;
     private final Configuration configuration;
 
-    protected ConfigurationOptions(Configuration configuration) {
+    protected ConfigurationOptions(@NotNull Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -24,7 +24,7 @@ public class ConfigurationOptions {
      *
      * @return Parent configuration
      */
-    
+    @NotNull
     public Configuration configuration() {
         return configuration;
     }
@@ -52,7 +52,7 @@ public class ConfigurationOptions {
      * @param value Path separator
      * @return This object, for chaining
      */
-    
+    @NotNull
     public ConfigurationOptions pathSeparator(char value) {
         this.pathSeparator = value;
         return this;
@@ -84,14 +84,14 @@ public class ConfigurationOptions {
      * directly copied, making it impossible to distinguish between values
      * that were set and values that are provided by default. As a result,
      * {@link ConfigurationSection#contains(java.lang.String)} will always
-     * return the same value as
-     * ConfigurationSection#isSet(java.lang.String). The default value is
+     * return the same value as {@link
+     * ConfigurationSection#isSet(java.lang.String)}. The default value is
      * false.
      *
      * @param value Whether or not defaults are directly copied
      * @return This object, for chaining
      */
-    
+    @NotNull
     public ConfigurationOptions copyDefaults(boolean value) {
         this.copyDefaults = value;
         return this;

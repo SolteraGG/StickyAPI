@@ -4,7 +4,7 @@
  */
 /**
  * Classes dedicated to facilitating
- * {@link org.bukkit.configuration.Configuration configurations} to be read and
+ * {@link com.dumbdogdiner.stickyapi.common.configuration.Configuration configurations} to be read and
  * stored on the filesystem.
  */
 package com.dumbdogdiner.stickyapi.common.configuration.file;

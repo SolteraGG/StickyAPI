@@ -4,11 +4,11 @@
  */
 package com.dumbdogdiner.stickyapi.common.configuration.serialization;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an "alias" that a {@link ConfigurationSerializable} may be
@@ -21,6 +21,8 @@ import java.lang.annotation.Target;
  * <p>
  * Using this annotation on any other class than a {@link
  * ConfigurationSerializable} will have no effect.
+ *
+ * @see ConfigurationSerialization#registerClass(Class, String)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -33,5 +35,6 @@ public @interface SerializableAs {
      *
      * @return Name to serialize the class as.
      */
+    @NotNull
     public String value();
 }

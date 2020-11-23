@@ -12,6 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.Map;
@@ -24,46 +25,46 @@ public class StickyUser implements Cacheable {
     @Getter
     protected String name;
 
-    public StickyUser(UUID uniqueId) {
+    public StickyUser(@NotNull UUID uniqueId) {
         this.uniqueId = uniqueId;
         MojangAPI a = new MojangAPI(uniqueId);
         name = a.getUsername();
     }
 
-    public StickyUser(Player p){
+    public StickyUser(@NotNull Player p) {
         uniqueId = p.getUniqueId();
         name = p.getName();
     }
 
-    public StickyUser(ProxiedPlayer p){
+    public StickyUser(@NotNull ProxiedPlayer p) {
         uniqueId = p.getUniqueId();
         name = p.getName();
     }
 
-    public StickyUser(OfflinePlayer p){
+    public StickyUser(@NotNull OfflinePlayer p) {
         uniqueId = p.getUniqueId();
         name = p.getName();
     }
 
-    protected StickyUser(UUID uniqueId, String userName) {
+    protected StickyUser(@NotNull UUID uniqueId, @NotNull String userName) {
         this.uniqueId = uniqueId;
         this.name = userName;
     }
 
-    public Map<String, Instant> getNameHistory(){
+    public Map<String, Instant> getNameHistory() {
         MojangAPI api = new MojangAPI(uniqueId);
         return api.getUsernameHistory();
     }
 
-    public Player getAsBukkitPlayer(){
+    public Player getAsBukkitPlayer() {
         return Bukkit.getPlayer(uniqueId);
     }
 
-    public OfflinePlayer getAsOfflinePlayer(){
+    public OfflinePlayer getAsOfflinePlayer() {
         return Bukkit.getOfflinePlayer(uniqueId);
     }
 
-    public StickyUserBukkit getAsBukkitUser(){
+    public StickyUserBukkit getAsBukkitUser() {
         return new StickyUserBukkit(this);
     }
 

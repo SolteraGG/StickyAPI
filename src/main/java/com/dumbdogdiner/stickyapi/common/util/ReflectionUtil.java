@@ -4,18 +4,19 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * A class for abusing Java and using reflection to unprotect methods and constructors, use this with a lot of care and try not to break things!
+ * A class for abusing Java and using reflection to unprotect methods and
+ * constructors, use this with a lot of care and try not to break things!
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings({ "unchecked", "deprecation" })
 public final class ReflectionUtil {
-    private ReflectionUtil() {}
+    private ReflectionUtil() {
+    }
 
     public static void setProtectedValue(Object o, String field, Object newValue) {
         setProtectedValue(o.getClass(), o, field, newValue);
