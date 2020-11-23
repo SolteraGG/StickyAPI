@@ -35,6 +35,7 @@ public class SoundUtil {
      */
     public static void queueSound(@NotNull Player player, @NotNull Sound sound, @NotNull float volume,
             @NotNull float pitch, @NotNull Long delay) {
+
         StickyAPI.getPool().submit(() -> {
             try {
                 Thread.sleep(delay);

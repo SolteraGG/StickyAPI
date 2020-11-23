@@ -14,12 +14,13 @@ import org.bukkit.Particle.DustOptions;
 
 /**
  * Draws a circle.
+ * 
  * @since 2.0
  */
 public class Circle implements Shape {
     /**
-     * Prevent developers from creating absurdly large circles - too many particles will
-     * cause nearby clients to crash.
+     * Prevent developers from creating absurdly large circles - too many particles
+     * will cause nearby clients to crash.
      */
     final double MAX_RADIUS = 250;
 
@@ -101,27 +102,11 @@ public class Circle implements Shape {
 
     @Override
     public void draw(ParticleSystem system, Particle particle, DustOptions data) {
-        system.parametric(
-            particle,
-            this.parametric,
-            0,
-            Math.PI * 2,
-            Math.PI / (16*r),
-            1,
-            data
-        );
+        system.parametric(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 
     @Override
     public void drawAbsolute(ParticleSystem system, Particle particle, DustOptions data) {
-        system.parametricAbsolute(
-            particle,
-            this.parametric,
-            0,
-            Math.PI * 2,
-            Math.PI / (16*r),
-            1,
-            data
-        );
+        system.parametricAbsolute(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 }

@@ -57,7 +57,7 @@ public class StringUtilTest {
         }
         assertEquals(count, 10);
     }
-    
+
     @Test
     public void testCreateProgressBarNoBrackets() {
         String bar = StringUtil.createProgressBar(10, 50, false, false, false);
@@ -148,7 +148,7 @@ public class StringUtilTest {
     public void testCompareMany() {
         assertTrue(StringUtil.compareMany("hello there", new String[] { "hello there" }));
         assertTrue(StringUtil.compareMany("hello there", new String[] { "Hello there" }));
-        
+
         assertFalse(StringUtil.compareMany("hello there", new String[] { "goodbye" }));
     }
 }

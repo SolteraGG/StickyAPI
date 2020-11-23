@@ -12,9 +12,9 @@ import lombok.Getter;
 
 /**
  * This class is for creating new slots in an inventory GUI
-*/
+ */
 public class ClickableSlot {
-    
+
     @Getter
     private ItemStack item;
 

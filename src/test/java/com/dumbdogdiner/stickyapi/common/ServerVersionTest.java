@@ -32,7 +32,7 @@ public class ServerVersionTest {
             mocked.verify(ServerVersion::getServerType);
         }
     }
-    
+
     @Test
     public void testGetServerTypeSpigot() {
         try (MockedStatic<ServerVersion> mocked = mockStatic(ServerVersion.class)) {
@@ -57,7 +57,7 @@ public class ServerVersionTest {
             // Set stub return values when methods are called
             mocked.when(ServerVersion::isBukkit).thenReturn(true);
             mocked.when(ServerVersion::isPaper).thenReturn(true);
-            //mocked.when(ServerVersion::isSpigot).thenReturn(false);
+            // mocked.when(ServerVersion::isSpigot).thenReturn(false);
             mocked.when(ServerVersion::getServerType).thenCallRealMethod(); // Bypass mocking
 
             assertTrue(ServerVersion.getServerType().equals(ServerType.PAPER));
@@ -68,7 +68,7 @@ public class ServerVersionTest {
             mocked.verify(ServerVersion::getServerType);
         }
     }
-    
+
     @Test
     public void testGetServerTypeWaterfall() {
         try (MockedStatic<ServerVersion> mocked = mockStatic(ServerVersion.class)) {

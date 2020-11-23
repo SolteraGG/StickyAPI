@@ -106,9 +106,11 @@ public final class StringUtil {
      * `keepCase` input
      * 
      * @see Alternate (keeping uppercase):
-     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     *      {@link #capitaliseSentenceKeepUpperCase(String)} <<<<<<< HEAD
      * @param string   The string to capitalise
-     * @param keepCase Whether or not to keep the uppercase characters
+     * @param keepCase Whether or not to keep the uppercase characters =======
+     * @param string   The string to capitalise >>>>>>>
+     *                 e266cc86d56b59e8f725d4de3763bc01abcbdfb0
      * @return A message with capital letters after every whitespace
      * @see Alternate (keeping uppercase):
      *      {@link #capitaliseSentenceKeepUpperCase(String)}

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LuhnTest {
-    
+
     @Test
     public void luhnCheckValid() {
         assertTrue(Luhn.luhnCheck("402007136885364"));
@@ -42,7 +42,7 @@ public class LuhnTest {
         assertFalse(Luhn.luhnCheck("1"));
     }
 
-    //TODO: Test to see if it can handle supplementary characters?
+    // TODO: Test to see if it can handle supplementary characters?
 
     @Test
     public void calculateCheckDigitNull() {

@@ -12,8 +12,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
- * <h1>StickyAPI</h1>
- * Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins.
+ * <h1>StickyAPI</h1> Utility methods, classes and potentially
+ * code-dupe-annihilating code for DDD plugins.
+ * 
  * @author DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>
  * @version 2.0.0
  */
