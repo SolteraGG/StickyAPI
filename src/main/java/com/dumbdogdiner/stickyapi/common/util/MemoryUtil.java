@@ -23,6 +23,10 @@ public final class MemoryUtil {
 
     /**
      * Get the size of an object, specifying in what units the method should return.
+     * 
+     * @param object The object to get the size of
+     * @param units  The unit to return the size in
+     * @return {@link Double}
      */
     public static Double getSizeOf(Object object, Unit units) {
         int bits = getSizeOf(object);
@@ -31,6 +35,10 @@ public final class MemoryUtil {
 
     /**
      * Format a number of bits into their unit equivalent.
+     * 
+     * @param bits  The amount of bits to format
+     * @param units The unit to format `bits` with
+     * @return {@link Double}
      */
     public static Double formatBits(int bits, Unit units) {
         switch (units) {
@@ -49,6 +57,9 @@ public final class MemoryUtil {
 
     /**
      * Get the approximate size of the given object.
+     * 
+     * @param object The object to get the size of
+     * @return {@link Integer}
      */
     public static int getSizeOf(Object object) {
         if (object == null) {

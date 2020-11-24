@@ -4,49 +4,55 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import java.util.HashMap;
+
 import org.jetbrains.annotations.NotNull;
 
 public class TextUtil {
+    static HashMap<Character, Integer> characterWidths = new HashMap<>();
+    static {
+        characterWidths.put('!', 1);
+        characterWidths.put(',', 1);
+        characterWidths.put('\'', 1);
+        characterWidths.put('.', 1);
+        characterWidths.put(':', 1);
+        characterWidths.put(';', 1);
+        characterWidths.put('i', 1);
+        characterWidths.put('|', 1);
+        characterWidths.put('!', 1);
+
+        characterWidths.put('`', 2);
+        characterWidths.put('l', 2);
+
+        characterWidths.put(' ', 3);
+        characterWidths.put('(', 3);
+        characterWidths.put(')', 3);
+        characterWidths.put('*', 3);
+        characterWidths.put('I', 3);
+        characterWidths.put('[', 3);
+        characterWidths.put(']', 3);
+        characterWidths.put('t', 3);
+        characterWidths.put('{', 3);
+        characterWidths.put('}', 3);
+
+        characterWidths.put('<', 4);
+        characterWidths.put('>', 4);
+        characterWidths.put('f', 4);
+        characterWidths.put('k', 4);
+
+        characterWidths.put('@', 6);
+        characterWidths.put('~', 6);
+    }
+
     // Uses info from: https://minecraft.gamepedia.com/Language#Font
     public static int getCharacterWidth(@NotNull char c) {
         if (c < 32 || c > 126) {
             // Not presently implemented, would require rendering TTF
             return -1;
         }
-        switch (c) {
-            case '!':
-            case ',':
-            case '\'':
-            case '.':
-            case ':':
-            case ';':
-            case 'i':
-            case '|':
-                return 1;
-            case '`':
-            case 'l':
-                return 2;
-            case ' ':
-            case '(':
-            case ')':
-            case '*':
-            case 'I':
-            case '[':
-            case ']':
-            case 't':
-            case '{':
-            case '}':
-                return 3;
-            case '<':
-            case '>':
-            case 'f':
-            case 'k':
-                return 4;
-            case '@':
-            case '~':
-                return 6;
-            default:
-                return 5;
+        if (characterWidths.containsKey(c)) {
+            return characterWidths.get(c);
         }
+        return 5;
     }
 }

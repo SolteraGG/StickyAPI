@@ -17,8 +17,8 @@ public class IPUtilTest {
 
     @Test
     public void testCheckValidRanges4() {
-        assertTrue(IPUtil.compareRangeCIDR("1.1.1.1", "1.1.1.1", "32"));
-        assertFalse(IPUtil.compareRangeCIDR("1.1.1.1", "1.1.1.2", "32"));
+        assertTrue(IPUtil.compareRangeCIDR("192.0.2.1", "192.0.2.1", "32"));
+        assertFalse(IPUtil.compareRangeCIDR("192.0.2.1", "192.0.2.2", "32"));
     }
 
     @Test

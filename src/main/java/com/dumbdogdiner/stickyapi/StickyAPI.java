@@ -12,9 +12,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <h1>StickyAPI</h1>
- * Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins.
- * @author DumbDogDiner <dumbdogdiner.com>
+ * <h1>StickyAPI</h1> Utility methods, classes and potentially
+ * code-dupe-annihilating code for DDD plugins.
+ * 
+ * @author DumbDogDiner (dumbdogdiner.com)
  * @version 2.0.0
  */
 public class StickyAPI {

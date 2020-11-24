@@ -17,6 +17,7 @@ import com.dumbdogdiner.stickyapi.bukkit.command.ExitCode;
 import com.dumbdogdiner.stickyapi.bukkit.command.PluginCommand;
 import com.dumbdogdiner.stickyapi.bukkit.util.NotificationType;
 import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
+import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
@@ -38,13 +39,6 @@ import org.jetbrains.annotations.NotNull;
  * @since 2.0
  */
 public class CommandBuilder {
-
-    // Before you ask, yes, this should be it's own object
-    // Before you ask, it's not because that's too much work for poor zachy, and I
-    // personally don't like the amount of code dupe it introduces
-    // so i'll stick with this.
-    Boolean subCommand = false;
-
     Boolean synchronous = false;
     Boolean requiresPlayer = false;
     String name;
@@ -84,7 +78,7 @@ public class CommandBuilder {
      * <p>
      * Used to build and register Bukkit commands
      * 
-     * @param name
+     * @param name The name of the command
      */
     public CommandBuilder(@NotNull String name) {
         this.name = name;
@@ -93,7 +87,7 @@ public class CommandBuilder {
     /**
      * If this command should run asynchronously
      * 
-     * @param synchronous
+     * @param synchronous if this command should run synchronously
      * @return {@link CommandBuilder}
      */
     public CommandBuilder synchronous(@NotNull Boolean synchronous) {
@@ -125,7 +119,7 @@ public class CommandBuilder {
      * If this command requires the sender to be an instance of
      * {@link org.bukkit.entity.Player}
      * 
-     * @param requiresPlayer
+     * @param requiresPlayer If this command should require a player as the executor
      * @return {@link CommandBuilder}
      */
     public CommandBuilder requiresPlayer(@NotNull Boolean requiresPlayer) {
@@ -146,7 +140,7 @@ public class CommandBuilder {
     /**
      * If this command should play a sound upon exiting
      * 
-     * @param playSound
+     * @param playSound If this command should play a sound upon exiting
      * @return {@link CommandBuilder}
      */
     public CommandBuilder playSound(@NotNull Boolean playSound) {
@@ -217,7 +211,6 @@ public class CommandBuilder {
      */
     public CommandBuilder subCommand(@NotNull CommandBuilder builder) {
         builder.synchronous = this.synchronous;
-        builder.subCommand = true;
         this.subCommands.put(builder.name, builder);
         return this;
     }
@@ -408,9 +401,17 @@ public class CommandBuilder {
      * @param plugin to register with
      */
     public void register(@NotNull Plugin plugin) {
-        Command command = this.build(plugin);
-        CommandMap cmap = ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap");
-        cmap.register(plugin.getName(), command);
+
+        // If the server is running paper, we don't need to do reflection, which is
+        // good.
+        if (ServerVersion.isPaper()) {
+            plugin.getServer().getCommandMap().register(plugin.getName(), this.build(plugin));
+            return;
+        }
+        // However, if it's not running paper, we need to use reflection, which is
+        // really annoying
+        ((CommandMap) ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap")).register(plugin.getName(),
+                this.build(plugin));
     }
 
     private void _playSound(CommandSender sender, NotificationType type) {

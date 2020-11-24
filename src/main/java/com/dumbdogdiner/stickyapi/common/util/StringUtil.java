@@ -39,6 +39,9 @@ public final class StringUtil {
     /**
      * Create a horizontal progress bar, similar to how htop does it.
      * 
+     * <p>
+     * Returns a progress bar
+     * 
      * @param size              The size of the bar (inside)
      * @param percentage        The percentage to fill the bar to
      * @param monospace         If false, the bars will be a character with the
@@ -49,7 +52,7 @@ public final class StringUtil {
      *                          is available
      * @param includeBrackets   If true, the progress bar will return wrapped in
      *                          snuggly brackets
-     * @return A progress bar
+     * @return {@link String}
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
             @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
@@ -84,10 +87,12 @@ public final class StringUtil {
 
     /**
      * Create a horizontal progress bar, similar to how htop does it.
+     * <p>
+     * Returns a progress bar
      * 
      * @param size       The size of the bar
      * @param percentage The percentage to fill the bar to
-     * @return A progress bar
+     * @return {@link String}
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage) {
         Validate.notNull(size, "size cannot be null");
@@ -104,14 +109,14 @@ public final class StringUtil {
      * <p>
      * Example: "hello WORLD" == "Hello World" || "Hello WORLD" depending on the
      * `keepCase` input
+     * <p>
+     * Returns a message with capital letters after every whitespace
+     * <p>
+     * See {@link #capitaliseSentenceKeepUpperCase(String)}
      * 
-     * @see Alternate (keeping uppercase):
-     *      {@link #capitaliseSentenceKeepUpperCase(String)}
      * @param string   The string to capitalise
      * @param keepCase Whether or not to keep the uppercase characters
-     * @return A message with capital letters after every whitespace
-     * @see Alternate (keeping uppercase):
-     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     * @return {@link String}
      */
     public static String capitaliseSentence(@NotNull String string, @NotNull Boolean keepCase) {
         Validate.notNull(string, "string cannot be null");
@@ -139,14 +144,15 @@ public final class StringUtil {
      * <p>
      * Example: "hello world" == "Hello World"
      * <p>
-     * Example: "HELLO WORLD" == "Hello World"
+     * Example: "HELLO WORLD" == "Hello World"}
+     * <p>
+     * Returns a message with capital letters after every whitespace
+     * <p>
+     * See Alternate (keeping uppercase):
+     * {@link #capitaliseSentenceKeepUpperCase(String)}
      * 
-     * @see Alternate (keeping uppercase):
-     *      {@link #capitaliseSentenceKeepUpperCase(String)}
      * @param string The string to capitalise
-     * @return A message with capital letters after every whitespace
-     * @see Alternate (keeping uppercase):
-     *      {@link #capitaliseSentenceKeepUpperCase(String)}
+     * @return {@link String}
      */
     public static String capitaliseSentence(@NotNull String string) {
         Validate.notNull(string, "string cannot be null");
@@ -162,10 +168,15 @@ public final class StringUtil {
      * <p>
      * Example: "hello WORLD" == "Hello WORLD"
      * 
+     * <p>
+     * See Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
+     * 
+     * <p>
+     * Returns a message with capital letters after every whitespace
+     * 
      * @since 2.0
-     * @see Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
      * @param string The string to capitalise
-     * @return A message with capital letters after every whitespace
+     * @return {@link String}
      */
     public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
         Validate.notNull(string, "string cannot be null");
@@ -174,10 +185,12 @@ public final class StringUtil {
 
     /**
      * Replace a word with asterisks.
-     *
+     * <p>
+     * The censored word
+     * 
      * @param word  The word to censor
      * @param regex The characters to not censor
-     * @return The censored word
+     * @return {@link String}
      */
     public static String censorWord(@NotNull String word, @NotNull String regex) {
         Validate.notNull(word, "word cannot be null");
@@ -198,8 +211,11 @@ public final class StringUtil {
     /**
      * Replace a word with asterisks.
      *
+     * <p>
+     * The censored word
+     * 
      * @param word The word to censor
-     * @return The censored word
+     * @return {@link String}
      */
     public static String censorWord(@NotNull String word) {
         Validate.notNull(word, "word cannot be null");
@@ -215,8 +231,11 @@ public final class StringUtil {
      * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
      * </pre>
      * 
+     * <p>
+     * The filtered message
+     * 
      * @param message The message to filter
-     * @return The filtered message
+     * @return {@link String}
      */
     public static String replaceLeet(@NotNull String message) {
         Validate.notNull(message, "message cannot be null");
@@ -232,9 +251,12 @@ public final class StringUtil {
     /**
      * Check if many strings equal a single comparison string
      * 
+     * <p>
+     * Whether something matches.
+     * 
      * @param haystack the string to compare to
      * @param needles  things that may match the comparison string
-     * @return Whether something matches.
+     * @return {@link Boolean}
      */
     public static boolean compareMany(@NotNull String haystack, @NotNull String[] needles) {
         Validate.notNull(haystack, "haystack cannot be null");
@@ -269,7 +291,8 @@ public final class StringUtil {
     /**
      * Put hyphens into a uuid
      * <p>
-     * e.x. de8c89e12f25424d8078c6ff58db7d6e > de8c89e1-2f25-424d-8078-c6ff58db7d6e
+     * e.x. de8c89e12f25424d8078c6ff58db7d6e &gt;
+     * de8c89e1-2f25-424d-8078-c6ff58db7d6e
      * 
      * @param uuid to hyphenate
      * @return {@link UUID}

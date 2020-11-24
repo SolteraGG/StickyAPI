@@ -22,7 +22,7 @@ import org.bukkit.Bukkit;
 
 /**
  * Create and modify inventory GUIs
-*/
+ */
 public abstract class GUI implements Listener {
 
     @Getter
@@ -35,7 +35,8 @@ public abstract class GUI implements Listener {
 
     /**
      * Create a new inventory GUI
-     * @param pSize The inventory size
+     * 
+     * @param pSize   The inventory size
      * @param pPlugin The plugin to register with
      */
     protected GUI(int pSize, Plugin pPlugin) {
@@ -48,27 +49,31 @@ public abstract class GUI implements Listener {
 
     /**
      * Register a new inventory slot
+     * 
      * @param pItem The item to put in the slot
      * @param pSlot The location of the slot
      */
     protected void registerSlot(ItemStack pItem, int pSlot) {
-        if(pItem == null) 
+        if (pItem == null)
             return;
         inventory.setItem(pSlot, pItem);
     }
 
     /**
      * Register a slot as a clickable slot
+     * 
      * @param cs The slot to register as clickable
      */
     protected void registerClickable(ClickableSlot cs) {
-        if(cs.getItem() == null || inventory.getItem(cs.getSlot()) != null) return;
+        if (cs.getItem() == null || inventory.getItem(cs.getSlot()) != null)
+            return;
         clickableMap.put(cs.getSlot(), cs);
         inventory.setItem(cs.getSlot(), cs.getItem());
     }
 
     /**
      * Get a clickable slot
+     * 
      * @param slot The slot to get
      * @return The ClickableSlot
      */
@@ -78,22 +83,27 @@ public abstract class GUI implements Listener {
 
     /**
      * Build an inventory GUI with command arugments
-     * @param player The player to send the GUI to
+     * 
+     * @param player  The player to send the GUI to
      * @param rawArgs The raw arguments of the command they have executed
-     * @param args The parsed arguments of the command
+     * @param args    The parsed arguments of the command
      */
     protected abstract void buildGUI(Player player, String[] rawArgs, Arguments args);
 
     /**
      * Build an inventory GUI
+     * 
      * @param player The player to send the GUI to
      */
     protected abstract void buildGUI(Player player);
-    
+
     /**
      * Check whether or not a slot is valid
-     * @param pSlot The slot to check
+     * <p>
      * Returns true if the slot is a valid slot
+     * 
+     * @param pSlot The slot to check
+     * @return {@link Boolean}
      */
     protected boolean isValidSlot(int pSlot) {
         return inventory.getItem(pSlot) != null;
@@ -101,8 +111,9 @@ public abstract class GUI implements Listener {
 
     /**
      * Check whether or not a slot is clickable
-     * @param pSlot The slot to check
-     * Returns true if the slot is a clickable slot
+     * 
+     * @param pSlot The slot to check Returns true if the slot is a clickable slot
+     * @return {@link Boolean}
      */
     protected boolean isClickable(int pSlot) {
         return clickableMap.containsKey(pSlot);
@@ -113,8 +124,9 @@ public abstract class GUI implements Listener {
 
     /**
      * Create the new inventory
-     * @param pTitle The title of the inventory
-     * Returns the inventory you've created
+     * 
+     * @param pTitle The title of the inventory Returns the inventory you've created
+     * @return {@link Inventory}
      */
     protected Inventory makeInventory(String pTitle) {
         return this.inventory = Bukkit.createInventory(null, s, pTitle);

@@ -30,6 +30,8 @@ public class Debugger {
 
     /**
      * The time at which this debugger instance began logging.
+     * 
+     * @return {@link Long}
      */
     @Getter
     private Long startTime = System.nanoTime();
@@ -37,6 +39,8 @@ public class Debugger {
     /**
      * The current increment count of the log - equivalent to how many times
      * <code>Debugger.print(Object message)</code> has been called.
+     * 
+     * @return {@link Integer}
      */
     @Getter
     private int logCount = 0;
@@ -61,11 +65,12 @@ public class Debugger {
      * Print a debug message.
      * 
      * @param object to print.
+     * @param args   to format the message with
      */
     public void print(@Nullable Object object, @Nullable Object... args) {
         if (enabled) {
             logger.info(String.format(COLOR + "[" + ++logCount + " | " + clazz.getSimpleName() + ".class: "
-                    + Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps() + "] \u00A7r" + object + " | "
+                    + dddGetThisLineOfWhereverThisThingIsCalleduwu() + "] \u00A7r" + object + " | "
                     + ((System.nanoTime() - startTime) / 1e3) + "μ", args));
         }
     }
@@ -73,6 +78,8 @@ public class Debugger {
     /**
      * Reset this debugger instance, setting <code>startTime</code> to the current
      * time, and <code>logCount</code> to 0.
+     * 
+     * @return {@link Debugger}
      */
     public Debugger reset() {
         startTime = System.nanoTime();
@@ -91,7 +98,7 @@ public class Debugger {
      * @author Brian_Entei
      */
     // Thanks Brian! https://stackoverflow.com/a/26410435/11988998
-    private int Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps() {
+    private int dddGetThisLineOfWhereverThisThingIsCalleduwu() {
         boolean thisOne = false;
         int thisOneCountDown = 1;
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
@@ -103,7 +110,7 @@ public class Debugger {
             } else if (thisOne) {
                 thisOneCountDown--;
             }
-            if (methodName.equals("Fi5vGG6kBJbVhpjH3p8PaubeS2Mdtps")) {
+            if (methodName.equals("dddGetThisLineOfWhereverThisThingIsCalleduwu")) {
                 thisOne = true;
             }
         }

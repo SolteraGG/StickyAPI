@@ -228,7 +228,8 @@ public class Arguments {
      * Create an optional sentence argument, with its length defaulting to the
      * remaining length of current unparsed arguments.
      * 
-     * @param name The name of this sentence
+     * @param name     The name of this sentence
+     * @param fallback The fallback sentence to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments optionalSentence(@NotNull String name, @Nullable String fallback) {
@@ -239,8 +240,9 @@ public class Arguments {
     /**
      * Create an optional sentence with the given length.
      * 
-     * @param name   The name of the sentence to createa
-     * @param length The length of the sentence
+     * @param name     The name of the sentence to create
+     * @param fallback The fallback sentence to use if one is not provided
+     * @param length   The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments optionalSentence(@NotNull String name, @Nullable String fallback, @NotNull int length) {
@@ -255,7 +257,7 @@ public class Arguments {
     /**
      * Create an optional sentence with the given length.
      * 
-     * @param name   The name of the sentence to createa
+     * @param name   The name of the sentence to create
      * @param length The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
@@ -382,7 +384,8 @@ public class Arguments {
     /**
      * Create an optional integer argument.
      * 
-     * @param name Name of the argument
+     * @param name     Name of the argument
+     * @param fallback The fallback integer to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments optionalInt(@NotNull String name, @NotNull Integer fallback) {
@@ -466,7 +469,6 @@ public class Arguments {
      * @param name The name of the argument to fetch
      * @return {@link java.lang.String}
      * @since 2.0
-     * @apiNote This function was renamed from `get(String)` in 1.X
      */
     public String getString(@NotNull String name) {
         return parsedArgs.get(name);
@@ -502,7 +504,7 @@ public class Arguments {
      * <p>
      * Returns the argument, if it exists
      * 
-     * @param name The name of the integer to fetch\
+     * @param name The name of the integer to fetch
      * @return {@link java.lang.Integer}
      */
     public Integer getInt(@NotNull String name) {
@@ -518,7 +520,7 @@ public class Arguments {
      * <p>
      * Returns the argument, if it exists
      * 
-     * @param name The name of the double to fetch\
+     * @param name The name of the double to fetch
      * @return {@link java.lang.Double}
      */
     public Double getDouble(@NotNull String name) {
@@ -534,7 +536,7 @@ public class Arguments {
      * <p>
      * Returns the argument, if it exists
      * 
-     * @param name The name of the long to fetch\
+     * @param name The name of the long to fetch
      * @return {@link java.lang.Long}
      */
     public Long getLong(@NotNull String name) {

@@ -46,6 +46,7 @@ public class Scheduler {
 
 	/**
 	 * Execute a function/task immediately asynchronously
+	 * 
 	 * @param task to execute
 	 */
 	public <V> Future<V> scheduleThreaded(Callable<V> task) {
@@ -56,6 +57,7 @@ public class Scheduler {
 
 	/**
 	 * Schedule a function/task to run asynchronously at a certain datetime
+	 * 
 	 * @param task to run
 	 * @param time to execute the task
 	 */
@@ -72,6 +74,7 @@ public class Scheduler {
 	/**
 	 * Execute a task in the synchronous thread, scheduled for the next available
 	 * tick.
+	 * 
 	 * @param task to run
 	 */
 	public <T> Future<T> scheduleSynchronous(Callable<T> task) {
@@ -82,6 +85,7 @@ public class Scheduler {
 
 	/**
 	 * Schedule a function/task to run synchronously at a certain datetime
+	 * 
 	 * @param task to run
 	 * @param time to execute the task
 	 */

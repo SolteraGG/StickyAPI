@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
  * Represents a {@link Command} belonging to a plugin
  * <p>
  * Cloned from bukkit to prevent reflective calls
+ * <p>
+ * <b>DO NOT TOUCH</b>
  */
 // Fuck you reflection, and fuck you Java for changing it so much!!!
 public final class PluginCommand extends Command implements PluginIdentifiableCommand {

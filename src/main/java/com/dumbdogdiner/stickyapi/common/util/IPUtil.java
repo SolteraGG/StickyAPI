@@ -26,14 +26,15 @@ public final class IPUtil {
 	 */
 	public static Boolean compareRangeCIDR(String address1, String address2, String prefix) {
 
-		String subnetStr = address1 + "/" + prefix;
-		IPAddress subnetAddress = new IPAddressString(subnetStr).getAddress();
+		IPAddress subnetAddress = new IPAddressString(address1 + "/" + prefix).getAddress();
 		if (subnetAddress == null)
 			return false; // prevent NPE for invalid subnetAddress
+
 		IPAddress subnet = subnetAddress.toPrefixBlock();
 		IPAddress testAddress = new IPAddressString(address2).getAddress();
 		if (testAddress == null)
 			return false; // prevent NPE for invalid testAddress
+
 		return subnet.contains(testAddress);
 	}
 }

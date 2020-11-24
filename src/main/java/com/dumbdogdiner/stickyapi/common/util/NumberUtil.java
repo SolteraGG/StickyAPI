@@ -46,8 +46,8 @@ public final class NumberUtil {
      */
     public static boolean isNumeric(@NotNull String string) {
         Validate.notNull(string, "string cannot be null");
-        int sz = string.length();
-        for (int i = 0; i < sz; i++) {
+        int size = string.length();
+        for (int i = 0; i < size; i++) {
             if (Character.isDigit(string.charAt(i)) == false) {
                 return false;
             }
@@ -105,9 +105,11 @@ public final class NumberUtil {
 
     /**
      * Try to return long as an int, capped at int max and int min
+     * <p>
+     * Returns the long as a capped int
      * 
      * @param l The long to convert
-     * @return Returns the long as a capped int
+     * @return {@link Integer}
      */
     public static int longToInt(@NotNull long l) {
         Validate.notNull(l, "l cannot be null");

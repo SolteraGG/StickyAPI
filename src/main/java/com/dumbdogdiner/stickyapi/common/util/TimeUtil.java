@@ -227,7 +227,8 @@ public class TimeUtil {
      * @return {@link java.sql.Timestamp}
      */
     public static Timestamp toTimestamp(@NotNull String timePeriod) {
-        if (StringUtil.compareMany(timePeriod, new String[] { "*", "0" }))
+        boolean compare = StringUtil.compareMany(timePeriod, new String[] { "*", "0" });
+        if (compare)
             return null;
 
         // If it's numeric, lets do some extra checks!
@@ -235,22 +236,20 @@ public class TimeUtil {
             // Return null if it's greater 12 characters long
             if (timePeriod.length() > 12)
                 return null;
-            Optional<Long> dur = TimeUtil.duration(timePeriod);
-            if (dur.isPresent())
-                return new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L)
-                        .getTime() >= new java.sql.Timestamp(253402261199L * 1000L).getTime() ? null
-                                : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
-            // 253402261199 x 1000L is the year 9999 in epoch, this ensures we don't have
-            // invalid timestamp exceptions.
+            return _toTimestamp(timePeriod);
         }
-        if (!StringUtil.compareMany(timePeriod, new String[] { "*", "0" })) {
-            Optional<Long> dur = TimeUtil.duration(timePeriod);
-            if (dur.isPresent())
-                return new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L).getTime() >= (253402261199L * 1000L)
-                        ? null
-                        : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
+        if (!compare) {
+            return _toTimestamp(timePeriod);
         }
 
+        return null;
+    }
+
+    private static Timestamp _toTimestamp(String timePeriod) {
+        Optional<Long> dur = TimeUtil.duration(timePeriod);
+        if (dur.isPresent())
+            return ((TimeUtil.getUnixTime() + dur.get()) * 1000L) >= (253402261199L * 1000L) ? null
+                    : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
         return null;
     }
 

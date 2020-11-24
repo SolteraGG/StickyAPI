@@ -35,6 +35,8 @@ public class LocaleProvider {
 
     /**
      * The default locale to use when
+     * 
+     * @return {@link Locale}
      */
     @Getter
     private Locale defaultLocale;
@@ -216,7 +218,8 @@ public class LocaleProvider {
      * Returns The variable, or the default for the given name if the former does
      * not exist
      * 
-     * @param node The configuration node to retrieve
+     * @param node         The configuration node to retrieve
+     * @param defaultValue The default value to use
      * @return {@link java.lang.String}
      */
     public String getDefault(@NotNull String node, @NotNull String defaultValue) {
@@ -261,6 +264,8 @@ public class LocaleProvider {
      * @param in           File inputstream
      * @param resourcePath The path to which the resource should be saved
      * @param replace      Whether or not to replace the file if it already exists
+     * @throws IllegalArgumentException
+     * @throws IOException
      */
     public void writeLocaleStream(@NotNull InputStream in, @NotNull String resourcePath, @NotNull boolean replace)
             throws IllegalArgumentException, IOException {
@@ -308,7 +313,8 @@ public class LocaleProvider {
     /**
      * Convenience function for getting a new TreeMap
      * <p>
-     * Returns {@link java.util.TreeMap}
+     * 
+     * @return {@link java.util.TreeMap}
      */
     public TreeMap<String, String> newVariables() {
         return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
