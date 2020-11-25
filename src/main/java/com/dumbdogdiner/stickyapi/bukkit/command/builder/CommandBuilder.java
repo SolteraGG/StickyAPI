@@ -13,7 +13,8 @@ import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
-import com.dumbdogdiner.stickyapi.bukkit.command.ExitCode;
+import com.dumbdogdiner.stickyapi.common.command.ExitCode;
+import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
 import com.dumbdogdiner.stickyapi.bukkit.command.PluginCommand;
 import com.dumbdogdiner.stickyapi.bukkit.util.NotificationType;
 import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
@@ -38,27 +39,15 @@ import org.jetbrains.annotations.NotNull;
  * 
  * @since 2.0
  */
-public class CommandBuilder {
-    Boolean synchronous = false;
-    Boolean requiresPlayer = false;
-    String name;
-    String permission;
-    String description;
-    Boolean playSound = false;
-    List<String> aliases = new ArrayList<>();
-    Long cooldown = 0L;
+public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
+
+    // Hmm...
+    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
 
     Executor executor;
     TabExecutor tabExecutor;
 
     ErrorHandler errorHandler;
-
-    Command bukkitCommand;
-
-    HashMap<String, CommandBuilder> subCommands = new HashMap<>();
-
-    // Hmm...
-    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
 
     @FunctionalInterface
     public interface Executor {
@@ -81,138 +70,95 @@ public class CommandBuilder {
      * @param name The name of the command
      */
     public CommandBuilder(@NotNull String name) {
-        this.name = name;
+        super(name);
+    }
+
+    public String getNameTest() {
+        return this.getName();
+    }
+
+    private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
+            List<String> args) {
+        StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
+            performExecution(sender, command, label, args);
+            return null;
+        }));
     }
 
     /**
-     * If this command should run asynchronously
-     * 
-     * @param synchronous if this command should run synchronously
-     * @return {@link CommandBuilder}
+     * Execute this command. Checks for existing sub-commands, and runs the error
+     * handler if anything goes wrong.
      */
-    public CommandBuilder synchronous(@NotNull Boolean synchronous) {
-        this.synchronous = synchronous;
-        return this;
-    }
+    private void performExecution(CommandSender sender, org.bukkit.command.Command command, String label,
+            List<String> args) {
+        // look for subcommands
+        if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
+            CommandBuilder subCommand = (CommandBuilder) getSubCommands().get(args.get(0));
+            if (!getSynchronous() && subCommand.getSynchronous()) {
+                throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
+            }
 
-    /**
-     * Set this command to run asynchronously
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder synchronous() {
-        return this.synchronous(true);
-    }
+            // We can't modify List, so we need to make a clone of it, because java is
+            // special.
+            ArrayList<String> argsClone = new ArrayList<String>(args);
+            argsClone.remove(0);
 
-    /**
-     * Set the cooldown for this command
-     * 
-     * @param cooldown in milliseconds
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder cooldown(@NotNull Long cooldown) {
-        this.cooldown = cooldown;
-        return this;
-    }
+            // spawn async command from sync
+            if (getSynchronous() && !subCommand.getSynchronous()) {
+                subCommand.performAsynchronousExecution(sender, command, label, argsClone);
+            }
 
-    /**
-     * If this command requires the sender to be an instance of
-     * {@link org.bukkit.entity.Player}
-     * 
-     * @param requiresPlayer If this command should require a player as the executor
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder requiresPlayer(@NotNull Boolean requiresPlayer) {
-        this.requiresPlayer = requiresPlayer;
-        return this;
-    }
-
-    /**
-     * If this command requires the sender to be an instance of
-     * {@link org.bukkit.entity.Player}
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder requiresPlayer() {
-        return this.requiresPlayer(true);
-    }
-
-    /**
-     * If this command should play a sound upon exiting
-     * 
-     * @param playSound If this command should play a sound upon exiting
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder playSound(@NotNull Boolean playSound) {
-        this.playSound = playSound;
-        return this;
-    }
-
-    /**
-     * If this command should play a sound upon exiting
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder playSound() {
-        return this.playSound(true);
-    }
-
-    /**
-     * Set the permission of the command
-     * 
-     * @param permission to set
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder permission(@NotNull String permission) {
-        this.permission = permission;
-        return this;
-    }
-
-    /**
-     * Set the description of the command
-     * 
-     * @param description to set
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder description(@NotNull String description) {
-        this.description = description;
-        return this;
-    }
-
-    /**
-     * Add an alias to this command.
-     * 
-     * @param alias to add
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder alias(@NotNull String... alias) {
-        for (var a : alias) {
-            this.aliases.add(a);
+            subCommand.performExecution(sender, command, label, argsClone);
+            return;
         }
-        return this;
-    }
 
-    /**
-     * Set the aliases of the command
-     * 
-     * @param aliases to set
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder aliases(@NotNull List<String> aliases) {
-        this.aliases = aliases;
-        return this;
-    }
+        ExitCode exitCode;
+        Arguments a = new Arguments(args);
+        var variables = new TreeMap<String, String>();
+        variables.put("command", command.getName());
+        variables.put("sender", sender.getName());
+        variables.put("player", sender.getName());
+        variables.put("uuid", (sender instanceof Player) ? ((Player) sender).getUniqueId().toString() : "");
+        variables.put("cooldown", getCooldown().toString());
+        variables.put("cooldown_remaining",
+                cooldownSenders.containsKey(sender)
+                        ? String.valueOf(getCooldown() - (System.currentTimeMillis() - cooldownSenders.get(sender)))
+                        : "0");
+        try {
+            if (cooldownSenders.containsKey(sender)
+                    && ((System.currentTimeMillis() - cooldownSenders.get(sender)) < getCooldown())) {
+                exitCode = ExitCode.EXIT_COOLDOWN;
+            } else {
 
-    /**
-     * Add a subcommand to a command
-     * 
-     * @param builder the sub command
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder subCommand(@NotNull CommandBuilder builder) {
-        builder.synchronous = this.synchronous;
-        this.subCommands.put(builder.name, builder);
-        return this;
+                // Add our sender and their command execution time to our hashmap of coolness
+                cooldownSenders.put(sender, System.currentTimeMillis());
+
+                // If the user does not have permission to execute the sub command, don't let
+                // them execute and return permission denied
+                if (this.getPermission() != null && !sender.hasPermission(this.getPermission())) {
+                    exitCode = ExitCode.EXIT_PERMISSION_DENIED;
+                } else if (this.getRequiresPlayer() && !(sender instanceof Player)) {
+                    exitCode = ExitCode.EXIT_MUST_BE_PLAYER;
+                } else {
+                    exitCode = executor.apply(sender, a, variables);
+                }
+            }
+        } catch (Exception e) {
+            exitCode = ExitCode.EXIT_ERROR;
+            e.printStackTrace();
+        }
+
+        // run the error handler - something made a fucky wucky uwu
+        if (exitCode != ExitCode.EXIT_SUCCESS) {
+            if (exitCode == ExitCode.EXIT_INFO) {
+                _playSound(sender, NotificationType.INFO);
+                return;
+            }
+            errorHandler.apply(exitCode, sender, a, variables);
+            _playSound(sender, NotificationType.ERROR);
+        } else {
+            _playSound(sender, NotificationType.SUCCESS);
+        }
     }
 
     /**
@@ -248,90 +194,6 @@ public class CommandBuilder {
         return this;
     }
 
-    private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
-        StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
-            performExecution(sender, command, label, args);
-            return null;
-        }));
-    }
-
-    /**
-     * Execute this command. Checks for existing sub-commands, and runs the error
-     * handler if anything goes wrong.
-     */
-    private void performExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
-        // look for subcommands
-        if (args.size() > 0 && subCommands.containsKey(args.get(0))) {
-            CommandBuilder subCommand = subCommands.get(args.get(0));
-            if (!synchronous && subCommand.synchronous) {
-                throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
-            }
-
-            // We can't modify List, so we need to make a clone of it, because java is
-            // special.
-            ArrayList<String> argsClone = new ArrayList<String>(args);
-            argsClone.remove(0);
-
-            // spawn async command from sync
-            if (synchronous && !subCommand.synchronous) {
-                subCommand.performAsynchronousExecution(sender, command, label, argsClone);
-            }
-
-            subCommand.performExecution(sender, command, label, argsClone);
-            return;
-        }
-
-        ExitCode exitCode;
-        Arguments a = new Arguments(args);
-        var variables = new TreeMap<String, String>();
-        variables.put("command", command.getName());
-        variables.put("sender", sender.getName());
-        variables.put("player", sender.getName());
-        variables.put("uuid", (sender instanceof Player) ? ((Player) sender).getUniqueId().toString() : "");
-        variables.put("cooldown", cooldown.toString());
-        variables.put("cooldown_remaining",
-                cooldownSenders.containsKey(sender)
-                        ? String.valueOf(cooldown - (System.currentTimeMillis() - cooldownSenders.get(sender)))
-                        : "0");
-        try {
-            if (cooldownSenders.containsKey(sender)
-                    && ((System.currentTimeMillis() - cooldownSenders.get(sender)) < cooldown)) {
-                exitCode = ExitCode.EXIT_COOLDOWN;
-            } else {
-
-                // Add our sender and their command execution time to our hashmap of coolness
-                cooldownSenders.put(sender, System.currentTimeMillis());
-
-                // If the user does not have permission to execute the sub command, don't let
-                // them execute and return permission denied
-                if (this.permission != null && !sender.hasPermission(this.permission)) {
-                    exitCode = ExitCode.EXIT_PERMISSION_DENIED;
-                } else if (this.requiresPlayer && !(sender instanceof Player)) {
-                    exitCode = ExitCode.EXIT_MUST_BE_PLAYER;
-                } else {
-                    exitCode = executor.apply(sender, a, variables);
-                }
-            }
-        } catch (Exception e) {
-            exitCode = ExitCode.EXIT_ERROR;
-            e.printStackTrace();
-        }
-
-        // run the error handler - something made a fucky wucky uwu
-        if (exitCode != ExitCode.EXIT_SUCCESS) {
-            if (exitCode == ExitCode.EXIT_INFO) {
-                _playSound(sender, NotificationType.INFO);
-                return;
-            }
-            errorHandler.apply(exitCode, sender, a, variables);
-            _playSound(sender, NotificationType.ERROR);
-        } else {
-            _playSound(sender, NotificationType.SUCCESS);
-        }
-    }
-
     /**
      * Build the command!
      * 
@@ -339,10 +201,10 @@ public class CommandBuilder {
      * @return {@link org.bukkit.command.Command}
      */
     public org.bukkit.command.Command build(@NotNull Plugin plugin) {
-        PluginCommand command = new PluginCommand(this.name, plugin);
+        PluginCommand command = new PluginCommand(this.getName(), plugin);
 
-        if (this.synchronous == null) {
-            this.synchronous = false;
+        if (this.getSynchronous() == null) {
+            this.synchronous(false);
         }
 
         // Execute the command by creating a new CommandExecutor and passing the
@@ -385,13 +247,12 @@ public class CommandBuilder {
             }
         });
 
-        command.setDescription(this.description);
+        command.setDescription(this.getDescription());
 
-        if (this.aliases != null)
-            command.setAliases(this.aliases);
+        if (this.getAliases() != null)
+            command.setAliases(this.getAliases());
 
-        command.setPermission(this.permission);
-        this.bukkitCommand = command;
+        command.setPermission(this.getPermission());
         return command;
     }
 
@@ -415,7 +276,7 @@ public class CommandBuilder {
     }
 
     private void _playSound(CommandSender sender, NotificationType type) {
-        if (!this.playSound)
+        if (!this.getPlaySound())
             return;
         SoundUtil.send(sender, type);
     }
