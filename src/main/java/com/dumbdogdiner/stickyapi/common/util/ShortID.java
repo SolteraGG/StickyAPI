@@ -1,14 +1,19 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
 import java.util.Random;
+import java.util.UUID;
 import java.util.zip.CRC32;
 
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
+
 final class Luhn {
-    private Luhn() {}
+    private Luhn() {
+    }
 
     /**
      * Checks if the card is valid
@@ -76,7 +81,7 @@ public class ShortID {
         this.id = generate(r.nextInt()).toString();
     }
 
-    protected ShortID(String name) {
+    private ShortID(String name) {
         this.id = name;
     }
 
@@ -86,9 +91,11 @@ public class ShortID {
 
     /**
      * Create a ShortID from a string
-     * @param name 
-     * Returns a ShortID object from the string inputed
-     * @throws IllegalArgumentException If name does not conform to the string representation as described in toString
+     * 
+     * @param name Returns a ShortID object from the string inputted
+     * @throws IllegalArgumentException If name does not conform to the string
+     *                                  representation as described in toString
+     * @return {@link ShortID}
      */
     public static ShortID fromString(String name) throws IllegalArgumentException {
         if (!validateID(name))
@@ -96,17 +103,11 @@ public class ShortID {
         return new ShortID((name));
     }
 
-    /**
-     * Generate a short semi-unique ID
-     * 
-     * @param key An identifier to start the ID with (usually the position in a
-     *            SQL table)
-     * @return a Luhn-passable identifier
-     */
-    public static ShortID generate(int key) {
+    private static ShortID generateBase(int key) {
+        Validate.notNull(key, "key cannot be null");
         CRC32 crc = new CRC32();
 
-        crc.update((int) (System.currentTimeMillis() / 1000L));
+        crc.update((int) System.nanoTime());
         // Some kind of semi-unique identifier (like last database row insertion)
         crc.update(key);
 
@@ -121,28 +122,31 @@ public class ShortID {
     /**
      * Generate a short semi-unique ID
      * 
+     * @param key An identifier to start the ID with (usually the position in a SQL
+     *            table)
+     * @return a Luhn-passable identifier
+     */
+    public static ShortID generate(@NotNull int key) {
+        return generateBase(key);
+    }
+
+    /**
+     * Generate a short semi-unique ID
+     * 
      * @return a Luhn-passable identifier
      */
     public static ShortID generate() {
-        CRC32 crc = new CRC32();
-
-        crc.update((int) (System.nanoTime()));
-
-        // Get the hash
-        String crc32hash = Long.toHexString(crc.getValue());
-        // Calculate the Luhn check digit
-        crc32hash += Luhn.calculateCheckDigit(crc32hash);
-        // return.
-        return new ShortID(crc32hash.toUpperCase());
+        return generateBase(Integer.valueOf(UUID.randomUUID().toString().replace("[A-z\\-]", "")));
     }
 
     /**
      * Validate that a string passes the Luhn test
      * 
-     * @param id a string to test against the Luhn algorithm
+     * @param shortId a string to test against the Luhn algorithm
      * @return Whether the string passes the Luhn test
      */
-    public static boolean validateID(String id) {
-        return Luhn.luhnCheck(id);
+    public static boolean validateID(@NotNull String shortId) {
+        Validate.notNull(shortId, "shortId cannot be null");
+        return Luhn.luhnCheck(shortId);
     }
 }

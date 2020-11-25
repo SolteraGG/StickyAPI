@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration;
 
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents a source of configurable options and settings.
- * This is identical to <code>org.bukkit</code>'s configuration API
- * and this can be used on things like bungeecord!
+ * Represents a source of configurable options and settings
  */
 public interface Configuration extends ConfigurationSection {
     /**
@@ -27,7 +27,7 @@ public interface Configuration extends ConfigurationSection {
      * @throws IllegalArgumentException Thrown if path is null.
      */
     @Override
-    public void addDefault(String path,  Object value);
+    public void addDefault(@NotNull String path, @Nullable Object value);
 
     /**
      * Sets the default values of the given paths as provided.
@@ -39,7 +39,7 @@ public interface Configuration extends ConfigurationSection {
      * @param defaults A map of Path{@literal ->}Values to add to defaults.
      * @throws IllegalArgumentException Thrown if defaults is null.
      */
-    public void addDefaults(Map<String, Object> defaults);
+    public void addDefaults(@NotNull Map<String, Object> defaults);
 
     /**
      * Sets the default values of the given paths as provided.
@@ -49,12 +49,14 @@ public interface Configuration extends ConfigurationSection {
      * hold the new default value.
      * <p>
      * This method will not hold a reference to the specified Configuration,
-     * nor will it automatically update if that Configuration ever changes.
+     * nor will it automatically update if that Configuration ever changes. If
+     * you require this, you should set the default source with {@link
+     * #setDefaults(com.dumbdogdiner.stickyapi.common.configuration.Configuration)}.
      *
      * @param defaults A configuration holding a list of defaults to copy.
      * @throws IllegalArgumentException Thrown if defaults is null or this.
      */
-    public void addDefaults(Configuration defaults);
+    public void addDefaults(@NotNull Configuration defaults);
 
     /**
      * Sets the source of all default values for this {@link Configuration}.
@@ -65,7 +67,7 @@ public interface Configuration extends ConfigurationSection {
      * @param defaults New source of default values for this configuration.
      * @throws IllegalArgumentException Thrown if defaults is null or this.
      */
-    public void setDefaults(Configuration defaults);
+    public void setDefaults(@NotNull Configuration defaults);
 
     /**
      * Gets the source {@link Configuration} for this configuration.
@@ -76,7 +78,7 @@ public interface Configuration extends ConfigurationSection {
      *
      * @return Configuration source for default values, or null if none exist.
      */
-    
+    @Nullable
     public Configuration getDefaults();
 
     /**
@@ -86,6 +88,6 @@ public interface Configuration extends ConfigurationSection {
      *
      * @return Options for this configuration
      */
-    
+    @NotNull
     public ConfigurationOptions options();
 }

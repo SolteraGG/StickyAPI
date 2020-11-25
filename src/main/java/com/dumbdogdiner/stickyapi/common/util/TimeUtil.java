@@ -1,54 +1,64 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility methods for dealing with time and duration parsing.
  */
-public final class TimeUtil {
-    private TimeUtil() {}
-
+public class TimeUtil {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
 
     /**
-     * A lookup table of values for multiplier characters used by
-     * TimeUtil.Duration(). In this lookup table, the indexes for the ascii values
-     * 'm' and 'M' have the value '60', the indexes for the ascii values 'D' and 'd'
-     * have a value of '86400', etc.
-     */
-    private static final long duration_multi[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 86400, 0, 0, 0, 3600, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 1, 0, 0, 0, 604800, 0,
-            31557600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 86400, 0, 0, 0, 3600, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-            604800, 0, 31557600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-    /**
-     * Convert the unix timestamp to a human readable duration string
+     * Convert milliseconds into a compact human readable time string
+     * <p>
+     * Returns human readable duration
      * 
-     * @param t {@link java.sql.Timestamp}
-     * @return a human readable duration
+     * @param time in milliseconds (e.x. 1000 == 0.02/m)
+     * @return {@link java.lang.String}
      */
-    public static String durationString(Timestamp t) {
-        return TimeUtil.durationString(t.getTime() / 1000L);
+    public static String significantDurationString(@NotNull final long time) {
+        StringBuilder message = new StringBuilder();
+        double timeSince = (double) (System.currentTimeMillis() / 1000L)
+                - ((double) (System.currentTimeMillis() / 1000L) - (time / 1000L) + 0.0);
+        if ((timeSince /= 60.0) < 60.0) {
+            message.append(new DecimalFormat("0.00").format(timeSince) + "/m");
+        }
+        if (message.length() == 0 && (timeSince /= 60.0) < 24.0) {
+            message.append(new DecimalFormat("0.00").format(timeSince) + "/h");
+        }
+        if (message.length() == 0 && (timeSince /= 24.0) < 30) {
+            message.append(new DecimalFormat("0.00").format(timeSince) + "/d");
+        }
+        if (message.length() == 0) {
+            message.append(new DecimalFormat("0.00").format(timeSince /= 30.0) + "/mo");
+        }
+        return message.toString();
     }
 
     /**
-     * Convert the unix timestamp to a human readable duration string
+     * Convert milliseconds into a human readable time string
+     * <p>
+     * Returns human readable duration
      * 
-     * @param t unix timestamp
-     * @return human readable duration
+     * @param time in milliseconds (e.x. 1000 == 1 second)
+     * @return {@link java.lang.String}
      */
-    public static String durationString(long t) {
+    public static String durationString(@NotNull final long time) {
+        var t = time / 1000L;
         long years = t / 31449600;
         long weeks = (t / 604800) % 52;
         long days = (t / 86400) % 7;
@@ -56,91 +66,117 @@ public final class TimeUtil {
         long minutes = (t / 60) % 60;
         long seconds = t % 60;
 
-        boolean need_comma = false;
-        String buffer = "";
+        List<String> components = new ArrayList<>();
+
         if (years != 0) {
-            buffer = String.format("%d %s", years, years != 1 ? "years" : "year");
-            need_comma = true;
+            components.add(String.format("%d %s", years, years != 1 ? "years" : "year"));
         }
         if (weeks != 0) {
-            buffer += need_comma ? ", " : "";
-            buffer += String.format("%d %s", weeks, weeks != 1 ? "weeks" : "week");
-            need_comma = true;
+            components.add(String.format("%d %s", weeks, weeks != 1 ? "weeks" : "week"));
         }
         if (days != 0) {
-            buffer += need_comma ? ", " : "";
-            buffer += String.format("%d %s", days, days != 1 ? "days" : "day");
-            need_comma = true;
+            components.add(String.format("%d %s", days, days != 1 ? "days" : "day"));
         }
         if (hours != 0) {
-            buffer += need_comma ? ", " : "";
-            buffer += String.format("%d %s", hours, hours != 1 ? "hours" : "hour");
-            need_comma = true;
+            components.add(String.format("%d %s", hours, hours != 1 ? "hours" : "hour"));
         }
         if (minutes != 0) {
-            buffer += need_comma ? ", " : "";
-            buffer += String.format("%d %s", minutes, minutes != 1 ? "minutes" : "minute");
-            need_comma = true;
+            components.add(String.format("%d %s", minutes, minutes != 1 ? "minutes" : "minute"));
         }
         if (seconds != 0) {
-            buffer += need_comma ? ", and " : "";
-            buffer += String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second");
+            components.add(String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second"));
         }
-        return buffer;
+        StringBuilder sb = new StringBuilder();
+        for (String str : components) {
+            if (components.get(components.size() - 1) == str) {
+                if (components.size() == 1) {
+                    sb.append(str);
+                    break;
+                }
+                sb.append("and " + str);
+                break;
+            }
+            sb.append(str + ", ");
+        }
+        return sb.toString();
     }
 
-    /**
-     * Convert unix timestamp to a duration forward or backward to current system
-     * time
-     * 
-     * @param ts {@link java.sql.Timestamp}
-     * @return A string stating the duration forward or backward in time.
-     */
-    public static String expires(Timestamp ts) {
-        if (ts == null)
-            return "";
-        return TimeUtil.expires(ts.getTime() / 1000L);
-    }
-
-    /**
-     * Convert unix timestamp to a duration forward or backward to current system
-     * time
-     * 
-     * @param expires A unix timestamp
-     * @return A string stating the duration forward or backward in time.
-     */
-    public static String expires(long expires) {
-        long CurTime = TimeUtil.getUnixTime();
-        if (expires == 0)
+    private static String expTime(@NotNull long time, @NotNull boolean compact) {
+        long currentTime = System.currentTimeMillis();
+        if (time == 0)
             return "never expires";
-        else if (expires < CurTime)
-            return String.format("%s ago", TimeUtil.durationString(CurTime - expires));
+        else if (time < currentTime)
+            return String.format("%s ago",
+                    compact ? TimeUtil.significantDurationString(time) : TimeUtil.durationString(time));
         else
-            return String.format("%s from now", TimeUtil.durationString(expires - CurTime));
+            return String.format("%s from now",
+                    compact ? TimeUtil.significantDurationString(time) : TimeUtil.durationString(time));
+    }
+
+    /**
+     * Convert amount of time in milliseconds since unix epoch into a human readable
+     * time string time
+     * <p>
+     * Returns a string stating the duration forward or backward in time.
+     * 
+     * @param time in milliseconds since unix epoch
+     * @return {@link java.lang.String}
+     */
+    public static String expirationTime(@NotNull long time) {
+        return expTime(time, false);
+    }
+
+    /**
+     * Convert amount of time in milliseconds since unix epoch into a human readable
+     * time string time
+     * <p>
+     * Returns a string stating the duration forward or backward in time.
+     * 
+     * @param time in milliseconds since unix epoch
+     * @return {@link java.lang.String}
+     */
+    public static String significantExpirationTime(@NotNull long time) {
+        return expTime(time, true);
+    }
+
+    private static HashMap<Character, Long> durationChars = new HashMap<>();
+    static {
+        durationChars.put('Y', 31536000L);
+        durationChars.put('y', 31536000L);
+        durationChars.put('M', 2592000L);
+        durationChars.put('W', 604800L);
+        durationChars.put('w', 604800L);
+        durationChars.put('D', 86400L);
+        durationChars.put('d', 86400L);
+        durationChars.put('H', 3600L);
+        durationChars.put('h', 3600L);
+        durationChars.put('m', 60L);
+        durationChars.put('S', 1L);
+        durationChars.put('s', 1L);
     }
 
     /**
      * Parse a duration string to a length of time in seconds.
+     * <p>
+     * Returns the duration converted to seconds
      * 
-     * @param s the string of characters to convert to a quantity of seconds
-     * @return The duration converted to seconds
+     * @param string the string of characters to convert to a quantity of seconds
+     * @return {@link java.lang.String}
      */
-    public static Optional<Long> duration(String s) {
-        long total = 0;
-        long subtotal = 0;
+    public static Optional<Long> duration(@NotNull String string) {
+        var total = 0L;
+        var subtotal = 0L;
 
-        for (int i = 0; i < s.length(); ++i) {
-            char ch = s.charAt(i);
+        for (var i = 0; i < string.length(); ++i) {
+            char ch = string.charAt(i);
             if ((ch >= '0') && (ch <= '9'))
                 subtotal = (subtotal * 10) + (ch - '0');
             else {
-                /*
-                 Found something thats not a number, find out how much it multiplies the built
-                 up number by, multiply the total and reset the built up number.
-                 */
+                // Found something thats not a number, find out how much it multiplies the built
+                // up number by, multiply the total and reset the built up number.
 
-                long multiplier = TimeUtil.duration_multi[ch];
-                if (multiplier == 0)
+                Long multiplier = TimeUtil.durationChars.get(ch);
+                if (multiplier == null)
                     return Optional.empty();
 
                 total += subtotal * multiplier;
@@ -149,8 +185,7 @@ public final class TimeUtil {
                 subtotal = 0;
             }
         }
-
-        return Optional.of(total + subtotal);
+        return Optional.of(total);
     }
 
     /**
@@ -164,7 +199,7 @@ public final class TimeUtil {
      *             {@link java.text.SimpleDateFormat}
      */
     @Deprecated
-    public static String timeString(long t) {
+    public static String timeString(@Nullable long t) {
         return TimeUtil.timeString(new Timestamp(t));
     }
 
@@ -179,7 +214,7 @@ public final class TimeUtil {
      *             {@link java.text.SimpleDateFormat}
      */
     @Deprecated
-    public static String timeString(Timestamp ts) {
+    public static String timeString(@Nullable Timestamp ts) {
         if (ts == null)
             return "";
         return sdf.format(ts);
@@ -191,12 +226,9 @@ public final class TimeUtil {
      * @param timePeriod A duration string (eg, "2y1w10d40m6s")
      * @return {@link java.sql.Timestamp}
      */
-    // I spent 2 hours ensuring this method worked...
-    // Turns out, I need to read documentation more, java.sql.Timestamp uses
-    // milliseconds and not seconds, I somehow forgot that.
-    public static Timestamp toTimestamp(String timePeriod) {
-        // Parse ban time.
-        if (StringUtil.compareMany(timePeriod, new String[] { "*", "0" }))
+    public static Timestamp toTimestamp(@NotNull String timePeriod) {
+        boolean compare = StringUtil.compareMany(timePeriod, new String[] { "*", "0" });
+        if (compare)
             return null;
 
         // If it's numeric, lets do some extra checks!
@@ -204,22 +236,20 @@ public final class TimeUtil {
             // Return null if it's greater 12 characters long
             if (timePeriod.length() > 12)
                 return null;
-            Optional<Long> dur = TimeUtil.duration(timePeriod);
-            if (dur.isPresent())
-                return new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L)
-                        .getTime() >= new java.sql.Timestamp(253402261199L * 1000L).getTime() ? null
-                                : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
-            // 253402261199 x 1000L is the year 9999 in epoch, this ensures we don't have
-            // invalid timestamp exceptions.
+            return _toTimestamp(timePeriod);
         }
-        if (!StringUtil.compareMany(timePeriod, new String[] { "*", "0" })) {
-            Optional<Long> dur = TimeUtil.duration(timePeriod);
-            if (dur.isPresent())
-                return new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L)
-                        .getTime() >= new java.sql.Timestamp(253402261199L * 1000L).getTime() ? null
-                                : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
+        if (!compare) {
+            return _toTimestamp(timePeriod);
         }
 
+        return null;
+    }
+
+    private static Timestamp _toTimestamp(String timePeriod) {
+        Optional<Long> dur = TimeUtil.duration(timePeriod);
+        if (dur.isPresent())
+            return ((TimeUtil.getUnixTime() + dur.get()) * 1000L) >= (253402261199L * 1000L) ? null
+                    : new Timestamp((TimeUtil.getUnixTime() + dur.get()) * 1000L);
         return null;
     }
 

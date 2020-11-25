@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
@@ -87,5 +87,11 @@ public class TimeUtilTest {
     @Test
     public void testDurationLongUnknownMultiplier() {
         assertEquals(TimeUtil.duration("1z"), Optional.empty());
+    }
+
+    @Test
+    public void testSignificantDurationString() {
+        String time = TimeUtil.significantDurationString(6000000L);
+        assertEquals(time, "1.67/h");
     }
 }

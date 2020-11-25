@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
@@ -19,8 +19,6 @@ public class NumberUtilTest {
     public void testIsNumeric() {
         assertTrue(NumberUtil.isNumeric(""));
         assertTrue(NumberUtil.isNumeric("123"));
-
-        assertFalse(NumberUtil.isNumeric(null));
         assertFalse(NumberUtil.isNumeric("  "));
         assertFalse(NumberUtil.isNumeric("12 3"));
         assertFalse(NumberUtil.isNumeric("ab2c"));

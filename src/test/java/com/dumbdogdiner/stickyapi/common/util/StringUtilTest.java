@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
@@ -57,7 +57,7 @@ public class StringUtilTest {
         }
         assertEquals(count, 10);
     }
-    
+
     @Test
     public void testCreateProgressBarNoBrackets() {
         String bar = StringUtil.createProgressBar(10, 50, false, false, false);
@@ -129,6 +129,11 @@ public class StringUtilTest {
         assertEquals(StringUtil.censorWord("hi"), "**");
     }
 
+    @Test
+    public void testCensorWordRegex() {
+        assertEquals(StringUtil.censorWord("hi 123", "[A-z]"), "hi****");
+    }
+
     // replaceLeet
 
     @Test
@@ -139,7 +144,7 @@ public class StringUtilTest {
     @Test
     public void testReplaceLeet() {
         // From javadoc example.
-        assertEquals(StringUtil.replaceLeet("50m3 1337 5p34k h3r3"), "some leet speak here");
+        assertEquals(StringUtil.replaceLeet("50m3 1337 5p34k h3r3 0w0"), "some leet speak here owo");
     }
 
     // compareMany
@@ -148,7 +153,9 @@ public class StringUtilTest {
     public void testCompareMany() {
         assertTrue(StringUtil.compareMany("hello there", new String[] { "hello there" }));
         assertTrue(StringUtil.compareMany("hello there", new String[] { "Hello there" }));
-        
+        assertTrue(StringUtil.compareMany("hello there", new String[] { "hello there", "foxes" }));
+
+        assertFalse(StringUtil.compareMany("hello there", new String[] { "hello ", "there" }));
         assertFalse(StringUtil.compareMany("hello there", new String[] { "goodbye" }));
     }
 }

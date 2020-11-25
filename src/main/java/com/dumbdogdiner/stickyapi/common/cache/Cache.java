@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.cache;
 
@@ -11,6 +11,8 @@ import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 
+import org.jetbrains.annotations.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +22,9 @@ import lombok.Setter;
 public class Cache<T extends Cacheable> {
     public interface CacheTester<T extends Cacheable> {
         /**
-         * Matching function that should evaluate to true if a given object matches 
-         * any necessary criteria.
+         * Matching function that should evaluate to true if a given object matches any
+         * necessary criteria.
+         * 
          * @param object The object being tested
          * @return True if this object matches the necessary criteria.
          */
@@ -31,34 +34,38 @@ public class Cache<T extends Cacheable> {
     private ConcurrentHashMap<String, T> objects = new ConcurrentHashMap<String, T>();
     private ConcurrentHashMap<String, Long> objectInsertionTimestamps = new ConcurrentHashMap<String, Long>();
 
-    @Getter @Setter private Long ttl = (long) (30 * 60e3);
+    @Getter
+    @Setter
+    private Long ttl = (long) (30 * 60e3);
 
     // private int memoryUsage = 0;
     // @Getter @Setter
     // private int maxMemoryUsage = 0;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int maxSize = 0;
-    
-    @Getter private FutureTask<?> objectExpiryTask =  new FutureTask<>(new Callable<Boolean>() {
-            @Override
-        public Boolean call() {
-                if (ttl <= 0) {
-                    return false;
-                }
-                
-                objectInsertionTimestamps.forEach((k, v) -> {
-                    if (v + ttl < System.currentTimeMillis()) {
-                        debug.print("Evicting " + k + " from " + clazz.getSimpleName() + " cache");
-                        removeKey(k);
-                    }
-                });
-                return true;
-            }
-        });
 
+    @Getter
+    private FutureTask<?> objectExpiryTask = new FutureTask<>(new Callable<Boolean>() {
+        @Override
+        public Boolean call() {
+            if (ttl <= 0) {
+                return false;
+            }
+
+            objectInsertionTimestamps.forEach((k, v) -> {
+                if (v + ttl < System.currentTimeMillis()) {
+                    debug.print("Evicting " + k + " from " + clazz.getSimpleName() + " cache");
+                    removeKey(k);
+                }
+            });
+            return true;
+        }
+    });
 
     private Class<T> clazz;
+
     public Cache(Class<T> clazz) {
         this.clazz = clazz;
     }
@@ -67,6 +74,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Return the size of this cache.
+     * 
      * @return The size of this cache.
      */
     public int size() {
@@ -74,31 +82,33 @@ public class Cache<T extends Cacheable> {
     }
 
     // /**
-    //  * Get the memory usage of this cache, specifying the units of the returned value.
-    //  * @param units The units the result
-    //  * @return Approximate memory usage
-    //  */
+    // * Get the memory usage of this cache, specifying the units of the returned
+    // value.
+    // * @param units The units the result
+    // * @return Approximate memory usage
+    // */
     // public Double memoryUsage(MemoryUtil.Unit units) {
-    //     return MemoryUtil.formatBits(memoryUsage, units);
-    // }   
+    // return MemoryUtil.formatBits(memoryUsage, units);
+    // }
 
     // /**
-    //  * Get the approximate memory usage of this cache in kilobytes.
-    //  * @return Approximate memory usage
-    //  */
+    // * Get the approximate memory usage of this cache in kilobytes.
+    // * @return Approximate memory usage
+    // */
     // public Double memoryUsage() {
-    //     return memoryUsage(MemoryUtil.Unit.KILOBYTES);
+    // return memoryUsage(MemoryUtil.Unit.KILOBYTES);
     // }
 
     /**
      * Retrieve an object from the cache.
+     * 
      * @param key The key of the object
      * @return The requested object, if it exists
      */
-    public T get(String key) {
+    public T get(@NotNull String key) {
         debug.reset();
         T object = objects.get(key);
-        
+
         if (object != null)
             debug.print("Got cached entry for " + clazz.getSimpleName() + " with key " + key);
 
@@ -107,6 +117,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Return all values in the cache.
+     * 
      * @return All values in the cache
      */
     public Collection<T> getAll() {
@@ -115,10 +126,12 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Find an object using the given tester lambda.
-     * @param tester A cache tester implemented for any necessary criteria you are looking for
+     * 
+     * @param tester A cache tester implemented for any necessary criteria you are
+     *               looking for
      * @return The first object that evaluates the tester to true, if there is one
      */
-    public T find(CacheTester<T> tester) {
+    public T find(@NotNull CacheTester<T> tester) {
         debug.reset();
         for (T object : objects.values()) {
             if (tester.match(object)) {
@@ -132,13 +145,15 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Store an object in the cache.
+     * 
      * @param object The object to store
      */
-    public void put(T object) {
+    public void put(@NotNull T object) {
         debug.reset();
 
         if (objects.containsKey(object.getKey())) {
-            debug.print("Skipping insertion for " + clazz.getSimpleName() + " " + object.getKey() + " - already exists.");
+            debug.print(
+                    "Skipping insertion for " + clazz.getSimpleName() + " " + object.getKey() + " - already exists.");
             return;
         }
 
@@ -149,23 +164,24 @@ public class Cache<T extends Cacheable> {
         }
 
         // This causes a StackOverflow, no big deal just remove this feature!
-        // Or, you know, fix memory util but that's more work than commenting a few lines
+        // Or, you know, fix memory util but that's more work than commenting a few
+        // lines
         // which didn't really work in the first place
         // int size = MemoryUtil.getSizeOf(object);
         // if (maxMemoryUsage > 0 && memoryUsage + size > maxMemoryUsage) {
-        //     Runnable memoryReleaser = new Runnable() {
-        //         @Override
-        //         public void run() {
-        //             synchronized (this) {
-        //                 while (memoryUsage + size > maxMemoryUsage) {
-        //                     removeOldestEntry();
-        //                 }
-        //                 memoryUsage += size;
-        //                 debug.print("Released memory from " + clazz.getSimpleName() +" cache");
-        //             }
-        //         }
-        //     };
-        //     StickyAPI.getPool().submit(memoryReleaser);
+        // Runnable memoryReleaser = new Runnable() {
+        // @Override
+        // public void run() {
+        // synchronized (this) {
+        // while (memoryUsage + size > maxMemoryUsage) {
+        // removeOldestEntry();
+        // }
+        // memoryUsage += size;
+        // debug.print("Released memory from " + clazz.getSimpleName() +" cache");
+        // }
+        // }
+        // };
+        // StickyAPI.getPool().submit(memoryReleaser);
         // }
 
         objects.put(object.getKey(), object);
@@ -175,9 +191,10 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Update a value in the cache - bypasses not-null check!
+     * 
      * @param object The object to update
      */
-    public void update(T object) {
+    public void update(@NotNull T object) {
         if (objects.containsKey(object.getKey())) {
             remove(object);
         }
@@ -186,32 +203,35 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Remove an object from the cache, returning the old object.
+     * 
      * @param object The object to remove
      * @return The removed object, if it exists
      */
-    public T remove(T object) {
+    public T remove(@NotNull T object) {
         debug.reset();
         T didRemove = objects.remove(object.getKey());
 
         if (didRemove == null) {
-            debug.print("Could not remove entry for " + clazz.getSimpleName() + " with key " + object.getKey() + " - does not exist");
+            debug.print("Could not remove entry for " + clazz.getSimpleName() + " with key " + object.getKey()
+                    + " - does not exist");
             return null;
         }
 
         // if (maxMemoryUsage > 0) {
-        //     memoryUsage -= MemoryUtil.getSizeOf(object);
+        // memoryUsage -= MemoryUtil.getSizeOf(object);
         // }
-        
+
         debug.print("Removed entry for " + clazz.getSimpleName() + " with key " + object.getKey());
         return didRemove;
     }
 
     /**
      * Remove an oibject from the cache using its key.
+     * 
      * @param key The key to remove
      * @return The removed object, if it exists
      */
-    public T removeKey(String key) {
+    public T removeKey(@NotNull String key) {
         T object = objects.get(key);
         if (object == null) {
             return null;
@@ -222,6 +242,7 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Fetch the oldest entry in the cache.
+     * 
      * @return The oldest entry in the cache, if it exists
      */
     public T getOldestEntry() {
@@ -240,7 +261,8 @@ public class Cache<T extends Cacheable> {
 
     /**
      * Remove the oldest entry from the cache.
-     * @return The oldest entry in the cache, if it exists  
+     * 
+     * @return The oldest entry in the cache, if it exists
      */
     public T removeOldestEntry() {
         return remove(getOldestEntry());

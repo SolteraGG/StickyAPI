@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration.file;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Node;
@@ -20,32 +20,20 @@ public class YamlConstructor extends SafeConstructor {
 
     private class ConstructCustomObject extends ConstructYamlMap {
 
+        @Nullable
         @Override
-        public Object construct(Node node) {
+        public Object construct(@NotNull Node node) {
             if (node.isTwoStepsConstruction()) {
                 throw new YAMLException("Unexpected referential mapping structure. Node: " + node);
             }
 
             Map<?, ?> raw = (Map<?, ?>) super.construct(node);
 
-            if (raw.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
-                Map<String, Object> typed = new LinkedHashMap<String, Object>(raw.size());
-                for (Map.Entry<?, ?> entry : raw.entrySet()) {
-                    typed.put(entry.getKey().toString(), entry.getValue());
-                }
-
-                try {
-                    return ConfigurationSerialization.deserializeObject(typed);
-                } catch (IllegalArgumentException ex) {
-                    throw new YAMLException("Could not deserialize object", ex);
-                }
-            }
-
             return raw;
         }
 
         @Override
-        public void construct2ndStep(Node node, Object object) {
+        public void construct2ndStep(@NotNull Node node, @NotNull Object object) {
             throw new YAMLException("Unexpected referential mapping structure. Node: " + node);
         }
     }

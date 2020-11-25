@@ -1,15 +1,14 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration.serialization;
-
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Applies to a {@link ConfigurationSerializable} that will delegate all
@@ -24,6 +23,6 @@ public @interface DelegateDeserialization {
      *
      * @return Delegate class
      */
-    
+    @NotNull
     public Class<? extends ConfigurationSerializable> value();
 }

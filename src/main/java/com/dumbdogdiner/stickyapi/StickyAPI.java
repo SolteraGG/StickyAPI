@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi;
 
@@ -12,9 +12,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <h1>StickyAPI</h1>
- * Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins.
- * @author DumbDogDiner <dumbdogdiner.com>
+ * <h1>StickyAPI</h1> Utility methods, classes and potentially
+ * code-dupe-annihilating code for DDD plugins.
+ * 
+ * @author DumbDogDiner (dumbdogdiner.com)
  * @version 2.0.0
  */
 public class StickyAPI {

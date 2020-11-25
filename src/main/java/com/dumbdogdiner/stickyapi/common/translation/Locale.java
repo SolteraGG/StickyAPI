@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.translation;
 
@@ -9,6 +9,8 @@ import java.io.File;
 import com.dumbdogdiner.stickyapi.common.configuration.file.FileConfiguration;
 import com.dumbdogdiner.stickyapi.common.configuration.file.YamlConfiguration;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
+
+import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 
@@ -29,15 +31,17 @@ public class Locale {
 
     /**
      * Create a new locale object
-     * <p>Returns the new locale object
+     * <p>
+     * Returns the new locale object
+     * 
      * @param localeFile The locale file to use
      */
-    public Locale(File localeFile) {
+    public Locale(@NotNull File localeFile) {
         this.localeFile = localeFile;
         try {
             localeConfig.load(this.localeFile);
             isValid = true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             isValid = false;
         }
@@ -45,11 +49,13 @@ public class Locale {
 
     /**
      * Get a locale value.
-     * <p>Returns the node if it exists
+     * <p>
+     * Returns the node if it exists
+     * 
      * @param node The node to get
      * @return {@link java.lang.String}
      */
-    public String get(String node) {
+    public String get(@NotNull String node) {
         debug.reset().print("fetching node " + node);
         debug.print("node value: " + localeConfig.getString(node));
 

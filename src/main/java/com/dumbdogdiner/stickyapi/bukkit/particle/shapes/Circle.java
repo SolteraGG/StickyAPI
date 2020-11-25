@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
- * Licensed under the GPLv3 license, see LICENSE for more information...
+ * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.particle.shapes;
 
@@ -14,12 +14,13 @@ import org.bukkit.Particle.DustOptions;
 
 /**
  * Draws a circle.
+ * 
  * @since 2.0
  */
 public class Circle implements Shape {
     /**
-     * Prevent developers from creating absurdly large circles - too many particles will
-     * cause nearby clients to crash.
+     * Prevent developers from creating absurdly large circles - too many particles
+     * will cause nearby clients to crash.
      */
     final double MAX_RADIUS = 250;
 
@@ -29,6 +30,12 @@ public class Circle implements Shape {
 
     /**
      * Construct a new circle with center (x,y,z) and radius r.
+     *
+     * @param x           X coordinate for center of the circle.
+     * @param y           Y coordinate for center of the circle.
+     * @param z           Z coordinate for center of the circle.
+     * @param r           Size of the circle's radius.
+     * @param orientation Orientation of the circle.
      */
     public Circle(double x, double y, double z, double r, Orientation orientation) {
         if (r > MAX_RADIUS) {
@@ -101,27 +108,11 @@ public class Circle implements Shape {
 
     @Override
     public void draw(ParticleSystem system, Particle particle, DustOptions data) {
-        system.parametric(
-            particle,
-            this.parametric,
-            0,
-            Math.PI * 2,
-            Math.PI / (16*r),
-            1,
-            data
-        );
+        system.parametric(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 
     @Override
     public void drawAbsolute(ParticleSystem system, Particle particle, DustOptions data) {
-        system.parametricAbsolute(
-            particle,
-            this.parametric,
-            0,
-            Math.PI * 2,
-            Math.PI / (16*r),
-            1,
-            data
-        );
+        system.parametricAbsolute(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 }
