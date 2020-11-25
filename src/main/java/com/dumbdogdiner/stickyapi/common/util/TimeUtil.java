@@ -50,6 +50,18 @@ public class TimeUtil {
     }
 
     /**
+     * Convert milliseconds into a compact human readable time string
+     * <p>
+     * Returns human readable duration
+     * 
+     * @param timestamp to convert to a significant duration string
+     * @return {@link java.lang.String}
+     */
+    public static String significantDurationString(@NotNull Timestamp timestamp) {
+        return significantDurationString(System.currentTimeMillis() - timestamp.getTime());
+    }
+
+    /**
      * Convert milliseconds into a human readable time string
      * <p>
      * Returns human readable duration
@@ -99,6 +111,18 @@ public class TimeUtil {
             sb.append(str + ", ");
         }
         return sb.toString();
+    }
+
+    /**
+     * Convert milliseconds into a human readable time string
+     * <p>
+     * Returns human readable duration
+     * 
+     * @param timestamp to convert to a duration string
+     * @return {@link java.lang.String}
+     */
+    public static String durationString(@NotNull Timestamp timestamp) {
+        return durationString(System.currentTimeMillis() - timestamp.getTime());
     }
 
     private static String expTime(@NotNull long time, @NotNull boolean compact) {
