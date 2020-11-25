@@ -1,0 +1,218 @@
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
+ */
+package com.dumbdogdiner.stickyapi.bungeecord.command.builder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.concurrent.FutureTask;
+
+import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
+import com.dumbdogdiner.stickyapi.common.command.ExitCode;
+import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
+import com.dumbdogdiner.stickyapi.common.util.StringUtil;
+import com.google.common.collect.ImmutableList;
+
+import org.jetbrains.annotations.NotNull;
+
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
+
+public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
+
+    // Hmm...
+    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
+
+    Executor executor;
+    TabExecutor tabExecutor;
+
+    ErrorHandler errorHandler;
+
+    @FunctionalInterface
+    public interface Executor {
+        public ExitCode apply(CommandSender sender, Arguments args, TreeMap<String, String> vars);
+    }
+
+    public interface TabExecutor {
+        public java.util.List<String> apply(CommandSender sender, String commandLabel, Arguments args);
+    }
+
+    public interface ErrorHandler {
+        public void apply(ExitCode exitCode, CommandSender sender, Arguments args, TreeMap<String, String> vars);
+    }
+
+    public CommandBuilder(@NotNull String name) {
+        super(name);
+    }
+
+    private void performAsynchronousExecution(CommandSender sender, CommandBuilder builder, String label,
+            List<String> args) {
+        StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
+            performExecution(sender, builder, label, args);
+            return null;
+        }));
+    }
+
+    /**
+     * Execute this command. Checks for existing sub-commands, and runs the error
+     * handler if anything goes wrong.
+     */
+    private void performExecution(CommandSender sender, CommandBuilder builder, String label, List<String> args) {
+        // look for subcommands
+        if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
+            CommandBuilder subCommand = (CommandBuilder) getSubCommands().get(args.get(0));
+            if (!getSynchronous() && subCommand.getSynchronous()) {
+                throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
+            }
+
+            // We can't modify List, so we need to make a clone of it, because java is
+            // special.
+            ArrayList<String> argsClone = new ArrayList<String>(args);
+            argsClone.remove(0);
+
+            // spawn async command from sync
+            if (getSynchronous() && !subCommand.getSynchronous()) {
+                subCommand.performAsynchronousExecution(sender, builder, label, argsClone);
+            }
+
+            subCommand.performExecution(sender, builder, label, argsClone);
+            return;
+        }
+
+        ExitCode exitCode;
+        Arguments a = new Arguments(args);
+        var variables = new TreeMap<String, String>();
+        variables.put("command", builder.getName());
+        variables.put("sender", sender.getName());
+        variables.put("player", sender.getName());
+        variables.put("uuid", (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString()
+                : "00000000-0000-0000-0000-000000000000");
+        variables.put("cooldown", getCooldown().toString());
+        variables.put("cooldown_remaining",
+                cooldownSenders.containsKey(sender)
+                        ? String.valueOf(getCooldown() - (System.currentTimeMillis() - cooldownSenders.get(sender)))
+                        : "0");
+        try {
+            if (cooldownSenders.containsKey(sender)
+                    && ((System.currentTimeMillis() - cooldownSenders.get(sender)) < getCooldown())) {
+                exitCode = ExitCode.EXIT_COOLDOWN;
+            } else {
+
+                // Add our sender and their command execution time to our hashmap of coolness
+                cooldownSenders.put(sender, System.currentTimeMillis());
+
+                // If the user does not have permission to execute the sub command, don't let
+                // them execute and return permission denied
+                if (this.getPermission() != null && !sender.hasPermission(this.getPermission())) {
+                    exitCode = ExitCode.EXIT_PERMISSION_DENIED;
+                } else if (this.getRequiresPlayer() && !(sender instanceof ProxiedPlayer)) {
+                    exitCode = ExitCode.EXIT_MUST_BE_PLAYER;
+                } else {
+                    exitCode = executor.apply(sender, a, variables);
+                }
+            }
+        } catch (Exception e) {
+            exitCode = ExitCode.EXIT_ERROR;
+            e.printStackTrace();
+        }
+
+        // run the error handler - something made a fucky wucky uwu
+        if (exitCode != ExitCode.EXIT_SUCCESS) {
+            errorHandler.apply(exitCode, sender, a, variables);
+        }
+    }
+
+    /**
+     * Set the executor of the command
+     * 
+     * @param executor to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder onExecute(@NotNull Executor executor) {
+        this.executor = executor;
+        return this;
+    }
+
+    /**
+     * Set the tab complete executor of the command
+     * 
+     * @param executor to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder onTabComplete(@NotNull TabExecutor executor) {
+        this.tabExecutor = executor;
+        return this;
+    }
+
+    /**
+     * Set the error handler of the command
+     * 
+     * @param handler to set
+     * @return {@link CommandBuilder}
+     */
+    public CommandBuilder onError(@NotNull ErrorHandler handler) {
+        this.errorHandler = handler;
+        return this;
+    }
+
+    public Command build(Plugin plugin) {
+        return new TabableCommand(this);
+    }
+
+    public Command register(Plugin plugin) {
+        Command command = build(plugin);
+        ProxyServer.getInstance().getPluginManager().registerCommand(plugin, command);
+        return command;
+    }
+
+    private static class TabableCommand extends net.md_5.bungee.api.plugin.Command
+            implements net.md_5.bungee.api.plugin.TabExecutor {
+        CommandBuilder builder;
+
+        public TabableCommand(CommandBuilder builder) {
+            super(builder.getName(), builder.getPermission(), builder.getAliases().toArray(new String[0]));
+            this.builder = builder;
+        }
+
+        public void execute(net.md_5.bungee.api.CommandSender sender, String[] args) {
+            // CommandSender sender, CommandBuilder builder, String label, List<String> args
+            builder.performExecution(sender, builder, builder.getName(), Arrays.asList(args));
+        }
+
+        @Override
+        public Iterable<String> onTabComplete(net.md_5.bungee.api.CommandSender sender, String[] args) {
+            if (builder.tabExecutor != null)
+                return builder.tabExecutor.apply(sender, builder.getName(), new Arguments(Arrays.asList(args)));
+            else {
+                if (args.length == 0) {
+                    return ImmutableList.of();
+                }
+
+                String lastWord = args[args.length - 1];
+
+                ProxiedPlayer senderPlayer = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
+
+                ArrayList<String> matchedPlayers = new ArrayList<String>();
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    String name = player.getName();
+                    if ((senderPlayer == null) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
+                        matchedPlayers.add(name);
+                    }
+                }
+
+                Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
+                return matchedPlayers;
+            }
+        }
+    }
+
+}

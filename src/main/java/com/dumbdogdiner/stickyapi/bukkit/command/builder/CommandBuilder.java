@@ -73,10 +73,6 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         super(name);
     }
 
-    public String getNameTest() {
-        return this.getName();
-    }
-
     private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
             List<String> args) {
         StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
