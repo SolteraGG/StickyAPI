@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
+ */
 package com.dumbdogdiner.stickyapi.webapis;
 
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
@@ -40,7 +44,7 @@ public class MojangAPI {
     protected UUID uuid;
 
     public MojangAPI(String uuid) {
-        this.uuid = StringUtil.getUUIDFromString(uuid);
+        this.uuid = StringUtil.hyphenateUUID(uuid);
     }
 
     public MojangAPI(OfflinePlayer player) {

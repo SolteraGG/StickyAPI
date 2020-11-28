@@ -8,7 +8,7 @@ package com.dumbdogdiner.stickyapi.bukkit.command;
  * Class based exit codes for StickyAPI command classes.
  * @since v2.0.0
  */
-public class ExitCode {
+public enum ExitCode {
     /**
      * If the command executed successfully
      */

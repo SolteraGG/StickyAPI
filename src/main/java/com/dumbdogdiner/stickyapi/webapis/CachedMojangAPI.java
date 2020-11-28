@@ -42,7 +42,7 @@ public class CachedMojangAPI {
     protected UUID uuid;
 
     public CachedMojangAPI(String uuid) {
-        this.uuid = StringUtil.getUUIDFromString(uuid);
+        this.uuid = StringUtil.hyphenateUUID(uuid);
     }
 
     public CachedMojangAPI(OfflinePlayer player) {
