@@ -38,7 +38,7 @@ public class PacketRegistration {
     /**
      * Register a packet with BungeeCord
      * 
-     * @param clazz that extends {@link DefinedPacket}
+     * @param clazz that extends {@link net.md_5.bungee.protocol.DefinedPacket}
      * @param id    the protocol ID for the packet (see: https://wiki.vg/Protocol)
      */
     public static void registerPacket(Class<?> clazz, Integer id) {
