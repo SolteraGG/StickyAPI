@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.particle;
@@ -166,6 +166,7 @@ public class ParticleSystem {
      */
     public ParticleSystem spawn(double x, double y, double z, int count) {
         this.ensureDefaultParticle();
+        assert this.particle != null;
         return this.spawn(this.particle, x, y, z, count, this.data);
     }
 
@@ -532,6 +533,7 @@ public class ParticleSystem {
      */
     public ParticleSystem shape(Shape shape) {
         this.ensureDefaultParticle();
+        assert this.particle != null;
         return this.shape(this.particle, shape, this.data);
     }
 
@@ -564,6 +566,7 @@ public class ParticleSystem {
      */
     public ParticleSystem shapeAbsolute(@NotNull Shape shape) {
         this.ensureDefaultParticle();
+        assert this.particle != null;
         return this.shapeAbsolute(this.particle, shape, this.data);
     }
 }
