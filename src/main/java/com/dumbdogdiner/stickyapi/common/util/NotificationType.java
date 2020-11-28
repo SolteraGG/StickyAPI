@@ -16,7 +16,7 @@ public enum NotificationType {
     QUIET,
     SUCCESS;
 
-    public NotificationType fromExitCode(@Nullable ExitCode code){
+    public static NotificationType fromExitCode(@Nullable ExitCode code){
         if(code == null)
             return QUIET;
         switch(code){

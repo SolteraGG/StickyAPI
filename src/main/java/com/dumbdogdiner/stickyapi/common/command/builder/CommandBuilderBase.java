@@ -5,13 +5,17 @@
 package com.dumbdogdiner.stickyapi.common.command.builder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 
+@SuppressWarnings("unchecked")
 public abstract class CommandBuilderBase<T extends CommandBuilderBase<T>> {
 
     @Getter
@@ -21,6 +25,7 @@ public abstract class CommandBuilderBase<T extends CommandBuilderBase<T>> {
     @Getter
     String name;
     @Getter
+    @Setter(AccessLevel.PROTECTED)
     String permission;
     @Getter
     String description;
@@ -146,9 +151,7 @@ public abstract class CommandBuilderBase<T extends CommandBuilderBase<T>> {
      * @return {@link CommandBuilderBase}
      */
     public T alias(@NotNull String... alias) {
-        for (var a : alias) {
-            this.aliases.add(a);
-        }
+        this.aliases.addAll(Arrays.asList(alias));
         return (T) this;
     }
 

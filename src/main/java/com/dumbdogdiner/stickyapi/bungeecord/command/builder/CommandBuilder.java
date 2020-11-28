@@ -4,14 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.bungeecord.command.builder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.concurrent.FutureTask;
-
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bungeecord.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
@@ -20,15 +12,17 @@ import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
-
-import org.jetbrains.annotations.NotNull;
-
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.*;
+import java.util.concurrent.FutureTask;
+
+// TODO make a bungee command class that this works with
 public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
     // Hmm...
@@ -97,7 +91,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         variables.put("sender", sender.getName());
         variables.put("player", sender.getName());
         variables.put("uuid", (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString()
-                : "00000000-0000-0000-0000-000000000000");
+                : new UUID(0,0).toString());
         variables.put("cooldown", getCooldown().toString());
         variables.put("cooldown_remaining",
                 cooldownSenders.containsKey(sender)

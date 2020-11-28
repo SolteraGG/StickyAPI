@@ -595,4 +595,12 @@ public class Arguments {
         return TimeUtil.duration(parsedArgs.get(name)).isPresent() ? TimeUtil.duration(parsedArgs.get(name)).get()
                 : null;
     }
+
+    /**
+     * Fetch the last argument in the raw arguments list
+     * @return {@link String} the final argument in the list
+     */
+    public String getLastArgument(){
+        return rawArgs.get(rawArgs.size() - 1);
+    }
 }

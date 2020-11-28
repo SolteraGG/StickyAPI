@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +18,13 @@ import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * TODO Cleanup to use the Java instants stuff
  * Utility methods for dealing with time and duration parsing.
  */
 public class TimeUtil {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
 
+    //TODO convert this stuff to use an enum so it's nicer
     private static final HashMap<Character, Long> DURATION_CHARS = new HashMap<>();
     static {
         DURATION_CHARS.put('Y', 31536000L);
@@ -307,7 +310,7 @@ public class TimeUtil {
      * @return Current number of seconds since Unix Epoch
      */
     public static long getUnixTime() {
-        return System.currentTimeMillis() / 1000L;
+        return Instant.now().getEpochSecond();
     }
 
     /**
@@ -316,6 +319,6 @@ public class TimeUtil {
      * @return {@link java.sql.Timestamp}
      */
     public static Timestamp now() {
-        return new Timestamp(TimeUtil.getUnixTime() * 1000L);
+        return new Timestamp(Instant.now().toEpochMilli());
     }
 }

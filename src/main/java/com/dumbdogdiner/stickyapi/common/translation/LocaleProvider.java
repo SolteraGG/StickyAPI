@@ -264,10 +264,10 @@ public class LocaleProvider {
      * @param in           File inputstream
      * @param resourcePath The path to which the resource should be saved
      * @param replace      Whether or not to replace the file if it already exists
-     * @throws IllegalArgumentException
-     * @throws IOException
+     * @throws IllegalArgumentException if the resource path is empty or cannot be found
+     * @throws IOException @See {@link FileOutputStream}, {@link InputStream}
      */
-    public void writeLocaleStream(@NotNull InputStream in, @NotNull String resourcePath, @NotNull boolean replace)
+    public void writeLocaleStream(@NotNull InputStream in, @NotNull String resourcePath, boolean replace)
             throws IllegalArgumentException, IOException {
         if (resourcePath == null || resourcePath.equals("")) {
             throw new IllegalArgumentException("Resource path cannot be null or empty");
@@ -280,7 +280,7 @@ public class LocaleProvider {
 
         File outFile = new File(localeFolder, resourcePath);
         int lastIndex = resourcePath.lastIndexOf('/');
-        File outDir = new File(localeFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+        File outDir = new File(localeFolder, resourcePath.substring(0, Math.max(lastIndex, 0)));
 
         if (!outDir.exists()) {
             outDir.mkdirs();
@@ -316,7 +316,7 @@ public class LocaleProvider {
      * 
      * @return {@link java.util.TreeMap}
      */
-    public TreeMap<String, String> newVariables() {
+    public static TreeMap<String, String> newVariables() {
         return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
     }
 }
