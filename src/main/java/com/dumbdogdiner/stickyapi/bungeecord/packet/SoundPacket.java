@@ -19,9 +19,17 @@ public class SoundPacket extends DefinedPacket {
     private float volume;
     private float pitch;
 
-    public SoundPacket() {
-    }
-
+    /**
+     * Create a new sound packet to play to a player
+     * 
+     * @param sound    to play
+     * @param category of the sound
+     * @param x        coordinate of where this sound should be played
+     * @param y        coordinate of where this sound should be played
+     * @param z        coordinate of where this sound should be played
+     * @param volume   to play the sound at
+     * @param pitch    to play the sound at
+     */
     public SoundPacket(int sound, int category, double x, double y, double z, float volume, float pitch) {
         this.sound = sound;
         this.category = category;

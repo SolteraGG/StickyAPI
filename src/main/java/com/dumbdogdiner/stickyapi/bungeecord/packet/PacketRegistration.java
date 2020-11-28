@@ -18,7 +18,8 @@ public class PacketRegistration {
     private static Class<?> protocolMapping, protocolMappingArray;
     private static Object TO_CLIENT;
 
-    public static void processReflection() {
+    // Process our reflection nonsense
+    private static void processReflection() {
         try {
             Field f = Protocol.class.getDeclaredField("TO_CLIENT");
             map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
@@ -34,26 +35,31 @@ public class PacketRegistration {
         }
     }
 
-    public static void registerPacket(Class<?> c, Integer id) {
+    /**
+     * Register a packet with BungeeCord
+     * 
+     * @param clazz that extends {@link DefinedPacket}
+     * @param id    the protocol ID for the packet (see: https://wiki.vg/Protocol)
+     */
+    public static void registerPacket(Class<?> clazz, Integer id) {
         Object[] array = (Object[]) Array.newInstance(protocolMapping, 1);
         try {
             array[0] = map.invoke(null, ProxyServer.getInstance().getProtocolVersion(), id);
-            regPacket.invoke(TO_CLIENT, c, array);
+            regPacket.invoke(TO_CLIENT, clazz, array);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
 
     static {
-        registerPacket();
+        processReflection();
+        registerSoundPacket();
     }
 
     /**
-     * Register this sound packet with BungeeCord
+     * Register our sound packet with BungeeCord
      */
-    public static void registerPacket() {
-        processReflection();
+    public static void registerSoundPacket() {
         registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This should automatically register with the server's correct version
     }
-
 }

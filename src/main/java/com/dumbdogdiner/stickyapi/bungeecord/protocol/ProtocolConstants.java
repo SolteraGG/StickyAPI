@@ -4,8 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.bungeecord.protocol;
 
-import lombok.Getter;
-
 public class ProtocolConstants {
 
     public static final int MINECRAFT_1_8 = 47;
