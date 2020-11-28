@@ -22,6 +22,22 @@ import org.jetbrains.annotations.NotNull;
 public class TimeUtil {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
 
+    private static final HashMap<Character, Long> DURATION_CHARS = new HashMap<>();
+    static {
+        DURATION_CHARS.put('Y', 31536000L);
+        DURATION_CHARS.put('y', 31536000L);
+        DURATION_CHARS.put('M', 2592000L);
+        DURATION_CHARS.put('W', 604800L);
+        DURATION_CHARS.put('w', 604800L);
+        DURATION_CHARS.put('D', 86400L);
+        DURATION_CHARS.put('d', 86400L);
+        DURATION_CHARS.put('H', 3600L);
+        DURATION_CHARS.put('h', 3600L);
+        DURATION_CHARS.put('m', 60L);
+        DURATION_CHARS.put('S', 1L);
+        DURATION_CHARS.put('s', 1L);
+    }
+
     /**
      * Convert milliseconds into a compact human readable time string
      * <p>
@@ -101,6 +117,30 @@ public class TimeUtil {
         return sb.toString();
     }
 
+    /**
+     * Convert milliseconds into a human readable time string
+     * <p>
+     * Returns human readable duration
+     * 
+     * @param timestamp to convert to a duration string
+     * @return {@link java.lang.String}
+     */
+    public static String durationString(@NotNull Timestamp timestamp) {
+        return durationString(System.currentTimeMillis() - timestamp.getTime());
+    }
+
+    /**
+     * Convert milliseconds into a compact human readable time string
+     * <p>
+     * Returns human readable duration
+     * 
+     * @param timestamp to convert to a significant duration string
+     * @return {@link java.lang.String}
+     */
+    public static String significantDurationString(@NotNull Timestamp timestamp) {
+        return significantDurationString(System.currentTimeMillis() - timestamp.getTime());
+    }
+
     private static String expTime(@NotNull long time, @NotNull boolean compact) {
         long currentTime = System.currentTimeMillis();
         if (time == 0)
@@ -127,6 +167,18 @@ public class TimeUtil {
     }
 
     /**
+     * Convert a timestamp into a human readable time string
+     * <p>
+     * Returns a string stating the duration forward or backward in time.
+     * 
+     * @param timestamp to convert
+     * @return {@link java.lang.String}
+     */
+    public static String expirationTime(@NotNull Timestamp timestamp) {
+        return expirationTime(System.currentTimeMillis() - timestamp.getTime());
+    }
+
+    /**
      * Convert amount of time in milliseconds since unix epoch into a human readable
      * time string time
      * <p>
@@ -139,20 +191,16 @@ public class TimeUtil {
         return expTime(time, true);
     }
 
-    private static HashMap<Character, Long> durationChars = new HashMap<>();
-    static {
-        durationChars.put('Y', 31536000L);
-        durationChars.put('y', 31536000L);
-        durationChars.put('M', 2592000L);
-        durationChars.put('W', 604800L);
-        durationChars.put('w', 604800L);
-        durationChars.put('D', 86400L);
-        durationChars.put('d', 86400L);
-        durationChars.put('H', 3600L);
-        durationChars.put('h', 3600L);
-        durationChars.put('m', 60L);
-        durationChars.put('S', 1L);
-        durationChars.put('s', 1L);
+    /**
+     * Convert a timestamp into a human readable time string
+     * <p>
+     * Returns a string stating the duration forward or backward in time.
+     * 
+     * @param timestamp to convert
+     * @return {@link java.lang.String}
+     */
+    public static String significantExpirationTime(@NotNull Timestamp timestamp) {
+        return significantExpirationTime(System.currentTimeMillis() - timestamp.getTime());
     }
 
     /**
@@ -175,7 +223,7 @@ public class TimeUtil {
                 // Found something thats not a number, find out how much it multiplies the built
                 // up number by, multiply the total and reset the built up number.
 
-                Long multiplier = TimeUtil.durationChars.get(ch);
+                Long multiplier = TimeUtil.DURATION_CHARS.get(ch);
                 if (multiplier == null)
                     return Optional.empty();
 
