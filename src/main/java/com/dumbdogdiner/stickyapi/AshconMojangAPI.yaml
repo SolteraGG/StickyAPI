@@ -1,0 +1,88 @@
+#
+# Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
+# Licensed under the MIT license, see LICENSE for more information...
+#
+
+openapi: 3.0.0
+info:
+  title: mojang-api
+  description: https://github.com/Electroid/mojang-api
+  version: 1.0.0
+servers:
+  - url: 'https://api.ashcon.app/mojang/v2'
+
+paths:
+  /user/{uuid}:
+    get:
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  username:
+                    type: string
+                  username_history:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        changed_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                  textures:
+                    type: object
+                    properties:
+                      slim:
+                        type: boolean
+                      custom:
+                        type: boolean
+                      skin:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            format: uri
+                          data:
+                            type: string
+                            format: byte
+                      cape:
+                        type: object
+                        nullable: true
+                        properties:
+                          url:
+                            type: string
+                            format: uri
+                            nullable: true
+                          data:
+                            type: string
+                            format: byte
+                            nullable: true
+                      raw:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                            format: base64
+                          signature:
+                            type: string
+                            format: base64
+                  created_at:
+                     type: string
+                     format: date-time
+                     nullable: true
+
+      parameters:
+        - name: uuid
+          in: path
+          description: mojang uuid
+          required: true
+          schema:
+            type: string

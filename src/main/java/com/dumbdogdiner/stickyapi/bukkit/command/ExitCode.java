@@ -1,11 +1,12 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
 /**
- * Enum based exit codes for StickyAPI command classes.
+ * Class based exit codes for StickyAPI command classes.
+ * @since v2.0.0
  */
 public enum ExitCode {
     /**

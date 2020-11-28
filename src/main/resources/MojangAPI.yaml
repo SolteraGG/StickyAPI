@@ -1,0 +1,85 @@
+#
+# Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
+# Licensed under the MIT license, see LICENSE for more information...
+#
+
+openapi: 3.0.0
+info:
+  title: Title
+  description: Title
+  version: 1.0.0
+servers:
+  - url: 'https://api.ashcon.app/mojang/v2'
+tags:
+  - name: user
+    description: User/profile stuff
+    externalDocs:
+      description: Wiki
+      url: https://wiki.vg/Mojang_API
+  - name: status
+    description: Mojang server status
+  - name: profile
+    description: Operations about user
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+# Only API Features useful, I.E. not provided by Bukkit/paper, are here
+paths:
+  /check:
+    servers:
+      - url: 'https://status.mojang.com'
+    get:
+      tags:
+        - status
+      responses:
+        200:
+          description: successful operation
+
+  /user/profiles/{uuid}:
+    get:
+      tags:
+        - user
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+      parameters:
+        - name: uuid
+          in: path
+          description: mojang uuid
+          required: true
+          schema:
+            type: string
+        - name: timestamp
+          in: query
+          required: false
+          schema:
+            type: integer
+  /user/profiles/{uuid}/names:
+    get:
+      tags:
+        - user
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+      parameters:
+        - name: uuid
+          in: path
+          description: mojang uuid
+          required: true
+          schema:
+            type: string
