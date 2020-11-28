@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
+ */
 package com.dumbdogdiner.stickyapi.webapis;
 
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
@@ -19,9 +23,7 @@ import java.util.UUID;
 
 //TODO: Better error handeling in case of 404
 
-public class MojangAPI {
-
-
+public class CachedMojangAPI {
     /** When possible, use the cached, faster api at https://api.ashcon.app/mojang/v2/user, otherwise use mojang
      * API URLs
      */
@@ -39,19 +41,19 @@ public class MojangAPI {
 
     protected UUID uuid;
 
-    public MojangAPI(String uuid) {
+    public CachedMojangAPI(String uuid) {
         this.uuid = StringUtil.getUUIDFromString(uuid);
     }
 
-    public MojangAPI(OfflinePlayer player) {
+    public CachedMojangAPI(OfflinePlayer player) {
         this.uuid = player.getUniqueId();
     }
 
-    public MojangAPI(Player player) {
+    public CachedMojangAPI(Player player) {
         this.uuid = player.getUniqueId();
     }
 
-    public MojangAPI(UUID uuid){
+    public CachedMojangAPI(UUID uuid){
         this.uuid = uuid;
     }
 
@@ -97,16 +99,6 @@ public class MojangAPI {
         }
 
         return retval;
-    }
-
-    public String getUsername() {
-        try {
-            URL url = new URL(COMBINED_API_URL + "/" + uuid.toString().replace("-",""));
-            return  getJSONFromURL(url).getAsJsonObject().get("username").getAsString();//.getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
-        } catch (Exception e) {
-            Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
-            return null;//STEVE_TEXTURE;
-        }
     }
 
     private JsonElement getJSONFromURL(URL url){
