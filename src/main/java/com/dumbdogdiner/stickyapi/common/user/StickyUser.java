@@ -8,6 +8,7 @@ import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import com.dumbdogdiner.stickyapi.common.cache.Cacheable;
 import com.dumbdogdiner.stickyapi.webapis.MojangAPI;
 import lombok.Getter;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -61,6 +62,10 @@ public class StickyUser implements Cacheable {
 
     public OfflinePlayer getAsOfflinePlayer(){
         return Bukkit.getOfflinePlayer(uniqueId);
+    }
+
+    public ProxiedPlayer getAsProxiedPlayer(){
+        return ProxyServer.getInstance().getPlayer(uniqueId);
     }
 
     public StickyUserBukkit getAsBukkitUser(){
