@@ -68,10 +68,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.90'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
-    
-    // JUnit 5 Testing
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    compileOnly 'com.dumbdogdiner.buildtools:paper:1.16.4-288-SNAPSHOT'
 
     // PAPI
     compileOnly "me.clip:placeholderapi:2.10.6"

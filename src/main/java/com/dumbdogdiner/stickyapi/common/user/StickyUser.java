@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.common.user;
 
+import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
+import com.dumbdogdiner.stickyapi.common.cache.Cacheable;
 import com.dumbdogdiner.stickyapi.webapis.MojangAPI;
 import lombok.Getter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,39 +17,58 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
-public class StickyUser {
+public class StickyUser implements Cacheable {
     @Getter
-    private UUID uid;
+    protected UUID uniqueId;
 
     @Getter
-    private String userName;
+    protected String name;
 
+    public StickyUser(UUID uniqueId) {
+        this.uniqueId = uniqueId;
+        MojangAPI a = new MojangAPI(uniqueId);
+        name = a.getUsername();
+    }
 
     public StickyUser(Player p){
-        uid = p.getUniqueId();
-        userName = p.getName();
+        uniqueId = p.getUniqueId();
+        name = p.getName();
     }
 
     public StickyUser(ProxiedPlayer p){
-        uid = p.getUniqueId();
-        userName = p.getName();
+        uniqueId = p.getUniqueId();
+        name = p.getName();
     }
 
     public StickyUser(OfflinePlayer p){
-        uid = p.getUniqueId();
-        userName = p.getName();
+        uniqueId = p.getUniqueId();
+        name = p.getName();
+    }
+
+    protected StickyUser(UUID uniqueId, String userName) {
+        this.uniqueId = uniqueId;
+        this.name = userName;
     }
 
     public Map<String, Instant> getNameHistory(){
-        MojangAPI api = new MojangAPI(uid);
+        MojangAPI api = new MojangAPI(uniqueId);
         return api.getUsernameHistory();
     }
 
     public Player getAsBukkitPlayer(){
-        return Bukkit.getPlayer(uid);
+        return Bukkit.getPlayer(uniqueId);
     }
 
     public OfflinePlayer getAsOfflinePlayer(){
-        return Bukkit.getOfflinePlayer(uid);
+        return Bukkit.getOfflinePlayer(uniqueId);
+    }
+
+    public StickyUserBukkit getAsBukkitUser(){
+        return new StickyUserBukkit(this);
+    }
+
+    @Override
+    public String getKey() {
+        return uniqueId.toString();
     }
 }
