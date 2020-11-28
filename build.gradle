@@ -29,9 +29,33 @@ configurations {
 repositories {
     mavenCentral()
     jcenter()
+    google()
 
+
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
+
+    maven { url = "https://jitpack.io" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+
+    // FULL paper/spigot/bukkit/craftbukkit
+    maven {
+        credentials {
+            username "$ghUser"
+            password "$ghPass"
+        }
+        url = "https://maven.pkg.github.com/DumbDogDiner/buildtoolspackages/" }
+
+    maven {
+        credentials {
+            username "$ghUser"
+            password "$ghPass"
+        }
+        url = "https://maven.pkg.github.com/DumbDogDiner/mojangapi/" }
+
 }
 
 dependencies {
@@ -49,6 +73,17 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 
+    compileOnly "me.clip:placeholderapi:2.10.6"
+    // PAPI
+
+    // Luckperms
+    compileOnly 'net.luckperms:api:5.2'
+    // Vault
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+    // JUnit 5 Testing
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     // Mocking
     testImplementation("org.powermock:powermock-module-junit4:2.0.9")
     testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
@@ -82,7 +117,9 @@ task sources(type: Jar, dependsOn: classes) {
 tasks.publish.dependsOn build, sources
 
 
-
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
 
 publishing {
     repositories {

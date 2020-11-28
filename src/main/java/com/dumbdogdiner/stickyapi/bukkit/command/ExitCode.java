@@ -5,9 +5,10 @@
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
 /**
- * Enum based exit codes for StickyAPI command classes.
+ * Class based exit codes for StickyAPI command classes.
+ * @since v2.0.0
  */
-public enum ExitCode {
+public class ExitCode {
     /**
      * If the command executed successfully
      */

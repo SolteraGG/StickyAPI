@@ -226,7 +226,7 @@ public final class StringUtil {
      * Filter "Leet Speak" out of a message
      * <p>
      * Example:
-     * 
+     *
      * <pre>
      * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
      * </pre>
