@@ -13,9 +13,11 @@ import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.bungeecord.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
 import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
+import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
 
@@ -125,9 +127,15 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
             e.printStackTrace();
         }
 
-        // run the error handler - something made a fucky wucky uwu
         if (exitCode != ExitCode.EXIT_SUCCESS) {
+            if (exitCode == ExitCode.EXIT_INFO) {
+                _playSound(sender, NotificationType.INFO);
+                return;
+            }
             errorHandler.apply(exitCode, sender, a, variables);
+            _playSound(sender, NotificationType.ERROR);
+        } else {
+            _playSound(sender, NotificationType.SUCCESS);
         }
     }
 
@@ -213,6 +221,12 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
                 return matchedPlayers;
             }
         }
+    }
+
+    private void _playSound(CommandSender sender, NotificationType type) {
+        if (!this.getPlaySound())
+            return;
+        SoundUtil.send(sender, type);
     }
 
 }
