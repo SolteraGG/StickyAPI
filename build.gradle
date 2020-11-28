@@ -1,15 +1,31 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'org.openjfx:javafx-plugin:0.0.9'
+    }
+}
+
+
 plugins {
     id 'java'
     id 'maven-publish'
     id 'jacoco'
     id "io.freefair.lombok" version "5.3.0"
     id "com.github.hierynomus.license" version "0.15.0"
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 jacoco {
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
     toolVersion = "0.8.6"
 }
+
+
+
 
 group = 'com.dumbdogdiner'
 
@@ -19,6 +35,17 @@ version = '2.0.0'
 license { header = file('LICENSE_HEADER') }
 // Run the license formatter before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
+
+java{
+    sourceCompatibility(JavaVersion.VERSION_11)
+    targetCompatibility(getTargetCompatibility())
+}
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version(getSourceCompatibility())
+    modules('javafx.base', 'javafx.graphics')
+}
 
 configurations {
     jaxDoclet

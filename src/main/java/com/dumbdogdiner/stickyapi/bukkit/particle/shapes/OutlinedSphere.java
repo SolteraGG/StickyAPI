@@ -8,45 +8,47 @@ import com.dumbdogdiner.stickyapi.bukkit.particle.Orientation;
 import com.dumbdogdiner.stickyapi.bukkit.particle.Parametric;
 import com.dumbdogdiner.stickyapi.bukkit.particle.ParticleSystem;
 import com.dumbdogdiner.stickyapi.bukkit.particle.Shape;
-
+import org.apache.commons.lang.Validate;
 import org.bukkit.Particle;
-import org.bukkit.Particle.DustOptions;
 
-/**
- * Draws a circle.
- * 
- * @since 2.0
- */
-public class Circle implements Shape {
-    /**
-     * Prevent developers from creating absurdly large circles - too many particles
-     * will cause nearby clients to crash.
-     */
-    final double MAX_RADIUS = 250;
+public class OutlinedSphere implements Shape {
+    @Override
+    public void draw(ParticleSystem system, Particle particle, Particle.DustOptions data) {
 
-    private final double r;
+    }
+
+    @Override
+    public void drawAbsolute(ParticleSystem system, Particle particle, Particle.DustOptions data) {
+
+    }
+
+    public enum SphereType {
+        XY,
+        YZ,
+        XZ,
+        XYZ,
+        XY_SPIRAL,
+        YZ_SPIRAL,
+        XZ_SPIRAL
+    }
+
+    public static final int MIN_DIVISIONS = 4;
+    public static final int MAX_DIVISIONS = 32;
+    public static final int MAX_RADIUS = 128;
 
     private Parametric parametric;
 
-    /**
-     * Construct a new circle with center (x,y,z) and radius r.
-     *
-     * @param x           X coordinate for center of the circle.
-     * @param y           Y coordinate for center of the circle.
-     * @param z           Z coordinate for center of the circle.
-     * @param r           Size of the circle's radius.
-     * @param orientation Orientation of the circle.
-     */
-    public Circle(double x, double y, double z, double r, Orientation orientation) {
+    public OutlinedSphere(double x, double y, double z, double r, int divisions, SphereType orientation) {
         if (r > MAX_RADIUS) {
-            throw new IllegalArgumentException("Tried to draw circle with absurd radius (>" + MAX_RADIUS + ")!");
+            throw new IllegalArgumentException("Tried to draw sphere with absurd radius (>" + MAX_RADIUS + ")!");
+        }
+        if (r < MIN_DIVISIONS || r > MAX_DIVISIONS) {
+            throw new IllegalArgumentException("Tried to draw sphere with invalid divisions (>"
+                    + MAX_DIVISIONS + " or <" + MIN_DIVISIONS + ")!");
         }
 
-        this.r = r;
-
-        // set the orientation of the circle
         switch (orientation) {
-            case XY: {
+            case XY:
                 this.parametric = new Parametric() {
                     @Override
                     public double x(double t) {
@@ -60,12 +62,12 @@ public class Circle implements Shape {
 
                     @Override
                     public double z(double t) {
-                        return z;
+                        return Math.floor(t / (2 * Math.PI)) - (r / 2D) + z;
                     }
                 };
                 break;
-            }
-            case XZ: {
+
+            case XZ:
                 this.parametric = new Parametric() {
                     @Override
                     public double x(double t) {
@@ -74,7 +76,7 @@ public class Circle implements Shape {
 
                     @Override
                     public double y(double t) {
-                        return y;
+                        return Math.floor(t / (2 * Math.PI)) - (r / 2D) + y;
                     }
 
                     @Override
@@ -83,12 +85,12 @@ public class Circle implements Shape {
                     }
                 };
                 break;
-            }
-            case YZ: {
+
+            case YZ:
                 this.parametric = new Parametric() {
                     @Override
                     public double x(double t) {
-                        return x;
+                        return Math.floor(t / (2 * Math.PI)) - (r / 2D) + x;
                     }
 
                     @Override
@@ -102,17 +104,10 @@ public class Circle implements Shape {
                     }
                 };
                 break;
-            }
+            default:
+                throw new UnsupportedOperationException("I haven't written that yet");
         }
-    }
 
-    @Override
-    public void draw(ParticleSystem system, Particle particle, DustOptions data) {
-        system.parametric(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
-    }
 
-    @Override
-    public void drawAbsolute(ParticleSystem system, Particle particle, DustOptions data) {
-        system.parametricAbsolute(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 }
