@@ -1,16 +1,16 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
+
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Operations on {@link java.lang.String}
@@ -176,7 +176,9 @@ public final class StringUtil {
      * 
      * @since 2.0
      * @param string The string to capitalise
-     * @return {@link String}
+     * @return {@link String} A message with capital letters after every whitespace Alternate (not
+     *         keeping uppercase): @see {@link #capitaliseSentence(String)}
+     * @since 2.0
      */
     public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
         Validate.notNull(string, "string cannot be null");

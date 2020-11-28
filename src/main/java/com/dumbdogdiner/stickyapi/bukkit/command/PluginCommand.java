@@ -1,11 +1,12 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.*;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,7 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
     private final Plugin owningPlugin;
     private CommandExecutor executor;
     private TabCompleter completer;
+    private List<Permission> commandPermissions;
 
     public PluginCommand(@NotNull String name, @NotNull Plugin owner) {
         super(name);
