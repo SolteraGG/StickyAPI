@@ -69,17 +69,6 @@ public class TimeUtilTest {
     }
 
     @Test
-    public void testExpiresZero() {
-        Timestamp ts = new Timestamp(0L);
-        assertEquals(TimeUtil.expires(ts), "never expires");
-    }
-
-    @Test
-    public void testExpiresNull() {
-        assertEquals(TimeUtil.expires(null), "");
-    }
-
-    @Test
     public void testDurationLongOneSecond() {
         assertEquals(TimeUtil.duration("1s"), Optional.of(1L));
     }
@@ -93,5 +82,16 @@ public class TimeUtilTest {
     public void testSignificantDurationString() {
         String time = TimeUtil.significantDurationString(6000000L);
         assertEquals(time, "1.67/h");
+    }
+
+    @Test
+    public void testExpiresZero() {
+        Timestamp ts = new Timestamp(0L);
+        assertEquals(TimeUtil.expirationTime(ts), "never expires");
+    }
+
+    @Test
+    public void testExpiresNull() {
+        assertEquals(TimeUtil.expirationTime(null), "");
     }
 }
