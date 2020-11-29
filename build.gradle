@@ -14,7 +14,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'jacoco'
-    //id "io.freefair.lombok" version "5.3.0"
+    id "io.freefair.lombok" version "5.3.0"
     id "com.github.hierynomus.license" version "0.15.0"
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
@@ -31,6 +31,7 @@ group = 'com.dumbdogdiner'
 
 version = '2.0.0'
 
+tasks.javadoc.dependsOn compileJava, delombok
 // License Plugin Options
 license { header = file('LICENSE_HEADER') }
 // Run the license formatter before compiling the source code.
@@ -43,7 +44,6 @@ java{
 apply plugin: 'org.openjfx.javafxplugin'
 
 javafx {
-    version(getSourceCompatibility())
     modules('javafx.base', 'javafx.graphics')
 }
 
@@ -151,8 +151,10 @@ task sources(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+tasks.build.dependsOn javadoc, sources
 
-tasks.publish.dependsOn build, sources
+
+tasks.publish.dependsOn build
 
 
 tasks.withType(JavaCompile) {
