@@ -4,9 +4,11 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.particle;
 
+import javafx.geometry.Point3D;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.plugin.Plugin;
 
 import lombok.Getter;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
  * Manages the spawning and animation of particles.
  * @since 2.0
  */
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ParticleSystem {
     /**
      * The plugin this particle system is attached to.
@@ -291,7 +294,7 @@ public class ParticleSystem {
      */
     public ParticleSystem parametricAbsolute(@NotNull Particle particle, @NotNull Parametric parametric,
             double t0, double t1, double stepSize, int count, @Nullable Particle.DustOptions data) {
-        for (var t = t0; t < t1; t += stepSize) {
+        for (double t = t0; t < t1; t += stepSize) {
             this.spawnAbsolute(particle, parametric.x(t), parametric.y(t), parametric.z(t), count, data);
         }
         return this;
@@ -350,6 +353,7 @@ public class ParticleSystem {
     public ParticleSystem line(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count, @Nullable Particle.DustOptions data) {
         this.ensureRelative();
         return this.parametric(particle, new Parametric() {
+
             public double x(double t) {
                 return x2 * t + (1 - t) * x1;
             }
@@ -361,6 +365,39 @@ public class ParticleSystem {
             }
         } , 0, 1, 1 / steps, count);
     }
+
+    /**
+     * Draw a straight line between the specified relative co-ordinates.
+     * @param p1       The first point relative to the system root
+     * @param p2       The second point relative to the system root
+     * @param steps    The number of steps to take drawing the line
+     * @param count    The number of particles to spawn per step
+     * @return {@link ParticleSystem}
+     */
+
+    public ParticleSystem line(Point3D p1, Point3D p2, int steps, int count){
+        this.ensureDefaultParticle();
+        assert this.particle != null;
+        return this.line(this.particle, p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ(), steps, count, this.data);
+    }
+
+    /**
+     * Draw a straight line between the specified relative co-ordinates.
+     * @param particle The {@link Particle} to draw
+     * @param p1       The first point relative to the system root
+     * @param p2       The second point relative to the system root
+     * @param steps    The number of steps to take drawing the line
+     * @param count    The number of particles to spawn per step
+     * @param data     The {@link Particle.DustOptions} for the particle
+     * @return {@link ParticleSystem}
+     */
+
+    public ParticleSystem line(@NotNull Particle particle, Point3D p1, Point3D p2, int steps, int count, Particle.DustOptions data){
+        return this.line(particle, p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ(), steps, count, data);
+    }
+
+
+
 
     /**
      * Draw a straight line between the specified relative co-ordinates.
@@ -397,7 +434,20 @@ public class ParticleSystem {
         return this.line(this.particle, x1, y1, z1, x2, y2, z2, steps, count, this.data);
     }
 
-    
+    /**
+     * Draw a straight line between the specified relative co-ordinates.
+     * @param p1       The first point relative to the world origin
+     * @param p2       The second point relative to the world origin
+     * @param steps    The number of steps to take drawing the line
+     * @param count    The number of particles to spawn per step
+     * @return {@link ParticleSystem}
+     */
+
+    public ParticleSystem lineAbsolute(Point3D p1, Point3D p2, int steps, int count){
+        this.ensureDefaultParticle();
+        assert this.particle != null;
+        return this.lineAbsolute(this.particle, p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ(), steps, count, this.data);
+    }
 
     /**
      * Draw a straight line between the specified absolute co-ordinates.
@@ -461,7 +511,23 @@ public class ParticleSystem {
         this.ensureDefaultParticle();
         return this.lineAbsolute(this.particle, x1, y1, z1, x2, y2, z2, steps, count, this.data);
     }
-    
+
+    /**
+     * Draw a straight line between the specified relative co-ordinates.
+     * @param particle The {@link Particle} to draw
+     * @param p1       The first point relative to the system root
+     * @param p2       The second point relative to the system root
+     * @param steps    The number of steps to take drawing the line
+     * @param count    The number of particles to spawn per step
+     * @param data     The {@link Particle.DustOptions} for the particle
+     * @return {@link ParticleSystem}
+     */
+
+    public ParticleSystem lineAbsolute(@NotNull Particle particle, Point3D p1, Point3D p2, int steps, int count, Particle.DustOptions data){
+        return this.lineAbsolute(particle, p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ(), steps, count, data);
+    }
+
+
     /**
      * Draw a straight line between the specified absolute co-ordinates.
      * @param particle The type of particle to spawn

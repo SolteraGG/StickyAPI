@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.bungeecord.packet;
 
+import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
 import io.netty.buffer.ByteBuf;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 import net.md_5.bungee.protocol.DefinedPacket;
@@ -44,15 +45,15 @@ public class SoundPacket extends DefinedPacket {
     }
 
     public void setX(double x) {
-        this.x = ((int) (x * 8.0D));
+        this.x = NumberUtil.longToInt(Math.round(x * 8.0D));
     }
 
     public void setY(double y) {
-        this.y = ((int) (y * 8.0D));
+        this.y = NumberUtil.longToInt(Math.round(y * 8.0D));
     }
 
     public void setZ(double z) {
-        this.z = ((int) (z * 8.0D));
+        this.z = NumberUtil.longToInt(Math.round(z * 8.0D));
     }
 
     @Override
