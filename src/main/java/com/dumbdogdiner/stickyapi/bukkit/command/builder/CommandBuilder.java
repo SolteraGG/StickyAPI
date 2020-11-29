@@ -5,209 +5,99 @@
 package com.dumbdogdiner.stickyapi.bukkit.command.builder;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
-import com.dumbdogdiner.stickyapi.bukkit.command.ExitCode;
-import com.dumbdogdiner.stickyapi.bukkit.command.PluginCommand;
-import com.dumbdogdiner.stickyapi.bukkit.util.NotificationType;
-import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
-import com.dumbdogdiner.stickyapi.common.ServerVersion;
+import com.dumbdogdiner.stickyapi.bukkit.command.ErrorHandler;
+import com.dumbdogdiner.stickyapi.bukkit.command.StickyPluginCommand;
+import com.dumbdogdiner.stickyapi.bukkit.command.executor.Executor;
+import com.dumbdogdiner.stickyapi.bukkit.command.tabcomplete.TabExecutor;
+import com.dumbdogdiner.stickyapi.bukkit.plugin.StickyPlugin;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
-import com.dumbdogdiner.stickyapi.common.util.StringUtil;
-import com.google.common.collect.ImmutableList;
-import org.bukkit.command.*;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import com.dumbdogdiner.stickyapi.common.command.ExitCode;
+import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.FutureTask;
 
 /**
  * CommandBuilder for avoiding bukkit's terrible command API and making creating
  * new commands as simple as possible
- * 
+ *
  * @since 2.0
  */
-public class CommandBuilder {
-    Boolean synchronous = false;
-    Boolean requiresPlayer = false;
-    String name;
-    String permission;
-    String description;
-    Boolean playSound = false;
-    List<String> aliases = new ArrayList<>();
-    Long cooldown = 0L;
+public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
+
+    // Hmm...
+    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
 
     Executor executor;
     TabExecutor tabExecutor;
 
     ErrorHandler errorHandler;
+    private StickyPluginCommand bukkitCommand;
 
-    Command bukkitCommand;
-
-    HashMap<String, CommandBuilder> subCommands = new HashMap<>();
-
-    // Hmm...
-    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
-
-    @FunctionalInterface
-    public interface Executor {
-        public ExitCode apply(CommandSender sender, Arguments args, TreeMap<String, String> vars);
-    }
-
-    public interface TabExecutor {
-        public java.util.List<String> apply(CommandSender sender, String commandLabel, Arguments args);
-    }
-
-    public interface ErrorHandler {
-        public void apply(ExitCode exitCode, CommandSender sender, Arguments args, TreeMap<String, String> vars);
-    }
 
     /**
-     * Create a new [@link CommandBuilder} instance
+     * Generate a permission for a given command
+     *
+     * @param owner The plugin that owns the command
+     * @param name   The name of the command
+     * @return the permission of format &lt;PluginName&gt;.&lt;CommandName&gt;
+     */
+    public static String getBasePermissionName(StickyPlugin owner, String name) {
+        return (owner.getName() + "." + name).toLowerCase();
+    }
+
+
+    /**
+     * Create a new {@link CommandBuilder} instance
      * <p>
      * Used to build and register Bukkit commands
-     * 
+     *
      * @param name The name of the command
      */
     public CommandBuilder(@NotNull String name) {
-        this.name = name;
+        super(name);
     }
 
     /**
-     * If this command should run asynchronously
-     * 
-     * @param synchronous if this command should run synchronously
-     * @return {@link CommandBuilder}
+     * Executes a subcommand if it exists
+     * @param sender the commandsender
+     * @param command the bukkit command
+     * @param args the args provided to the main command
+     * @return if a subcommand was found and executed
      */
-    public CommandBuilder synchronous(@NotNull Boolean synchronous) {
-        this.synchronous = synchronous;
-        return this;
-    }
-
-    /**
-     * Set this command to run asynchronously
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder synchronous() {
-        return this.synchronous(true);
-    }
-
-    /**
-     * Set the cooldown for this command
-     * 
-     * @param cooldown in milliseconds
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder cooldown(@NotNull Long cooldown) {
-        this.cooldown = cooldown;
-        return this;
-    }
-
-    /**
-     * If this command requires the sender to be an instance of
-     * {@link org.bukkit.entity.Player}
-     * 
-     * @param requiresPlayer If this command should require a player as the executor
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder requiresPlayer(@NotNull Boolean requiresPlayer) {
-        this.requiresPlayer = requiresPlayer;
-        return this;
-    }
-
-    /**
-     * If this command requires the sender to be an instance of
-     * {@link org.bukkit.entity.Player}
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder requiresPlayer() {
-        return this.requiresPlayer(true);
-    }
-
-    /**
-     * If this command should play a sound upon exiting
-     * 
-     * @param playSound If this command should play a sound upon exiting
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder playSound(@NotNull Boolean playSound) {
-        this.playSound = playSound;
-        return this;
-    }
-
-    /**
-     * If this command should play a sound upon exiting
-     * 
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder playSound() {
-        return this.playSound(true);
-    }
-
-    /**
-     * Set the permission of the command
-     * 
-     * @param permission to set
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder permission(@NotNull String permission) {
-        this.permission = permission;
-        return this;
-    }
-
-    /**
-     * Set the description of the command
-     * 
-     * @param description to set
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder description(@NotNull String description) {
-        this.description = description;
-        return this;
-    }
-
-    /**
-     * Add an alias to this command.
-     * 
-     * @param alias to add
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder alias(@NotNull String... alias) {
-        for (var a : alias) {
-            this.aliases.add(a);
+    private boolean executeSubCommandIfExists(CommandSender sender, StickyPluginCommand command, List<String> args){
+        if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
+            CommandBuilder subCommand = getSubCommands().get(args.get(0));
+            String subLabel = args.get(0);
+            String [] subArgs = (String[]) args.subList(1, args.size()).toArray();
+            if(getSynchronous() != subCommand.getSynchronous()){
+                if(subCommand.getSynchronous()){
+                    StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
+                        subCommand.build(command.getOwningPlugin()).execute(sender, subLabel, subArgs);
+                        return null;
+                    }));
+                } else {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(command.getPlugin(), () ->
+                            subCommand.build(command.getOwningPlugin()).execute(sender, subLabel, subArgs));
+                }
+            }
+            return true;
         }
-        return this;
+        return false;
     }
 
-    /**
-     * Set the aliases of the command
-     * 
-     * @param aliases to set
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder aliases(@NotNull List<String> aliases) {
-        this.aliases = aliases;
-        return this;
-    }
-
-    /**
-     * Add a subcommand to a command
-     * 
-     * @param builder the sub command
-     * @return {@link CommandBuilder}
-     */
-    public CommandBuilder subCommand(@NotNull CommandBuilder builder) {
-        builder.synchronous = this.synchronous;
-        this.subCommands.put(builder.name, builder);
-        return this;
-    }
 
     /**
      * Set the executor of the command
-     * 
+     *
      * @param executor to set
      * @return {@link CommandBuilder}
      */
@@ -218,7 +108,7 @@ public class CommandBuilder {
 
     /**
      * Set the tab complete executor of the command
-     * 
+     *
      * @param executor to set
      * @return {@link CommandBuilder}
      */
@@ -229,7 +119,7 @@ public class CommandBuilder {
 
     /**
      * Set the error handler of the command
-     * 
+     *
      * @param handler to set
      * @return {@link CommandBuilder}
      */
@@ -238,175 +128,64 @@ public class CommandBuilder {
         return this;
     }
 
-    private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
-        StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
-            performExecution(sender, command, label, args);
-            return null;
-        }));
-    }
-
-    /**
-     * Execute this command. Checks for existing sub-commands, and runs the error
-     * handler if anything goes wrong.
-     */
-    private void performExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
-        // look for subcommands
-        if (args.size() > 0 && subCommands.containsKey(args.get(0))) {
-            CommandBuilder subCommand = subCommands.get(args.get(0));
-            if (!synchronous && subCommand.synchronous) {
-                throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
-            }
-
-            // We can't modify List, so we need to make a clone of it, because java is
-            // special.
-            ArrayList<String> argsClone = new ArrayList<String>(args);
-            argsClone.remove(0);
-
-            // spawn async command from sync
-            if (synchronous && !subCommand.synchronous) {
-                subCommand.performAsynchronousExecution(sender, command, label, argsClone);
-            }
-
-            subCommand.performExecution(sender, command, label, argsClone);
-            return;
-        }
-
-        ExitCode exitCode;
-        Arguments a = new Arguments(args);
-        var variables = new TreeMap<String, String>();
-        variables.put("command", command.getName());
-        variables.put("sender", sender.getName());
-        variables.put("player", sender.getName());
-        variables.put("uuid", (sender instanceof Player) ? ((Player) sender).getUniqueId().toString() : "");
-        variables.put("cooldown", cooldown.toString());
-        variables.put("cooldown_remaining",
-                cooldownSenders.containsKey(sender)
-                        ? String.valueOf(cooldown - (System.currentTimeMillis() - cooldownSenders.get(sender)))
-                        : "0");
-        try {
-            if (cooldownSenders.containsKey(sender)
-                    && ((System.currentTimeMillis() - cooldownSenders.get(sender)) < cooldown)) {
-                exitCode = ExitCode.EXIT_COOLDOWN;
-            } else {
-
-                // Add our sender and their command execution time to our hashmap of coolness
-                cooldownSenders.put(sender, System.currentTimeMillis());
-
-                // If the user does not have permission to execute the sub command, don't let
-                // them execute and return permission denied
-                if (this.permission != null && !sender.hasPermission(this.permission)) {
-                    exitCode = ExitCode.EXIT_PERMISSION_DENIED;
-                } else if (this.requiresPlayer && !(sender instanceof Player)) {
-                    exitCode = ExitCode.EXIT_MUST_BE_PLAYER;
-                } else {
-                    exitCode = executor.apply(sender, a, variables);
-                }
-            }
-        } catch (Exception e) {
-            exitCode = ExitCode.EXIT_ERROR;
-            e.printStackTrace();
-        }
-
-        // run the error handler - something made a fucky wucky uwu
-        if (exitCode != ExitCode.EXIT_SUCCESS) {
-            if (exitCode == ExitCode.EXIT_INFO) {
-                _playSound(sender, NotificationType.INFO);
-                return;
-            }
-            errorHandler.apply(exitCode, sender, a, variables);
-            _playSound(sender, NotificationType.ERROR);
-        } else {
-            _playSound(sender, NotificationType.SUCCESS);
-        }
-    }
-
     /**
      * Build the command!
-     * 
+     *
      * @param plugin to build it for
      * @return {@link org.bukkit.command.Command}
      */
-    public org.bukkit.command.Command build(@NotNull Plugin plugin) {
-        PluginCommand command = new PluginCommand(this.name, plugin);
+    public StickyPluginCommand build(@NotNull StickyPlugin plugin) {
 
-        if (this.synchronous == null) {
-            this.synchronous = false;
+        if (getPermission() == null) {
+            setPermission(getBasePermissionName(plugin, getName()));
         }
+        StickyPluginCommand command = new StickyPluginCommand(getName(), getAliases(), plugin, new Permission(getPermission()), getPlaySound()) {
+            @Override
+            public ExitCode execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull Arguments args, @NotNull Map<String, String> variables) {
+                if (executeSubCommandIfExists(sender, this, args.getRawArgs())) {
+                    return null;
+                } else {
+                    return executor.execute(sender, args, alias, variables);
+                }
+            }
+
+            @Override
+            public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException, CommandException {
+                return tabExecutor.tabComplete(sender, alias, new Arguments(Arrays.asList(args)));
+            }
+
+            @Override
+            public void onError(CommandSender sender, String commandLabel, Arguments arguments, ExitCode code, Map<String, String> vars) {
+                if (errorHandler == null || !errorHandler.onError(code, sender, arguments, vars))
+                    super.onError(sender, commandLabel, arguments, code, vars);
+            }
+        };
+
+        command.setDescription(getDescription());
+
 
         // Execute the command by creating a new CommandExecutor and passing the
         // arguments to our executor
-        command.setExecutor(new CommandExecutor() {
-            @Override
-            public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
-                    String[] args) {
-                performExecution(sender, command, label, Arrays.asList(args));
-                return true;
-            }
-        });
 
-        command.setTabCompleter(new TabCompleter() {
-            @Override
-            public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-                if (tabExecutor == null) {
-                    if (args.length == 0) {
-                        return ImmutableList.of();
-                    }
 
-                    String lastWord = args[args.length - 1];
+        command.setDescription(getDescription());
 
-                    Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+        command.setAliases(getAliases());
 
-                    ArrayList<String> matchedPlayers = new ArrayList<String>();
-                    for (Player player : sender.getServer().getOnlinePlayers()) {
-                        String name = player.getName();
-                        if ((senderPlayer == null || senderPlayer.canSee(player))
-                                && StringUtil.startsWithIgnoreCase(name, lastWord)) {
-                            matchedPlayers.add(name);
-                        }
-                    }
 
-                    Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
-                    return matchedPlayers;
-                } else {
-                    return tabExecutor.apply(sender, alias, new Arguments(Arrays.asList(args)));
-                }
-            }
-        });
-
-        command.setDescription(this.description);
-
-        if (this.aliases != null)
-            command.setAliases(this.aliases);
-
-        command.setPermission(this.permission);
         this.bukkitCommand = command;
         return command;
     }
 
     /**
      * Register the command with a {@link org.bukkit.plugin.Plugin}
-     * 
+     *
      * @param plugin to register with
      */
-    public void register(@NotNull Plugin plugin) {
-
-        // If the server is running paper, we don't need to do reflection, which is
-        // good.
-        if (ServerVersion.isPaper()) {
-            plugin.getServer().getCommandMap().register(plugin.getName(), this.build(plugin));
-            return;
+    public void register(@NotNull StickyPlugin plugin) {
+        if(bukkitCommand == null || !plugin.equals(bukkitCommand.getPlugin())) {
+            this.build(plugin);
         }
-        // However, if it's not running paper, we need to use reflection, which is
-        // really annoying
-        ((CommandMap) ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap")).register(plugin.getName(),
-                this.build(plugin));
-    }
-
-    private void _playSound(CommandSender sender, NotificationType type) {
-        if (!this.playSound)
-            return;
-        SoundUtil.send(sender, type);
+        bukkitCommand.register();
     }
 }

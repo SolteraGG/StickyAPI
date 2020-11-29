@@ -38,7 +38,7 @@ public class PacketRegistration {
     /**
      * Register a packet with BungeeCord
      * 
-     * @param clazz that extends {@link DefinedPacket}
+     * @param clazz that extends {@link net.md_5.bungee.protocol.DefinedPacket}
      * @param id    the protocol ID for the packet (see: https://wiki.vg/Protocol)
      */
     public static void registerPacket(Class<?> clazz, Integer id) {
@@ -51,15 +51,15 @@ public class PacketRegistration {
         }
     }
 
-    static {
-        processReflection();
-        registerSoundPacket();
-    }
-
+    // static {
+    //     registerSoundPacket();
+    // }
+    
     /**
      * Register our sound packet with BungeeCord
      */
     public static void registerSoundPacket() {
+        processReflection();
         registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This should automatically register with the server's correct version
     }
 }

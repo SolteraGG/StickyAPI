@@ -1,0 +1,21 @@
+#
+# Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+# Licensed under the MIT license, see LICENSE for more information...
+#
+
+# Global variables, you can use these in any message in this file.
+newline: "&8&l» "
+prefix: "&b&l{plugin} {newline}"
+network-name: "&bDumb Dog Diner"
+website: "dumbdogdiner.com"
+
+# Common error messages used throughout the plugin
+invalid-syntax: "{prefix}&cInvalid Syntax! Please use &f{syntax}&c!"
+server-error: "{prefix}&cThe server encountered an error, please try again later."
+no-permission: "{prefix}&cError! Permission denied!"
+player-does-not-exist: "{prefix}&cError! The player {bad_user} does not exist!"
+player-has-not-joined: "{prefix}&cError! The player {bad_user} has not joined before!"
+must-be-player: "{prefix}&cYou must be a player to execute this command!"
+not-online-player: "{prefix}&c Error! {PLAYER} is not online!"
+invalid-group: "{prefix}&cError! Group {GROUP} is invalid!"
+cooldown: "{prefix}&cYou need to wait {seconds} seconds before trying the command again!"

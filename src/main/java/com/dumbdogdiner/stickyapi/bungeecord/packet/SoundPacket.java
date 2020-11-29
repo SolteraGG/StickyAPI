@@ -19,6 +19,9 @@ public class SoundPacket extends DefinedPacket {
     private float volume;
     private float pitch;
 
+    public SoundPacket() {
+    }
+
     /**
      * Create a new sound packet to play to a player
      * 
