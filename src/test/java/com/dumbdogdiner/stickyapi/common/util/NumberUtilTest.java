@@ -44,16 +44,16 @@ public class NumberUtilTest {
 
     @Test
     public void testIntHelper() {
-        assertEquals(NumberUtil.intHelper(1L), 1);
+        assertEquals(NumberUtil.longToInt(1L), 1);
     }
 
     @Test
     public void testIntHelperMax() {
-        assertEquals(NumberUtil.intHelper(((long)Integer.MAX_VALUE) + 1L), Integer.MAX_VALUE);
+        assertEquals(NumberUtil.longToInt(((long)Integer.MAX_VALUE) + 1L), Integer.MAX_VALUE);
     }
 
     @Test
     public void testIntHelperMin() {
-        assertEquals(NumberUtil.intHelper(((long) Integer.MIN_VALUE) - 1L), Integer.MIN_VALUE);
+        assertEquals(NumberUtil.longToInt(((long) Integer.MIN_VALUE) - 1L), Integer.MIN_VALUE);
     }
 }
