@@ -89,9 +89,4 @@ public class TimeUtilTest {
         Timestamp ts = new Timestamp(0L);
         assertEquals(TimeUtil.expirationTime(ts), "never expires");
     }
-
-    @Test
-    public void testExpiresNull() {
-        assertEquals(TimeUtil.expirationTime(null), "");
-    }
 }

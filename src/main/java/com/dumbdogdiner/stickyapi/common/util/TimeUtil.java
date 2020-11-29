@@ -161,6 +161,7 @@ public class TimeUtil {
      * 
      * @param time in milliseconds since unix epoch
      * @return {@link java.lang.String}
+     * @since 2.0 - (was nullable in 1.x)
      */
     public static String expirationTime(@NotNull long time) {
         return expTime(time, false);
