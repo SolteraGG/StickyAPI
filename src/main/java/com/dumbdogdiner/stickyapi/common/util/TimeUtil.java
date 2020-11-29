@@ -176,7 +176,7 @@ public class TimeUtil {
      * @since 2.0 - This can no longer take <code>null</code> as a value
      */
     public static String expirationTime(@NotNull Timestamp timestamp) {
-        return expirationTime(System.currentTimeMillis() - timestamp.getTime());
+        return expirationTime(timestamp.getTime());
     }
 
     /**
