@@ -31,14 +31,14 @@ public final class ReflectionUtil {
             Field f = c.getDeclaredField(field);
             f.setAccessible(true);
 
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            if (!modifiersField.isAccessible())
-                throw new IllegalAccessException("Cannot set field as accessible");
-
             if (Modifier.isFinal(f.getModifiers())) {
-                modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
 
+                // Before we do this, attempt to disabled the reflective access warnings if they aren't already disabled.
+                UnsafeUtil.tryDisableIllegalReflectiveAccessWarning();
+
+                FieldUtil.makeNonFinal(f); // Hacky method to allow this to still work in java 12+
+
+                // TODO: Is this check still needed?
                 if (Modifier.isFinal(f.getModifiers()))
                     throw new IllegalAccessException("Cannot set field as non-final. Is this assigned final?");
             }

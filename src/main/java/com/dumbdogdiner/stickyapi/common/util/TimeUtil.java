@@ -126,7 +126,7 @@ public class TimeUtil {
      * @return {@link java.lang.String}
      */
     public static String durationString(@NotNull Timestamp timestamp) {
-        return durationString(System.currentTimeMillis() - timestamp.getTime());
+        return durationString(timestamp.getTime());
     }
 
     /**
@@ -138,7 +138,7 @@ public class TimeUtil {
      * @return {@link java.lang.String}
      */
     public static String significantDurationString(@NotNull Timestamp timestamp) {
-        return significantDurationString(System.currentTimeMillis() - timestamp.getTime());
+        return significantDurationString(timestamp.getTime());
     }
 
     private static String expTime(@NotNull long time, @NotNull boolean compact) {
@@ -161,6 +161,7 @@ public class TimeUtil {
      * 
      * @param time in milliseconds since unix epoch
      * @return {@link java.lang.String}
+     * @since 2.0 - (was nullable in 1.x)
      */
     public static String expirationTime(@NotNull long time) {
         return expTime(time, false);
@@ -173,9 +174,10 @@ public class TimeUtil {
      * 
      * @param timestamp to convert
      * @return {@link java.lang.String}
+     * @since 2.0 - This can no longer take <code>null</code> as a value
      */
     public static String expirationTime(@NotNull Timestamp timestamp) {
-        return expirationTime(System.currentTimeMillis() - timestamp.getTime());
+        return expirationTime(timestamp.getTime());
     }
 
     /**
@@ -186,6 +188,7 @@ public class TimeUtil {
      * 
      * @param time in milliseconds since unix epoch
      * @return {@link java.lang.String}
+     * @since 2.0 - This can no longer take <code>null</code> as a value
      */
     public static String significantExpirationTime(@NotNull long time) {
         return expTime(time, true);
@@ -198,6 +201,7 @@ public class TimeUtil {
      * 
      * @param timestamp to convert
      * @return {@link java.lang.String}
+     * @since 2.0 - This can no longer take <code>null</code> as a value
      */
     public static String significantExpirationTime(@NotNull Timestamp timestamp) {
         return significantExpirationTime(System.currentTimeMillis() - timestamp.getTime());

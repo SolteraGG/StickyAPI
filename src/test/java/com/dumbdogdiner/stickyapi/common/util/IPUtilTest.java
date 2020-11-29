@@ -4,8 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import com.dumbdogdiner.stickyapi.common.util.IPUtil;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

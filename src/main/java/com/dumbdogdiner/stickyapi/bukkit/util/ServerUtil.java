@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class ServerUtil {
+    private ServerUtil() {}
 
     // These are here so we don't have to re-declare them later
     private static Object minecraftServer;

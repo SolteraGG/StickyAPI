@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * This class is used for reducing code dupe on plugin startup
  */
 public class StartupUtil {
+    private StartupUtil() {}
 
     /**
      * Generate a configuration datafolder and save the default config if one does
