@@ -9,7 +9,7 @@ import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class StickyPlugin extends JavaPlugin {
-    public abstract LocaleProvider getLocale();
+    public abstract LocaleProvider getLocaleProvider();
 
     @Getter
     protected Boolean enabled = false;

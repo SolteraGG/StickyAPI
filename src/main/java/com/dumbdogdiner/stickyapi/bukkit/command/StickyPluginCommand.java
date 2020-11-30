@@ -76,7 +76,7 @@ public abstract class StickyPluginCommand extends org.bukkit.command.Command imp
         this.owningPlugin = owner;
         this.basePermission = basePermission;
         setPermission(basePermission.getName());
-        this.locale = owner.getLocale();
+        this.locale = owner.getLocaleProvider();
         commandPermissions.add(0, basePermission);
         cooldowns = new CooldownManager(COOLDOWN_TIME);
     }
