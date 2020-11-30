@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.90'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     compileOnly 'com.dumbdogdiner.buildtools:paper:1.16.4-288-SNAPSHOT'
 
     // PAPI

@@ -6,7 +6,7 @@ package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import com.dumbdogdiner.stickyapi.common.util.textures.Mobhead;
+import com.dumbdogdiner.stickyapi.common.util.textures.MobHead;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,10 +20,11 @@ public class MobHeadGenerator {
 
 
 
-    public MobHeadGenerator(Mobhead head){
-        profile.setName(head.toDisplayString());
+    public MobHeadGenerator(MobHead head){
+        profile.setName(head.getName());
         profile.setProperty(new ProfileProperty("texture", head.getTexture()));
         meta.setPlayerProfile(profile);
+        meta.setDisplayName(head.getName());
     }
 
     public ItemStack getHead(){

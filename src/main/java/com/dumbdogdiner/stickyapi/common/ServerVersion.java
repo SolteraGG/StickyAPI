@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common;
 /**
  * Utility class for fetching version data.
  */
+@SuppressWarnings("ConstantConditions")
 public final class ServerVersion {
     public enum ServerType {
         BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL

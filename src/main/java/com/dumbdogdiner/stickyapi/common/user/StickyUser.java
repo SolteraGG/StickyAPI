@@ -5,9 +5,11 @@
 package com.dumbdogdiner.stickyapi.common.user;
 
 import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
+import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.cache.Cacheable;
-import com.dumbdogdiner.stickyapi.webapis.MojangAPI;
+import com.dumbdogdiner.stickyapi.common.webapis.MojangAPI;
 import lombok.Getter;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -26,8 +28,17 @@ public class StickyUser implements Cacheable {
 
     public StickyUser(UUID uniqueId) {
         this.uniqueId = uniqueId;
-        MojangAPI a = new MojangAPI(uniqueId);
-        name = a.getUsername();
+        if(ServerVersion.isBukkit()){
+            name = Bukkit.getOfflinePlayer(uniqueId).getName();
+        } else if(ServerVersion.isBungee()){
+            try {
+                ProxyServer.getInstance().getPlayer(uniqueId);
+            } catch (Exception ex){
+                name = new MojangAPI(uniqueId).getUsername();
+            }
+        } else {
+            name = new MojangAPI(uniqueId).getUsername();
+        }
     }
 
     public StickyUser(Player p){

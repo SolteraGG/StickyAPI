@@ -4,5 +4,12 @@
  */
 package com.dumbdogdiner.stickyapi.common.util.textures;
 
-public class Miniblocks {
+import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class MobHeadTest {
+
+
+
 }
