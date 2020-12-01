@@ -4,12 +4,12 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
-import java.lang.reflect.Field;
-
 import javax.annotation.Nullable;
 
 import com.destroystokyo.paper.Title;
+
 import com.dumbdogdiner.stickyapi.common.translation.Translation;
+import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -23,7 +23,7 @@ public class ServerUtil {
 
     // These are here so we don't have to re-declare them later
     private static Object minecraftServer;
-    private static Field recentTps;
+    private static double[] recentTps;
 
     /**
      * Get the server's TPS over the last 15 minutes (1m, 5m, 15m)
@@ -31,19 +31,14 @@ public class ServerUtil {
      * @return {@link java.util.ArrayList}
      */
     public static double[] getRecentTps() {
-        try {
-            if (minecraftServer == null) {
-                Field consoleField = Bukkit.getServer().getClass().getDeclaredField("console");
-                consoleField.setAccessible(true);
-            }
-            if (recentTps == null) {
-                recentTps = minecraftServer.getClass().getSuperclass().getDeclaredField("recentTps");
-                recentTps.setAccessible(true);
-            }
-            return (double[]) recentTps.get(minecraftServer);
-        } catch (IllegalAccessException | NoSuchFieldException ignored) {
+        if (minecraftServer == null) {
+                minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
         }
-        return new double[] { 0, 0, 0 }; // If there's an issue, let's make it known.
+        if (recentTps == null) {
+            recentTps = ReflectionUtil.getProtectedValue(minecraftServer.getClass().getSuperclass(), "recentTps");
+        }
+            
+        return recentTps;
     }
 
     /**
