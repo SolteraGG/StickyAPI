@@ -29,7 +29,7 @@ public class ServerUtil {
      */
     public static double[] getRecentTps() {
         Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
-        double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer.getClass().getSuperclass(), "recentTps");
+        double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
             
         return recentTps;
     }
