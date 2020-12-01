@@ -21,22 +21,15 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class ServerUtil {
     private ServerUtil() {}
 
-    // These are here so we don't have to re-declare them later
-    private static Object minecraftServer;
-    private static double[] recentTps;
-
     /**
      * Get the server's TPS over the last 15 minutes (1m, 5m, 15m)
      * 
      * @return {@link java.util.ArrayList}
+     * @since 2.0 (in 1.x, this method did not work correctly!)
      */
     public static double[] getRecentTps() {
-        if (minecraftServer == null) {
-                minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
-        }
-        if (recentTps == null) {
-            recentTps = ReflectionUtil.getProtectedValue(minecraftServer.getClass().getSuperclass(), "recentTps");
-        }
+        Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
+        double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer.getClass().getSuperclass(), "recentTps");
             
         return recentTps;
     }
