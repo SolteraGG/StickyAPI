@@ -10,6 +10,8 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class CachedMojangAPITest {
 
     @Test
@@ -30,5 +32,10 @@ class CachedMojangAPITest {
             String dateStr = response.get(name) == null ? "" : response.get(name).toString();
             System.out.println("Name: " + name + "; date: " + dateStr);
         }
+    }
+
+    @Test
+    void getUsername() {
+        assertEquals(new CachedMojangAPI(UUID.fromString("9b6d27b3-f53b-49d1-b8c4-fa807f7575e9")).getUsername(), "Rodwuff");
     }
 }

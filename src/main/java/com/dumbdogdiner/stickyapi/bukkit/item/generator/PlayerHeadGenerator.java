@@ -6,6 +6,7 @@ package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -30,6 +31,11 @@ public class PlayerHeadGenerator {
 
     public PlayerHeadGenerator(Player player){
         this(Bukkit.getOfflinePlayer(player.getUniqueId()));
+    }
+
+    public PlayerHeadGenerator(StickyUserBukkit player){
+        meta.setOwningPlayer(player.getAsBukkitPlayer());
+        ownerProfile = player.getAsBukkitPlayer().getPlayerProfile();
     }
 
     public PlayerHeadGenerator(OfflinePlayer player){

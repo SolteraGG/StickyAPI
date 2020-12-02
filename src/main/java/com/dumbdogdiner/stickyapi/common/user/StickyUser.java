@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.user;
 import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.cache.Cacheable;
+import com.dumbdogdiner.stickyapi.common.webapis.CachedMojangAPI;
 import com.dumbdogdiner.stickyapi.common.webapis.MojangAPI;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
@@ -23,47 +24,31 @@ public class StickyUser implements Cacheable {
     @Getter
     protected UUID uniqueId;
 
+    protected CachedMojangAPI mojangAPI;
+
     @Getter
     protected String name;
 
     public StickyUser(UUID uniqueId) {
         this.uniqueId = uniqueId;
-        if(ServerVersion.isBukkit()){
-            name = Bukkit.getOfflinePlayer(uniqueId).getName();
-        } else if(ServerVersion.isBungee()){
-            try {
-                ProxyServer.getInstance().getPlayer(uniqueId);
-            } catch (Exception ex){
-                name = new MojangAPI(uniqueId).getUsername();
-            }
-        } else {
-            name = new MojangAPI(uniqueId).getUsername();
-        }
+        this.mojangAPI = new CachedMojangAPI(uniqueId);
+        this.name = mojangAPI.getUsername();
     }
 
-    public StickyUser(Player p){
+    public StickyUser(StickyUser p){
         uniqueId = p.getUniqueId();
         name = p.getName();
-    }
-
-    public StickyUser(ProxiedPlayer p){
-        uniqueId = p.getUniqueId();
-        name = p.getName();
-    }
-
-    public StickyUser(OfflinePlayer p){
-        uniqueId = p.getUniqueId();
-        name = p.getName();
+        mojangAPI = p.mojangAPI;
     }
 
     protected StickyUser(UUID uniqueId, String userName) {
         this.uniqueId = uniqueId;
         this.name = userName;
+        mojangAPI = new CachedMojangAPI(uniqueId);
     }
 
     public Map<String, Instant> getNameHistory(){
-        MojangAPI api = new MojangAPI(uniqueId);
-        return api.getUsernameHistory();
+        return mojangAPI.getUsernameHistory();
     }
 
     public Player getAsBukkitPlayer(){

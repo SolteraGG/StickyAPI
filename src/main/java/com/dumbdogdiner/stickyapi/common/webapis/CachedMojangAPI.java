@@ -111,6 +111,16 @@ public class CachedMojangAPI {
             return new JsonObject();
         }
     }
+
+    public String getUsername() {
+        try {
+            URL url = new URL(COMBINED_API_URL + "/" + uuid.toString().replace("-",""));
+            return  getJSONFromURL(url).getAsJsonObject().get("username").getAsString();//.getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
+        } catch (Exception e) {
+            Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
+            return null;//STEVE_TEXTURE;
+        }
+    }
 /*
 
             String uuid = jsonResponse.getAsJsonObject().get("uuid").toString().replace("\"", "");

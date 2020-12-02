@@ -4,31 +4,33 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.user;
 
+import com.dumbdogdiner.stickyapi.bukkit.item.generator.PlayerHeadGenerator;
 import com.dumbdogdiner.stickyapi.common.user.StickyUser;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class StickyUserBukkit extends StickyUser {
     public StickyUserBukkit(Player p) {
-        super(p);
-    }
-
-    public StickyUserBukkit(OfflinePlayer p) {
-        super(p);
-    }
-
-    public StickyUserBukkit(StickyUser p){
         super(p.getUniqueId(), p.getName());
     }
 
+    public StickyUserBukkit(OfflinePlayer p) {
+        super(p.getUniqueId(), p.getName());
+    }
+
+    public StickyUserBukkit(StickyUser p){
+        super(p);
+    }
+
     public StickyUserBukkit(UUID uniqueId){
-        super(Bukkit.getOfflinePlayer(uniqueId));
+        super(uniqueId);
     }
 
     public boolean isOnline(){
@@ -67,7 +69,13 @@ public class StickyUserBukkit extends StickyUser {
         return true;
     }
 
-
+    public ItemStack getHead(){
+        return getHead(1);
+    }
+    public ItemStack getHead(int amt){
+        PlayerHeadGenerator gen = new PlayerHeadGenerator(this);
+        return gen.getHead(amt);
+    }
 
 
 }
