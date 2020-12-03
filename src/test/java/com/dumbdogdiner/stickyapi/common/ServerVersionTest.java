@@ -8,10 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import static org.mockito.Mockito.*;
 
 import com.dumbdogdiner.stickyapi.common.ServerVersion.ServerType;
+
+import org.bukkit.Bukkit;
+
+import net.md_5.bungee.api.ProxyServer;
 
 public class ServerVersionTest {
 
@@ -98,6 +103,63 @@ public class ServerVersionTest {
             mocked.verify(ServerVersion::isBukkit);
             mocked.verify(ServerVersion::isWaterfall);
             mocked.verify(ServerVersion::getServerType);
+        }
+    }
+
+    @Test
+    public void testGetBukkitVersion() {
+        String mockedVersion = "1.2.3-MOCKED";
+        try (MockedStatic<Bukkit> mocked = mockStatic(Bukkit.class)) {
+            mocked.when(Bukkit::getVersion).thenReturn(mockedVersion);
+
+            assertEquals(ServerVersion.getBukkitVersion(), mockedVersion);
+
+            mocked.verify(Bukkit::getVersion);
+        }
+    }
+
+    @Test
+    public void testGetBukkitVersionException() {
+        try (MockedStatic<Bukkit> mocked = mockStatic(Bukkit.class)) {
+            mocked.when(Bukkit::getVersion).thenThrow(new NoClassDefFoundError());
+
+            assertEquals(ServerVersion.getBukkitVersion(), null);
+
+            mocked.verify(Bukkit::getVersion);
+        }
+    }
+
+    @Test
+    public void testGetBungeeVersion() {
+        String mockedVersion = "git:BungeeCord-Bootstrap:1.2.3-MOCKED:12345:6789";
+
+        ProxyServer proxyServer = mock(ProxyServer.class);
+
+        try (MockedStatic<ProxyServer> mocked = mockStatic(ProxyServer.class)) {
+            mocked.when(ProxyServer::getInstance).thenReturn(proxyServer);
+
+            when(proxyServer.getVersion()).thenReturn(mockedVersion);
+
+            assertEquals(ServerVersion.getBungeeVersion(),mockedVersion);
+
+            verify(proxyServer).getVersion();
+            mocked.verify(ProxyServer::getInstance);
+        }
+    }
+
+    @Test
+    public void testGetBungeeVersionException() {
+        ProxyServer proxyServer = mock(ProxyServer.class);
+
+        try (MockedStatic<ProxyServer> mocked = mockStatic(ProxyServer.class)) {
+            mocked.when(ProxyServer::getInstance).thenReturn(proxyServer);
+
+            when(proxyServer.getVersion()).thenThrow(new NoClassDefFoundError());
+
+            assertEquals(ServerVersion.getBungeeVersion(), null);
+
+            verify(proxyServer).getVersion();
+            mocked.verify(ProxyServer::getInstance);
         }
     }
 }

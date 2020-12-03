@@ -42,7 +42,7 @@ dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.github.classgraph:classgraph:4.8.90'
+    implementation 'io.github.classgraph:classgraph:4.8.92'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     
     // JUnit 5 Testing
@@ -54,13 +54,15 @@ dependencies {
     testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
     testImplementation("org.powermock:powermock-module-junit4-rule:2.0.9")
     testImplementation("org.powermock:powermock-classloading-xstream:2.0.9")
-    testImplementation("org.mockito:mockito-core:3.6.0")
+    testImplementation("org.mockito:mockito-core:3.6.28")
 }
 
 test {
 	useJUnitPlatform()
 	testLogging {
 		events "passed", "skipped", "failed"
+        // Show System.out for code ran by tests
+        showStandardStreams = true
 	}
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
