@@ -38,6 +38,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     TabExecutor tabExecutor;
 
     ErrorHandler errorHandler;
+    Boolean playSound = false;
 
     @FunctionalInterface
     public interface Executor {
@@ -50,6 +51,37 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
     public interface ErrorHandler {
         public void apply(ExitCode exitCode, CommandSender sender, Arguments args, TreeMap<String, String> vars);
+    }
+
+
+    /**
+     * If this command should play a sound upon exiting
+     * 
+     * @param playSound If this command should play a sound upon exiting
+     * @return {@link CommandBuilderBase}
+     * @deprecated I advise against using this since it plays the sound at an absurd
+     *             volume since we can't get the location of the sender which means
+     *             the sound is slightly distorted and unpleasant.
+     */
+    @Override
+    @Deprecated
+    public CommandBuilder playSound(@NotNull Boolean playSound) {
+        this.playSound = playSound;
+        return this;
+    }
+
+    /**
+     * If this command should play a sound upon exiting
+     * 
+     * @return {@link CommandBuilderBase}
+     * @deprecated I advise against using this since it plays the sound at an absurd
+     *             volume since we can't get the location of the sender which means
+     *             the sound is slightly distorted and unpleasant.
+     */
+    @Override
+    @Deprecated
+    public CommandBuilder playSound() {
+        return this.playSound(true);
     }
 
     public CommandBuilder(@NotNull String name) {
