@@ -2,15 +2,16 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.bukkit.util;
+package com.dumbdogdiner.stickyapi.bungeecord.util;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.bungeecord.packet.SoundPacket;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 
-import org.bukkit.Sound;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
  * Handles the playing of cute fox noises for notification purposes.
@@ -23,7 +24,7 @@ public class SoundUtil {
      * @return {@link java.lang.Boolean}
      */
     private static Boolean validate(CommandSender sender) {
-        return sender instanceof Player;
+        return sender instanceof ProxiedPlayer;
     }
 
     /**
@@ -35,12 +36,15 @@ public class SoundUtil {
      * @param pitch  The pitch of the sound
      * @param delay  T
      */
-    public static void queueSound(@NotNull Player player, @NotNull Sound sound, @NotNull float volume,
+    public static void queueSound(@NotNull ProxiedPlayer player, @NotNull Sound sound, @NotNull float volume,
             @NotNull float pitch, @NotNull Long delay) {
         StickyAPI.getPool().submit(() -> {
             try {
                 Thread.sleep(delay);
-                player.playSound(player.getLocation(), sound, volume, pitch);
+                // So, since we don't have the player's position (yet...) So, we have to play this at the center of the world
+                // at the max volume... Yes, this distorts the sound, please hold while I map more packets
+                // so I can obtain the player's position and play the sound that way... -zach
+                player.unsafe().sendPacket(new SoundPacket(sound.getId(), 0, 0, 255, 0, Float.MAX_VALUE, pitch));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -50,20 +54,20 @@ public class SoundUtil {
     /**
      * Send an info notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.Player} The target player
+     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
      */
-    public static void sendInfo(@NotNull Player player) {
-        queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L);
-        queueSound(player, Sound.ENTITY_FOX_AMBIENT, 1f, 1f, 500L);
+    public static void sendInfo(@NotNull ProxiedPlayer player) {
+        queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L); // note pling
+        queueSound(player, Sound.ENTITY_FOX_AMBIENT, 1f, 1f, 500L); // fox ambient
     }
 
     /**
      * Send a quiet notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.Player} The target player
+     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
      */
-    public static void sendQuiet(@NotNull Player player) {
-        queueSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 1f, 1f, 0L);
+    public static void sendQuiet(@NotNull ProxiedPlayer player) {
+        queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L); // note harp
         // This makes it too loud?
         // queueSound(player, Sound.ENTITY_FOX_SLEEP, 1f, 1f, 500L);
     }
@@ -71,9 +75,9 @@ public class SoundUtil {
     /**
      * Send an error notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.Player} The target player
+     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
      */
-    public static void sendError(@NotNull Player player) {
+    public static void sendError(@NotNull ProxiedPlayer player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.944f, 0L);
         queueSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f, 0L);
         queueSound(player, Sound.ENTITY_FOX_HURT, 1f, 1f, 0L);
@@ -82,9 +86,9 @@ public class SoundUtil {
     /**
      * Send a success notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.Player} The target player
+     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
      */
-    public static void sendSuccess(@NotNull Player player) {
+    public static void sendSuccess(@NotNull ProxiedPlayer player) {
         queueSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 2f, 0L);
         queueSound(player, Sound.ENTITY_FOX_SCREECH, 1f, 1f, 500L);
     }
@@ -102,7 +106,7 @@ public class SoundUtil {
         if (!validate(sender)) {
             return false;
         }
-        var player = (Player) sender;
+        var player = (ProxiedPlayer) sender;
         switch (type) {
             case ERROR:
                 sendError(player);

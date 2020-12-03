@@ -51,15 +51,15 @@ public class PacketRegistration {
         }
     }
 
-    static {
-        processReflection();
-        registerSoundPacket();
-    }
-
+    // static {
+    //     registerSoundPacket();
+    // }
+    
     /**
      * Register our sound packet with BungeeCord
      */
     public static void registerSoundPacket() {
+        processReflection();
         registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This should automatically register with the server's correct version
     }
 }

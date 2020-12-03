@@ -45,7 +45,6 @@ public final class NumberUtil {
      * @return <code>true</code> if only contains digits, and is non-null
      */
     public static boolean isNumeric(@NotNull String string) {
-        Validate.notNull(string, "string cannot be null");
         int size = string.length();
         for (int i = 0; i < size; i++) {
             if (Character.isDigit(string.charAt(i)) == false) {
@@ -65,9 +64,6 @@ public final class NumberUtil {
      * @return {@link Double}
      */
     public static Double getPercentage(@NotNull int x, @NotNull int total, @NotNull Double decimalPlace) {
-        Validate.notNull(x, "x cannot be null");
-        Validate.notNull(total, "total cannot be null");
-        Validate.notNull(decimalPlace, "decimalPlace cannot be null");
         var percent = ((double) x / (double) total) * 100;
         final DecimalFormat formatter = new DecimalFormat(String.valueOf(decimalPlace));
         formatter.setRoundingMode(RoundingMode.HALF_EVEN);
@@ -82,8 +78,6 @@ public final class NumberUtil {
      * @return {@link Double}
      */
     public static Double getPercentage(@NotNull int x, @NotNull int total) {
-        Validate.notNull(x, "x cannot be null");
-        Validate.notNull(total, "total cannot be null");
         return getPercentage(x, total, 0.00);
     }
 
@@ -96,8 +90,6 @@ public final class NumberUtil {
      * @throws IllegalArgumentException when min is greater than max
      */
     public static int getRandomNumber(@NotNull int min, @NotNull int max) {
-        Validate.notNull(min, "min cannot be null");
-        Validate.notNull(max, "max cannot be null");
         if (min >= max)
             throw new IllegalArgumentException("Min may not be greater than max!");
         return (int) ((Math.random() * (max - min)) + min);
@@ -112,7 +104,6 @@ public final class NumberUtil {
      * @return {@link Integer}
      */
     public static int longToInt(@NotNull long l) {
-        Validate.notNull(l, "l cannot be null");
         try {
             return Math.toIntExact(l);
         } catch (ArithmeticException ae) {

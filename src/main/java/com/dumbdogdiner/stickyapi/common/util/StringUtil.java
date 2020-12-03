@@ -56,11 +56,6 @@ public final class StringUtil {
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
             @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
-        Validate.notNull(size, "size cannot be null");
-        Validate.notNull(percentage, "percentage cannot be null");
-        Validate.notNull(monospace, "monospace cannot be null");
-        Validate.notNull(includePercentage, "includePercentage cannot be null");
-        Validate.notNull(includeBrackets, "includeBrackets cannot be null");
         double barCount = ((percentage / 100) * size);
         StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
@@ -95,8 +90,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage) {
-        Validate.notNull(size, "size cannot be null");
-        Validate.notNull(percentage, "percentage cannot be null");
         return createProgressBar(size, percentage, false, false, true);
     }
 
@@ -119,8 +112,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String capitaliseSentence(@NotNull String string, @NotNull Boolean keepCase) {
-        Validate.notNull(string, "string cannot be null");
-        Validate.notNull(keepCase, "keepCase cannot be null");
         StringBuilder sb = new StringBuilder();
         boolean cnl = true;
         for (char c : string.toCharArray()) {
@@ -155,7 +146,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String capitaliseSentence(@NotNull String string) {
-        Validate.notNull(string, "string cannot be null");
         return capitaliseSentence(string, false);
     }
 
@@ -179,7 +169,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
-        Validate.notNull(string, "string cannot be null");
         return capitaliseSentence(string, true);
     }
 
@@ -193,8 +182,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String censorWord(@NotNull String word, @NotNull String regex) {
-        Validate.notNull(word, "word cannot be null");
-        Validate.notNull(regex, "regex cannot be null");
         StringBuilder asterisks = new StringBuilder();
 
         for (int i = 0; i < word.length(); i++) {
@@ -218,7 +205,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String censorWord(@NotNull String word) {
-        Validate.notNull(word, "word cannot be null");
         return censorWord(word, "[ -/:-@\\[-`{-~¡-¿]");
     }
 
@@ -238,7 +224,6 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String replaceLeet(@NotNull String message) {
-        Validate.notNull(message, "message cannot be null");
         if (message.trim().isEmpty())
             return message;
 
@@ -259,8 +244,6 @@ public final class StringUtil {
      * @return {@link Boolean}
      */
     public static boolean compareMany(@NotNull String haystack, @NotNull String[] needles) {
-        Validate.notNull(haystack, "haystack cannot be null");
-        Validate.notNull(needles, "needles cannot be null");
         for (String needle : needles) {
             if (haystack.equalsIgnoreCase(needle))
                 return true;
@@ -281,7 +264,6 @@ public final class StringUtil {
      */
     public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix)
             throws IllegalArgumentException, NullPointerException {
-        Validate.notNull(string, "Cannot check a null string for a match");
         if (string.length() < prefix.length()) {
             return false;
         }
@@ -298,7 +280,6 @@ public final class StringUtil {
      * @return {@link UUID}
      */
     public static UUID hyphenateUUID(@NotNull String uuid) {
-        Validate.notNull(uuid, "uuid cannot be null");
         if (uuid.length() == 32) {
             return UUID.fromString(uuid.replaceFirst( // https://stackoverflow.com/a/19399768
                     "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",

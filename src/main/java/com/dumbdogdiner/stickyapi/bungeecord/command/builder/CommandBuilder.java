@@ -2,7 +2,7 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.bukkit.command.builder;
+package com.dumbdogdiner.stickyapi.bungeecord.command.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,32 +13,22 @@ import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
-import com.dumbdogdiner.stickyapi.bukkit.command.PluginCommand;
-import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
+import com.dumbdogdiner.stickyapi.bungeecord.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
-import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
-import com.dumbdogdiner.stickyapi.common.ServerVersion;
+import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * CommandBuilder for avoiding bukkit's terrible command API and making creating
- * new commands as simple as possible
- * 
- * @since 2.0
- */
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Plugin;
+
 public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
     // Hmm...
@@ -48,6 +38,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     TabExecutor tabExecutor;
 
     ErrorHandler errorHandler;
+    Boolean playSound = false;
 
     @FunctionalInterface
     public interface Executor {
@@ -62,21 +53,45 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         public void apply(ExitCode exitCode, CommandSender sender, Arguments args, TreeMap<String, String> vars);
     }
 
+
     /**
-     * Create a new [@link CommandBuilder} instance
-     * <p>
-     * Used to build and register Bukkit commands
+     * If this command should play a sound upon exiting
      * 
-     * @param name The name of the command
+     * @param playSound If this command should play a sound upon exiting
+     * @return {@link CommandBuilderBase}
+     * @deprecated I advise against using this since it plays the sound at an absurd
+     *             volume since we can't get the location of the sender which means
+     *             the sound is slightly distorted and unpleasant.
      */
+    @Override
+    @Deprecated
+    public CommandBuilder playSound(@NotNull Boolean playSound) {
+        this.playSound = playSound;
+        return this;
+    }
+
+    /**
+     * If this command should play a sound upon exiting
+     * 
+     * @return {@link CommandBuilderBase}
+     * @deprecated I advise against using this since it plays the sound at an absurd
+     *             volume since we can't get the location of the sender which means
+     *             the sound is slightly distorted and unpleasant.
+     */
+    @Override
+    @Deprecated
+    public CommandBuilder playSound() {
+        return this.playSound(true);
+    }
+
     public CommandBuilder(@NotNull String name) {
         super(name);
     }
 
-    private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
+    private void performAsynchronousExecution(CommandSender sender, CommandBuilder builder, String label,
             List<String> args) {
         StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
-            performExecution(sender, command, label, args);
+            performExecution(sender, builder, label, args);
             return null;
         }));
     }
@@ -85,8 +100,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * Execute this command. Checks for existing sub-commands, and runs the error
      * handler if anything goes wrong.
      */
-    private void performExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
+    private void performExecution(CommandSender sender, CommandBuilder builder, String label, List<String> args) {
         // look for subcommands
         if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
             CommandBuilder subCommand = (CommandBuilder) getSubCommands().get(args.get(0));
@@ -101,20 +115,21 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
             // spawn async command from sync
             if (getSynchronous() && !subCommand.getSynchronous()) {
-                subCommand.performAsynchronousExecution(sender, command, label, argsClone);
+                subCommand.performAsynchronousExecution(sender, builder, label, argsClone);
             }
 
-            subCommand.performExecution(sender, command, label, argsClone);
+            subCommand.performExecution(sender, builder, label, argsClone);
             return;
         }
 
         ExitCode exitCode;
         Arguments a = new Arguments(args);
         var variables = new TreeMap<String, String>();
-        variables.put("command", command.getName());
+        variables.put("command", builder.getName());
         variables.put("sender", sender.getName());
         variables.put("player", sender.getName());
-        variables.put("uuid", (sender instanceof Player) ? ((Player) sender).getUniqueId().toString() : "");
+        variables.put("uuid", (sender instanceof ProxiedPlayer) ? ((ProxiedPlayer) sender).getUniqueId().toString()
+                : "00000000-0000-0000-0000-000000000000");
         variables.put("cooldown", getCooldown().toString());
         variables.put("cooldown_remaining",
                 cooldownSenders.containsKey(sender)
@@ -133,7 +148,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
                 // them execute and return permission denied
                 if (this.getPermission() != null && !sender.hasPermission(this.getPermission())) {
                     exitCode = ExitCode.EXIT_PERMISSION_DENIED;
-                } else if (this.getRequiresPlayer() && !(sender instanceof Player)) {
+                } else if (this.getRequiresPlayer() && !(sender instanceof ProxiedPlayer)) {
                     exitCode = ExitCode.EXIT_MUST_BE_PLAYER;
                 } else {
                     exitCode = executor.apply(sender, a, variables);
@@ -144,7 +159,6 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
             e.printStackTrace();
         }
 
-        // run the error handler - something made a fucky wucky uwu
         if (exitCode != ExitCode.EXIT_SUCCESS) {
             if (exitCode == ExitCode.EXIT_INFO) {
                 _playSound(sender, NotificationType.INFO);
@@ -190,85 +204,55 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         return this;
     }
 
-    /**
-     * Build the command!
-     * 
-     * @param plugin to build it for
-     * @return {@link org.bukkit.command.Command}
-     */
-    public org.bukkit.command.Command build(@NotNull Plugin plugin) {
-        PluginCommand command = new PluginCommand(this.getName(), plugin);
+    public Command build(Plugin plugin) {
+        return new TabableCommand(this);
+    }
 
-        if (this.getSynchronous() == null) {
-            this.synchronous(false);
-        }
-
-        // Execute the command by creating a new CommandExecutor and passing the
-        // arguments to our executor
-        command.setExecutor(new CommandExecutor() {
-            @Override
-            public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
-                    String[] args) {
-                performExecution(sender, command, label, Arrays.asList(args));
-                return true;
-            }
-        });
-
-        command.setTabCompleter(new TabCompleter() {
-            @Override
-            public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-                if (tabExecutor == null) {
-                    if (args.length == 0) {
-                        return ImmutableList.of();
-                    }
-
-                    String lastWord = args[args.length - 1];
-
-                    Player senderPlayer = sender instanceof Player ? (Player) sender : null;
-
-                    ArrayList<String> matchedPlayers = new ArrayList<String>();
-                    for (Player player : sender.getServer().getOnlinePlayers()) {
-                        String name = player.getName();
-                        if ((senderPlayer == null || senderPlayer.canSee(player))
-                                && StringUtil.startsWithIgnoreCase(name, lastWord)) {
-                            matchedPlayers.add(name);
-                        }
-                    }
-
-                    Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
-                    return matchedPlayers;
-                } else {
-                    return tabExecutor.apply(sender, alias, new Arguments(Arrays.asList(args)));
-                }
-            }
-        });
-
-        command.setDescription(this.getDescription());
-
-        if (this.getAliases() != null)
-            command.setAliases(this.getAliases());
-
-        command.setPermission(this.getPermission());
+    public Command register(Plugin plugin) {
+        Command command = build(plugin);
+        ProxyServer.getInstance().getPluginManager().registerCommand(plugin, command);
         return command;
     }
 
-    /**
-     * Register the command with a {@link org.bukkit.plugin.Plugin}
-     * 
-     * @param plugin to register with
-     */
-    public void register(@NotNull Plugin plugin) {
+    private static class TabableCommand extends net.md_5.bungee.api.plugin.Command
+            implements net.md_5.bungee.api.plugin.TabExecutor {
+        CommandBuilder builder;
 
-        // If the server is running paper, we don't need to do reflection, which is
-        // good.
-        if (ServerVersion.isPaper()) {
-            plugin.getServer().getCommandMap().register(plugin.getName(), this.build(plugin));
-            return;
+        public TabableCommand(CommandBuilder builder) {
+            super(builder.getName(), builder.getPermission(), builder.getAliases().toArray(new String[0]));
+            this.builder = builder;
         }
-        // However, if it's not running paper, we need to use reflection, which is
-        // really annoying
-        ((CommandMap) ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap")).register(plugin.getName(),
-                this.build(plugin));
+
+        public void execute(net.md_5.bungee.api.CommandSender sender, String[] args) {
+            // CommandSender sender, CommandBuilder builder, String label, List<String> args
+            builder.performExecution(sender, builder, builder.getName(), Arrays.asList(args));
+        }
+
+        @Override
+        public Iterable<String> onTabComplete(net.md_5.bungee.api.CommandSender sender, String[] args) {
+            if (builder.tabExecutor != null)
+                return builder.tabExecutor.apply(sender, builder.getName(), new Arguments(Arrays.asList(args)));
+            else {
+                if (args.length == 0) {
+                    return ImmutableList.of();
+                }
+
+                String lastWord = args[args.length - 1];
+
+                ProxiedPlayer senderPlayer = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
+
+                ArrayList<String> matchedPlayers = new ArrayList<String>();
+                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                    String name = player.getName();
+                    if ((senderPlayer == null) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
+                        matchedPlayers.add(name);
+                    }
+                }
+
+                Collections.sort(matchedPlayers, String.CASE_INSENSITIVE_ORDER);
+                return matchedPlayers;
+            }
+        }
     }
 
     private void _playSound(CommandSender sender, NotificationType type) {
@@ -276,4 +260,5 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
             return;
         SoundUtil.send(sender, type);
     }
+
 }
