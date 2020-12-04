@@ -7,6 +7,8 @@ package com.dumbdogdiner.stickyapi.common.util.url;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.jetbrains.annotations.NotNull;
 
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -44,18 +46,30 @@ public class URLUtil {
      *             formatted URLs.
      * @return {@link TextComponent}
      */
-    public static TextComponent convertURLs(@NotNull String text) {
+
+    public static TextComponent convertURLs(String text) {
         TextComponent finalComp = new TextComponent();
-        for (String s : text.split(" ")) {
+        TextComponent tmp = new TextComponent();
+
+        String[] split = text.split(" ");
+        int i = 0;
+        for(String s : split) {
             URLPair url = findURL(s + " ");
-            if ((url) == null) {
-                finalComp.addExtra(s + " ");
+            if((url) == null) {
+                tmp.setText(tmp.getText() + s + " ");
+                if(split.length == i + 1) finalComp.addExtra(tmp);
             } else {
+                finalComp.addExtra(tmp);
+                tmp = new TextComponent();
+
                 TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
                 urlComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.getFullPath()));
+                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7Click to open URL"), new Text("\n§8" + url.getFullPath())));
                 urlComponent.setBold(true);
                 finalComp.addExtra(urlComponent);
             }
+
+            i++;
         }
 
         return finalComp;
