@@ -4,38 +4,53 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.gui;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+
 /**
  * This class is for creating new slots in an inventory GUI
 */
 public class ClickableSlot {
-    
-    @Getter
-    private ItemStack item;
 
-    @Getter
-    private int slot;
+    @Getter public ItemStack item;
+    @Getter public int slot;
 
-    @Getter
-    private ItemMeta meta = item.getItemMeta();
-
-    public ClickableSlot(Material pMaterial, String pName, int pAmount, int pSlot) {
+    public ClickableSlot(Material pMaterial, String pName, int pAmount, int pSlot, String... lore) {
         this.item = new ItemStack(pMaterial, pAmount);
 
         ItemMeta isM = item.getItemMeta();
-        isM.setDisplayName(pName);
+        isM.setDisplayName(ChatColor.translateAlternateColorCodes('&', pName));
+        ArrayList<String> metaLore = new ArrayList<>();
+
+        for (String loreComments : lore) {
+            loreComments = ChatColor.translateAlternateColorCodes('&', loreComments);
+            metaLore.add(loreComments);
+        }
+
+        isM.setLore(metaLore);
         item.setItemMeta(isM);
+
+        this.slot = pSlot;
+    }
+
+    public ClickableSlot(ItemStack item, int pSlot) {
+        this.item = item;
 
         this.slot = pSlot;
     }
 
     public void execute(Runnable r) {
         new Thread(r).start();
+    }
+
+    public ItemMeta getMeta() {
+        return item.getItemMeta();
     }
 
     public void setName(String s) {
