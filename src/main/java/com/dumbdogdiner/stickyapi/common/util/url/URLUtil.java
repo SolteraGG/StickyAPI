@@ -47,7 +47,7 @@ public class URLUtil {
      * @return {@link TextComponent}
      */
 
-    public static TextComponent convertURLs(String text) {
+    public static TextComponent convertURLs(@NotNull String text) {
         TextComponent finalComp = new TextComponent();
         TextComponent tmp = new TextComponent();
 

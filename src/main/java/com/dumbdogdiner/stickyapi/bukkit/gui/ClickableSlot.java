@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -18,14 +19,29 @@ import java.util.ArrayList;
 */
 public class ClickableSlot {
 
-    @Getter public ItemStack item;
-    @Getter public int slot;
+    @Getter
+    public ItemStack item;
+    @Getter
+    public int slot;
 
-    public ClickableSlot(Material pMaterial, String pName, int pAmount, int pSlot, String... lore) {
+    /**
+     * Creates a ClickableSlot object that should be used
+     * to register interactive slots in a {@link GUI} object
+     * @param pMaterial The Material for this slot item
+     * @param pName The Displayname for this slot item
+     * @param pAmount Amount of items
+     * @param pSlot The slot which should be used for this item
+     * @param lore (Optional) Add lore to this item
+     */
+    public ClickableSlot(@NotNull Material pMaterial, String pName, int pAmount, int pSlot, String... lore) {
         this.item = new ItemStack(pMaterial, pAmount);
 
         ItemMeta isM = item.getItemMeta();
-        isM.setDisplayName(ChatColor.translateAlternateColorCodes('&', pName));
+
+        if(pName != null) {
+            isM.setDisplayName(ChatColor.translateAlternateColorCodes('&', pName));
+        }
+
         ArrayList<String> metaLore = new ArrayList<>();
 
         for (String loreComments : lore) {
@@ -39,21 +55,31 @@ public class ClickableSlot {
         this.slot = pSlot;
     }
 
-    public ClickableSlot(ItemStack item, int pSlot) {
+    /**
+     * Creates a ClickableSlot object that should be used
+     * to register interactive slots in a {@link GUI} object
+     * @param item A pre-configured {@link org.bukkit.inventory.ItemStack} object
+     * @param pSlot The slot which should be used for this item
+     */
+    public ClickableSlot(@NotNull ItemStack item, int pSlot) {
         this.item = item;
-
         this.slot = pSlot;
     }
 
-    public void execute(Runnable r) {
-        new Thread(r).start();
+    /**
+     * Executes a specific task async. Typically used
+     * within {@link org.bukkit.event.inventory.InventoryClickEvent}
+     * @param task The async task that should be executed
+     */
+    public void execute(@NotNull Runnable task) {
+        new Thread(task).start();
     }
 
     public ItemMeta getMeta() {
         return item.getItemMeta();
     }
 
-    public void setName(String s) {
+    public void setName(@NotNull String s) {
         ItemMeta isM = this.item.getItemMeta();
         isM.setDisplayName(s);
         item.setItemMeta(isM);
