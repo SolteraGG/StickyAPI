@@ -32,16 +32,26 @@ repositories {
 
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+
+
+    // FULL paper/spigot/bukkit/craftbukkit
+    maven {
+        credentials {
+            username "$ghUser"
+            password "$ghPass"
+        }
+        url = "https://maven.pkg.github.com/DumbDogDiner/buildtoolspackages/" }
 }
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
-    compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
     implementation 'com.atlassian.commonmark:commonmark:0.15.2'
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
+
+    compileOnly 'com.dumbdogdiner.buildtools:paper:1.16.4-298-SNAPSHOT'
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
+
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.92'

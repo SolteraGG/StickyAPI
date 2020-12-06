@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2020 DumbDogDiner <a href="dumbdogdiner.com">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.
+ * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
-import com.dumbdogdiner.stickyapi.common.util.commonmarkextensions.MCColorFormatDelimiterProcessor;
+import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCColorFormatDelimiterProcessor;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 

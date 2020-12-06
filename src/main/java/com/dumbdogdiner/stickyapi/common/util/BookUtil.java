@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.util.HashMap;
 
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.NotNull;
 
 public class BookUtil {
@@ -60,6 +61,4 @@ public class BookUtil {
         }
         return 5;
     }
-
-
 }
