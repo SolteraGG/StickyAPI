@@ -4,6 +4,21 @@ plugins {
     id 'jacoco'
     id "io.freefair.lombok" version "5.3.0"
     id "com.github.hierynomus.license" version "0.15.0"
+    id "com.diffplug.spotless" version "5.8.2"
+}
+
+spotless {
+    encoding 'UTF-8' // all formats will be interpreted as UTF-8
+
+    java {
+        removeUnusedImports()
+        //googleJavaFormat()
+
+        eclipse('4.17.0').configFile('spotless-eclipse-prefs.xml')
+
+        //indentWithTabs(2)
+        //indentWithSpaces(4)
+    }
 }
 
 jacoco {
