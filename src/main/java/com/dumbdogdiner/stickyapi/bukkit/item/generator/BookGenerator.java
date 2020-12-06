@@ -5,49 +5,40 @@
 package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 
 import com.dumbdogdiner.stickyapi.common.util.BookUtil;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
 import com.google.gson.Gson;
-
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import net.minecraft.server.v1_16_R3.NBTTagList;
 import net.minecraft.server.v1_16_R3.NBTTagString;
 import org.bukkit.Material;
-
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta.Generation;
-import org.bukkit.inventory.meta.BookMeta;
-import lombok.Getter;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.awt.print.Book;
-import java.lang.reflect.Constructor;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
 public class BookGenerator {
-    public enum Generation{
+    public enum Generation {
         ORIGINAL(0),
         COPY_OF_ORIGINAL(1),
         COPY_OF_COPY(2),
         TATTERED(3);
 
-        private Generation(int g){
+        private Generation(int g) {
             genInt = g;
         }
+
         private final int genInt;
-        public int asInt(){
+
+        public int asInt() {
             return genInt;
         }
     }
 
     private NBTTagList pages = new NBTTagList();
-
 
 
     @Setter
@@ -76,13 +67,12 @@ public class BookGenerator {
     @Getter
     private String title;
 
-    public BookGenerator(Material material){
-        if(material != Material.WRITABLE_BOOK && material != Material.WRITTEN_BOOK){
+    public BookGenerator(Material material) {
+        if (material != Material.WRITABLE_BOOK && material != Material.WRITTEN_BOOK) {
             throw new IllegalArgumentException("Material must be WRITABLE_BOOK or WRITTEN_BOOK");
         }
 
         this.bookType = material;
-
 
 
     }
@@ -91,70 +81,52 @@ public class BookGenerator {
 
  */
 
- /**
-  * Escape characters for colors, etc...
-  * I guess we can just.... use the &amp;-* codes or something, we can use chatcolors somehow
-  * Beyond that, we can use markdown???
-  */
+    /**
+     * Escape characters for colors, etc...
+     * I guess we can just.... use the &amp;-* codes or something, we can use chatcolors somehow
+     * Beyond that, we can use markdown???
+     */
 
-    public BookGenerator addPages(JsonObject ... pages){
-        for (JsonObject page: pages) {
+    public BookGenerator addPages(JsonObject... pages) {
+        for (JsonObject page : pages) {
             addPage(page);
         }
         return this;
     }
-    public BookGenerator addPage(JsonObject page){
-        pages.add(NBTTagString.create(page.toString()));
+
+    public BookGenerator addPage(JsonObject page) {
+        if(!isFull()){
+            pages.add(NBTTagString.create(page.toString()));
+        } else {
+            throw new IllegalStateException("Book is overfilled");
+        }
         return this;
     }
 
 
 
-    public ItemStack toItemStack(int qty){
+    public ItemStack toItemStack(int qty) {
         NBTTagCompound root = new NBTTagCompound();
-        if(bookType == Material.WRITTEN_BOOK) {
+        if (bookType == Material.WRITTEN_BOOK) {
             root.setString("title", title);
             root.setString("author", author);
             root.setInt("generation", generation.asInt());
         }
         root.set("pages", pages);
 
-        net.minecraft.server.v1_16_R3.ItemStack nmsBook= CraftItemStack.asNMSCopy(new ItemStack(bookType,qty));
+        net.minecraft.server.v1_16_R3.ItemStack nmsBook = CraftItemStack.asNMSCopy(new ItemStack(bookType, qty));
         nmsBook.setTag(root);
         return CraftItemStack.asBukkitCopy(nmsBook);
     }
 
 
-
-    private NBTTagCompound generateRootNBT(NBTTagCompound base){
-
-        NBTTagList modifiers = new NBTTagList();
-
-        modifiers.add(base);
-        NBTTagCompound root = new NBTTagCompound();
-        root.set("AttributeModifiers", modifiers);
-        return root;
+    public float percentFull() {
+        return (float)pages.size() / (float)BookUtil.PAGES_PER_BOOK;
     }
 
-    public String generateText(TextComponent [] wrappers){
-        TextComponent t = wrappers[0];
 
-
-        Gson g = new Gson();
-        return g.toJson(wrappers);
-    }
-
-    public float percentFull(){
-        return 0.0f;
-    }
-
-    //TODO STUB
-    public boolean isFull(){
-        return false;
-    }
-
-    public BookGenerator(String sth){
-        int x = BookUtil.getCharacterWidth('a');
+    public boolean isFull() {
+        return percentFull() >= 1.0f;
     }
 
 
