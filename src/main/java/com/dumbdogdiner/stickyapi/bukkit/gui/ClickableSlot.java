@@ -61,7 +61,7 @@ public class ClickableSlot {
      * @param item A pre-configured {@link org.bukkit.inventory.ItemStack} object
      * @param pSlot The slot which should be used for this item
      */
-    public ClickableSlot(@NotNull ItemStack item, int pSlot) {
+    public ClickableSlot(@NotNull ItemStack item, @NotNull int pSlot) {
         this.item = item;
         this.slot = pSlot;
     }
