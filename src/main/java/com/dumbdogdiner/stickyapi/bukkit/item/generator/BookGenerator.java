@@ -43,7 +43,7 @@ public class BookGenerator {
 
  /**
   * Escape characters for colors, etc...
-  * I guess we can just.... use the &-* codes or something, we can use chatcolors somehow
+  * I guess we can just.... use the &amp;-* codes or something, we can use chatcolors somehow
   * Beyond that, we can use markdown???
   */
 
