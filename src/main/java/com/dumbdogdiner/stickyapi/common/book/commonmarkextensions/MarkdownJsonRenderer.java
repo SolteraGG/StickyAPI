@@ -4,105 +4,150 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.commonmark.node.*;
+import org.commonmark.renderer.NodeRenderer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-//TODO Implement NodeRenderer or Renderer
-public class MarkdownJsonRenderer {
-    private MarkdownJsonRenderer() {}
+public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRenderer {
+    private static final Set<Class<? extends Node>> nodeTypes = new HashSet<>(Arrays.asList(
+            Text.class,
+            Heading.class,
+            MCColorNode.class,
+            Emphasis.class,
+            StrongEmphasis.class,
+            Link.class,
+            SoftLineBreak.class,
+            HardLineBreak.class,
+            ListItem.class,
+            OrderedList.class,
+            BulletList.class,
+            Block.class
+    ));
 
-    public static BaseComponent render(Node node) {
-        BaseComponent component = new MarkdownJsonRenderer().render0(node);
-        BaseComponent current = component;
-        // find last element and try to remove trailing newlines
-        while (!current.getExtra().isEmpty()) {
-            current = current.getExtra().get(current.getExtra().size() - 1);
-        }
-        if (current instanceof TextComponent) {
-            ((TextComponent) current).setText(((TextComponent) current).getText().stripTrailing());
-        }
-        return component;
+    private final TextComponentWriter writer;
+    private int listIndex = 0;
+
+    public MarkdownJsonRenderer(TextComponentWriter writer) {
+        this.writer = writer;
     }
 
-    private BaseComponent render0(Node node) {
-        TextComponent component = new TextComponent();
-        addProperties(node, component);
-        component.setExtra(renderChildren(node));
-        addExtra(node, component);
-        return optimize(component);
+    // lombok auto getter is static which doesn't match the override
+    @Override
+    public Set<Class<? extends Node>> getNodeTypes() {
+        return nodeTypes;
     }
 
-    private void addProperties(Node node, TextComponent component) {
-        if (node instanceof Text) {
-            component.setText(((Text) node).getLiteral());
-        } else if (node instanceof Heading) {
-            component.setBold(true);
-        } else if (node instanceof MCColorNode) {
-            component.setColor(ChatColor.of(((MCColorNode) node).getColorName()));
-        } else if (node instanceof Delimited) {
-            switch (((Delimited) node).getOpeningDelimiter()) {
-                case "*": case "_":
-                    component.setItalic(true);
-                    break;
-                case "**":
-                    component.setBold(true);
-                    break;
-                case "__":
-                    component.setUnderlined(true);
-                    break;
-                    // no official formatters are mapped to strikethrough or obfuscated
-            }
-        } else if (node instanceof Link) {
-            component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, ((Link) node).getDestination()));
-            String title = ((Link) node).getTitle();
-            if (title != null) {
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(title)));
-            }
+    @Override
+    public void visit(Text text) {
+        writer.addText(text.getLiteral());
+        visitChildren(text);
+    }
+
+    @Override
+    public void visit(Heading heading) {
+        writer.setBold();
+        visitChildren(heading);
+        writer.addLine();
+    }
+
+    @Override
+    public void visit(Emphasis node) {
+        writer.setItalic();
+        visitChildren(node);
+    }
+
+    @Override
+    public void visit(StrongEmphasis node) {
+        switch (node.getOpeningDelimiter()) {
+            case "**":
+                writer.setBold();
+                break;
+            case "__":
+                writer.setUnderlined();
+                break;
         }
+        visitChildren(node);
     }
 
-    private void addExtra(Node node, TextComponent component) {
-        if (node instanceof SoftLineBreak) {
-            component.addExtra(" ");
-        } else if (node instanceof HardLineBreak) {
-            component.addExtra("\n");
-        } else if (node instanceof Block) {
-            if (!(
-                    node instanceof ListItem ||
-                    node instanceof ListBlock
-            )) {
-                component.addExtra("\n");
-            }
-        }
+    @Override
+    public void visit(Link link) {
+        writer.setHyperlink(link.getDestination());
+        writer.setMouseoverText(link.getTitle());
     }
 
-    private List<BaseComponent> renderChildren(Node node) {
-        List<BaseComponent> extra = new ArrayList<>();
-        for (Node child = node.getFirstChild(); child != null; child = child.getNext()) {
-            extra.add(render0(child));
-        }
-        return extra;
+    @Override
+    public void visit(SoftLineBreak lineBreak) {
+        writer.addText(" ");
     }
 
-    private BaseComponent optimize(TextComponent component) {
-        if (component.getText().equals("") &&
-                component.getExtra().size() == 1 &&
-                (component.isBoldRaw() == Boolean.FALSE) &&
-                (component.isItalicRaw() == Boolean.FALSE) &&
-                (component.isObfuscatedRaw() == Boolean.FALSE) &&
-                (component.isStrikethroughRaw() == Boolean.FALSE) &&
-                (component.isUnderlinedRaw() == Boolean.FALSE)
-        ) {
-            return component.getExtra().get(0);
+    @Override
+    public void visit(HardLineBreak lineBreak) {
+        writer.addLine();
+    }
+
+    @Override
+    public void visit(Paragraph paragraph) {
+        visitChildren(paragraph);
+        writer.addLine();
+    }
+
+    @Override
+    public void visit(OrderedList list) {
+        visitList(list, 1);
+    }
+
+    @Override
+    public void visit(BulletList list) {
+        visitList(list, 0);
+    }
+
+    private void visitList(ListBlock list, int initialIndex) {
+        writer.indent();
+        int oldIndex = listIndex;
+        listIndex = initialIndex;
+        visitChildren(list);
+        listIndex = oldIndex;
+        writer.dedent();
+    }
+
+    @Override
+    public void visit(ListItem item) {
+        if (listIndex == 0) {
+            writer.addText("• ");
         } else {
-            return component;
+            writer.addText((listIndex++) + ". ");
         }
+        visitChildren(item);
+    }
+
+    @Override
+    public void visit(CustomNode node) {
+        if (node instanceof MCColorNode) {
+            visit((MCColorNode) node);
+        } else {
+            visitChildren(node);
+        }
+    }
+
+    public void visit(MCColorNode color) {
+        writer.setColor(ChatColor.of(color.getColorName()));
+        visitChildren(color);
+    }
+
+    @Override
+    protected void visitChildren(Node parent) {
+        for (Node child = parent.getFirstChild(); child != null; child = child.getNext()) {
+            render(child);
+        }
+    }
+
+    @Override
+    public void render(Node node) {
+        writer.enterLevel();
+        node.accept(this);
+        writer.exitLevel();
     }
 }
