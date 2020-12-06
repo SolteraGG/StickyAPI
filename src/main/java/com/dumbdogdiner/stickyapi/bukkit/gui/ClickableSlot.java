@@ -33,7 +33,7 @@ public class ClickableSlot {
      * @param pSlot The slot which should be used for this item
      * @param lore (Optional) Add lore to this item
      */
-    public ClickableSlot(@NotNull Material pMaterial, String pName, int pAmount, int pSlot, String... lore) {
+    public ClickableSlot(@NotNull Material pMaterial, @NotNull Integer pAmount, String pName, @NotNull Integer pSlot, String... lore) {
         this.item = new ItemStack(pMaterial, pAmount);
 
         ItemMeta isM = item.getItemMeta();
