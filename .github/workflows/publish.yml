@@ -16,6 +16,14 @@ jobs:
       run: echo ${GITHUB_REF##*/}
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Setup gradle.properties
+      run: |
+        mkdir -p ~/.gradle/
+        echo "GRADLE_USER_HOME=$HOME/.gradle" >> $GITHUB_ENV
+        echo "ghUser=${GITHUB_ACTOR}" >> ~/.gradle/gradle.properties
+        echo "ghPass=${GITHUB_TOKEN}" >> ~/.gradle/gradle.properties
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Publish with Gradle
       run: ./gradlew -Pversion=${GITHUB_REF##*/} publish
       env:

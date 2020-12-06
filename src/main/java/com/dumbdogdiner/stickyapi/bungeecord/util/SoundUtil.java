@@ -54,7 +54,7 @@ public class SoundUtil {
     /**
      * Send an info notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
+     * @param player {@link ProxiedPlayer} The target player
      */
     public static void sendInfo(@NotNull ProxiedPlayer player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L); // note pling
@@ -64,7 +64,7 @@ public class SoundUtil {
     /**
      * Send a quiet notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
+     * @param player {@link ProxiedPlayer} The target player
      */
     public static void sendQuiet(@NotNull ProxiedPlayer player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L); // note harp
@@ -75,7 +75,7 @@ public class SoundUtil {
     /**
      * Send an error notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
+     * @param player {@link ProxiedPlayer} The target player
      */
     public static void sendError(@NotNull ProxiedPlayer player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.944f, 0L);
@@ -86,7 +86,7 @@ public class SoundUtil {
     /**
      * Send a success notification to the target player.
      * 
-     * @param player {@link org.bukkit.entity.ProxiedPlayer} The target player
+     * @param player {@link ProxiedPlayer} The target player
      */
     public static void sendSuccess(@NotNull ProxiedPlayer player) {
         queueSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 2f, 0L);
@@ -98,7 +98,7 @@ public class SoundUtil {
      * the sound was played.
      * 
      * @param sender {@link org.bukkit.command.CommandSender} The sender
-     * @param type   {@link com.dumbdogdiner.stickyapi.bukkit.util.NotificationType}
+     * @param type   {@link NotificationType}
      *               The type of sound
      * @return {@link java.lang.Boolean}
      */
