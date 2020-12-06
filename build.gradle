@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'jacoco'
-    id "io.freefair.lombok" version "5.3.0"
+    //id "io.freefair.lombok" version "5.3.0"
     id "com.github.hierynomus.license" version "0.15.0"
 }
 
@@ -13,7 +13,8 @@ jacoco {
 
 group = 'com.dumbdogdiner'
 
-version = '2.0.0'
+// Suffix with -pre while in development
+version = '2.0.0-pre'
 
 // License Plugin Options
 license { header = file('LICENSE_HEADER') }
@@ -30,21 +31,50 @@ repositories {
     mavenCentral()
     jcenter()
 
+    maven { url 'https://jitpack.io' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven {
+        credentials {
+            username "$ghUser"
+            password "$ghPass"
+        }
+        url = "https://maven.pkg.github.com/DumbDogDiner/buildtoolspackages/" }
+
+    maven {
+        credentials {
+            username "$ghUser"
+            password "$ghPass"
+        }
+        url = "https://maven.pkg.github.com/DumbDogDiner/closedsource-package-mirror/" }
 }
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
+    compileOnly 'com.dumbdogdiner.buildtools:paper:1.16.4-318-SNAPSHOT'
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
+
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.atlassian.commonmark:commonmark:0.15.2'
     implementation 'io.github.classgraph:classgraph:4.8.92'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
-    
+    implementation 'org.apache.httpcomponents:httpclient:4.5'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
+    //Softdepend Plugins (not all are used yet)
+    compileOnly 'net.luckperms:api:5.2'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+    compileOnly 'me.clip:placeholderapi:2.10.6'
+    compileOnly 'com.dumbdogdiner.closedsource-package-mirror:stafffacilities:4.8.5'
+    compileOnly 'com.dumbdogdiner.closedsource-package-mirror:plotsquared-bukkit-premium:5.13.8'
+    compileOnly 'com.dumbdogdiner.closedsource-package-mirror:spartan:377.1'
+    compileOnly 'com.dumbdogdiner.closedsource-package-mirror:warpsystem:4.2.12'
+
     // JUnit 5 Testing
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
@@ -80,10 +110,11 @@ task sources(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+}
 
 tasks.publish.dependsOn build, sources
-
-
 
 
 publishing {
