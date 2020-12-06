@@ -4,8 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
-import lombok.Getter;
-import net.md_5.bungee.api.ChatColor;
 import org.commonmark.node.*;
 import org.commonmark.renderer.NodeRenderer;
 
@@ -27,10 +25,10 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
             Block.class
     ));
 
-    private final TextComponentWriter writer;
+    private final JsonComponentWriter writer;
     private int listIndex = 0;
 
-    public MarkdownJsonRenderer(TextComponentWriter writer) {
+    public MarkdownJsonRenderer(JsonComponentWriter writer) {
         this.writer = writer;
     }
 
@@ -76,6 +74,7 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
     public void visit(Link link) {
         writer.setHyperlink(link.getDestination());
         writer.setMouseoverText(link.getTitle());
+        visitChildren(link);
     }
 
     @Override
@@ -133,7 +132,7 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
     }
 
     public void visit(MCColorNode color) {
-        writer.setColor(ChatColor.of(color.getColorName()));
+        writer.setColor(color.getColorName());
         visitChildren(color);
     }
 

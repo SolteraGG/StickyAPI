@@ -4,33 +4,27 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-
 import java.util.Stack;
 
-public class TextComponentWriter {
-    private final Stack<TextComponent> levels = new Stack<>();
-    private TextComponent current;
+public class JsonComponentWriter {
+    private final Stack<JsonComponent> levels = new Stack<>();
+    private JsonComponent current;
     private boolean renderNewLine = false;
     private boolean renderIndent = true;
     private int indent = 0;
 
-    public TextComponentWriter(TextComponent component) {
+    public JsonComponentWriter(JsonComponent component) {
         this.current = component;
     }
 
     public void enterLevel() {
         levels.push(current);
-        current = new TextComponent();
+        current = new JsonComponent();
     }
 
     public void exitLevel() {
-        TextComponent top = levels.pop();
-        top.addExtra(current);
+        JsonComponent top = levels.pop();
+        top.getChildren().add(current);
         current = top;
     }
 
@@ -47,7 +41,7 @@ public class TextComponentWriter {
         enterLevel();
         if (renderNewLine) {
             renderNewLine = false;
-            current.setText(current.getText() + "\n");
+            current.setText(current.getText() + "\n\n");
             renderIndent = true;
         }
         if (renderIndent) {
@@ -74,23 +68,15 @@ public class TextComponentWriter {
         current.setUnderlined(true);
     }
 
-    public void setColor(ChatColor color) {
+    public void setColor(String color) {
         current.setColor(color);
     }
 
     public void setHyperlink(String url) {
-        if (url == null) {
-            current.setClickEvent(null);
-        } else {
-            current.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        }
+        current.setUrl(url);
     }
 
     public void setMouseoverText(String text) {
-        if (text == null) {
-            current.setHoverEvent(null);
-        } else {
-            current.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
-        }
+        current.setHoverText(text);
     }
 }

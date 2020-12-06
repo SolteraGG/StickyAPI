@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MCColorFormatDelimiterProcessor implements DelimiterProcessor {
-    private static final Pattern COLOR_PATTERN = Pattern.compile("^(black|dark_blue|dark_green|dark_aqua|dark_red|dark_purple|gold|gray|dark_gray|blue|green|aqua|red|light_purple|yellow|white|reset|#[0-9A-Fa-f]{6})\\s*(?:\\s([\\S\\s]+))?$");
+    private static final Pattern COLOR_PATTERN = Pattern.compile("^(black|dark_blue|dark_green|dark_aqua|dark_red|dark_purple|gold|gray|dark_gray|blue|green|aqua|red|light_purple|yellow|white|reset|#[0-9A-Fa-f]{6})(\\s*(?:\\s[\\S\\s]+)?)$");
 
     @Override
     public char getOpeningCharacter() {
@@ -47,9 +47,11 @@ public class MCColorFormatDelimiterProcessor implements DelimiterProcessor {
             Matcher match = COLOR_PATTERN.matcher(literal);
             // only create the color node if a color was specified
             if (match.matches()) {
-                ((Text) firstNext).setLiteral(match.group(2));
+                ((Text) firstNext).setLiteral(match.group(2).stripLeading());
                 MCColorNode color = new MCColorNode(match.group(1));
-                for (Node n = opener.getNext(); n != null && n != closer; n = n.getNext()) {
+                Node next;
+                for (Node n = opener.getNext(); n != null && n != closer; n = next) {
+                    next = n.getNext();
                     color.appendChild(n);
                 }
                 opener.insertAfter(color);
