@@ -41,7 +41,7 @@ public class URLUtil {
      * Returns a TextComponent containing formatted and clickable URLs.
      * 
      * @param text The text that should be converted into a TextComponent with
-     *             formatted URLs.
+     *        formatted URLs.
      * @return {@link TextComponent}
      */
     public static TextComponent convertURLs(@NotNull String text) {

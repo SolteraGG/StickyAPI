@@ -65,7 +65,7 @@ public class Debugger {
      * Print a debug message.
      * 
      * @param object to print.
-     * @param args   to format the message with
+     * @param args to format the message with
      */
     public void print(@Nullable Object object, @Nullable Object... args) {
         if (enabled) {

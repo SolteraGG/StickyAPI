@@ -49,7 +49,7 @@ public class NumberUtilTest {
 
     @Test
     public void testIntHelperMax() {
-        assertEquals(NumberUtil.longToInt(((long)Integer.MAX_VALUE) + 1L), Integer.MAX_VALUE);
+        assertEquals(NumberUtil.longToInt(((long) Integer.MAX_VALUE) + 1L), Integer.MAX_VALUE);
     }
 
     @Test

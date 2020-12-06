@@ -28,10 +28,10 @@ public class SoundUtil {
      * Queue a specific sound to be run at a later date.
      * 
      * @param player The player to play the sound to
-     * @param sound  The sound to play
+     * @param sound The sound to play
      * @param volume The volume of the sound
-     * @param pitch  The pitch of the sound
-     * @param delay  T
+     * @param pitch The pitch of the sound
+     * @param delay T
      */
     public static void queueSound(@NotNull Player player, @NotNull Sound sound, @NotNull float volume,
             @NotNull float pitch, @NotNull Long delay) {
@@ -92,8 +92,8 @@ public class SoundUtil {
      * the sound was played.
      * 
      * @param sender {@link org.bukkit.command.CommandSender} The sender
-     * @param type   {@link com.dumbdogdiner.stickyapi.bukkit.util.NotificationType}
-     *               The type of sound
+     * @param type {@link com.dumbdogdiner.stickyapi.bukkit.util.NotificationType}
+     *        The type of sound
      * @return {@link java.lang.Boolean}
      */
     public static Boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {

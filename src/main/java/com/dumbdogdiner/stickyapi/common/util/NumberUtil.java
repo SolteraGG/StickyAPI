@@ -16,8 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * </p>
  */
 public final class NumberUtil {
-    private NumberUtil() {
-    }
+    private NumberUtil() {}
 
     /**
      * <p>
@@ -58,9 +57,8 @@ public final class NumberUtil {
     /**
      * Get a number as the percentage of another.
      * 
-     * @param x            The number who's percentage of the total this method will
-     *                     return
-     * @param total        The total
+     * @param x The number who's percentage of the total this method will return
+     * @param total The total
      * @param decimalPlace The number of decimal places to return
      * @return {@link Double}
      */
@@ -77,7 +75,7 @@ public final class NumberUtil {
     /**
      * Get a number as the percentage of another.
      * 
-     * @param x     The number who's percentage of the total this method will return
+     * @param x The number who's percentage of the total this method will return
      * @param total The total
      * @return {@link Double}
      */

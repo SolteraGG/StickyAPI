@@ -12,7 +12,7 @@ public class ReflectionUtilTest {
     private class ExampleClass {
 
         private String privateString = "default_value";
-        
+
         protected String protectedString = "default_value";
 
         private final String privateFinalString = "default_value";
@@ -56,7 +56,7 @@ public class ReflectionUtilTest {
         ReflectionUtil.setProtectedValue(c, "privateStaticFinalString", "edited_value");
 
         assertEquals(ReflectionUtil.getProtectedValue(c, "privateStaticFinalString"), "edited_value");
-        
+
         assertEquals(ReflectionUtil.getProtectedValue(c, "privateStaticFinalString"), "edited_value");
         // Doesn't work here - have to use ReflectionUtil's get!
         //assertEquals(c.privateStaticFinalString, "edited_value");

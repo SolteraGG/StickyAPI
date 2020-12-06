@@ -30,7 +30,7 @@ public class ServerUtil {
     public static double[] getRecentTps() {
         Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
         double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
-            
+
         return recentTps;
     }
 
@@ -38,7 +38,7 @@ public class ServerUtil {
      * Broadcast a colored and formatted message to a {@link Server}.
      * 
      * @param message The message to broadcast
-     * @param args    The format arguments, if any
+     * @param args The format arguments, if any
      */
     public static void broadcastMessage(@NotNull String message, @Nullable String... args) {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {

@@ -12,8 +12,7 @@ import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 final class Luhn {
-    private Luhn() {
-    }
+    private Luhn() {}
 
     /**
      * Checks if the card is valid
@@ -69,6 +68,7 @@ final class Luhn {
     }
 }
 
+
 /**
  * Class for generating small semi-unique IDs
  */
@@ -94,7 +94,7 @@ public class ShortID {
      * 
      * @param name Returns a ShortID object from the string inputted
      * @throws IllegalArgumentException If name does not conform to the string
-     *                                  representation as described in toString
+     *         representation as described in toString
      * @return {@link ShortID}
      */
     public static ShortID fromString(String name) throws IllegalArgumentException {
@@ -123,7 +123,7 @@ public class ShortID {
      * Generate a short semi-unique ID
      * 
      * @param key An identifier to start the ID with (usually the position in a SQL
-     *            table)
+     *        table)
      * @return a Luhn-passable identifier
      */
     public static ShortID generate(@NotNull int key) {

@@ -45,7 +45,9 @@ public class Protocol {
      * Get the Sound Effect packet ID
      * 
      * @return {@link Integer}
-     * @throws UnsupportedOperationException if the sound id for the current minecraft protocol is not mapped yet (If this is the case, either map the correct ID or get me (Zachery) to do it)
+     * @throws UnsupportedOperationException if the sound id for the current
+     *         minecraft protocol is not mapped yet (If this is the case, either map
+     *         the correct ID or get me (Zachery) to do it)
      */
     public static int getSoundEffectId() {
         var protocolVersion = ProxyServer.getInstance().getProtocolVersion();

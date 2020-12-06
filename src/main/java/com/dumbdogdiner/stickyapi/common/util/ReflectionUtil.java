@@ -15,8 +15,7 @@ import java.lang.reflect.Modifier;
  */
 @SuppressWarnings({ "unchecked", "deprecation" })
 public final class ReflectionUtil {
-    private ReflectionUtil() {
-    }
+    private ReflectionUtil() {}
 
     public static void setProtectedValue(Object o, String field, Object newValue) {
         setProtectedValue(o.getClass(), o, field, newValue);

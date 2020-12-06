@@ -36,7 +36,7 @@ public abstract class GUI implements Listener {
     /**
      * Create a new inventory GUI
      * 
-     * @param pSize   The inventory size
+     * @param pSize The inventory size
      * @param pPlugin The plugin to register with
      */
     protected GUI(int pSize, Plugin pPlugin) {
@@ -84,9 +84,9 @@ public abstract class GUI implements Listener {
     /**
      * Build an inventory GUI with command arugments
      * 
-     * @param player  The player to send the GUI to
+     * @param player The player to send the GUI to
      * @param rawArgs The raw arguments of the command they have executed
-     * @param args    The parsed arguments of the command
+     * @param args The parsed arguments of the command
      */
     protected abstract void buildGUI(Player player, String[] rawArgs, Arguments args);
 

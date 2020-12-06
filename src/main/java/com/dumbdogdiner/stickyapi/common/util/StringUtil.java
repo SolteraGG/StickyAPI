@@ -16,8 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * Operations on {@link java.lang.String}
  */
 public final class StringUtil {
-    private StringUtil() {
-    }
+    private StringUtil() {}
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
@@ -42,16 +41,14 @@ public final class StringUtil {
      * <p>
      * Returns a progress bar
      * 
-     * @param size              The size of the bar (inside)
-     * @param percentage        The percentage to fill the bar to
-     * @param monospace         If false, the bars will be a character with the
-     *                          equivalent amount of pixels as a whitespace
-     *                          character
+     * @param size The size of the bar (inside)
+     * @param percentage The percentage to fill the bar to
+     * @param monospace If false, the bars will be a character with the equivalent
+     *        amount of pixels as a whitespace character
      * @param includePercentage If true, the percentage will be appended inside of
-     *                          outside of the bar, depending on how much whitespace
-     *                          is available
-     * @param includeBrackets   If true, the progress bar will return wrapped in
-     *                          snuggly brackets
+     *        outside of the bar, depending on how much whitespace is available
+     * @param includeBrackets If true, the progress bar will return wrapped in
+     *        snuggly brackets
      * @return {@link String}
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
@@ -90,7 +87,7 @@ public final class StringUtil {
      * <p>
      * Returns a progress bar
      * 
-     * @param size       The size of the bar
+     * @param size The size of the bar
      * @param percentage The percentage to fill the bar to
      * @return {@link String}
      */
@@ -114,7 +111,7 @@ public final class StringUtil {
      * <p>
      * See {@link #capitaliseSentenceKeepUpperCase(String)}
      * 
-     * @param string   The string to capitalise
+     * @param string The string to capitalise
      * @param keepCase Whether or not to keep the uppercase characters
      * @return {@link String}
      */
@@ -188,7 +185,7 @@ public final class StringUtil {
      * <p>
      * The censored word
      * 
-     * @param word  The word to censor
+     * @param word The word to censor
      * @param regex The characters to not censor
      * @return {@link String}
      */
@@ -255,7 +252,7 @@ public final class StringUtil {
      * Whether something matches.
      * 
      * @param haystack the string to compare to
-     * @param needles  things that may match the comparison string
+     * @param needles things that may match the comparison string
      * @return {@link Boolean}
      */
     public static boolean compareMany(@NotNull String haystack, @NotNull String[] needles) {
@@ -276,7 +273,7 @@ public final class StringUtil {
      * @param string String to check
      * @param prefix Prefix of string to compare
      * @return {@link Boolean}
-     * @throws NullPointerException     if prefix is null
+     * @throws NullPointerException if prefix is null
      * @throws IllegalArgumentException if string is null
      */
     public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix)

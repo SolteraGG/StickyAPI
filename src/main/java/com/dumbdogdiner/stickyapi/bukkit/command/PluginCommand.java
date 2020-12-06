@@ -41,9 +41,9 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
      * <p>
      * Returns true if the command was successful, otherwise false
      * 
-     * @param sender       Source object which is executing this command
+     * @param sender Source object which is executing this command
      * @param commandLabel The alias of the command used
-     * @param args         All arguments passed to the command, split via ' '
+     * @param args All arguments passed to the command, split via ' '
      * @return {@link java.lang.Boolean}
      */
     @Override
@@ -139,9 +139,8 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
      * <p>
      * This method does not consider permissions.
      *
-     * @throws CommandException         if the completer or executor throw an
-     *                                  exception during the process of
-     *                                  tab-completing.
+     * @throws CommandException if the completer or executor throw an exception
+     *         during the process of tab-completing.
      * @throws IllegalArgumentException if sender, alias, or args is null
      */
     @NotNull

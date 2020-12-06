@@ -31,10 +31,10 @@ public class Circle implements Shape {
     /**
      * Construct a new circle with center (x,y,z) and radius r.
      *
-     * @param x           X coordinate for center of the circle.
-     * @param y           Y coordinate for center of the circle.
-     * @param z           Z coordinate for center of the circle.
-     * @param r           Size of the circle's radius.
+     * @param x X coordinate for center of the circle.
+     * @param y Y coordinate for center of the circle.
+     * @param z Z coordinate for center of the circle.
+     * @param r Size of the circle's radius.
      * @param orientation Orientation of the circle.
      */
     public Circle(double x, double y, double z, double r, Orientation orientation) {

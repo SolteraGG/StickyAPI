@@ -39,7 +39,7 @@ public class PacketRegistration {
      * Register a packet with BungeeCord
      * 
      * @param clazz that extends {@link DefinedPacket}
-     * @param id    the protocol ID for the packet (see: https://wiki.vg/Protocol)
+     * @param id the protocol ID for the packet (see: https://wiki.vg/Protocol)
      */
     public static void registerPacket(Class<?> clazz, Integer id) {
         Object[] array = (Object[]) Array.newInstance(protocolMapping, 1);

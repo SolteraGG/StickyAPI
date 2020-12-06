@@ -18,8 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Target(ElementType.TYPE)
 public @interface DelegateDeserialization {
     /**
-     * Which class should be used as a delegate for this classes
-     * deserialization
+     * Which class should be used as a delegate for this classes deserialization
      *
      * @return Delegate class
      */

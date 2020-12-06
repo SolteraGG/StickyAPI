@@ -15,6 +15,7 @@ import static org.mockito.Mockito.mockStatic;
 public class ReflectionUtilInvokeProtectedMethodClassTest {
     // Declare example private static methods here.
     private static void privateStaticMethod() {}
+
     private static void privateStaticMethodArgsString(String a) {}
 
     private static void privateStaticMethodArgsInt(int a) {}
@@ -25,16 +26,18 @@ public class ReflectionUtilInvokeProtectedMethodClassTest {
     private void privateMethod() {
         privateMethodHasRun = true;
     }
-    
+
     @SuppressWarnings("unused")
     private boolean privateMethodHasRun = false;
 
     @Test
     public void testInvokeProtectedMethodClass() {
-        try (MockedStatic<ReflectionUtilInvokeProtectedMethodClassTest> mocked = mockStatic(ReflectionUtilInvokeProtectedMethodClassTest.class)) {
+        try (MockedStatic<ReflectionUtilInvokeProtectedMethodClassTest> mocked =
+                mockStatic(ReflectionUtilInvokeProtectedMethodClassTest.class)) {
             mocked.when(ReflectionUtilInvokeProtectedMethodClassTest::privateStaticMethod).thenCallRealMethod();
 
-            ReflectionUtil.invokeProtectedMethod((Class<?>) ReflectionUtilInvokeProtectedMethodClassTest.class, "privateStaticMethod");
+            ReflectionUtil.invokeProtectedMethod((Class<?>) ReflectionUtilInvokeProtectedMethodClassTest.class,
+                    "privateStaticMethod");
 
             mocked.verify(ReflectionUtilInvokeProtectedMethodClassTest::privateStaticMethod);
         }
@@ -42,19 +45,23 @@ public class ReflectionUtilInvokeProtectedMethodClassTest {
 
     @Test
     public void testInvokeProtectedMethodClassArgsString() {
-        try (MockedStatic<ReflectionUtilInvokeProtectedMethodClassTest> mocked = mockStatic(ReflectionUtilInvokeProtectedMethodClassTest.class)) {
-            mocked.when(() -> ReflectionUtilInvokeProtectedMethodClassTest.privateStaticMethodArgsString(anyString())).thenCallRealMethod();
-            
-            ReflectionUtil.invokeProtectedMethod((Class<?>) ReflectionUtilInvokeProtectedMethodClassTest.class,"privateStaticMethodArgsString", (Object)(String)"A");
+        try (MockedStatic<ReflectionUtilInvokeProtectedMethodClassTest> mocked =
+                mockStatic(ReflectionUtilInvokeProtectedMethodClassTest.class)) {
+            mocked.when(() -> ReflectionUtilInvokeProtectedMethodClassTest.privateStaticMethodArgsString(anyString()))
+                    .thenCallRealMethod();
 
-            mocked.verify(() -> ReflectionUtilInvokeProtectedMethodClassTest.privateStaticMethodArgsString(anyString()));
+            ReflectionUtil.invokeProtectedMethod((Class<?>) ReflectionUtilInvokeProtectedMethodClassTest.class,
+                    "privateStaticMethodArgsString", (Object) (String) "A");
+
+            mocked.verify(
+                    () -> ReflectionUtilInvokeProtectedMethodClassTest.privateStaticMethodArgsString(anyString()));
         }
     }
 
     @Test
     public void testInvokeProtectedMethodClassArgsInteger() {
-        try (MockedStatic<ReflectionUtilInvokeProtectedMethodClassTest> mocked = mockStatic(
-                ReflectionUtilInvokeProtectedMethodClassTest.class)) {
+        try (MockedStatic<ReflectionUtilInvokeProtectedMethodClassTest> mocked =
+                mockStatic(ReflectionUtilInvokeProtectedMethodClassTest.class)) {
             mocked.when(() -> ReflectionUtilInvokeProtectedMethodClassTest.privateStaticMethodArgsInt(anyInt()))
                     .thenCallRealMethod();
 
@@ -68,7 +75,7 @@ public class ReflectionUtilInvokeProtectedMethodClassTest {
     @Test
     public void testInvokeProtectedMethodObject() {
         ReflectionUtilInvokeProtectedMethodClassTest c = new ReflectionUtilInvokeProtectedMethodClassTest();
-        
+
         ReflectionUtil.invokeProtectedMethod(c, "privateMethod");
 
         assertTrue((boolean) ReflectionUtil.getProtectedValue(c, "privateMethodHasRun")); // set to true while running the method

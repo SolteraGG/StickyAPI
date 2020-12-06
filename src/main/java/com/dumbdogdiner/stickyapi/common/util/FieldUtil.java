@@ -29,7 +29,8 @@ public final class FieldUtil {
     }
 
     public static void makeNonFinal(Field field) {
-        System.out.println("*** StickyAPI Warning: FieldUtil#makeNonFinal is a hacky workaround to get around limitations with Java 12+! This will probably also generate a JVM warning for illegal reflective access!***");
+        System.out.println(
+                "*** StickyAPI Warning: FieldUtil#makeNonFinal is a hacky workaround to get around limitations with Java 12+! This will probably also generate a JVM warning for illegal reflective access!***");
         int mods = field.getModifiers();
         if (Modifier.isFinal(mods)) {
             MODIFIERS.set(field, mods & ~Modifier.FINAL);

@@ -4,18 +4,13 @@
  */
 package com.dumbdogdiner.stickyapi.common.translation;
 
-import java.lang.Character;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.function.BiFunction;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * A class for parsing configurations
@@ -62,46 +57,46 @@ public class Translation {
      * function in the map below as:
      * {@code datetime(Variables.get("TimeBanned"), "HH:MM:SS")}
      */
-    public static TreeMap<String, BiFunction<String, String, String>> functions = new TreeMap<String, BiFunction<String, String, String>>(
-            String.CASE_INSENSITIVE_ORDER) {
-        {
-            put("pluralize", (String lvalue, String arg) -> {
-                return pluralize(lvalue, arg);
-            });
-            put("datetime", (String lvalue, String args) -> {
-                return lvalue == null || lvalue == "" ? "Never"
-                        : (new SimpleDateFormat(args)).format(Timestamp.valueOf(lvalue));
-            });
-            // FIXME: Allow for timestamps AND longs, for now, use longs!
-            put("duration", (String lvalue, String unused) -> {
-                return lvalue == null || lvalue == "" ? "Never" : TimeUtil.durationString(Long.valueOf(lvalue));
-            });
-            put("expiry", (String lvalue, String unused) -> {
-                return lvalue == null || lvalue == "" ? "Never" : TimeUtil.expirationTime(Long.valueOf(lvalue));
-            });
-            put("cut", (String lvalue, String arg) -> {
-                return lvalue.replace(arg, "");
-            });
-            put("empty_if_false", (String lvalue, String arg) -> {
-                return Boolean.valueOf(lvalue) ? arg : "";
-            });
-            put("empty_if_true", (String lvalue, String arg) -> {
-                return Boolean.valueOf(lvalue) ? "" : arg;
-            });
-            put("default_if_none", (String lvalue, String arg) -> {
-                return lvalue == null ? arg : lvalue;
-            });
-            put("lower", (String lvalue, String unused) -> {
-                return lvalue.toLowerCase();
-            });
-            put("upper", (String lvalue, String unused) -> {
-                return lvalue.toUpperCase();
-            });
-            put("yesno", (String lvalue, String arg) -> {
-                return yesno(lvalue, arg);
-            });
-        }
-    };
+    public static TreeMap<String, BiFunction<String, String, String>> functions =
+            new TreeMap<String, BiFunction<String, String, String>>(String.CASE_INSENSITIVE_ORDER) {
+                {
+                    put("pluralize", (String lvalue, String arg) -> {
+                        return pluralize(lvalue, arg);
+                    });
+                    put("datetime", (String lvalue, String args) -> {
+                        return lvalue == null || lvalue == "" ? "Never"
+                                : (new SimpleDateFormat(args)).format(Timestamp.valueOf(lvalue));
+                    });
+                    // FIXME: Allow for timestamps AND longs, for now, use longs!
+                    put("duration", (String lvalue, String unused) -> {
+                        return lvalue == null || lvalue == "" ? "Never" : TimeUtil.durationString(Long.valueOf(lvalue));
+                    });
+                    put("expiry", (String lvalue, String unused) -> {
+                        return lvalue == null || lvalue == "" ? "Never" : TimeUtil.expirationTime(Long.valueOf(lvalue));
+                    });
+                    put("cut", (String lvalue, String arg) -> {
+                        return lvalue.replace(arg, "");
+                    });
+                    put("empty_if_false", (String lvalue, String arg) -> {
+                        return Boolean.valueOf(lvalue) ? arg : "";
+                    });
+                    put("empty_if_true", (String lvalue, String arg) -> {
+                        return Boolean.valueOf(lvalue) ? "" : arg;
+                    });
+                    put("default_if_none", (String lvalue, String arg) -> {
+                        return lvalue == null ? arg : lvalue;
+                    });
+                    put("lower", (String lvalue, String unused) -> {
+                        return lvalue.toLowerCase();
+                    });
+                    put("upper", (String lvalue, String unused) -> {
+                        return lvalue.toUpperCase();
+                    });
+                    put("yesno", (String lvalue, String arg) -> {
+                        return yesno(lvalue, arg);
+                    });
+                }
+            };
 
     // Java apparently has no capabiliy to do something even a simple language like
     // C can do
@@ -151,8 +146,8 @@ public class Translation {
      * <p>
      * Returns a color formatted message for Minecraft clients
      * 
-     * @param chars   Character sequence to replace with the section character
-     *                minecraft uses for color codes
+     * @param chars Character sequence to replace with the section character
+     *        minecraft uses for color codes
      * @param message Message containing sequences of `chars` in it
      * @return {@link java.lang.String}.
      */
@@ -194,10 +189,10 @@ public class Translation {
      * <p>
      * Returns a formatted string with all placeholders from Variables replaced.
      * 
-     * @param locale    The LocaleProvider context
-     * @param message   The message to have placeholders replaced
+     * @param locale The LocaleProvider context
+     * @param message The message to have placeholders replaced
      * @param Variables The variables to be utilized in this message for the
-     *                  placeholders and their functions
+     *        placeholders and their functions
      * @return {@link java.lang.String}
      */
     public static String translateVariables(LocaleProvider locale, String message, Map<String, String> Variables) {
@@ -207,8 +202,8 @@ public class Translation {
 
         String retstr = message;
         // Try and iterate over all our variables.
-        for (int pos = retstr.indexOf("{"), pos2 = retstr.indexOf("}", pos); pos != -1
-                && pos2 != -1; pos = retstr.indexOf("{", pos + 1), pos2 = retstr.indexOf("}", pos + 1)) {
+        for (int pos = retstr.indexOf("{"), pos2 = retstr.indexOf("}", pos); pos != -1 && pos2 != -1; pos =
+                retstr.indexOf("{", pos + 1), pos2 = retstr.indexOf("}", pos + 1)) {
             // If we're longer than we should be.
             if (pos + 1 > retstr.length() || pos2 + 1 > retstr.length())
                 break;
@@ -261,12 +256,12 @@ public class Translation {
      * Returns a string with color sequences and placeholders translated to their
      * formatted message ready for the player.
      * 
-     * @param locale     The LocaleProvider context
-     * @param message    The message containing placeholders and untranslated color
-     *                   code sequences
+     * @param locale The LocaleProvider context
+     * @param message The message containing placeholders and untranslated color
+     *        code sequences
      * @param ColorChars The character used as the prefix for color strings
-     *                   (bukkit/spigot use `&amp;` and so do we most of the time)
-     * @param Variables  A list of variables to be parsed by the placeholder
+     *        (bukkit/spigot use `&amp;` and so do we most of the time)
+     * @param Variables A list of variables to be parsed by the placeholder
      * @return {@link java.lang.String}
      */
     public static String translate(LocaleProvider locale, String message, String ColorChars,

@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * This is a {@link Configuration} implementation that does not save or load
- * from any source, and stores all values in memory only.
- * This is useful for temporary Configurations for providing defaults.
+ * from any source, and stores all values in memory only. This is useful for
+ * temporary Configurations for providing defaults.
  */
 public class MemoryConfiguration extends MemorySection implements Configuration {
     protected Configuration defaults;
@@ -24,8 +24,8 @@ public class MemoryConfiguration extends MemorySection implements Configuration 
     public MemoryConfiguration() {}
 
     /**
-     * Creates an empty {@link MemoryConfiguration} using the specified {@link
-     * Configuration} as a source for all default values.
+     * Creates an empty {@link MemoryConfiguration} using the specified
+     * {@link Configuration} as a source for all default values.
      *
      * @param defaults Default value provider
      * @throws IllegalArgumentException Thrown if defaults is null

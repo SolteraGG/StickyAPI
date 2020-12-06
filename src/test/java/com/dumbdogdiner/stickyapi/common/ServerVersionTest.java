@@ -37,7 +37,7 @@ public class ServerVersionTest {
             mocked.verify(ServerVersion::getServerType);
         }
     }
-    
+
     @Test
     public void testGetServerTypeSpigot() {
         try (MockedStatic<ServerVersion> mocked = mockStatic(ServerVersion.class)) {
@@ -73,7 +73,7 @@ public class ServerVersionTest {
             mocked.verify(ServerVersion::getServerType);
         }
     }
-    
+
     @Test
     public void testGetServerTypeWaterfall() {
         try (MockedStatic<ServerVersion> mocked = mockStatic(ServerVersion.class)) {
@@ -140,7 +140,7 @@ public class ServerVersionTest {
 
             when(proxyServer.getVersion()).thenReturn(mockedVersion);
 
-            assertEquals(ServerVersion.getBungeeVersion(),mockedVersion);
+            assertEquals(ServerVersion.getBungeeVersion(), mockedVersion);
 
             verify(proxyServer).getVersion();
             mocked.verify(ProxyServer::getInstance);

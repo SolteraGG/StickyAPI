@@ -128,7 +128,7 @@ public class Cache<T extends Cacheable> {
      * Find an object using the given tester lambda.
      * 
      * @param tester A cache tester implemented for any necessary criteria you are
-     *               looking for
+     *        looking for
      * @return The first object that evaluates the tester to true, if there is one
      */
     public T find(@NotNull CacheTester<T> tester) {

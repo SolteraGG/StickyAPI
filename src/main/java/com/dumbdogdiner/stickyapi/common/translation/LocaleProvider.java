@@ -218,7 +218,7 @@ public class LocaleProvider {
      * Returns The variable, or the default for the given name if the former does
      * not exist
      * 
-     * @param node         The configuration node to retrieve
+     * @param node The configuration node to retrieve
      * @param defaultValue The default value to use
      * @return {@link java.lang.String}
      */
@@ -261,9 +261,9 @@ public class LocaleProvider {
     /**
      * Save an internal resource to the data file.
      * 
-     * @param in           File inputstream
+     * @param in File inputstream
      * @param resourcePath The path to which the resource should be saved
-     * @param replace      Whether or not to replace the file if it already exists
+     * @param replace Whether or not to replace the file if it already exists
      * @throws IllegalArgumentException
      * @throws IOException
      */

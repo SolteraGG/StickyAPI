@@ -11,30 +11,29 @@ import inet.ipaddr.IPAddressString;
  * Utility class for IP Addresses
  */
 public final class IPUtil {
-	private IPUtil() {
-	}
+    private IPUtil() {}
 
-	/**
-	 * Check if two IP addresses are within the same CIDR range
-	 * <p>
-	 * true if IP is in prefix, otherwise false
-	 * 
-	 * @param address1 The first IP address
-	 * @param address2 The IP to compare against the first addresses range
-	 * @param prefix   The prefix to check against
-	 * @return {@link java.lang.Boolean}
-	 */
-	public static Boolean compareRangeCIDR(String address1, String address2, String prefix) {
+    /**
+     * Check if two IP addresses are within the same CIDR range
+     * <p>
+     * true if IP is in prefix, otherwise false
+     * 
+     * @param address1 The first IP address
+     * @param address2 The IP to compare against the first addresses range
+     * @param prefix The prefix to check against
+     * @return {@link java.lang.Boolean}
+     */
+    public static Boolean compareRangeCIDR(String address1, String address2, String prefix) {
 
-		IPAddress subnetAddress = new IPAddressString(address1 + "/" + prefix).getAddress();
-		if (subnetAddress == null)
-			return false; // prevent NPE for invalid subnetAddress
+        IPAddress subnetAddress = new IPAddressString(address1 + "/" + prefix).getAddress();
+        if (subnetAddress == null)
+            return false; // prevent NPE for invalid subnetAddress
 
-		IPAddress subnet = subnetAddress.toPrefixBlock();
-		IPAddress testAddress = new IPAddressString(address2).getAddress();
-		if (testAddress == null)
-			return false; // prevent NPE for invalid testAddress
+        IPAddress subnet = subnetAddress.toPrefixBlock();
+        IPAddress testAddress = new IPAddressString(address2).getAddress();
+        if (testAddress == null)
+            return false; // prevent NPE for invalid testAddress
 
-		return subnet.contains(testAddress);
-	}
+        return subnet.contains(testAddress);
+    }
 }

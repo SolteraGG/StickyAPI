@@ -99,7 +99,7 @@ public class ChatMessage {
      * edited ChatMessage object.
      * 
      * @param text The String array that should be used for the tooltip content,
-     *             each String represents a new line.
+     *        each String represents a new line.
      *
      * @return {@link ChatMessage}
      */

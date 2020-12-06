@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LuhnTest {
-    
+
     @Test
     public void luhnCheckValid() {
         assertTrue(Luhn.luhnCheck("402007136885364"));

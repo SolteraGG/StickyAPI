@@ -140,7 +140,7 @@ public class Arguments {
     /**
      * Create an optional string argument with a default value
      * 
-     * @param name     The name of this string
+     * @param name The name of this string
      * @param fallback the default value you want for the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
@@ -228,7 +228,7 @@ public class Arguments {
      * Create an optional sentence argument, with its length defaulting to the
      * remaining length of current unparsed arguments.
      * 
-     * @param name     The name of this sentence
+     * @param name The name of this sentence
      * @param fallback The fallback sentence to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
@@ -240,9 +240,9 @@ public class Arguments {
     /**
      * Create an optional sentence with the given length.
      * 
-     * @param name     The name of the sentence to create
+     * @param name The name of the sentence to create
      * @param fallback The fallback sentence to use if one is not provided
-     * @param length   The length of the sentence
+     * @param length The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
     public Arguments optionalSentence(@NotNull String name, @Nullable String fallback, @NotNull int length) {
@@ -257,7 +257,7 @@ public class Arguments {
     /**
      * Create an optional sentence with the given length.
      * 
-     * @param name   The name of the sentence to create
+     * @param name The name of the sentence to create
      * @param length The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
@@ -281,7 +281,7 @@ public class Arguments {
     /**
      * Create a required sentence argument with the given length.
      * 
-     * @param name   Name of the argument
+     * @param name Name of the argument
      * @param length Maximum length in words of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
@@ -384,7 +384,7 @@ public class Arguments {
     /**
      * Create an optional integer argument.
      * 
-     * @param name     Name of the argument
+     * @param name Name of the argument
      * @param fallback The fallback integer to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */

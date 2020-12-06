@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ServerUtilTest {
 
     @Test
@@ -33,7 +33,7 @@ public class ServerUtilTest {
         ArrayList c2 = new ArrayList();
         c2.add(p1);
 
-        
+
         try (MockedStatic<Bukkit> mocked = mockStatic(Bukkit.class)) {
             // When Bukkit.getServer().getOnlinePlayers() is called return the new collection
             mocked.when(Bukkit::getServer).thenReturn(server);

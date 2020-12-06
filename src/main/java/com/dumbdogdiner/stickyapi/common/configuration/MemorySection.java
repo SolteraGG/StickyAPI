@@ -39,7 +39,7 @@ public class MemorySection implements ConfigurationSection {
      * throw an exception!
      *
      * @throws IllegalStateException Thrown if this is not a {@link Configuration}
-     *                               root.
+     *         root.
      */
     protected MemorySection() {
         if (!(this instanceof Configuration)) {
@@ -56,10 +56,10 @@ public class MemorySection implements ConfigurationSection {
      * Creates an empty MemorySection with the specified parent and path.
      *
      * @param parent Parent section that contains this own section.
-     * @param path   Path that you may access this section from via the root
-     *               {@link Configuration}.
+     * @param path Path that you may access this section from via the root
+     *        {@link Configuration}.
      * @throws IllegalArgumentException Thrown is parent or path is null, or if
-     *                                  parent contains no root Configuration.
+     *         parent contains no root Configuration.
      */
     protected MemorySection(@NotNull ConfigurationSection parent, @NotNull String path) {
         Validate.notNull(parent, "Parent cannot be null");
@@ -819,7 +819,7 @@ public class MemorySection implements ConfigurationSection {
      * {@link MemorySection}.
      *
      * @param section Section to create a path for.
-     * @param key     Name of the specified section.
+     * @param key Name of the specified section.
      * @return Full path of the section from its root.
      */
     @NotNull
@@ -834,8 +834,8 @@ public class MemorySection implements ConfigurationSection {
      * You may use this method for any given {@link ConfigurationSection}, not only
      * {@link MemorySection}.
      *
-     * @param section    Section to create a path for.
-     * @param key        Name of the specified section.
+     * @param section Section to create a path for.
+     * @param key Name of the specified section.
      * @param relativeTo Section to create the path relative to.
      * @return Full path of the section from its root.
      */
@@ -851,8 +851,8 @@ public class MemorySection implements ConfigurationSection {
 
         StringBuilder builder = new StringBuilder();
         if (section != null) {
-            for (ConfigurationSection parent = section; (parent != null)
-                    && (parent != relativeTo); parent = parent.getParent()) {
+            for (ConfigurationSection parent = section; (parent != null) && (parent != relativeTo); parent =
+                    parent.getParent()) {
                 if (builder.length() > 0) {
                     builder.insert(0, separator);
                 }

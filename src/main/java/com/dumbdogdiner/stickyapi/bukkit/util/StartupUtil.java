@@ -47,7 +47,7 @@ public class StartupUtil {
     /**
      * Load the server's localizations
      * 
-     * @param plugin         The plugin's main class
+     * @param plugin The plugin's main class
      * @param localeProvider The plugin's locale provider
      * @return False if something went wrong
      */
