@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 
+import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.util.BookUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -96,7 +98,15 @@ public class BookGenerator {
 
     public BookGenerator addPage(JsonObject page) {
         if(!isFull()){
-            pages.add(NBTTagString.a(page.toString()));
+            String jsonString = page.toString();
+            NBTTagString tag;
+            // .create just calls .a, so both branches are identical except .create is added by Paper
+            if (ServerVersion.isPaper()) {
+                tag = NBTTagString.create(jsonString);
+            } else {
+                tag = NBTTagString.a(jsonString);
+            }
+            pages.add(tag);
         } else {
             throw new IllegalStateException("Book is overfilled");
         }
