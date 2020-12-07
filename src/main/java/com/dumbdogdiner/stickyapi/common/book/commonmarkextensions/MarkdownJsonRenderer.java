@@ -4,6 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
+import com.dumbdogdiner.stickyapi.common.book.chat.ClickEvent;
+import com.dumbdogdiner.stickyapi.common.book.chat.HoverEvent;
+import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
 import org.commonmark.node.*;
 import org.commonmark.renderer.NodeRenderer;
 
@@ -46,14 +49,14 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
 
     @Override
     public void visit(Heading heading) {
-        writer.setBold();
+        writer.setBold(true);
         visitChildren(heading);
         writer.addLine();
     }
 
     @Override
     public void visit(Emphasis node) {
-        writer.setItalic();
+        writer.setItalic(true);
         visitChildren(node);
     }
 
@@ -61,10 +64,10 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
     public void visit(StrongEmphasis node) {
         switch (node.getOpeningDelimiter()) {
             case "**":
-                writer.setBold();
+                writer.setBold(true);
                 break;
             case "__":
-                writer.setUnderlined();
+                writer.setUnderlined(true);
                 break;
         }
         visitChildren(node);
@@ -72,8 +75,8 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
 
     @Override
     public void visit(Link link) {
-        writer.setHyperlink(link.getDestination());
-        writer.setMouseoverText(link.getTitle());
+        writer.setClickEvent(new ClickEvent.OpenUrl(link.getDestination()));
+        writer.setHoverEvent(new HoverEvent.ShowText(new JsonComponent(link.getTitle())));
         visitChildren(link);
     }
 
@@ -132,7 +135,7 @@ public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRendere
     }
 
     public void visit(MCColorNode color) {
-        writer.setColor(color.getColorName());
+        writer.setColor(color.getColor());
         visitChildren(color);
     }
 

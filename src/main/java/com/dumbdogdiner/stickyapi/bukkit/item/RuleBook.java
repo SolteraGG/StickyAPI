@@ -5,7 +5,7 @@
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
 import com.dumbdogdiner.stickyapi.bukkit.item.generator.BookGenerator;
-import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponent;
+import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponentWriter;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCColorFormatDelimiterProcessor;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MarkdownJsonRenderer;
@@ -30,7 +30,7 @@ public class RuleBook {
 
     public static ItemStack generateDefault() throws IOException {
         try (var reader = new InputStreamReader(new FileInputStream(getRulebookPath()))) {
-            return generate(reader, "§ddddMCSurvival Handbook", "Stixil");
+            return generate(reader, "§ddddMC Survival Handbook", "Stixil");
         }
     }
 
@@ -38,19 +38,22 @@ public class RuleBook {
         var cmparser = Parser.builder()
                 .customDelimiterProcessor(new MCColorFormatDelimiterProcessor())
                 .build();
-        var bookRoot = (Document) cmparser.parseReader(reader);
         var bookGenerator = new BookGenerator(Material.WRITTEN_BOOK);
-        BookUtil.splitDocumentByHeadings(bookRoot, 2)
-                .stream().map(document -> {
-                    var component = new JsonComponent();
-                    var writer = new JsonComponentWriter(component);
-                    new MarkdownJsonRenderer(writer).render(document);
-                    return component;
-                }).map(BookUtil::splitBookPages).flatMap(List::stream).forEach(page -> {
-                    bookGenerator.addPage(page.toJson());
-                });
+        var sections = BookUtil.splitDocumentByBreaks((Document) cmparser.parseReader(reader));
+        sections.stream()
+                .map(section -> BookUtil.splitBookPages(renderDocument(section)))
+                .flatMap(List::stream)
+                .forEach(page -> bookGenerator.addPage(page.toJson()));
         bookGenerator.setTitle(title);
         bookGenerator.setAuthor(author);
+
         return bookGenerator.toItemStack(1);
+    }
+
+    private static JsonComponent renderDocument(Document document) {
+        var component = new JsonComponent();
+        var writer = new JsonComponentWriter(component);
+        new MarkdownJsonRenderer(writer).render(document);
+        return component;
     }
 }

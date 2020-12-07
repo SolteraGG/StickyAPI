@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
-import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponent;
+import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
 import lombok.NonNull;
 import org.commonmark.node.Document;
 import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
+import org.commonmark.node.ThematicBreak;
 import org.jetbrains.annotations.NotNull;
 
 public class BookUtil {
@@ -128,7 +129,7 @@ public class BookUtil {
                     JsonComponent wordComponent = component.duplicate();
                     wordComponent.setText(word);
                     int width = getStringWidth(word) + 1;
-                    if (component.isBold()) width += word.length() + 1;
+                    if (component.getBold() == Boolean.TRUE) width += word.length() + 1;
                     if (xPosition + width >= pixels) {
                         lineComponents.add(currentLine);
                         currentLine = new JsonComponent();
@@ -169,6 +170,28 @@ public class BookUtil {
     }
 
     /**
+     * Split a document into multiple documents, delimited by thematic breaks. Destroys the original document.
+     * @param document The original document
+     * @return A list of each document.
+     */
+    public static List<Document> splitDocumentByBreaks(@NonNull Document document) {
+        List<Document> docs = new ArrayList<>();
+        Document currentDocument = new Document();
+        Node next;
+        for (Node n = document.getFirstChild(); n != null; n = next) {
+            next = n.getNext();
+            if (n instanceof ThematicBreak) {
+                docs.add(currentDocument);
+                currentDocument = new Document();
+            } else {
+                currentDocument.appendChild(n);
+            }
+        }
+        docs.add(currentDocument);
+        return docs;
+    }
+
+    /**
      * Measure the width of text in a BaseComponent in pixels.
      * @param component The component to measure
      * @return The width of the text, in pixels
@@ -176,7 +199,7 @@ public class BookUtil {
     public static int getComponentWidth(@NotNull JsonComponent component) {
         String text = component.getText();
         int width = getStringWidth(text);
-        if (component.isBold()) width += text.length();
+        if (component.getBold() == Boolean.TRUE) width += text.length();
         for (JsonComponent child : component.getChildren()) {
             width += getComponentWidth(child);
         }

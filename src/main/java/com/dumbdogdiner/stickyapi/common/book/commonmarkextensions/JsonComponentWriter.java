@@ -4,6 +4,11 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
+import com.dumbdogdiner.stickyapi.common.book.chat.ClickEvent;
+import com.dumbdogdiner.stickyapi.common.book.chat.ComponentColor;
+import com.dumbdogdiner.stickyapi.common.book.chat.HoverEvent;
+import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
+
 import java.util.Stack;
 
 public class JsonComponentWriter {
@@ -56,27 +61,35 @@ public class JsonComponentWriter {
         renderNewLine = true;
     }
 
-    public void setBold() {
-        current.setBold(true);
+    public void setBold(Boolean bold) {
+        current.setBold(bold);
     }
 
-    public void setItalic() {
-        current.setItalic(true);
+    public void setItalic(Boolean italic) {
+        current.setItalic(italic);
     }
 
-    public void setUnderlined() {
-        current.setUnderlined(true);
+    public void setUnderlined(Boolean underlined) {
+        current.setUnderlined(underlined);
     }
 
-    public void setColor(String color) {
+    public void setStrikethrough(Boolean strikethrough) {
+        current.setStrikethrough(strikethrough);
+    }
+
+    public void setObfuscated(Boolean obfuscated) {
+        current.setObfuscated(obfuscated);
+    }
+
+    public void setColor(ComponentColor color) {
         current.setColor(color);
     }
 
-    public void setHyperlink(String url) {
-        current.setUrl(url);
+    public void setClickEvent(ClickEvent event) {
+        current.setClickEvent(event);
     }
 
-    public void setMouseoverText(String text) {
-        current.setHoverText(text);
+    public void setHoverEvent(HoverEvent event) {
+        current.setHoverEvent(event);
     }
 }

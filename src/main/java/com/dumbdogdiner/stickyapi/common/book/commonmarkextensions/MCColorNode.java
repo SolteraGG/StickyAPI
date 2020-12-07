@@ -4,14 +4,15 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
+import com.dumbdogdiner.stickyapi.common.book.chat.ComponentColor;
 import lombok.Getter;
 import org.commonmark.node.CustomNode;
 
 public class MCColorNode extends CustomNode {
     @Getter
-    private final String colorName;
+    private final ComponentColor color;
 
-    public MCColorNode(String colorName) {
-        this.colorName = colorName;
+    public MCColorNode(ComponentColor color) {
+        this.color = color;
     }
 }
