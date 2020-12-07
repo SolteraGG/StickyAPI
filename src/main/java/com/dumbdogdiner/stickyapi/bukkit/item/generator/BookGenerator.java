@@ -96,7 +96,7 @@ public class BookGenerator {
 
     public BookGenerator addPage(JsonObject page) {
         if(!isFull()){
-            pages.add(NBTTagString.create(page.toString()));
+            pages.add(NBTTagString.a(page.toString()));
         } else {
             throw new IllegalStateException("Book is overfilled");
         }
