@@ -4,25 +4,53 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
+import com.dumbdogdiner.stickyapi.bukkit.item.generator.BookGenerator;
+import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponent;
+import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponentWriter;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCColorFormatDelimiterProcessor;
-import org.commonmark.node.Node;
+import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MarkdownJsonRenderer;
+import com.dumbdogdiner.stickyapi.common.util.BookUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
+import org.commonmark.node.Document;
 import org.commonmark.parser.Parser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.List;
 
 public class RuleBook {
     //TODO MOVE TO CONST
     private static final String RULEBOOK_PATH = "plugin name i guess? /rulebook.md";
-    public static void generateDefault() throws IOException {
-        Parser cmparser = Parser.builder()
+
+    // TODO where should we expect to find rulebook.md? using server root directory for now
+    private static File getRulebookPath() {
+        return new File(Bukkit.getWorldContainer(), "rulebook.md");
+    }
+
+    public static ItemStack generateDefault() throws IOException {
+        try (var reader = new InputStreamReader(new FileInputStream(getRulebookPath()))) {
+            return generate(reader, "§ddddMCSurvival Handbook", "Stixil");
+        }
+    }
+
+    public static ItemStack generate(Reader reader, String title, String author) throws IOException {
+        var cmparser = Parser.builder()
                 .customDelimiterProcessor(new MCColorFormatDelimiterProcessor())
                 .build();
-        File file = new File(RULEBOOK_PATH);
-        Node bookRoot  = cmparser.parseReader(new InputStreamReader(new FileInputStream(new File(RULEBOOK_PATH))));
-        //TODO: Traverse all subnodes and build the relevant json, convert to nbt, create a bookmeta, create an itemstack, and return it
-
+        var bookRoot = (Document) cmparser.parseReader(reader);
+        var bookGenerator = new BookGenerator(Material.WRITTEN_BOOK);
+        BookUtil.splitDocumentByHeadings(bookRoot, 2)
+                .stream().map(document -> {
+                    var component = new JsonComponent();
+                    var writer = new JsonComponentWriter(component);
+                    new MarkdownJsonRenderer(writer).render(document);
+                    return component;
+                }).map(BookUtil::splitBookPages).flatMap(List::stream).forEach(page -> {
+                    bookGenerator.addPage(page.toJson());
+                });
+        bookGenerator.setTitle(title);
+        bookGenerator.setAuthor(author);
+        return bookGenerator.toItemStack(1);
     }
 }
