@@ -50,6 +50,7 @@ public class RuleBook {
         return bookGenerator.toItemStack(1);
     }
 
+    //TODO: make a class that extends the renderer or NodeRenderer thingy
     private static JsonComponent renderDocument(Document document) {
         var component = new JsonComponent();
         var writer = new JsonComponentWriter(component);
