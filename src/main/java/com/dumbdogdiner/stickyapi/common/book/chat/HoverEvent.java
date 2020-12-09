@@ -8,18 +8,40 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
+/**
+ * An event that is fired when text associated with this event is hovered over.
+ */
 public abstract class HoverEvent {
-    private HoverEvent() {}
+    private HoverEvent() {} // seal this class
 
-    public abstract JsonElement toJson();
+    /**
+     * Convert the HoverEvent into JSON representation used in-game.
+     * @return {@link JsonElement}
+     */
+    public abstract @NonNull JsonElement toJson();
 
-    public abstract HoverEvent duplicate();
+    /**
+     * Create a copy of this HoverEvent.
+     * @return {@link HoverEvent}
+     */
+    public abstract @NonNull HoverEvent duplicate();
 
+    /**
+     * When hovered over, show some text.
+     */
     public final static class ShowText extends HoverEvent {
+        /** The text to show when the associated component is hovered over. */
         @Getter
         private final @NonNull JsonComponent component;
 
@@ -41,18 +63,20 @@ public abstract class HoverEvent {
         }
     }
 
+    /**
+     * When hovered over, show the tooltip of an item.
+     */
     public final static class ShowItem extends HoverEvent {
+        /** The item to reference for the tooltip. */
         @Getter
-        private final @NonNull String itemId;
+        private final @NonNull ItemStack item;
+        /** Extra NBT to apply to this item stack. */
         @Getter
-        private final @Nullable Integer count;
-        @Getter
-        private final @Nullable String nbt;
+        private final @Nullable String extraNBT; // might be possible to get this from the item but would need lots of nms
 
-        public ShowItem(@NonNull String itemId, @Nullable Integer count, @Nullable String nbt) {
-            this.itemId = itemId;
-            this.count = count;
-            this.nbt = nbt;
+        public ShowItem(@NonNull ItemStack item, @Nullable String extraNBT) {
+            this.item = item;
+            this.extraNBT = extraNBT;
         }
 
         @Override
@@ -60,14 +84,12 @@ public abstract class HoverEvent {
             JsonObject object = new JsonObject();
             object.addProperty("action", "show_item");
             JsonObject contents = new JsonObject();
-            if (itemId != null) {
-                contents.addProperty("id", itemId);
+            contents.addProperty("id", item.getType().getKey().toString());
+            if (item.getAmount() != 1) {
+                contents.addProperty("count", item.getAmount());
             }
-            if (count != null) {
-                contents.addProperty("count", count);
-            }
-            if (nbt != null) {
-                contents.addProperty("tag", nbt);
+            if (extraNBT != null) {
+                contents.addProperty("tag", extraNBT);
             }
             object.add("contents", contents);
             return object;
@@ -75,21 +97,27 @@ public abstract class HoverEvent {
 
         @Override
         public ShowItem duplicate() {
-            return new ShowItem(itemId, count, nbt);
+            return new ShowItem(item, extraNBT);
         }
     }
 
+    /**
+     * When hovered over, show data about an entity.
+     */
     public final static class ShowEntity extends HoverEvent {
+        /** Text to display as the name of the entity. */
         @Getter
         private final @Nullable JsonComponent name;
+        /** The type of the entity. */
         @Getter
-        private final @NonNull String entityKey;
+        private final @NonNull EntityType entityType;
+        /** The ID of the entity. */
         @Getter
         private final @NonNull UUID entityId;
 
-        public ShowEntity(@Nullable JsonComponent name, @NonNull String entityKey, @NonNull UUID entityId) {
+        public ShowEntity(@Nullable JsonComponent name, @NonNull EntityType entityType, @NonNull UUID entityId) {
             this.name = name;
-            this.entityKey = entityKey;
+            this.entityType = entityType;
             this.entityId = entityId;
         }
 
@@ -101,7 +129,7 @@ public abstract class HoverEvent {
             if (name != null) {
                 contents.add("name", name.toJson());
             }
-            contents.addProperty("type", entityKey);
+            contents.addProperty("type", entityType.getKey().toString());
             contents.addProperty("id", entityId.toString());
             object.add("contents", contents);
             return object;
@@ -109,7 +137,7 @@ public abstract class HoverEvent {
 
         @Override
         public ShowEntity duplicate() {
-            return new ShowEntity(name, entityKey, entityId);
+            return new ShowEntity(name, entityType, entityId);
         }
     }
 }

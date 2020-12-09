@@ -13,6 +13,9 @@ import org.commonmark.parser.delimiter.DelimiterRun;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A delimiter processor for custom name nbt.
+ */
 public class MCColorFormatDelimiterProcessor implements DelimiterProcessor {
     private static final Pattern COLOR_PATTERN = Pattern.compile("^([a-z_]+|#[0-9A-Fa-f]{6})(\\s*(?:\\s[\\S\\s]+)?)$");
 

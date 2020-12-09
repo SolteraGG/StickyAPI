@@ -9,12 +9,16 @@ import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * A color used in text components.
+ */
 public class ComponentColor {
-    private static final Set<String> VALID_NAMED_COLORS = new HashSet<>();
+    private static final HashMap<String, ComponentColor> VALID_NAMED_COLORS = new HashMap<>();
 
     public static final ComponentColor RESET = registerValid("reset");
     public static final ComponentColor BLACK = registerValid("black");
@@ -36,8 +40,9 @@ public class ComponentColor {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^#[0-9A-Fa-f]{6}$");
 
+    /** The text representation used for the color. */
     @Getter
-    private final String text;
+    private final @NonNull String text;
 
     private ComponentColor(String text) {
         this.text = text;
@@ -48,21 +53,30 @@ public class ComponentColor {
     }
 
     private static ComponentColor registerValid(String text) {
-        VALID_NAMED_COLORS.add(text);
-        return new ComponentColor(text);
+        ComponentColor x = new ComponentColor(text);
+        VALID_NAMED_COLORS.put(text, x);
+        return x;
     }
 
-    public static @Nullable ComponentColor fromText(String text) {
+    /**
+     * Get or create a color from the given string, or null if the string is not valid.
+     * @param text The text for the color. Can be a 6-digit hex color, one of the sixteen named colors, or "reset".
+     * @return {@link ComponentColor}
+     */
+    public static @Nullable ComponentColor fromText(@NonNull String text) {
         if (HEX_PATTERN.matcher(text).matches()) {
             return new ComponentColor(text);
-        } else if (VALID_NAMED_COLORS.contains(text)) {
-            return new ComponentColor(text);
         } else {
-            return null;
+            return VALID_NAMED_COLORS.get(text);
         }
     }
 
-    public static @NonNull ComponentColor fromColor(Color color) {
+    /**
+     * Create a color from the given Color object.
+     * @param color The color object to generate the color from.
+     * @return {@link ComponentColor}
+     */
+    public static @NonNull ComponentColor fromColor(@NonNull Color color) {
         return new ComponentColor(color);
     }
 }

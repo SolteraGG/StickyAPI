@@ -12,6 +12,9 @@ import org.commonmark.renderer.NodeRenderer;
 
 import java.util.*;
 
+/**
+ * An implementation of {@link NodeRenderer} that writes to a {@link JsonComponent}
+ */
 public class MarkdownJsonRenderer extends AbstractVisitor implements NodeRenderer {
     private static final Set<Class<? extends Node>> nodeTypes = new HashSet<>(Arrays.asList(
             Text.class,

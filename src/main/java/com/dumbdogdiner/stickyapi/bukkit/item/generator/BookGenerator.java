@@ -8,43 +8,30 @@ import com.dumbdogdiner.stickyapi.common.util.BookUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
 public class BookGenerator {
     private final JsonArray pages = new JsonArray();
-
-
-    @Setter
+    /** The generation of the book. */
+    @Getter @Setter
+    private @NonNull BookMeta.Generation generation = BookMeta.Generation.ORIGINAL;
+    /** The material of the book. */
     @Getter
-    private BookMeta.Generation generation = BookMeta.Generation.ORIGINAL;
-
-    @Getter
-    Material bookType;
-
-    @Getter
-    @Setter
-    private String author;
-
-    /**
-     * Title of the book
-     * -- SETTER --
-     * Sets the name of the book, this may have ChatColors
-     *
-     * @param title The new value.
-     * -- GETTER --
-     * Returns the book title
-     * @return String The book's title
-     */
-    @SuppressWarnings("JavaDoc")
-    @Setter
-    @Getter
+    private final Material bookType;
+    /** The author of the book. Must not be null if the book is written. */
+    @Getter @Setter
+    private @Nullable String author;
+    /** The title of the book, can be formatted using color codes. */
+    @Getter @Setter
     private String title;
 
     public BookGenerator(Material material) {
@@ -53,20 +40,13 @@ public class BookGenerator {
         }
 
         this.bookType = material;
-
-
     }
-    /*
-/give @p written_book{pages:['["",{"text":"Dumb Dog Diner MC\\nSurvival Handbook","bold":true,"italic":true,"color":"dark_purple"},{"text":"\\n\\n","color":"reset"},{"text":"Table of Contents:","bold":true,"italic":true,"underlined":true,"color":"dark_red"},{"text":"\\n","color":"reset"},{"text":"Page 2: ","color":"red"},{"text":"Rules\\n","color":"reset"},{"text":"Pg. 3: ","color":"red"},{"text":"Gameplay\\n","color":"reset"},{"text":"Pg. 5: ","color":"red"},{"text":"Trading\\n","color":"reset"},{"text":"Pg. 7: ","color":"red"},{"text":"Commands\\n","color":"reset"},{"text":"Pg. 9: ","color":"red"},{"text":"Trading\\nCommands\\n","color":"reset"},{"text":"Pg. 11: ","color":"red"},{"text":"Misc Commands\\n","color":"reset"},{"text":"Pg. 12: ","color":"red"},{"text":"Getting Help\\n","color":"reset"},{"text":"Pg. 14: ","color":"red"},{"text":"Credits","color":"reset"}]','["",{"text":"The Rules:","bold":true,"italic":true,"underlined":true,"color":"red"},{"text":"\\n1. Absolutely no\\ngriefing, theft, or\\nintentional distress!\\n2. No cheating/hacking\\nallowed. Optifine and\\nsimilar are okay.\\n3. No floating trees.\\n4. No fully-automatic\\nredstone farms.\\n5. No harassment,\\nbullying, or abuse.\\n6. No AFK fishing.","color":"reset"}]','["",{"text":"Gameplay:","bold":true,"italic":true,"underlined":true,"color":"dark_green"},{"text":"\\nThe world border for all worlds is 8,000\\nblocks from the\\ncenter. Because of\\nnow ","color":"reset"},{"text":"Nether Portal","color":"dark_red"},{"text":"\\ntravel works, you will\\nnot be able to light\\nthem past 1,000 blocks\\nfrom the center.\\nYou may build wherever you like! Try ","color":"reset"},{"text":"/rtp","color":"blue"},{"text":" to help find a spot!","color":"reset"}]','["",{"text":"This server uses a "},{"text":"Death Chest ","color":"red"},{"text":"system. Upon death, a campfire with your items will spawn at your death location. It will last\\nfor 10 minutes before\\nyour items drop on \\nthe ground!\\n\\nYou can have up to 3\\n","color":"reset"},{"text":"Death Chests","color":"red"},{"text":" at a time.","color":"reset"}]','["",{"text":"Trading:","bold":true,"italic":true,"underlined":true,"color":"dark_aqua"},{"text":"\\nWe use chest chops\\nfor player to trade\\ngood for ","color":"reset"},{"text":"Coins","color":"gold"},{"text":".\\n\\nCoins may be earned through selling goods\\nto other players,\\npaying/receiving\\nmoney for a service,\\nor by selling goods to\\nthe server itself.","color":"reset"}]','{"text":"Chest shops can buy\\nor sell items!\\n\\nTo make a shop, place a chest and\\nshift-click with the\\nitem you want to sell\\nor buy.\\n\\nRegular users may have up to 6 shops\\nat a time."}','["",{"text":"Commands:","bold":true,"italic":true,"underlined":true,"color":"red"},{"text":"\\nTab-complete is set\\nup to only show commands you have access to. Here are some useful ones:\\n\\n","color":"reset"},{"text":"/help ","color":"blue"},{"text":"- Opens the\\nhelp menu\\n","color":"reset"},{"text":"/servers ","color":"blue"},{"text":"- Opens the\\nserver menu\\n","color":"reset"},{"text":"/rules","color":"blue"},{"text":" - Grants this\\nbook","color":"reset"}]','["",{"text":"/options ","color":"blue"},{"text":"- Opens the player options menu\\n","color":"reset"},{"text":"/tpa ","color":"blue"},{"text":"- Sends a\\nteleport request to another player\\n","color":"reset"},{"text":"/rtp ","color":"blue"},{"text":"- Start a\\nrandom teleport\\n","color":"reset"},{"text":"/pw ","color":"blue"},{"text":"- Opens the playerwarps personal\\nhome menu\\n","color":"reset"},{"text":"/helpme ","color":"blue"},{"text":"- Pings an online staff member\\nfor assistance","color":"reset"}]','["",{"text":"Trading Commands:","bold":true,"italic":true,"underlined":true,"color":"dark_purple"},{"text":"\\n","color":"reset"},{"text":"/bal ","color":"blue"},{"text":"- Check your\\nbalance\\n","color":"reset"},{"text":"/pay ","color":"blue"},{"text":"- Pay another player\\n","color":"reset"},{"text":"/sell ","color":"blue"},{"text":"- Sell the item in your hand to the server\\n","color":"reset"},{"text":"/worth ","color":"blue"},{"text":"- Shows the\\nitem price when selling\\nto the server","color":"reset"}]','["",{"text":"/value","color":"blue"},{"text":" - Shows the\\naverage selling price\\nfor an item in\\nplayer shops","color":"reset"}]','["",{"text":"Extra Commands:","bold":true,"italic":true,"underlined":true,"color":"dark_aqua"},{"text":"\\n","color":"reset"},{"text":"/donate, /vip ","color":"blue"},{"text":"- Gives link to the server Patreon page\\n","color":"reset"},{"text":"/discord ","color":"blue"},{"text":"- Gives link to the server Discord\\n","color":"reset"},{"text":"/twitter, /twitch ","color":"blue"},{"text":"- Gives social media links\\n","color":"reset"},{"text":"/merch ","color":"blue"},{"text":"- Gives merch link\\n","color":"reset"},{"text":"/afk ","color":"blue"},{"text":"- Set your status to AFK","color":"reset"}]','["",{"text":"Getting Help:","bold":true,"italic":true,"underlined":true,"color":"light_purple"},{"text":"\\nIf you ever need help\\ngetting your way\\naround the server,\\nplease ask any staff!\\n","color":"reset"},{"text":"/helpme","color":"blue"},{"text":"\\n\\nPlease join the\\nDiscord server to get\\ntechnical help!\\n","color":"reset"},{"text":"/discord","color":"blue"}]','["",{"text":"Please report any\\nbugs, griefing, etc.\\nthat you come across\\nor are a victim of. A\\nstaff member will be\\nhappy to assist you.\\n\\nThe help menu has shortcuts that make getting help easy!\\n"},{"text":"/help","color":"blue"}]','["",{"text":"Credits:","bold":true,"italic":true,"underlined":true,"color":"gold"},{"text":"\\n","color":"reset"},{"text":"dddMC ","bold":true,"color":"dark_purple"},{"text":"is fully funded\\nthrough player donations. Please consider helping support us on Patreon!\\n","color":"reset"},{"text":"/donate /patreon","color":"blue"},{"text":"\\n\\nPatrons will receive a\\nVIP rank. More ranks\\nwill be added in the\\nfuture.","color":"reset"}]','["",{"text":"We hope you enjoy\\nyour time playing\\non the server!\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n- Stixil, "},{"text":"dddMC 2020","bold":true,"color":"dark_purple"}]'],title:"&ddddMC Survival Handbook",author:Stixil}
-
- */
 
     /**
-     * Escape characters for colors, etc...
-     * I guess we can just.... use the &amp;-* codes or something, we can use chatcolors somehow
-     * Beyond that, we can use markdown???
+     * Add some pages to the book. May fail with {@link IllegalStateException} if the book is full or fills up.
+     * @param pages Pages to add
+     * @return This object, for chaining
      */
-
     public BookGenerator addPages(JsonObject... pages) {
         for (JsonObject page : pages) {
             addPage(page);
@@ -74,6 +54,11 @@ public class BookGenerator {
         return this;
     }
 
+    /**
+     * Add a page to the book. May fail with {@link IllegalStateException} if the book is full.
+     * @param page The page to add
+     * @return This object, for chaining
+     */
     public BookGenerator addPage(JsonObject page) {
         if(!isFull()){
             pages.add(page.toString());
@@ -83,8 +68,11 @@ public class BookGenerator {
         return this;
     }
 
-
-
+    /**
+     * Build a book from this generator.
+     * @param qty Quantity of the item stack.
+     * @return {@link ItemStack}
+     */
     public ItemStack toItemStack(int qty) {
         ItemStack stack = Bukkit.getUnsafe().modifyItemStack(new ItemStack(bookType), "{pages: " + pages.toString() + "}");
 
@@ -99,12 +87,16 @@ public class BookGenerator {
         return stack;
     }
 
-
+    /**
+     * @return The percentage of pages allowed that are used by this book.
+     */
     public float percentFull() {
         return (float)pages.size() / (float)BookUtil.PAGES_PER_BOOK;
     }
 
-
+    /**
+     * @return True if the book is full.
+     */
     public boolean isFull() {
         return percentFull() >= 1.0f;
     }

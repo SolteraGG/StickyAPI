@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 public class JsonComponent {
     @Getter @Setter
     private @NonNull String text = "";
-    // for now, the attributes are only what are needed for the renderer, might expand later
     @Getter @Setter
     private @Nullable Boolean bold = null;
     @Getter @Setter
@@ -118,6 +117,10 @@ public class JsonComponent {
         }
     }
 
+    /**
+     * Clone this component
+     * @return A clone of this component
+     */
     public JsonComponent duplicate() {
         JsonComponent clone = new JsonComponent(text);
         clone.bold = bold;

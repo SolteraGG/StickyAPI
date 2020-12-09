@@ -8,6 +8,9 @@ import com.dumbdogdiner.stickyapi.common.book.chat.ComponentColor;
 import lombok.Getter;
 import org.commonmark.node.CustomNode;
 
+/**
+ * A custom node that represents a {@link ComponentColor}.
+ */
 public class MCColorNode extends CustomNode {
     @Getter
     private final ComponentColor color;

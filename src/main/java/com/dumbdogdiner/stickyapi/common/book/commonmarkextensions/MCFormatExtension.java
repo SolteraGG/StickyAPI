@@ -10,7 +10,7 @@ import org.commonmark.parser.Parser;
 public class MCFormatExtension implements Parser.ParserExtension {
     private MCFormatExtension(){}
 
-    public static Extension create(){
+    public static MCFormatExtension create() {
         return new MCFormatExtension();
     }
 

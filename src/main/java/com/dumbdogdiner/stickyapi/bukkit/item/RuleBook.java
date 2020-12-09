@@ -8,6 +8,7 @@ import com.dumbdogdiner.stickyapi.bukkit.item.generator.BookGenerator;
 import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponentWriter;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCColorFormatDelimiterProcessor;
+import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCFormatExtension;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MarkdownJsonRenderer;
 import com.dumbdogdiner.stickyapi.common.util.BookUtil;
 import org.bukkit.Bukkit;
@@ -35,9 +36,9 @@ public class RuleBook {
     }
 
     public static ItemStack generate(Reader reader, String title, String author) throws IOException {
-        var cmparser = Parser.builder()
-                .customDelimiterProcessor(new MCColorFormatDelimiterProcessor())
-                .build();
+        var builder = Parser.builder();
+        MCFormatExtension.create().extend(builder);
+        var cmparser = builder.build();
         var bookGenerator = new BookGenerator(Material.WRITTEN_BOOK);
         var sections = BookUtil.splitDocumentByBreaks((Document) cmparser.parseReader(reader));
         sections.stream()
@@ -47,7 +48,6 @@ public class RuleBook {
         return bookGenerator.setTitle(title).setAuthor(author).toItemStack(1);
     }
 
-    //TODO: make a class that extends the renderer or NodeRenderer thingy
     private static JsonComponent renderDocument(Document document) {
         var component = new JsonComponent();
         var writer = new JsonComponentWriter(component);

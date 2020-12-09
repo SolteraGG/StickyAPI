@@ -9,15 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
 import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
 import lombok.NonNull;
 import org.commonmark.node.Document;
-import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
 import org.commonmark.node.ThematicBreak;
-import org.jetbrains.annotations.NotNull;
 
+/**
+ * Utilities for text and books.
+ */
 public class BookUtil {
     public static final int PIXELS_PER_LINE = 113;
     public static final int LINES_PER_PAGE = 14;
@@ -60,7 +60,11 @@ public class BookUtil {
         characterWidths.put('~', 6);
     }
 
-    // Uses info from: https://minecraft.gamepedia.com/Language#Font
+    /**
+     * Uses info from https://minecraft.gamepedia.com/Language#Font"
+     * @param c The character to measure
+     * @return The width of the character in pixels
+     */
     public static int getCharacterWidth(char c) {
         if (c < 32 || c > 126) {
             // Not presently implemented, would require rendering TTF
@@ -148,28 +152,6 @@ public class BookUtil {
     }
 
     /**
-     * Split a document into multiple documents, delimited by headings. Destroys the original document.
-     * @param document The original document
-     * @param maxHeadingSize The smallest size of heading to split on.
-     * @return A list of each document.
-     */
-    public static List<Document> splitDocumentByHeadings(@NonNull Document document, int maxHeadingSize) {
-        List<Document> docs = new ArrayList<>();
-        Document currentDocument = new Document();
-        Node next;
-        for (Node n = document.getFirstChild(); n != null; n = next) {
-            next = n.getNext();
-            if (n instanceof Heading && ((Heading) n).getLevel() <= maxHeadingSize) {
-                docs.add(currentDocument);
-                currentDocument = new Document();
-            }
-            currentDocument.appendChild(n);
-        }
-        docs.add(currentDocument);
-        return docs;
-    }
-
-    /**
      * Split a document into multiple documents, delimited by thematic breaks. Destroys the original document.
      * @param document The original document
      * @return A list of each document.
@@ -196,7 +178,7 @@ public class BookUtil {
      * @param component The component to measure
      * @return The width of the text, in pixels
      */
-    public static int getComponentWidth(@NotNull JsonComponent component) {
+    public static int getComponentWidth(@NonNull JsonComponent component) {
         String text = component.getText();
         int width = getStringWidth(text);
         if (component.getBold() == Boolean.TRUE) width += text.length();
@@ -211,7 +193,7 @@ public class BookUtil {
      * @param text The string to measure
      * @return The width of the string, in pixels
      */
-    public static int getStringWidth(@NotNull String text) {
+    public static int getStringWidth(@NonNull String text) {
         if (text.isEmpty()) return 0;
         int width = 0;
         int textLength = text.length();
