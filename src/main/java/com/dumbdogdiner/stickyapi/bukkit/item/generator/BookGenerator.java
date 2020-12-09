@@ -4,48 +4,26 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 
-import com.dumbdogdiner.stickyapi.StickyAPI;
-import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.util.BookUtil;
-import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
-import net.minecraft.server.v1_16_R3.NBTTagList;
-import net.minecraft.server.v1_16_R3.NBTTagString;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
 public class BookGenerator {
-    public enum Generation {
-        ORIGINAL(0),
-        COPY_OF_ORIGINAL(1),
-        COPY_OF_COPY(2),
-        TATTERED(3);
-
-        private Generation(int g) {
-            genInt = g;
-        }
-
-        private final int genInt;
-
-        public int asInt() {
-            return genInt;
-        }
-    }
-
-    private NBTTagList pages = new NBTTagList();
+    private final JsonArray pages = new JsonArray();
 
 
     @Setter
     @Getter
-    private Generation generation = Generation.ORIGINAL;
+    private BookMeta.Generation generation = BookMeta.Generation.ORIGINAL;
 
     @Getter
     Material bookType;
@@ -98,15 +76,7 @@ public class BookGenerator {
 
     public BookGenerator addPage(JsonObject page) {
         if(!isFull()){
-            String jsonString = page.toString();
-            NBTTagString tag;
-            // .create just calls .a, so both branches are identical except .create is added by Paper
-            if (ServerVersion.isPaper()) {
-                tag = NBTTagString.create(jsonString);
-            } else {
-                tag = NBTTagString.a(jsonString);
-            }
-            pages.add(tag);
+            pages.add(page.toString());
         } else {
             throw new IllegalStateException("Book is overfilled");
         }
@@ -116,17 +86,17 @@ public class BookGenerator {
 
 
     public ItemStack toItemStack(int qty) {
-        NBTTagCompound root = new NBTTagCompound();
-        if (bookType == Material.WRITTEN_BOOK) {
-            root.setString("title", title);
-            root.setString("author", author);
-            root.setInt("generation", generation.asInt());
-        }
-        root.set("pages", pages);
+        ItemStack stack = Bukkit.getUnsafe().modifyItemStack(new ItemStack(bookType), "{pages: " + pages.toString() + "}");
 
-        net.minecraft.server.v1_16_R3.ItemStack nmsBook = CraftItemStack.asNMSCopy(new ItemStack(bookType, qty));
-        nmsBook.setTag(root);
-        return CraftItemStack.asBukkitCopy(nmsBook);
+        if (bookType == Material.WRITTEN_BOOK) {
+            BookMeta meta = (BookMeta) stack.getItemMeta();
+            meta.setTitle(title);
+            meta.setAuthor(author);
+            meta.setGeneration(generation);
+            stack.setItemMeta(meta);
+        }
+
+        return stack;
     }
 
 

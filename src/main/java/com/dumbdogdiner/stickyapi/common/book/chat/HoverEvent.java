@@ -8,10 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.NonNull;
-import net.minecraft.server.v1_16_R3.EntityTypes;
-import net.minecraft.server.v1_16_R3.IRegistry;
-import net.minecraft.server.v1_16_R3.ItemStack;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -46,10 +43,16 @@ public abstract class HoverEvent {
 
     public final static class ShowItem extends HoverEvent {
         @Getter
-        private final @NonNull ItemStack stack;
+        private final @NonNull String itemId;
+        @Getter
+        private final @Nullable Integer count;
+        @Getter
+        private final @Nullable String nbt;
 
-        public ShowItem(@NonNull ItemStack stack) {
-            this.stack = stack;
+        public ShowItem(@NonNull String itemId, @Nullable Integer count, @Nullable String nbt) {
+            this.itemId = itemId;
+            this.count = count;
+            this.nbt = nbt;
         }
 
         @Override
@@ -57,11 +60,14 @@ public abstract class HoverEvent {
             JsonObject object = new JsonObject();
             object.addProperty("action", "show_item");
             JsonObject contents = new JsonObject();
-            contents.addProperty("id", IRegistry.ITEM.getKey(stack.getItem()).toString());
-            contents.addProperty("count", stack.getCount());
-            NBTTagCompound tag = stack.getTag();
-            if (tag != null) {
-                contents.addProperty("tag", tag.toString());
+            if (itemId != null) {
+                contents.addProperty("id", itemId);
+            }
+            if (count != null) {
+                contents.addProperty("count", count);
+            }
+            if (nbt != null) {
+                contents.addProperty("tag", nbt);
             }
             object.add("contents", contents);
             return object;
@@ -69,21 +75,21 @@ public abstract class HoverEvent {
 
         @Override
         public ShowItem duplicate() {
-            return new ShowItem(stack);
+            return new ShowItem(itemId, count, nbt);
         }
     }
 
     public final static class ShowEntity extends HoverEvent {
         @Getter
-        private final JsonComponent name;
+        private final @Nullable JsonComponent name;
         @Getter
-        private final @NonNull EntityTypes<?> entityType;
+        private final @NonNull String entityKey;
         @Getter
         private final @NonNull UUID entityId;
 
-        public ShowEntity(JsonComponent name, @NonNull EntityTypes<?> entityType, @NonNull UUID entityId) {
+        public ShowEntity(@Nullable JsonComponent name, @NonNull String entityKey, @NonNull UUID entityId) {
             this.name = name;
-            this.entityType = entityType;
+            this.entityKey = entityKey;
             this.entityId = entityId;
         }
 
@@ -95,7 +101,7 @@ public abstract class HoverEvent {
             if (name != null) {
                 contents.add("name", name.toJson());
             }
-            contents.addProperty("type", IRegistry.ENTITY_TYPE.getKey(entityType).toString());
+            contents.addProperty("type", entityKey);
             contents.addProperty("id", entityId.toString());
             object.add("contents", contents);
             return object;
@@ -103,7 +109,7 @@ public abstract class HoverEvent {
 
         @Override
         public ShowEntity duplicate() {
-            return new ShowEntity(name, entityType, entityId);
+            return new ShowEntity(name, entityKey, entityId);
         }
     }
 }

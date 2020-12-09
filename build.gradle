@@ -56,7 +56,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
     implementation 'com.atlassian.commonmark:commonmark:0.15.2'
 
-    compileOnly 'com.dumbdogdiner.buildtools:paper:1.16.4-318-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
 
     implementation 'org.jetbrains:annotations:20.1.0'

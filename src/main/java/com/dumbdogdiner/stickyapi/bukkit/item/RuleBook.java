@@ -44,10 +44,7 @@ public class RuleBook {
                 .map(section -> BookUtil.splitBookPages(renderDocument(section)))
                 .flatMap(List::stream)
                 .forEach(page -> bookGenerator.addPage(page.toJson()));
-        bookGenerator.setTitle(title);
-        bookGenerator.setAuthor(author);
-
-        return bookGenerator.toItemStack(1);
+        return bookGenerator.setTitle(title).setAuthor(author).toItemStack(1);
     }
 
     //TODO: make a class that extends the renderer or NodeRenderer thingy
