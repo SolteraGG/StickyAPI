@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -30,6 +31,7 @@ public class Arguments {
     @Getter
     private ArrayList<String> unparsedArgs;
     private HashMap<String, String> parsedArgs = new HashMap<>();
+    private HashMap<String, Validator> validators = new HashMap<>();
 
     @Getter
     private String invalidatedBy;
@@ -37,6 +39,11 @@ public class Arguments {
     private int position = 0;
     private boolean valid = true;
     private final Debugger debug = new Debugger(getClass());
+
+    @FunctionalInterface
+    public interface Validator<T> {
+        public boolean validate(T arg);
+    }
 
     public void invalidate(@NotNull String name) {
         debug.print("Invalidated by argument " + name);
@@ -50,6 +57,13 @@ public class Arguments {
      * @return {@link java.lang.Boolean}
      */
     public boolean valid() {
+        for (Map.Entry<String, Validator> entry : validators.entrySet()) {
+            String arg = entry.getKey();
+            Validator func = entry.getValue();
+            if (!func.validate(parsedArgs.get(arg))) {
+                invalidate(arg);
+            }
+        }
         return valid;
     }
 
@@ -71,7 +85,7 @@ public class Arguments {
      * @param flag The name of this flag, and flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalFlag(@NotNull String flag) {
+    public ArgumentItem optionalFlag(@NotNull String flag) {
         return optionalFlag(flag, flag);
     }
 
@@ -82,12 +96,12 @@ public class Arguments {
      * @param flag The flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalFlag(@NotNull String name, @NotNull String flag) {
+    public ArgumentItem optionalFlag(@NotNull String name, @NotNull String flag) {
         debug.print("Looking for optional flag " + name + "...");
         int index = unparsedArgs.indexOf(flag);
         if (index == -1) {
             debug.print("Could not find flag");
-            return this;
+            return new ArgumentItem(this, name);
         }
 
         debug.print("Found flag at position " + index + " - new args size = " + unparsedArgs.size());
@@ -95,7 +109,7 @@ public class Arguments {
         parsedArgs.put(name, unparsedArgs.get(index));
         unparsedArgs.remove(index);
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -105,13 +119,13 @@ public class Arguments {
      * @param flag The flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredFlag(@NotNull String name, @NotNull String flag) {
+    public ArgumentItem requiredFlag(@NotNull String name, @NotNull String flag) {
         debug.print("Looking for required flag " + name + "...");
         int index = unparsedArgs.indexOf(flag);
         if (index == -1) {
             invalidate(name);
             debug.print("Could not find flag - marking as invalid");
-            return this;
+            return new ArgumentItem(this, name);
         }
 
         debug.print("Found flag at position " + String.valueOf(index));
@@ -119,10 +133,10 @@ public class Arguments {
         parsedArgs.put(name, unparsedArgs.get(index));
         unparsedArgs.remove(index);
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
-    private Arguments optionalStringImplementation(String name, String fallback) {
+    private ArgumentItem optionalStringImplementation(String name, String fallback) {
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
             parsedArgs.put(name, unparsedArgs.get(position));
@@ -134,7 +148,7 @@ public class Arguments {
             parsedArgs.put(name, fallback);
         }
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -144,7 +158,7 @@ public class Arguments {
      * @param fallback the default value you want for the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalString(@NotNull String name, @NotNull String fallback) {
+    public ArgumentItem optionalString(@NotNull String name, @NotNull String fallback) {
         // noinspection ConstantConditions
         return optionalStringImplementation(name, fallback);
     }
@@ -155,7 +169,7 @@ public class Arguments {
      * @param name The name of this string
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalString(String name) {
+    public ArgumentItem optionalString(String name) {
         return optionalStringImplementation(name, null);
     }
 
@@ -165,7 +179,7 @@ public class Arguments {
      * @param name The name of this string
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredString(String name) {
+    public ArgumentItem requiredString(String name) {
         debug.print("Looking for required string " + name + "...");
 
         if (unparsedArgs.size() > position) {
@@ -177,10 +191,10 @@ public class Arguments {
             invalidate(name);
         }
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
-    private Arguments optionalSentenceImplementation(String name, String fallback, int length) {
+    private ArgumentItem optionalSentenceImplementation(String name, String fallback, int length) {
         int end = position + length;
         debug.print("Looking for optional sentence - start = " + String.valueOf(position) + ", end = "
                 + String.valueOf(end) + ", length = " + String.valueOf(length));
@@ -188,14 +202,14 @@ public class Arguments {
         if (position >= end) {
             debug.print("Start cannot be greater than or equal to end, using default value of " + fallback);
             parsedArgs.put(name, fallback);
-            return this;
+            return new ArgumentItem(this, name);
         }
 
         if (unparsedArgs.size() < position + length) {
             debug.print("Could not find sentence of appropriate length (args are size " + String.valueOf(position)
                     + ") using default value of " + fallback);
             parsedArgs.put(name, fallback);
-            return this;
+            return new ArgumentItem(this, name);
         }
 
         String concatenated = String.join(" ",
@@ -209,7 +223,7 @@ public class Arguments {
         debug.print("Found sentence of length " + String.valueOf(length) + " - new args size = "
                 + String.valueOf(unparsedArgs.size()));
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -219,7 +233,7 @@ public class Arguments {
      * @param name The name of this sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name) {
+    public ArgumentItem optionalSentence(@NotNull String name) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
         return optionalSentence(name, unparsedArgs.size() - position);
     }
@@ -232,7 +246,7 @@ public class Arguments {
      * @param fallback The fallback sentence to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name, @Nullable String fallback) {
+    public ArgumentItem optionalSentence(@NotNull String name, @Nullable String fallback) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
         return optionalSentence(name, fallback, unparsedArgs.size() - position);
     }
@@ -245,12 +259,12 @@ public class Arguments {
      * @param length   The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name, @Nullable String fallback, @NotNull int length) {
+    public ArgumentItem optionalSentence(@NotNull String name, @Nullable String fallback, @NotNull int length) {
         if (fallback != null) {
             return optionalSentenceImplementation(name, fallback, length);
         } else {
             debug.print("Explicit fallback string of null attempted for parameter " + name + ", argument not added.");
-            return this;
+            return new ArgumentItem(this, name);
         }
     }
 
@@ -261,9 +275,9 @@ public class Arguments {
      * @param length The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name, @NotNull int length) {
+    public ArgumentItem optionalSentence(@NotNull String name, @NotNull int length) {
         optionalSentenceImplementation(name, null, length);
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -273,7 +287,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredSentence(@NotNull String name) {
+    public ArgumentItem requiredSentence(@NotNull String name) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
         return requiredSentence(name, unparsedArgs.size() - position);
     }
@@ -285,7 +299,7 @@ public class Arguments {
      * @param length Maximum length in words of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredSentence(@NotNull String name, @NotNull int length) {
+    public ArgumentItem requiredSentence(@NotNull String name, @NotNull int length) {
         int end = position + length;
         debug.print("Looking for required sentence - start = " + String.valueOf(position) + ", end = "
                 + String.valueOf(end) + ", length = " + String.valueOf(length));
@@ -294,14 +308,14 @@ public class Arguments {
         if (position >= end) {
             debug.print("Start cannot be greater than or equal to end");
             invalidate(name);
-            return this;
+            return new ArgumentItem(this, name);
         }
 
         if (unparsedArgs.size() < position + length) {
             invalidate(name);
             debug.print("Could not find sentence of appropriate length (args are size "
                     + String.valueOf(unparsedArgs.size()) + ") - marking as invalid");
-            return this;
+            return new ArgumentItem(this, name);
         }
 
         String concatenated = String.join(" ",
@@ -312,7 +326,7 @@ public class Arguments {
 
         debug.print("Found sentence of length " + String.valueOf(length));
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -321,7 +335,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalTimeString(@NotNull String name) {
+    public ArgumentItem optionalTimeString(@NotNull String name) {
         debug.print("Looking for optional timestamp " + name + "...");
         if (unparsedArgs.size() > position && TimeUtil.toTimestamp(unparsedArgs.get(position)) != null) {
             parsedArgs.put(name, String.valueOf(TimeUtil.toTimestamp(unparsedArgs.get(position)).getTime()));
@@ -331,7 +345,7 @@ public class Arguments {
         } else
             debug.print("Could not find timestamp");
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -340,7 +354,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredTimeString(@NotNull String name) {
+    public ArgumentItem requiredTimeString(@NotNull String name) {
         debug.print("Looking for required timestamp " + name + "...");
         if (unparsedArgs.size() > position && TimeUtil.toTimestamp(unparsedArgs.get(position)) != null) {
             parsedArgs.put(name, String.valueOf(TimeUtil.toTimestamp(unparsedArgs.get(position)).getTime()));
@@ -352,10 +366,10 @@ public class Arguments {
             invalidate(name);
         }
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
-    private Arguments optionalIntImplementation(@NotNull String name, @NotNull Integer fallback) {
+    private ArgumentItem optionalIntImplementation(@NotNull String name, @NotNull Integer fallback) {
         debug.print("Looking for optional integer " + name + "...");
         if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
             parsedArgs.put(name, unparsedArgs.get(position));
@@ -367,7 +381,7 @@ public class Arguments {
             parsedArgs.put(name, fallback.toString());
         }
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -376,9 +390,9 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalInt(@NotNull String name) {
+    public ArgumentItem optionalInt(@NotNull String name) {
         optionalIntImplementation(name, null);
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -388,12 +402,12 @@ public class Arguments {
      * @param fallback The fallback integer to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalInt(@NotNull String name, @NotNull Integer fallback) {
+    public ArgumentItem optionalInt(@NotNull String name, @NotNull Integer fallback) {
         if (fallback != null) {
             return optionalIntImplementation(name, fallback);
         } else {
             debug.print("Explicit fallback integer of null attempted for parameter " + name + ", argument not added.");
-            return this;
+            return new ArgumentItem(this, name);
         }
     }
 
@@ -403,7 +417,7 @@ public class Arguments {
      * @param name The name of the integer to create
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredInt(@NotNull String name) {
+    public ArgumentItem requiredInt(@NotNull String name) {
         debug.print("Looking for optional required " + name + "...");
 
         if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
@@ -416,7 +430,7 @@ public class Arguments {
             invalidate(name);
         }
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -425,7 +439,7 @@ public class Arguments {
      * @param name The name of the duration to create
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalDuration(@NotNull String name) {
+    public ArgumentItem optionalDuration(@NotNull String name) {
         debug.print("Looking for optional duration " + name + "...");
 
         if (unparsedArgs.size() > position && TimeUtil.duration(unparsedArgs.get(position)).isPresent()) {
@@ -436,7 +450,7 @@ public class Arguments {
         } else
             debug.print("Could not find duration");
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -445,7 +459,7 @@ public class Arguments {
      * @param name The name of the duration to create
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredDuration(@NotNull String name) {
+    public ArgumentItem requiredDuration(@NotNull String name) {
         debug.print("Looking for required duration " + name + "...");
 
         if (unparsedArgs.size() > position && TimeUtil.duration(unparsedArgs.get(position)).isPresent()) {
@@ -458,7 +472,7 @@ public class Arguments {
             invalidate(name);
         }
 
-        return this;
+        return new ArgumentItem(this, name);
     }
 
     /**
@@ -594,5 +608,18 @@ public class Arguments {
     public Long getDuration(@NotNull String name) {
         return TimeUtil.duration(parsedArgs.get(name)).isPresent() ? TimeUtil.duration(parsedArgs.get(name)).get()
                 : null;
+    }
+
+    /**
+     * Add a new validation method.
+     * 
+     * @param name The name of the argument to connect the validator to.
+     * @param func The validator function to call.
+     */
+    public boolean addValidator(@NotNull String name, @NotNull Validator func) {
+        if (!this.parsedArgs.containsKey(name))
+            return false;
+        this.validators.put(name, func);
+        return true;
     }
 }
