@@ -4,8 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.arguments;
 
-import com.dumbdogdiner.stickyapi.common.util.Debugger;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
 public class ArgumentItem {
     private Arguments parent;
     private String name;
-
-    private final Debugger debug = new Debugger(getClass());
 
     /**
      * Construct a new argument item for the provided Argument class, with the given argument name.
