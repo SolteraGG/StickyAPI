@@ -7,6 +7,7 @@ plugins {
     // Plugins used in the root project
     id "java"
     id "maven-publish"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 group = 'com.dumbdogdiner'
@@ -14,7 +15,31 @@ group = 'com.dumbdogdiner'
 version = '2.0.0'
 
 dependencies {
-    project(":core")
+    // Shadow: subproject as a 'compile' dependency
+    compile project(":core")
+}
+
+// Shadow: removed classifier from output filename
+shadowJar { archiveClassifier.set('') }
+
+// Shadow: Reproducible Builds
+tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+// Shadow: run with build
+tasks.build.dependsOn shadowJar
+
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    }
+
 }
 
 subprojects {
@@ -36,24 +61,14 @@ subprojects {
         testImplementation.extendsFrom compileOnly
     }
 
-    repositories {
-        mavenCentral()
-        jcenter()
-
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url 'https://papermc.io/repo/repository/maven-public/' }
-    }
-
     dependencies {
         compileOnly 'org.projectlombok:lombok:1.18.16'
         annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
         compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
         compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
-        implementation 'org.jetbrains:annotations:20.1.0'
-        implementation 'com.google.code.gson:gson:2.8.6'
-        implementation 'io.github.classgraph:classgraph:4.8.92'
-        implementation 'com.github.seancfoley:ipaddress:5.3.3'
+        compileOnly 'org.jetbrains:annotations:20.1.0'
+        compileOnly  'com.github.seancfoley:ipaddress:5.3.3'
 
         // JUnit 5 Testing
 	    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
@@ -88,10 +103,13 @@ subprojects {
 
 task sources(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+    // Use source code from all subprojects for sources.
+    // TODO: Use certain subprojects only to allow for multiple jar outputs
+    from subprojects.sourceSets.main.allSource
 }
 
-tasks.publish.dependsOn build, sources
+// We *probably* don't need this anymore.
+tasks.publish.dependsOn build, shadowJar, sources
 
 publishing {
     repositories {
@@ -106,7 +124,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            from(components.java)
+            artifact shadowJar // Use shadow jar instead of components.java
             artifact sources // Publish the output of the sources task
         }
     }
