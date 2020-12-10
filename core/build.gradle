@@ -2,37 +2,3 @@ jacoco {
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
     toolVersion = "0.8.6"
 }
-
-group = 'com.dumbdogdiner'
-
-version = '2.0.0'
-
-task sources(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
-}
-
-
-tasks.publish.dependsOn build, sources
-
-
-
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-            artifact sources // Publish the output of the sources task
-        }
-    }
-}

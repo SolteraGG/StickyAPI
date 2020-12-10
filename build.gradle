@@ -1,19 +1,24 @@
 plugins {
-    //id 'java' apply false
-    //id 'maven-publish' apply false
-    //id 'jacoco' apply false
-
+    // 'java', 'maven-publish' and 'jacoco' do not have 'apply false' tags here since they are core gradle plugins.
     // Plugins defined here with "apply false"; to be used in subprojects
     id "io.freefair.lombok" version "5.3.0" apply false
     id "com.github.hierynomus.license" version "0.15.0" apply false
 
     // Plugins used in the root project
     id "java"
+    id "maven-publish"
+}
+
+group = 'com.dumbdogdiner'
+
+version = '2.0.0'
+
+dependencies {
+    project(":core")
 }
 
 subprojects {
     apply plugin: "java"
-    apply plugin: "maven-publish"
     apply plugin: "jacoco"
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.github.hierynomus.license"
@@ -81,6 +86,28 @@ subprojects {
     }
 }
 
-dependencies {
-    project(":core")
+task sources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+tasks.publish.dependsOn build, sources
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+            artifact sources // Publish the output of the sources task
+        }
+    }
 }
