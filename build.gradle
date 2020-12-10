@@ -2,8 +2,13 @@ plugins {
     //id 'java' apply false
     //id 'maven-publish' apply false
     //id 'jacoco' apply false
+
+    // Plugins defined here with "apply false"; to be used in subprojects
     id "io.freefair.lombok" version "5.3.0" apply false
     id "com.github.hierynomus.license" version "0.15.0" apply false
+
+    // Plugins used in the root project
+    id "java"
 }
 
 subprojects {
@@ -76,28 +81,6 @@ subprojects {
     }
 }
 
-task compileJava {
-    subprojects.each { 
-        //dependsOn("${it.name}:licenseFormatMain")
-        //dependsOn("${it.name}:licenseFormat")
-        dependsOn("${it.name}:compileJava")
-    }
-}
-
-task test {
-    subprojects.each {
-        dependsOn("${it.name}:test")
-    }
-}
-
-task clean {
-    subprojects.each {
-        dependsOn("${it.name}:clean")
-    }
-}
-
-task build {
-    subprojects.each {
-        dependsOn("${it.name}:build")
-    }
+dependencies {
+    project(":core")
 }
