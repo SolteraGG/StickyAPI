@@ -1,0 +1,107 @@
+/*plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'jacoco'
+    id "io.freefair.lombok" version "5.3.0"
+    id "com.github.hierynomus.license" version "0.15.0"
+}*/
+
+jacoco {
+    // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
+    toolVersion = "0.8.6"
+}
+
+group = 'com.dumbdogdiner'
+
+version = '2.0.0'
+/*
+// License Plugin Options
+license { header = file('LICENSE_HEADER') }
+// Run the license formatter before compiling the source code.
+tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
+*/
+
+/*configurations {
+    jaxDoclet
+    // give test dependencies access to compileOnly dependencies to emulate providedCompile
+    testImplementation.extendsFrom compileOnly
+}*/
+
+/*repositories {
+    mavenCentral()
+    jcenter()
+
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+}*/
+
+/*dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
+    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'io.github.classgraph:classgraph:4.8.92'
+    implementation 'com.github.seancfoley:ipaddress:5.3.3'
+    
+    // JUnit 5 Testing
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+
+    // Mocking
+    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+    testImplementation("org.powermock:powermock-module-junit4-rule:2.0.9")
+    testImplementation("org.powermock:powermock-classloading-xstream:2.0.9")
+    testImplementation("org.mockito:mockito-core:3.6.28")
+}*/
+
+/*test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+        // Show System.out for code ran by tests
+        showStandardStreams = true
+	}
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}*/
+
+task sources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+
+tasks.publish.dependsOn build, sources
+
+
+
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+            artifact sources // Publish the output of the sources task
+        }
+    }
+}
