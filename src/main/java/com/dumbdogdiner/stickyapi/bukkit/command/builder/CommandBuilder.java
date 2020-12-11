@@ -67,35 +67,6 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     }
 
     /**
-     * Executes a subcommand if it exists
-     * @param sender the commandsender
-     * @param command the bukkit command
-     * @param args the args provided to the main command
-     * @return if a subcommand was found and executed
-     */
-    private boolean executeSubCommandIfExists(CommandSender sender, StickyPluginCommand command, List<String> args){
-        if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
-            CommandBuilder subCommand = getSubCommands().get(args.get(0));
-            String subLabel = args.get(0);
-            String [] subArgs = (String[]) args.subList(1, args.size()).toArray();
-            if(getSynchronous() != subCommand.getSynchronous()){
-                if(subCommand.getSynchronous()){
-                    StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
-                        subCommand.build(command.getOwningPlugin()).execute(sender, subLabel, subArgs);
-                        return null;
-                    }));
-                } else {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(command.getPlugin(), () ->
-                            subCommand.build(command.getOwningPlugin()).execute(sender, subLabel, subArgs));
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
      * Set the executor of the command
      *
      * @param executor to set
@@ -142,11 +113,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         StickyPluginCommand command = new StickyPluginCommand(getName(), getAliases(), plugin, new Permission(getPermission()), getPlaySound()) {
             @Override
             public ExitCode execute(@NotNull CommandSender sender, @NotNull String alias, @NotNull Arguments args, @NotNull Map<String, String> variables) {
-                if (executeSubCommandIfExists(sender, this, args.getRawArgs())) {
-                    return null;
-                } else {
-                    return executor.execute(sender, args, alias, variables);
-                }
+                return executor.execute(sender, args, alias, variables);
             }
 
             @Override
@@ -172,6 +139,9 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
         command.setAliases(getAliases());
 
+        for (var subCommand : getSubCommands().entrySet()) {
+            command.getSubCommands().put(subCommand.getKey(), subCommand.getValue().build(plugin));
+        }
 
         this.bukkitCommand = command;
         return command;

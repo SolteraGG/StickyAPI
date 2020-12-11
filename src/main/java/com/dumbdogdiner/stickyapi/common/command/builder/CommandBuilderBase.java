@@ -175,6 +175,9 @@ public abstract class CommandBuilderBase<T extends CommandBuilderBase<T>> {
     public T subCommand(@NotNull T builder) {
         builder.synchronous = this.synchronous;
         this.subCommands.put(builder.name, builder);
+        for (var alias : builder.aliases) {
+            this.subCommands.put(alias, builder);
+        }
         return (T) this;
     }
 }

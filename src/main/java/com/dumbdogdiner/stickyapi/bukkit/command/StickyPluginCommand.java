@@ -48,7 +48,18 @@ public abstract class StickyPluginCommand extends org.bukkit.command.Command imp
     @Getter
     protected Permission basePermission;
     protected boolean requiresPlayer = false;
+    @Getter
+    protected Map<String, StickyPluginCommand> subCommands = new TreeMap<>();
 
+    /**
+     * A StickyPluginCommand
+     *
+     * @param name    the name of the command
+     * @param owner   the owning plugin
+     */
+    public StickyPluginCommand(@NotNull String name, @NotNull StickyPlugin owner) {
+        this(name, null, owner);
+    }
 
     /**
      * A StickyPluginCommand
@@ -79,6 +90,7 @@ public abstract class StickyPluginCommand extends org.bukkit.command.Command imp
         this.locale = owner.getLocaleProvider();
         commandPermissions.add(0, basePermission);
         cooldowns = new CooldownManager(COOLDOWN_TIME);
+        SubCommandFinder.addSubCommands(this);
     }
 
     /**
@@ -140,7 +152,10 @@ public abstract class StickyPluginCommand extends org.bukkit.command.Command imp
         }
 
         try {
-            ExitCode code = execute(sender, commandLabel, arguments, variables);
+            ExitCode code = null;
+            if (!executeSubCommandIfExists(sender, Arrays.asList(args))) {
+                code = execute(sender, commandLabel, arguments, variables);
+            }
             onError(sender, commandLabel, arguments, code, variables);
             return true;
         } catch (Throwable ex) {
@@ -257,5 +272,23 @@ public abstract class StickyPluginCommand extends org.bukkit.command.Command imp
 
     void enableSounds() {
         playSounds = true;
+    }
+
+    /**
+     * Executes a subcommand if it exists
+     * @param sender the commandsender
+     * @param args the args provided to the main command
+     * @return if a subcommand was found and executed
+     */
+    private boolean executeSubCommandIfExists(CommandSender sender, List<String> args){
+        if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
+            StickyPluginCommand subCommand = getSubCommands().get(args.get(0));
+            String subLabel = args.get(0);
+            String[] subArgs = args.subList(1, args.size()).toArray(new String[0]);
+            // dont know how to handle sync/async, or if i even have to at all
+            subCommand.execute(sender, subLabel, subArgs);
+            return true;
+        }
+        return false;
     }
 }
