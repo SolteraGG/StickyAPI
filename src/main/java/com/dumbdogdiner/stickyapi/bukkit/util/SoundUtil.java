@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
@@ -94,7 +94,7 @@ public class SoundUtil {
      * the sound was played.
      * 
      * @param sender {@link org.bukkit.command.CommandSender} The sender
-     * @param type   {@link com.dumbdogdiner.stickyapi.bukkit.util.NotificationType}
+     * @param type   {@link NotificationType}
      *               The type of sound
      * @return {@link java.lang.Boolean}
      */

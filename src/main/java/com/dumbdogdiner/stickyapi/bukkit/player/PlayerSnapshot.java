@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
@@ -31,7 +31,7 @@ public class PlayerSnapshot {
      * This object can be used where the player inventory needs to be changed but
      * restored at a later date
      * 
-     * @param player
+     * @param player the Player to snapshot
      */
     public PlayerSnapshot(@NotNull Player player) {
         location = player.getLocation();
