@@ -50,7 +50,7 @@ dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.github.classgraph:classgraph:4.8.92'
+    implementation 'io.github.classgraph:classgraph:4.8.95'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     
     // JUnit 5 Testing
