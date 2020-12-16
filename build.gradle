@@ -16,7 +16,15 @@ group = 'com.dumbdogdiner'
 version = '2.0.0'
 
 // License Plugin Options
-license { header = file('LICENSE_HEADER') }
+license {
+    header = project.file('LICENSE_HEADER')
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    mapping("java", "SLASHSTAR_STYLE")
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+}
 // Run the license formatter before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
 
