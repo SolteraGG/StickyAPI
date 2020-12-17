@@ -288,4 +288,12 @@ public final class StringUtil {
             return UUID.fromString(uuid);
         }
     }
+
+    public static String unhyphenateUUID(@NotNull UUID uuid){
+        return unhyphenate(uuid.toString());
+    }
+
+    public static String unhyphenate(@NotNull String str){
+        return str.replace("-","");
+    }
 }

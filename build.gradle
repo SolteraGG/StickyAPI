@@ -52,6 +52,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.92'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     
     // JUnit 5 Testing
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
