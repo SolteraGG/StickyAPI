@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -44,9 +43,6 @@ public class CachedMojangAPI {
     protected static final String MOJANG_API_BASE_URL = "https://api.mojang.com";
     protected static final HttpUrl COMBINED_API_URL = HttpUrl.parse("https://api.ashcon.app/mojang/v2/user/");
     protected static final String MOJANG_SESSION_URL = "https://sessionserver.mojang.com";
-    static {
-        assert COMBINED_API_URL != null;
-    }
 
     protected UUID uuid;
 
@@ -78,21 +74,37 @@ public class CachedMojangAPI {
         return new Request.Builder().url(COMBINED_API_URL.newBuilder(StringUtil.unhyphenateUUID(uuid)).build()).build();
     }
 
+
     public static String getSkinTexture(StickyUser u){
         return getSkinTexture(u.getUniqueId());
     }
     public static String getSkinTexture(UUID uuid){
         try {
             Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
+            if(resp.code() != 200)
+                throw new IOException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
 
             return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class)).textures.raw.value;
             //return JsonParser.parseReader(resp.body().charStream()).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
-            Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
+            Bukkit.getLogger().severe(e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
             return DefaultSkins.STEVE.getTexture();
         }
     }
 
+    AshconResponse getResponse(){
+        try {
+            Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
+            if(resp.code() != 200)
+                throw new IOException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
+            return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class));
+        } catch (IOException ioe){
+            Bukkit.getLogger().severe(Arrays.toString(ioe.getStackTrace()));
+            return new AshconResponse();
+        }
+    }
+
+    @Deprecated
     public JsonElement getFullJsonCombinedAPI(){
         try {
             return getJSONFromURL(new URL(COMBINED_API_URL + "/" + uuid.toString().replace("-","")));

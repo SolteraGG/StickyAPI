@@ -4,15 +4,23 @@
  */
 package com.dumbdogdiner.stickyapi.common.webapis;
 
+import com.dumbdogdiner.stickyapi.common.util.textures.DefaultSkins;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class AshconResponse {
-    String uuid;
-    String username;
+/**
+ * Inner utility class to easily convert the received object from the Cached API to a java object.
+ */
 
-    List<Username> username_history;
+class AshconResponse {
+    String uuid = new UUID(0,0).toString();
+    String username = "Steve";
 
-    class Username {
+    List<Username> username_history = new ArrayList<>();
+
+    static class Username {
         String username;
         String changed_at;
 
@@ -25,20 +33,20 @@ public class AshconResponse {
 
 
     Textures textures;
-    class Textures {
+    static class Textures {
         boolean custom;
         boolean slim;
         Skin skin;
 
-        class Skin{
+        static class Skin{
             String url;
             String data;
         }
 
         Raw raw;
 
-        class Raw{
-            String value;
+        static class Raw{
+            String value = DefaultSkins.STEVE.getTexture();
             String signature;
         }
     }

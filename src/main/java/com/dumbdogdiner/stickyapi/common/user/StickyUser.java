@@ -6,46 +6,35 @@ package com.dumbdogdiner.stickyapi.common.user;
 
 import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import com.dumbdogdiner.stickyapi.common.cache.Cacheable;
-import com.dumbdogdiner.stickyapi.common.webapis.CachedMojangAPI;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.time.Instant;
-import java.util.Map;
 import java.util.UUID;
 
 public class StickyUser implements Cacheable {
     @Getter
     protected UUID uniqueId;
 
-    protected CachedMojangAPI mojangAPI;
-
     @Getter
     protected String name;
 
     public StickyUser(UUID uniqueId) {
         this.uniqueId = uniqueId;
-        this.mojangAPI = new CachedMojangAPI(uniqueId);
-        this.name = mojangAPI.getUsername();
+        this.name = null;
     }
 
     public StickyUser(StickyUser p){
         uniqueId = p.getUniqueId();
         name = p.getName();
-        mojangAPI = p.mojangAPI;
     }
 
     protected StickyUser(UUID uniqueId, String userName) {
         this.uniqueId = uniqueId;
         this.name = userName;
-        mojangAPI = new CachedMojangAPI(uniqueId);
     }
 
-    public Map<String, Instant> getNameHistory(){
-        return mojangAPI.getUsernameHistory();
-    }
 
     public Player getAsBukkitPlayer(){
         return Bukkit.getPlayer(uniqueId);

@@ -14,12 +14,12 @@ class MobHeadGeneratorTest {
     // No idea how to write test code for this :(
 
 
-    @BeforeAll
+/*    @BeforeAll
     public static void setUp(){
         Assertions.fail("This class requires a Bukkit server");
     }
     @Test
     void getHead() {
         Assertions.fail("This method may only be tested at run-time on a Bukkit server. Consider figuring out how to make a test plugin maybe???");
-    }
+    }*/
 }
