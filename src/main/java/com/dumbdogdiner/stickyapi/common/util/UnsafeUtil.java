@@ -1,10 +1,12 @@
-/**
+/*
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import sun.misc.Unsafe;
 
@@ -42,11 +44,12 @@ public class UnsafeUtil {
      * A method that attempts to disable the JVM warning for Illegal Reflective Access.
      */
     public static void tryDisableIllegalReflectiveAccessWarning() {
+        Logger l = Logger.getGlobal();
         if (illegalReflectiveAccessIsDisabled)
             return;
-        
+        l.log(Level.WARNING, "*** StickyAPI Warning: Attempting to disable the Illegal Reflective Access JVM Warning! ***");
         System.out
-                .println("*** StickyAPI Warning: Attempting to disable the Illegal Reflective Access JVM Warning! ***");
+                .println();
         
         try {
             Unsafe u = getUnsafe();
@@ -54,11 +57,11 @@ public class UnsafeUtil {
             Class<?> cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
             Field logger = cls.getDeclaredField("logger");
             u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
-            
-            System.out.println("*** StickyAPI Warning: Illegal Reflective Access Warnings disabled! ***");
+
+            l.log(Level.WARNING, "*** StickyAPI Warning: Illegal Reflective Access Warnings disabled! ***");
             illegalReflectiveAccessIsDisabled = true; // prevent this function from fully executing again.
         } catch (Exception e) {
-        // ignore
+            l.log(Level.WARNING, "*** StickyAPI Warning: Illegal Reflective Access Warnings could not be disabled! ***");
         }
     }   
 }
