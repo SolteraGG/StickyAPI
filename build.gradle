@@ -3,12 +3,12 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id 'io.freefair.lombok' version '5.3.0'
-    id "com.diffplug.spotless" version "5.8.2"
+    id 'com.diffplug.spotless' version '5.8.2'
 }
 
 jacoco {
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
-    toolVersion = "0.8.6"
+    toolVersion = '0.8.6'
 }
 
 group = 'com.dumbdogdiner'
@@ -35,6 +35,11 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: 'io.freefair.lombok'
+    lombok {
+        config['lombok.addLombokGeneratedAnnotation'] = 'true'
+    }
+
     apply plugin: 'com.diffplug.spotless'
     spotless {
         ratchetFrom 'origin/master'
@@ -51,7 +56,7 @@ subprojects {
 test {
 	useJUnitPlatform()
 	testLogging {
-		events "passed", "skipped", "failed"
+		events 'passed', 'skipped', 'failed'
         // Show System.out for code ran by tests
         showStandardStreams = true
 	}
@@ -67,7 +72,7 @@ jacocoTestReport {
 }
 
 task sources(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
@@ -76,11 +81,11 @@ tasks.publish.dependsOn build, sources
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+            name = 'GitHubPackages'
+            url = uri('https://maven.pkg.github.com/DumbDogDiner/StickyAPI')
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                username = project.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR')
+                password = project.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN')
             }
         }
     }
