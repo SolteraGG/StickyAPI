@@ -32,7 +32,9 @@ allprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://papermc.io/repo/repository/maven-public/' }
     }
+}
 
+subprojects {
     apply plugin: 'com.diffplug.spotless'
     spotless {
         ratchetFrom 'origin/master'
@@ -41,15 +43,10 @@ allprojects {
             importOrder()
             prettier(['prettier': '2.0.5', 'prettier-plugin-java': '0.8.0']).config(['parser': 'java', 'tabWidth': 4])
             // TODO: Someone please work out project-root relative path resolution so we can use licenseHeaderFile().
-            licenseHeader '/* \n' +
-                    ' * Copyright (c) $YEAR DumbDogDiner <dumbdogdiner.com>. All rights reserved.\n' +
-                    ' * Licensed under the MIT license, see LICENSE for more information.\n' +
-                    ' */'
+            licenseHeaderFile('../LICENSE_HEADER')
         }
     }
 }
-
-
 
 test {
 	useJUnitPlatform()
