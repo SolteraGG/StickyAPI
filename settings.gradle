@@ -1,1 +1,5 @@
 rootProject.name = 'stickyapi'
+
+include 'common'
+include 'bungeecord'
+include 'bukkit'

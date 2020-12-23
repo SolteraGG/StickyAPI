@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'io.freefair.lombok'
+}
+
+dependencies {
+    implementation project(':common')
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'io.github.classgraph:classgraph:4.8.92'
+    implementation 'com.github.seancfoley:ipaddress:5.3.3'
+
+    // junit 5 testing
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // mockito dependencies
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
+    testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.9'
+    testImplementation 'org.powermock:powermock-classloading-xstream:2.0.9'
+    testImplementation 'org.mockito:mockito-core:3.6.28'
+
+    // shared test fixtures
+    testImplementation(testFixtures(project(":common")))
+}
