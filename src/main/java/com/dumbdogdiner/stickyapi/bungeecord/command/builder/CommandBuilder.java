@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.bungeecord.packet.PacketRegistration;
 import com.dumbdogdiner.stickyapi.bungeecord.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
@@ -53,7 +54,6 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         public void apply(ExitCode exitCode, CommandSender sender, Arguments args, TreeMap<String, String> vars);
     }
 
-
     /**
      * If this command should play a sound upon exiting
      * 
@@ -67,6 +67,8 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     @Deprecated
     public CommandBuilder playSound(@NotNull Boolean playSound) {
         this.playSound = playSound;
+        PacketRegistration.registerSoundPacket(); // Register our sound packet, since this probably hasn't happened
+                                                  // already and if we don't, sounds will not play
         return this;
     }
 
@@ -204,14 +206,25 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         return this;
     }
 
+    /**
+     * Build this BungeeCord command
+     * 
+     * @param plugin to register register with
+     * 
+     * @return {@link Command}
+     */
     public Command build(Plugin plugin) {
         return new TabableCommand(this);
     }
 
-    public Command register(Plugin plugin) {
+    /**
+     * Register the command with a {@link net.md_5.bungee.api.plugin.Plugin}
+     * 
+     * @param plugin to register with
+     */
+    public void register(Plugin plugin) {
         Command command = build(plugin);
         ProxyServer.getInstance().getPluginManager().registerCommand(plugin, command);
-        return command;
     }
 
     private static class TabableCommand extends net.md_5.bungee.api.plugin.Command

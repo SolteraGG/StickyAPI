@@ -2,7 +2,7 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.bukkit.command;
+package com.dumbdogdiner.stickyapi.bukkit.command.builder;
 
 import java.util.List;
 import org.apache.commons.lang.Validate;
@@ -16,6 +16,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+// Fuck you reflection, and fuck you Java for changing it so much!!!
 /**
  * Represents a {@link Command} belonging to a plugin
  * <p>
@@ -23,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * <b>DO NOT TOUCH</b>
  */
-// Fuck you reflection, and fuck you Java for changing it so much!!!
-public final class PluginCommand extends Command implements PluginIdentifiableCommand {
+// We don't want this class to be used anywhere outside of this package...
+final class PluginCommand extends Command implements PluginIdentifiableCommand {
     private final Plugin owningPlugin;
     private CommandExecutor executor;
     private TabCompleter completer;

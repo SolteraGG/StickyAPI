@@ -9,11 +9,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
-import com.dumbdogdiner.stickyapi.bukkit.command.PluginCommand;
 import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
@@ -48,10 +46,11 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     TabExecutor tabExecutor;
 
     ErrorHandler errorHandler;
+    Plugin owner;
 
     @FunctionalInterface
     public interface Executor {
-        public ExitCode apply(CommandSender sender, Arguments args, TreeMap<String, String> vars);
+        public ExitCode apply(CommandSender sender, Arguments args, HashMap<String, String> vars);
     }
 
     public interface TabExecutor {
@@ -59,7 +58,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     }
 
     public interface ErrorHandler {
-        public void apply(ExitCode exitCode, CommandSender sender, Arguments args, TreeMap<String, String> vars);
+        public void apply(ExitCode exitCode, CommandSender sender, Arguments args, HashMap<String, String> vars);
     }
 
     /**
@@ -71,6 +70,11 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      */
     public CommandBuilder(@NotNull String name) {
         super(name);
+    }
+
+    public CommandBuilder(@NotNull String name, @NotNull Plugin owner) {
+        this(name);
+        this.owner = owner;
     }
 
     private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
@@ -110,7 +114,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
         ExitCode exitCode;
         Arguments a = new Arguments(args);
-        var variables = new TreeMap<String, String>();
+        var variables = new HashMap<String, String>();
         variables.put("command", command.getName());
         variables.put("sender", sender.getName());
         variables.put("player", sender.getName());
@@ -253,6 +257,18 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     }
 
     /**
+     * Build the command!
+     * 
+     * @return {@link org.bukkit.command.Command}
+     */
+    public org.bukkit.command.Command build() throws NullPointerException {
+        if (this.owner == null) {
+            throw new NullPointerException("Owning plugin is null, did you construct this object without an owner?");
+        }
+        return this.build(this.owner);
+    }
+
+    /**
      * Register the command with a {@link org.bukkit.plugin.Plugin}
      * 
      * @param plugin to register with
@@ -269,6 +285,16 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
         // really annoying
         ((CommandMap) ReflectionUtil.getProtectedValue(plugin.getServer(), "commandMap")).register(plugin.getName(),
                 this.build(plugin));
+    }
+
+    /**
+     * Register the command with a {@link org.bukkit.plugin.Plugin}
+     */
+    public void register() {
+        if (this.owner == null) {
+            throw new NullPointerException("Owning plugin is null, did you construct this object without an owner?");
+        }
+        this.register(this.owner);
     }
 
     private void _playSound(CommandSender sender, NotificationType type) {
