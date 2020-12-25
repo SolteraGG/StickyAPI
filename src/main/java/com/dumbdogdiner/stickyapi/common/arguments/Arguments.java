@@ -55,6 +55,17 @@ public class Arguments {
 
     /**
      * Construct a new argument class with the given input.
+     * This is (presently) deprecated syntax, it may be re-added if decided.
+     * @param args Arguments to parse
+     * @since 1.x
+     */
+    @Deprecated
+    public Arguments(@NotNull String [] args){
+        this(Arrays.asList(args));
+    }
+
+    /**
+     * Construct a new argument class with the given input.
      * 
      * @param args Arguments to parse
      * @since 2.0
