@@ -2,7 +2,7 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.bukkit.command.builder;
+package com.dumbdogdiner.stickyapi.bukkit.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.concurrent.FutureTask;
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
-import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
+import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
 import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  * 
  * @since 2.0
  */
-public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
+public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
 
     // Hmm...
     HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
@@ -62,17 +62,17 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
     }
 
     /**
-     * Create a new [@link CommandBuilder} instance
+     * Create a new [@link BukkitCommandBuilder} instance
      * <p>
      * Used to build and register Bukkit commands
      * 
      * @param name The name of the command
      */
-    public CommandBuilder(@NotNull String name) {
+    public BukkitCommandBuilder(@NotNull String name) {
         super(name);
     }
 
-    public CommandBuilder(@NotNull String name, @NotNull Plugin owner) {
+    public BukkitCommandBuilder(@NotNull String name, @NotNull Plugin owner) {
         this(name);
         this.owner = owner;
     }
@@ -93,7 +93,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
             List<String> args) {
         // look for subcommands
         if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
-            CommandBuilder subCommand = (CommandBuilder) getSubCommands().get(args.get(0));
+            BukkitCommandBuilder subCommand = (BukkitCommandBuilder) getSubCommands().get(args.get(0));
             if (!getSynchronous() && subCommand.getSynchronous()) {
                 throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
             }
@@ -167,7 +167,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * @param executor to set
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder onExecute(@NotNull Executor executor) {
+    public BukkitCommandBuilder onExecute(@NotNull Executor executor) {
         this.executor = executor;
         return this;
     }
@@ -178,7 +178,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * @param executor to set
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder onTabComplete(@NotNull TabExecutor executor) {
+    public BukkitCommandBuilder onTabComplete(@NotNull TabExecutor executor) {
         this.tabExecutor = executor;
         return this;
     }
@@ -189,7 +189,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * @param handler to set
      * @return {@link CommandBuilder}
      */
-    public CommandBuilder onError(@NotNull ErrorHandler handler) {
+    public BukkitCommandBuilder onError(@NotNull ErrorHandler handler) {
         this.errorHandler = handler;
         return this;
     }

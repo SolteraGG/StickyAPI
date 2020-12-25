@@ -12,6 +12,10 @@ import java.lang.reflect.Method;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.protocol.Protocol;
 
+/**
+ * @deprecated This is unsafe.
+ */
+@Deprecated
 public class PacketRegistration {
 
     private static Method map, regPacket;
@@ -53,9 +57,9 @@ public class PacketRegistration {
     }
 
     // static {
-    //     registerSoundPacket();
+    // registerSoundPacket();
     // }
-    
+
     /**
      * Register our sound packet with BungeeCord
      */
@@ -65,6 +69,14 @@ public class PacketRegistration {
 
         soundRegistered = true;
         processReflection();
-        registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This should automatically register with the server's correct version
+        registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This
+                                                                                                                       // should
+                                                                                                                       // automatically
+                                                                                                                       // register
+                                                                                                                       // with
+                                                                                                                       // the
+                                                                                                                       // server's
+                                                                                                                       // correct
+                                                                                                                       // version
     }
 }

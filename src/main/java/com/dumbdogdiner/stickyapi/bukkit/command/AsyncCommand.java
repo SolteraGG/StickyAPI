@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * caution!
  * 
  * @deprecated Use
- *             {@link com.dumbdogdiner.stickyapi.bukkit.command.builder.CommandBuilder}
+ *             {@link com.dumbdogdiner.stickyapi.bukkit.command.BukkitCommandBuilder}
  *             as this will be removed in the next release
  */
 @Deprecated

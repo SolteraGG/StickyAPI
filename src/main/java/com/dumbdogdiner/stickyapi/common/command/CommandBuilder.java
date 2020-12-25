@@ -2,7 +2,7 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.command.builder;
+package com.dumbdogdiner.stickyapi.common.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 
-public abstract class CommandBuilderBase<T extends CommandBuilderBase<T>> {
+public abstract class CommandBuilder<T extends CommandBuilder<T>> {
 
     @Getter
     Boolean synchronous = false;
@@ -40,7 +40,7 @@ public abstract class CommandBuilderBase<T extends CommandBuilderBase<T>> {
      * 
      * @param name The name of the command
      */
-    public CommandBuilderBase(@NotNull String name) {
+    public CommandBuilder(@NotNull String name) {
         this.name = name;
     }
 

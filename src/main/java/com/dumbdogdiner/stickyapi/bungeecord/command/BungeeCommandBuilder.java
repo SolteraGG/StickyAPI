@@ -2,7 +2,7 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.bungeecord.command.builder;
+package com.dumbdogdiner.stickyapi.bungeecord.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import com.dumbdogdiner.stickyapi.bungeecord.packet.PacketRegistration;
 import com.dumbdogdiner.stickyapi.bungeecord.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
-import com.dumbdogdiner.stickyapi.common.command.builder.CommandBuilderBase;
+import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
@@ -30,7 +30,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
+public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
 
     // Hmm...
     HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
@@ -65,7 +65,7 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      */
     @Override
     @Deprecated
-    public CommandBuilder playSound(@NotNull Boolean playSound) {
+    public BungeeCommandBuilder playSound(@NotNull Boolean playSound) {
         this.playSound = playSound;
         PacketRegistration.registerSoundPacket(); // Register our sound packet, since this probably hasn't happened
                                                   // already and if we don't, sounds will not play
@@ -82,15 +82,15 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      */
     @Override
     @Deprecated
-    public CommandBuilder playSound() {
+    public BungeeCommandBuilder playSound() {
         return this.playSound(true);
     }
 
-    public CommandBuilder(@NotNull String name) {
+    public BungeeCommandBuilder(@NotNull String name) {
         super(name);
     }
 
-    private void performAsynchronousExecution(CommandSender sender, CommandBuilder builder, String label,
+    private void performAsynchronousExecution(CommandSender sender, BungeeCommandBuilder builder, String label,
             List<String> args) {
         StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
             performExecution(sender, builder, label, args);
@@ -102,10 +102,10 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * Execute this command. Checks for existing sub-commands, and runs the error
      * handler if anything goes wrong.
      */
-    private void performExecution(CommandSender sender, CommandBuilder builder, String label, List<String> args) {
+    private void performExecution(CommandSender sender, BungeeCommandBuilder builder, String label, List<String> args) {
         // look for subcommands
         if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
-            CommandBuilder subCommand = (CommandBuilder) getSubCommands().get(args.get(0));
+            BungeeCommandBuilder subCommand = (BungeeCommandBuilder) getSubCommands().get(args.get(0));
             if (!getSynchronous() && subCommand.getSynchronous()) {
                 throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
             }
@@ -177,9 +177,9 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * Set the executor of the command
      * 
      * @param executor to set
-     * @return {@link CommandBuilder}
+     * @return {@link BungeeCommandBuilder}
      */
-    public CommandBuilder onExecute(@NotNull Executor executor) {
+    public BungeeCommandBuilder onExecute(@NotNull Executor executor) {
         this.executor = executor;
         return this;
     }
@@ -188,9 +188,9 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * Set the tab complete executor of the command
      * 
      * @param executor to set
-     * @return {@link CommandBuilder}
+     * @return {@link BungeeCommandBuilder}
      */
-    public CommandBuilder onTabComplete(@NotNull TabExecutor executor) {
+    public BungeeCommandBuilder onTabComplete(@NotNull TabExecutor executor) {
         this.tabExecutor = executor;
         return this;
     }
@@ -199,9 +199,9 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
      * Set the error handler of the command
      * 
      * @param handler to set
-     * @return {@link CommandBuilder}
+     * @return {@link BungeeCommandBuilder}
      */
-    public CommandBuilder onError(@NotNull ErrorHandler handler) {
+    public BungeeCommandBuilder onError(@NotNull ErrorHandler handler) {
         this.errorHandler = handler;
         return this;
     }
@@ -229,9 +229,9 @@ public class CommandBuilder extends CommandBuilderBase<CommandBuilder> {
 
     private static class TabableCommand extends net.md_5.bungee.api.plugin.Command
             implements net.md_5.bungee.api.plugin.TabExecutor {
-        CommandBuilder builder;
+        BungeeCommandBuilder builder;
 
-        public TabableCommand(CommandBuilder builder) {
+        public TabableCommand(BungeeCommandBuilder builder) {
             super(builder.getName(), builder.getPermission(), builder.getAliases().toArray(new String[0]));
             this.builder = builder;
         }
