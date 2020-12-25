@@ -70,7 +70,7 @@ public class Debugger {
     public void print(@Nullable Object object, @Nullable Object... args) {
         if (enabled) {
             logger.info(String.format(COLOR + "[" + ++logCount + " | " + clazz.getSimpleName() + ".class: "
-                    + dddGetThisLineOfWhereverThisThingIsCalleduwu() + "] \u00A7r" + object + " | "
+                    + dddGetThisLineOfWhereverThisThingIsCalleduwu() + "] \u00A7r" + object + " | " // \u00A7 = section symbol
                     + ((System.nanoTime() - startTime) / 1e3) + "μ", args));
         }
     }
