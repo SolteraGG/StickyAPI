@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -18,61 +19,58 @@ import java.util.ArrayList;
  * This class is for creating new slots in an inventory GUI
 */
 public class ClickableSlot {
-
     @Getter
     public ItemStack item;
     @Getter
-    public int slot;
+    public final int x;
+    @Getter
+    public final int y;
 
     /**
      * Creates a ClickableSlot object that should be used
      * to register interactive slots in a {@link GUI} object
-     * @param pMaterial The Material for this slot item
-     * @param pName The Displayname for this slot item
-     * @param pAmount Amount of items
-     * @param pSlot The slot which should be used for this item
+     * @param material The Material for this slot item
+     * @param amount Amount of items
+     * @param name The display name for this slot item
+     * @param x The x position of the item
+     * @param y The y position of the item
      * @param lore (Optional) Add lore to this item
      */
-    public ClickableSlot(@NotNull Material pMaterial, @NotNull Integer pAmount, String pName, @NotNull Integer pSlot, String... lore) {
-        this.item = new ItemStack(pMaterial, pAmount);
+    public ClickableSlot(@NotNull Material material, int amount, @Nullable String name, int x, int y, String... lore) {
+        this(makeItem(material, amount, name, lore), x, y);
+    }
 
-        ItemMeta isM = item.getItemMeta();
+    private static ItemStack makeItem(Material material, int amount, String name, String[] lore) {
+        ItemStack item = new ItemStack(material, amount);
 
-        if(pName != null) {
-            isM.setDisplayName(ChatColor.translateAlternateColorCodes('&', pName));
+        ItemMeta meta = item.getItemMeta();
+
+        if (name != null) {
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         }
 
         ArrayList<String> metaLore = new ArrayList<>();
 
         for (String loreComments : lore) {
-            loreComments = ChatColor.translateAlternateColorCodes('&', loreComments);
-            metaLore.add(loreComments);
+            metaLore.add(ChatColor.translateAlternateColorCodes('&', loreComments));
         }
 
-        isM.setLore(metaLore);
-        item.setItemMeta(isM);
-
-        this.slot = pSlot;
+        meta.setLore(metaLore);
+        item.setItemMeta(meta);
+        return item;
     }
 
     /**
      * Creates a ClickableSlot object that should be used
      * to register interactive slots in a {@link GUI} object
      * @param item A pre-configured {@link org.bukkit.inventory.ItemStack} object
-     * @param pSlot The slot which should be used for this item
+     * @param x The x position of the item
+     * @param y The y position of the item
      */
-    public ClickableSlot(@NotNull ItemStack item, @NotNull int pSlot) {
+    public ClickableSlot(@NotNull ItemStack item, int x, int y) {
         this.item = item;
-        this.slot = pSlot;
-    }
-
-    /**
-     * Executes a specific task async. Typically used
-     * within {@link org.bukkit.event.inventory.InventoryClickEvent}
-     * @param task The async task that should be executed
-     */
-    public void execute(@NotNull Runnable task) {
-        new Thread(task).start();
+        this.x = x;
+        this.y = y;
     }
 
     public ItemMeta getMeta() {
