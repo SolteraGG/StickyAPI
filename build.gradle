@@ -101,14 +101,16 @@ tasks.delombok.shouldRunAfter(sources)
 
 tasks.publish.dependsOn build
 
+tasks.javadoc.dependsOn delombok
 javadoc {
     options.addStringOption('XDignore.symbol.file', '-quiet')
 }
-tasks.build.finalizedBy(javadoc, sources)
+tasks.build.finalizedBy(sources)
 
 task rebuild {}
 tasks.rebuild.dependsOn build, clean
 tasks.build.shouldRunAfter(clean)
+tasks.javadoc.shouldRunAfter(clean)
 
 
 
