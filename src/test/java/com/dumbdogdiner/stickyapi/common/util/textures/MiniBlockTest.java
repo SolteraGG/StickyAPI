@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MobHeadTest {
+class MiniBlockTest {
     @Test
-    public void testHead(){
-        TestsCommon.superficialEnumCodeCoverage(MobHead.class);
+    void testEnum(){
+        TestsCommon.superficialEnumCodeCoverage(MiniBlock.class);
     }
 }
