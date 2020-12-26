@@ -7,6 +7,10 @@ package com.dumbdogdiner.stickyapi.common.util.textures;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import lombok.Getter;
 
+/**
+ * This enum is subject to removal!
+ */
+@Deprecated
 public enum MobHead {
 
     BEE("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTlhYzE2ZjI5NmI0NjFkMDVlYTA3ODVkNDc3MDMzZTUyNzM1OGI0ZjMwYzI2NmFhMDJmMDIwMTU3ZmZjYTczNiJ9fX0="),

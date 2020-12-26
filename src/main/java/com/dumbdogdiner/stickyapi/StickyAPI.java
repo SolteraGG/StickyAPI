@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi;
 
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -25,4 +26,15 @@ public class StickyAPI {
     @Getter
     @Setter
     private static ExecutorService pool = Executors.newCachedThreadPool();
+
+    /**
+     * Provides a wrapper for {@link java.lang.Class#getResourceAsStream(String)} (String)}
+     * @param resourceName The resource to get
+     * @return an {@link InputStream} to that resource
+     */
+    public static InputStream getResourceAsStream(String resourceName){
+        return StickyAPI.class.getResourceAsStream(resourceName);
+    }
+
+    private StickyAPI() {}
 }

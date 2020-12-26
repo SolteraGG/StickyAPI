@@ -6,6 +6,10 @@ package com.dumbdogdiner.stickyapi.common.util.textures;
 
 import lombok.Getter;
 
+/**
+ * This enum is subject to removal!
+ */
+@Deprecated
 public enum MiniBlock {
     // Gems uwu
     AMETHYST_GEM("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDJjYmZmMDZhZDJlMzg3ZDM0ZjZiOGE5YjkxYzI4MTcyMTViNzgxYWZlNjgzODk1ZjNkNmViNGUzZGE0MTgifX19"),

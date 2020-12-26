@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "unused"})
 public class StickyUserBukkit extends StickyUser {
     public StickyUserBukkit(Player p) {
         super(p.getUniqueId(), p.getName());
@@ -41,10 +42,10 @@ public class StickyUserBukkit extends StickyUser {
         return getAsOfflinePlayer().isBanned();
     }
 
-    public boolean playSound(@NotNull Location location, @NotNull Sound sound, float v, float v1){
+    public boolean playSound(@NotNull Location location, @NotNull Sound sound, float volume, float pitch){
         if(!isOnline())
             return false;
-        getAsBukkitPlayer().playSound(location, sound, v, v1);
+        getAsBukkitPlayer().playSound(location, sound, volume, pitch);
         return true;
     }
 

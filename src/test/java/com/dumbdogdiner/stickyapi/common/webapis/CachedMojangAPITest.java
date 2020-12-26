@@ -36,6 +36,6 @@ class CachedMojangAPITest {
 
     @Test
     void getUsername() {
-        assertEquals(new CachedMojangAPI(UUID.fromString("9b6d27b3-f53b-49d1-b8c4-fa807f7575e9")).getUsername(), "Rodwuff");
+        assertEquals("Rodwuff", new CachedMojangAPI(UUID.fromString("9b6d27b3-f53b-49d1-b8c4-fa807f7575e9")).getUsername());
     }
 }

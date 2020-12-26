@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.webapis;
 
+import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.user.StickyUser;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.common.util.textures.DefaultSkins;
@@ -31,6 +32,7 @@ import java.util.UUID;
 
 //TODO: Better error handeling in case of 404
 
+//FIXME MAJOR BUG IN ASHCON: Sometimes the raw.value and the skin.data are inverted!
 public class CachedMojangAPI {
     /**
      * When possible, use the cached, faster api at https://api.ashcon.app/mojang/v2/user, otherwise use mojang
@@ -71,7 +73,11 @@ public class CachedMojangAPI {
     }
 
     private static Request buildRequest(UUID uuid){
-        return new Request.Builder().url(COMBINED_API_URL.newBuilder(StringUtil.unhyphenateUUID(uuid)).build()).build();
+        return new Request.Builder().url(
+                COMBINED_API_URL.newBuilder(
+                        StringUtil.unhyphenateUUID(uuid))
+                        .build())
+                .build();
     }
 
 
@@ -82,12 +88,12 @@ public class CachedMojangAPI {
         try {
             Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
             if(resp.code() != 200)
-                throw new IOException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
+                throw new java.net.ConnectException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
 
-            return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class)).textures.raw.value;
+            return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class)).textures.skin.data;
             //return JsonParser.parseReader(resp.body().charStream()).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
-            Bukkit.getLogger().severe(e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
+            StickyAPI.getLogger().severe(e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
             return DefaultSkins.STEVE.getTexture();
         }
     }
@@ -99,7 +105,7 @@ public class CachedMojangAPI {
                 throw new IOException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
             return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class));
         } catch (IOException ioe){
-            Bukkit.getLogger().severe(Arrays.toString(ioe.getStackTrace()));
+            StickyAPI.getLogger().severe(Arrays.toString(ioe.getStackTrace()));
             return new AshconResponse();
         }
     }
@@ -107,7 +113,7 @@ public class CachedMojangAPI {
     @Deprecated
     public JsonElement getFullJsonCombinedAPI(){
         try {
-            return getJSONFromURL(new URL(COMBINED_API_URL + "/" + uuid.toString().replace("-","")));
+            return getJSONFromURL(new URL(COMBINED_API_URL + uuid.toString().replace("-","")));
         } catch (MalformedURLException e) {
             Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
             return new JsonObject();
@@ -117,7 +123,7 @@ public class CachedMojangAPI {
     public HashMap<String, Instant> getUsernameHistory(){
         HashMap<String, Instant> retval = new HashMap<>();
         try{
-            URL url = new URL(COMBINED_API_URL + "/" + uuid.toString().replace("-",""));
+            URL url = new URL(COMBINED_API_URL + uuid.toString().replace("-",""));
             for (JsonElement el : getJSONFromURL(url).getAsJsonObject().getAsJsonArray("username_history")) {
                 Instant changedAt = null;
                 if(el.getAsJsonObject().has("changed_at")){
@@ -147,10 +153,10 @@ public class CachedMojangAPI {
 
     public String getUsername() {
         try {
-            Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
-            return  JsonParser.parseReader(resp.body().charStream()).getAsJsonObject().get("username").getAsString();//.getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
+            //Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
+            return getResponse().username;
         } catch (Exception e) {
-            Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
+            StickyAPI.getLogger().severe(e.getMessage());
             return null;//STEVE_TEXTURE;
         }
     }

@@ -58,7 +58,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * If this command should play a sound upon exiting
      * 
      * @param playSound If this command should play a sound upon exiting
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      * @deprecated I advise against using this since it plays the sound at an absurd
      *             volume since we can't get the location of the sender which means
      *             the sound is slightly distorted and unpleasant.
@@ -75,7 +75,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
     /**
      * If this command should play a sound upon exiting
      * 
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      * @deprecated I advise against using this since it plays the sound at an absurd
      *             volume since we can't get the location of the sender which means
      *             the sound is slightly distorted and unpleasant.

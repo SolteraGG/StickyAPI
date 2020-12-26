@@ -6,6 +6,8 @@ plugins {
     id "com.github.hierynomus.license" version "0.15.0"
 }
 
+
+
 jacoco {
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
     toolVersion = "0.8.6"
@@ -54,6 +56,7 @@ dependencies {
     implementation 'io.github.classgraph:classgraph:4.8.92'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'commons-validator:commons-validator:1.7'
     
     // JUnit 5 Testing
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
@@ -67,13 +70,16 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.6.28")
 }
 
+
 test {
 	useJUnitPlatform()
 	testLogging {
 		events "passed", "skipped", "failed"
         // Show System.out for code ran by tests
         showStandardStreams = true
+
 	}
+    //ignoreFailures = true
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
@@ -90,9 +96,19 @@ task sources(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+tasks.delombok.shouldRunAfter(sources)
 
-tasks.publish.dependsOn build, sources
 
+tasks.publish.dependsOn build
+
+javadoc {
+    options.addStringOption('XDignore.symbol.file', '-quiet')
+}
+tasks.build.finalizedBy(javadoc, sources)
+
+task rebuild {}
+tasks.rebuild.dependsOn build, clean
+tasks.build.shouldRunAfter(clean)
 
 
 

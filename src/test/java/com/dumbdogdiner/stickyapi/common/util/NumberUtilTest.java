@@ -26,7 +26,7 @@ public class NumberUtilTest {
         assertFalse(NumberUtil.isNumeric("12.3"));
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(1000)
     public void testGetRandomNumber() {
         int number = NumberUtil.getRandomNumber(0, 100);
         assertTrue(number >= 0); // number is 0 or more

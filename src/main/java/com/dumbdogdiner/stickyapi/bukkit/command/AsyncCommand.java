@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * 
  * @deprecated Use
  *             {@link com.dumbdogdiner.stickyapi.bukkit.command.BukkitCommandBuilder}
- *             as this will be removed in the next release
+ *             as this will be removed in a future release
  */
 @Deprecated
 public abstract class AsyncCommand extends Command implements PluginIdentifiableCommand {
