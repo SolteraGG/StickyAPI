@@ -4,11 +4,15 @@
  */
 package com.dumbdogdiner.stickyapi.common.webapis;
 
+import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.common.util.textures.DefaultSkins;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -20,10 +24,12 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 //TODO: Better error handeling in case of 404
-@Deprecated
+
 public class MojangAPI {
 
 
@@ -31,11 +37,7 @@ public class MojangAPI {
      * API URLs
      */
 
-    public enum APIStatus{
-        GREEN,
-        YELLOW,
-        RED
-    }
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
 
     protected static final String MOJANG_STATUS_BASE_URL = "https://status.mojang.com/check";
     protected static final String MOJANG_API_BASE_URL = "https://api.mojang.com";
@@ -60,8 +62,19 @@ public class MojangAPI {
         this.uuid = uuid;
     }
 
-    public static APIStatus getMojangAPIStatus(){
-        return APIStatus.RED;
+    public static Map<String, MojangStatus>  getMojangAPIStatus(){
+        Map<String, MojangStatus> status = new HashMap<>();
+        try {
+            Response resp = HTTP_CLIENT.newCall(new Request.Builder().url(MOJANG_STATUS_BASE_URL).build()).execute();
+            for(JsonElement obj : JsonParser.parseReader(resp.body().charStream()).getAsJsonArray()){
+                for(Map.Entry<String, JsonElement> entry : obj.getAsJsonObject().entrySet()){
+                    status.put(entry.getKey(), MojangStatus.valueOf(entry.getValue().getAsString().toUpperCase()));
+                }
+            }
+        } catch (Exception e){
+            StickyAPI.getLogger().log(Level.WARNING, e.getMessage());
+        }
+        return status;
     }
 
     public String getSkinTexture(){
