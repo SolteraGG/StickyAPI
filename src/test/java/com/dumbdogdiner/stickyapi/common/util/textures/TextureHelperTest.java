@@ -21,11 +21,11 @@ class TextureHelperTest {
 //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
 //        Logger.getLogger(OkHttpClient.class.getName()).addHandler(new StreamHandler(System.err, new SimpleFormatter()));
 
-        Logger l = StickyAPI.getLogger();
-        l.setUseParentHandlers(false);
-        for(Handler h : l.getHandlers()){
-            l.removeHandler(h);
-        }
+//        Logger l = StickyAPI.getLogger();
+//        l.setUseParentHandlers(false);
+//        for(Handler h : l.getHandlers()){
+//            l.removeHandler(h);
+//        }
 
 //        // Uncomment the following line to print exceptions to STDOUT
 //        l.addHandler(new StreamHandler(System.out, new SimpleFormatter()));

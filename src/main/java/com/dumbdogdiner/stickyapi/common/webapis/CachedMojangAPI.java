@@ -33,6 +33,7 @@ import java.util.UUID;
 //TODO: Better error handeling in case of 404
 
 //FIXME MAJOR BUG IN ASHCON: Sometimes the raw.value and the skin.data are inverted!
+// Double check the occurances of this and whatnot, try to fix, etc.
 public class CachedMojangAPI {
     /**
      * When possible, use the cached, faster api at https://api.ashcon.app/mojang/v2/user, otherwise use mojang
@@ -41,10 +42,7 @@ public class CachedMojangAPI {
 
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
 
-    protected static final String MOJANG_STATUS_BASE_URL = "https://status.mojang.com/check";
-    protected static final String MOJANG_API_BASE_URL = "https://api.mojang.com";
     protected static final HttpUrl COMBINED_API_URL = HttpUrl.parse("https://api.ashcon.app/mojang/v2/user/");
-    protected static final String MOJANG_SESSION_URL = "https://sessionserver.mojang.com";
 
     protected UUID uuid;
 
@@ -90,7 +88,7 @@ public class CachedMojangAPI {
             if(resp.code() != 200)
                 throw new java.net.ConnectException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
 
-            return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class)).textures.skin.data;
+            return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class)).textures.raw.value;
             //return JsonParser.parseReader(resp.body().charStream()).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
             StickyAPI.getLogger().severe(e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));

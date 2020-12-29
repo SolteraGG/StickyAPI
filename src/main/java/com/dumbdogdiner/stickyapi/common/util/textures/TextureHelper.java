@@ -35,11 +35,14 @@ public class TextureHelper {
             Object a = y.load(test);
             //TODO do something neater/nicer plz
             TextureMap = (Map<String, Map<String, String>>) a;
-            System.out.println(a.getClass());
+           //System.out.println(a.getClass());
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassCastException e){
+            throw new RuntimeException("The integrated textures.yml resource was invalid. Please check the format at compile-time. If you are a server owner, contact the developers of StickyAPI", e);
         }
     }
+
 
     public static Set<String> getCategories(){
         return TextureMap.keySet();
@@ -59,9 +62,22 @@ public class TextureHelper {
 
     public static String getTexture(String qualifiedName){
         String [] splits = qualifiedName.split("\\.");
-        if(splits.length != 2)
+        if(splits.length != 2 && splits.length != 1)
             throw new RuntimeException("Invalid qualified name: " + qualifiedName);
-        return getTexture(splits[0], splits[1]);
+        if(splits[1].equals("*")){
+            String texture = null;
+            for(String cat : getCategories()){
+                try {
+                    texture = getTexture(cat, qualifiedName);
+                } catch (NoSuchElementException e) {
+                    continue;
+                }
+                return texture;
+            }
+            return texture;
+        } else {
+            return getTexture(splits[0], splits[1]);
+        }
     }
 
     public static List<String> getQualifiedNames(){
@@ -131,7 +147,7 @@ public class TextureHelper {
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
-            StickyAPI.getLogger().log(Level.WARNING, sw.toString());
+            StickyAPI.getLogger().log(Level.INFO, sw.toString());
             return false;
         }
     }
