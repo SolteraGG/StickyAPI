@@ -27,6 +27,10 @@ license {
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
 }
+
+javadoc{
+    options.addBooleanOption("-frames", true)
+}
 // Run the license formatter before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
 
