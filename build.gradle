@@ -108,7 +108,7 @@ tasks.publish.dependsOn build
 
 tasks.javadoc.dependsOn delombok
 javadoc {
-    options.addStringOption('XDignore.symbol.file', '-quiet')
+    options.addBooleanOption('XDignore.symbol.file', true)
     options.addBooleanOption('-frames', true)
 }
 tasks.build.finalizedBy(sources)
