@@ -4,20 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-
-import static org.mockito.Mockito.*;
-
 import com.destroystokyo.paper.Title;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.function.Consumer;
 import com.dumbdogdiner.stickyapi_tests_common.BukkitCommon;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ServerUtilTest {

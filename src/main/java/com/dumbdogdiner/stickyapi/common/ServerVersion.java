@@ -7,6 +7,9 @@ package com.dumbdogdiner.stickyapi.common;
 /**
  * Utility class for fetching version data.
  */
+
+// Suppress Constant conditions because they appear to always be true at compile time
+@SuppressWarnings("ConstantConditions")
 public final class ServerVersion {
     public enum ServerType {
         BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL

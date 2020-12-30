@@ -4,22 +4,40 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import com.dumbdogdiner.stickyapi_tests_common.TestsCommon;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReflectionUtilTest {
+    @BeforeAll
+    static void setUp() {
+        TestsCommon.disableHandlers();
+        TestsCommon.addMaskedHandler();
+    }
+
+    @AfterAll
+    static void tearDown() {
+        TestsCommon.removeMaskedHandler();
+        TestsCommon.enableHandlers();
+    }
+
     private class ExampleClass {
 
         private String privateString = "default_value";
-        
+
         protected String protectedString = "default_value";
 
         private final String privateFinalString = "default_value";
 
         private static final String privateStaticFinalString = "default_value";
 
-        public ExampleClass() {};
+        public ExampleClass() {
+        }
+
+        ;
     }
 
     @Test
@@ -56,7 +74,7 @@ public class ReflectionUtilTest {
         ReflectionUtil.setProtectedValue(c, "privateStaticFinalString", "edited_value");
 
         assertEquals(ReflectionUtil.getProtectedValue(c, "privateStaticFinalString"), "edited_value");
-        
+
         assertEquals(ReflectionUtil.getProtectedValue(c, "privateStaticFinalString"), "edited_value");
         // Doesn't work here - have to use ReflectionUtil's get!
         //assertEquals(c.privateStaticFinalString, "edited_value");

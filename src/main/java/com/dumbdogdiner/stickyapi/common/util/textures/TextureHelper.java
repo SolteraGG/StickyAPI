@@ -151,4 +151,8 @@ public class TextureHelper {
             return false;
         }
     }
+
+    public static String asQualifiedName(String filter, String head) {
+        return (filter + '.' + head).toUpperCase();
+    }
 }

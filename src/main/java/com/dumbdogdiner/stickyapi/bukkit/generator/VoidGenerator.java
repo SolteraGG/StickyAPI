@@ -13,10 +13,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A class for generating empty void worlds
  */
+@SuppressWarnings("unused")
 public class VoidGenerator extends ChunkGenerator {
 
     @Override
-    public ChunkData generateChunkData(@NotNull World world, Random random, int x, int z, BiomeGrid biome) {
+    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
         return createChunkData(world);
     }
 }

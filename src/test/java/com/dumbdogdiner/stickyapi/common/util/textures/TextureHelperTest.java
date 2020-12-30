@@ -5,7 +5,9 @@
 package com.dumbdogdiner.stickyapi.common.util.textures;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi_tests_common.TestsCommon;
 import okhttp3.OkHttpClient;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -14,22 +16,22 @@ import java.util.logging.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TextureHelperTest {
-
     @BeforeAll
-    static void setup() {
+    static void setUp() {
+        TestsCommon.disableHandlers();
+        TestsCommon.addMaskedHandler();
+
 //        // Uncomment the following two lines to see if there are any leaks from OkHTTP
 //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
 //        Logger.getLogger(OkHttpClient.class.getName()).addHandler(new StreamHandler(System.err, new SimpleFormatter()));
-
-//        Logger l = StickyAPI.getLogger();
-//        l.setUseParentHandlers(false);
-//        for(Handler h : l.getHandlers()){
-//            l.removeHandler(h);
-//        }
-
-//        // Uncomment the following line to print exceptions to STDOUT
-//        l.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
     }
+
+    @AfterAll
+    static void tearDown() {
+        TestsCommon.removeMaskedHandler();
+        TestsCommon.enableHandlers();
+    }
+
     @Test
     void validateTexture() {
         assertTrue(TextureHelper.validateTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDViM2Y4Y2E0YjNhNTU1Y2NiM2QxOTQ0NDk4MDhiNGM5ZDc4MzMyNzE5NzgwMGQ0ZDY1OTc0Y2M2ODVhZjJlYSJ9fX0="));
