@@ -34,6 +34,14 @@ public class StickyUserBukkit extends StickyUser {
         super(uniqueId);
     }
 
+    public Player getAsBukkitPlayer() {
+        return Bukkit.getPlayer(uniqueId);
+    }
+
+    public OfflinePlayer getAsOfflinePlayer() {
+        return Bukkit.getOfflinePlayer(uniqueId);
+    }
+
     public boolean isOnline(){
         return getAsOfflinePlayer().isOnline();
     }

@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.webapis;
 
-import com.dumbdogdiner.stickyapi.common.util.textures.DefaultSkins;
+import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ class AshconResponse {
         Raw raw;
 
         static class Raw{
-            String value = DefaultSkins.STEVE.getTexture();
+            String value = TextureHelper.getTexture("MHF.MHF_Steve");
             String signature;
         }
     }

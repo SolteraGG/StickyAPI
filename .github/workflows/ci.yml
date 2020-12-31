@@ -57,5 +57,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: javadocs-opts
-          path: build/tmp/javadoc/javadoc.options
+          path: build/*
 
