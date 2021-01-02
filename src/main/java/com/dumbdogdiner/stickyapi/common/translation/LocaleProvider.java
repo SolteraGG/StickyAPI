@@ -1,24 +1,19 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.translation;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
+import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
-
-import org.jetbrains.annotations.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.*;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Provides an interface between locale files and your plugin.
@@ -31,7 +26,7 @@ public class LocaleProvider {
     private File localeFolder;
 
     @Getter
-    private ConcurrentHashMap<String, Locale> loadedLocales = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Locale> loadedLocales = new ConcurrentHashMap<>();
 
     /**
      * The default locale to use when
@@ -50,7 +45,9 @@ public class LocaleProvider {
     public LocaleProvider(@NotNull File localeFolder) {
         this.localeFolder = localeFolder;
         if (!localeFolder.exists())
-            localeFolder.mkdir();
+            if(!localeFolder.mkdir()){
+                StickyAPI.getLogger().severe("Directory " + localeFolder.getPath() + " did not exist and could not be created!");
+            }
     }
 
     /**

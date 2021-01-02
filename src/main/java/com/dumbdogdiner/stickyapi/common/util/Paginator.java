@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.lang.Math;
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class Paginator<T> {

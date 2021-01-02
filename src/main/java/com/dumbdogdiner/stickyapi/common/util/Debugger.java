@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.util.Random;
-import java.util.logging.Logger;
-
-import javax.annotation.Nullable;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import lombok.Setter;
-import lombok.Getter;
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Utility class for debugging.

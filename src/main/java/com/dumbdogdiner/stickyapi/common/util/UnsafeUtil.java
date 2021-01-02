@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import sun.misc.Unsafe;
+
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import sun.misc.Unsafe;
 
 /**
  * A utility class for the Java internal {@link sun.misc.Unsafe Unsafe} class - a class with low-level mechanisms designed only to be used by the core Java library.
@@ -26,17 +26,16 @@ public class UnsafeUtil {
      * This method uses reflection to avoid a SecurityException.
      * 
      * @return {@link sun.misc.Unsafe Unsafe} - an instance of the Unsafe class.
-     * @throws NoSuchFieldException
-     * @throws SecurityException
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
+     * @throws NoSuchFieldException @see {@link sun.misc.Unsafe}
+     * @throws SecurityException @see {@link sun.misc.Unsafe}
+     * @throws IllegalArgumentException @see {@link sun.misc.Unsafe}
+     * @throws IllegalAccessException @see {@link sun.misc.Unsafe}
      */
     public static Unsafe getUnsafe() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
             IllegalAccessException {
         Field f = Unsafe.class.getDeclaredField("theUnsafe");
         f.setAccessible(true);
-        Unsafe unsafe = (Unsafe) f.get(null);
-        return unsafe;
+        return (Unsafe) f.get(null);
     }
 
     private static boolean illegalReflectiveAccessIsDisabled = false;

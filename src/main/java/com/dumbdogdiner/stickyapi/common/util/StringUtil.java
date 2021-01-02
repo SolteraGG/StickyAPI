@@ -1,29 +1,29 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
+
+import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Operations on {@link java.lang.String}
  */
-public final class StringUtil {
+public final class StringUtil extends StringUtils {
     private StringUtil() {
     }
 
-    private static HashMap<String, String> leetReplace = new HashMap<>();
+    private static final HashMap<String, String> leetReplace = new HashMap<>();
 
     // createProgressBar - format double percentage to no decimal places to avoid it
     // showing as '100.0000%' or something
-    private static DecimalFormat percentageFormatter = new DecimalFormat("#");
+    private static final DecimalFormat percentageFormatter = new DecimalFormat("#");
 
     static {
         leetReplace.put("0", "o");
@@ -54,8 +54,8 @@ public final class StringUtil {
      *                          snuggly brackets
      * @return {@link String}
      */
-    public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
-            @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
+    public static String createProgressBar(double size, double percentage, boolean monospace,
+                                           boolean includePercentage, boolean includeBrackets) {
         double barCount = ((percentage / 100) * size);
         StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
@@ -89,7 +89,7 @@ public final class StringUtil {
      * @param percentage The percentage to fill the bar to
      * @return {@link String}
      */
-    public static String createProgressBar(@NotNull double size, @NotNull double percentage) {
+    public static String createProgressBar(double size, double percentage) {
         return createProgressBar(size, percentage, false, false, true);
     }
 

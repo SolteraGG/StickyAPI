@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bungeecord.protocol;
 
-import java.util.HashMap;
-
 import net.md_5.bungee.api.ProxyServer;
+
+import java.util.HashMap;
 
 @Deprecated
 /**

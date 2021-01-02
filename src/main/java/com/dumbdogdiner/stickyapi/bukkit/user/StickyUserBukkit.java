@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.user;
 
-import com.dumbdogdiner.stickyapi.bukkit.item.generator.PlayerHeadGenerator;
+import com.dumbdogdiner.stickyapi.bukkit.item.generator.PlayerHeadBuilder;
 import com.dumbdogdiner.stickyapi.common.user.StickyUser;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "unused"})
@@ -23,7 +24,7 @@ public class StickyUserBukkit extends StickyUser {
     }
 
     public StickyUserBukkit(OfflinePlayer p) {
-        super(p.getUniqueId(), p.getName());
+        super(p.getUniqueId(), Objects.requireNonNull(p.getName()));
     }
 
     public StickyUserBukkit(StickyUser p){
@@ -82,8 +83,9 @@ public class StickyUserBukkit extends StickyUser {
         return getHead(1);
     }
     public ItemStack getHead(int amt){
-        PlayerHeadGenerator gen = new PlayerHeadGenerator(this);
-        return gen.getHead(amt);
+        PlayerHeadBuilder gen = new PlayerHeadBuilder(this);
+        gen.quantity(amt);
+        return gen.build();
     }
 
 

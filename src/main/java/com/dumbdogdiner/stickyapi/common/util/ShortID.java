@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
+
+import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 import java.util.UUID;
 import java.util.zip.CRC32;
 
-import org.apache.commons.lang.Validate;
-import org.jetbrains.annotations.NotNull;
 
+// TODO: consider https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/checkdigit/LuhnCheckDigit.html instead??
 final class Luhn {
     private Luhn() {
     }
@@ -99,7 +101,7 @@ public class ShortID {
      */
     public static ShortID fromString(String name) throws IllegalArgumentException {
         if (!validateID(name))
-            throw new IllegalArgumentException("The provided String is not a valid Luhn-parseable ShortID");
+            throw new IllegalArgumentException("The provided String is not a valid Luhn-parsable ShortID");
         return new ShortID((name));
     }
 

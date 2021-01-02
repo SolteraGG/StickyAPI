@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util.textures;
@@ -11,7 +11,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.w3c.dom.Text;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.imageio.ImageIO;
@@ -152,7 +151,7 @@ public class TextureHelper {
         }
     }
 
-    public static String asQualifiedName(String filter, String head) {
+    public static String toQualifiedName(String filter, String head) {
         return (filter + '.' + head).toUpperCase();
     }
 }

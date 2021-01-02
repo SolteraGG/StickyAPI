@@ -1,34 +1,27 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bungeecord.command;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bungeecord.packet.PacketRegistration;
 import com.dumbdogdiner.stickyapi.bungeecord.util.SoundUtil;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
-import com.dumbdogdiner.stickyapi.common.command.ExitCode;
 import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
+import com.dumbdogdiner.stickyapi.common.command.ExitCode;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
-
-import org.jetbrains.annotations.NotNull;
-
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+import java.util.concurrent.FutureTask;
 
 public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
 

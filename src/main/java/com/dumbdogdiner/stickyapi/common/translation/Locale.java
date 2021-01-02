@@ -1,24 +1,22 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.translation;
 
-import java.io.File;
-
 import com.dumbdogdiner.stickyapi.common.configuration.file.FileConfiguration;
 import com.dumbdogdiner.stickyapi.common.configuration.file.YamlConfiguration;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
-
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import lombok.Getter;
+import java.io.File;
 
 /**
  * Represents a wrapper around a locale configuration file.
  */
 public class Locale {
-    private Debugger debug = new Debugger(getClass());
+    private final Debugger debug = new Debugger(getClass());
 
     @Getter
     Boolean isValid = false;

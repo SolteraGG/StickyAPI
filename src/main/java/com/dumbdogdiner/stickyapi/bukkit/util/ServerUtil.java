@@ -1,22 +1,19 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
-import javax.annotation.Nullable;
-
 import com.destroystokyo.paper.Title;
-
 import com.dumbdogdiner.stickyapi.common.translation.Translation;
 import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
-
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import javax.annotation.Nullable;
 
 public class ServerUtil {
     private ServerUtil() {}
@@ -29,9 +26,8 @@ public class ServerUtil {
      */
     public static double[] getRecentTps() {
         Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
-        double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
-            
-        return recentTps;
+
+        return ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
     }
 
     /**

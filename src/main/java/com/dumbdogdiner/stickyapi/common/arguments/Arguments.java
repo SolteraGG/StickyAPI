@@ -1,23 +1,18 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.arguments;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
-
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * Utility class for handling command arguments.
