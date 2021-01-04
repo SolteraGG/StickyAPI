@@ -4,14 +4,10 @@
  */
 package com.dumbdogdiner.stickyapi.common.util.textures;
 
-import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi_tests_common.TestsCommon;
-import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.util.logging.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +15,7 @@ class TextureHelperTest {
     @BeforeAll
     static void setUp() {
         TestsCommon.disableHandlers();
-        TestsCommon.addMaskedHandler();
+        //TestsCommon.addMaskedHandler();
 
 //        // Uncomment the following two lines to see if there are any leaks from OkHTTP
 //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
@@ -28,13 +24,13 @@ class TextureHelperTest {
 
     @AfterAll
     static void tearDown() {
-        TestsCommon.removeMaskedHandler();
+        //TestsCommon.removeMaskedHandler();
         TestsCommon.enableHandlers();
     }
 
     @Test
     void validateTexture() {
-        assertTrue(TextureHelper.validateTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDViM2Y4Y2E0YjNhNTU1Y2NiM2QxOTQ0NDk4MDhiNGM5ZDc4MzMyNzE5NzgwMGQ0ZDY1OTc0Y2M2ODVhZjJlYSJ9fX0="));
+        assertTrue(TextureHelper.isValidTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDViM2Y4Y2E0YjNhNTU1Y2NiM2QxOTQ0NDk4MDhiNGM5ZDc4MzMyNzE5NzgwMGQ0ZDY1OTc0Y2M2ODVhZjJlYSJ9fX0="));
     }
 
     @Test
@@ -46,7 +42,7 @@ class TextureHelperTest {
         };
         for (String invalidTest : tests) {
             System.out.println(invalidTest);
-            assertFalse(TextureHelper.validateTexture(invalidTest));
+            assertFalse(TextureHelper.isValidTexture(invalidTest));
         }
     }
 
@@ -126,7 +122,7 @@ class TextureHelperTest {
     private void testMultiFail(String[] tests) {
         for (String invalidTest : tests) {
             System.out.println("Now Testing invalid texture " + invalidTest);
-            assertFalse(TextureHelper.validateTexture(invalidTest));
+            assertFalse(TextureHelper.isValidTexture(invalidTest));
         }
     }
 
@@ -147,7 +143,7 @@ class TextureHelperTest {
     void validateAllTextures() {
         for(String qn : TextureHelper.getQualifiedNames()){
             System.out.println("Testing texture for " + qn + " (" + TextureHelper.getTexture(qn) + ")");
-            assertTrue(TextureHelper.validateTexture(TextureHelper.getTexture(qn)));
+            assertTrue(TextureHelper.isValidTexture(TextureHelper.getTexture(qn)));
         }
     }
 

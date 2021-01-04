@@ -18,6 +18,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 class SkullBuilderTest {
     static ServerMock svr;
 
@@ -61,6 +64,13 @@ class SkullBuilderTest {
 
         Assertions.assertEquals(sb, sb.name("alexa"));
         Assertions.assertEquals("alexa", sb.name());
+
+        try {
+            sb.texture(new URL("http://textures.minecraft.net/texture/83cee5ca6afcdb171285aa00e8049c297b2dbeba0efb8ff970a5677a1b644032"));
+        } catch (MalformedURLException e) {
+            Assertions.fail(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
@@ -81,7 +91,7 @@ class SkullBuilderTest {
         for (ProfileProperty pp : meta.getPlayerProfile().getProperties()) {
             if (pp.getName().equals("texture")) {
                 Assertions.assertEquals(TextureHelper.getTexture("MHF.MHF_Alex"), pp.getValue());
-                Assertions.assertTrue(TextureHelper.validateTexture(pp.getValue()));
+                Assertions.assertTrue(TextureHelper.isValidTexture(pp.getValue()));
             }
         }
         Assertions.assertEquals("alexa", meta.getDisplayName());

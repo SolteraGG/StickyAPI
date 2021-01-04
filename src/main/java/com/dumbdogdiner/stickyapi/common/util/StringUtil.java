@@ -7,10 +7,9 @@ package com.dumbdogdiner.stickyapi.common.util;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Operations on {@link java.lang.String}
@@ -295,5 +294,25 @@ public final class StringUtil extends StringUtils {
 
     public static String unhyphenate(@NotNull String str){
         return str.replace("-","");
+    }
+
+
+    /**
+     * Utility method to ensure Base64 encoding is done consistently.
+     * @param str The {@link String} to be encoded
+     * @return The encoded {@link String}
+     */
+    public static String encodeBase64(String str) {
+        return new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Utility method to ensure Base64 decoding is done consistently.
+     * @param str A {@link String} containing the Base64-encoded data
+     * @return A string of UTF-8 Text decoded from the input
+     * @throws IllegalArgumentException if the Base64 decoding fails
+     */
+    public static String decodeBase64(String str) throws IllegalArgumentException {
+        return new String(Base64.getDecoder().decode(str), StandardCharsets.UTF_8);
     }
 }

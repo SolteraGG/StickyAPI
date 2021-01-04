@@ -4,23 +4,29 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.player;
 
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerSnapshot {
+import java.io.Serializable;
+import java.time.Instant;
 
-    private Location location;
-    private ItemStack[] armor;
-    private ItemStack[] items;
-    private double health;
-    private int foodLevel;
-    private float saturation;
-    private float exhaustion;
-    private float exp;
-    private Vector velocity;
+public class PlayerSnapshot implements Serializable {
+
+    private final Location location;
+    private final ItemStack[] armor;
+    private final ItemStack[] items;
+    private final double health;
+    private final int foodLevel;
+    private final float saturation;
+    private final float exhaustion;
+    private final float exp;
+    private final Vector velocity;
+    @Getter
+    private final Instant savedAt;
 
     /**
      * Create a new {@link PlayerSnapshot}.
@@ -34,16 +40,16 @@ public class PlayerSnapshot {
      * @param player the Player to snapshot
      */
     public PlayerSnapshot(@NotNull Player player) {
-        location = player.getLocation();
-        armor = player.getInventory().getArmorContents();
-        items = player.getInventory().getContents();
-        health = player.getHealth();
-        foodLevel = player.getFoodLevel();
-        saturation = player.getSaturation();
-        exhaustion = player.getExhaustion();
-        exp = player.getExp();
-        velocity = player.getVelocity();
-
+        this.savedAt = Instant.now();
+        this.location = player.getLocation();
+        this.armor = player.getInventory().getArmorContents();
+        this.items = player.getInventory().getContents();
+        this.health = player.getHealth();
+        this.foodLevel = player.getFoodLevel();
+        this.saturation = player.getSaturation();
+        this.exhaustion = player.getExhaustion();
+        this.exp = player.getExp();
+        this.velocity = player.getVelocity();
     }
 
     /**

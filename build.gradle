@@ -29,9 +29,6 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
 }
 
-javadoc{
-    options.addBooleanOption("-frames", true)
-}
 // Run the license formatter before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
 
@@ -108,12 +105,22 @@ tasks.delombok.shouldRunAfter(sources)
 
 tasks.publish.dependsOn build
 
-tasks.javadoc.dependsOn delombok
 javadoc {
     options.addBooleanOption('XDignore.symbol.file', true)
     options.addBooleanOption('-frames', true)
+    options.addBooleanOption('private', true)
+    test.ignoreFailures true;
+    dependsOn delombok
 }
 tasks.build.finalizedBy(sources)
+
+
+task browseJavadoc {
+    dependsOn javadoc
+    doLast {
+        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
+    }
+}
 
 task rebuild {
     dependsOn build, clean

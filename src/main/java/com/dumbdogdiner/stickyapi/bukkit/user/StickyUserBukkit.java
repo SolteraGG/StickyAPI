@@ -82,11 +82,18 @@ public class StickyUserBukkit extends StickyUser {
     public ItemStack getHead(){
         return getHead(1);
     }
+
     public ItemStack getHead(int amt){
         PlayerHeadBuilder gen = new PlayerHeadBuilder(this);
         gen.quantity(amt);
         return gen.build();
     }
 
+    public Player toBukkitPlayer(){
+        return Bukkit.getPlayer(uniqueId);
+    }
 
+    public OfflinePlayer toOfflinePlayer() {
+        return Bukkit.getOfflinePlayer(uniqueId);
+    }
 }

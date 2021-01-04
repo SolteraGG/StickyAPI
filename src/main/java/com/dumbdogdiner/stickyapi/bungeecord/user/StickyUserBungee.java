@@ -5,7 +5,6 @@
 package com.dumbdogdiner.stickyapi.bungeecord.user;
 
 import com.dumbdogdiner.stickyapi.common.user.StickyUser;
-import com.dumbdogdiner.stickyapi.common.webapis.MojangAPI;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -18,5 +17,9 @@ public class StickyUserBungee extends StickyUser {
 
     public StickyUserBungee(ProxiedPlayer p) {
         super(p.getUniqueId(), p.getName());
+    }
+
+    public ProxiedPlayer toProxiedPlayer(){
+        return ProxyServer.getInstance().getPlayer(uniqueId);
     }
 }
