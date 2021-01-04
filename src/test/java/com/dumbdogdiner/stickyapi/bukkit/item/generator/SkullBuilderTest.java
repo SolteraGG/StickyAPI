@@ -8,6 +8,7 @@ import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
+import com.dumbdogdiner.stickyapi.common.util.textures.TextureValidator;
 import com.dumbdogdiner.stickyapi_tests_common.MockedBukkitPlugin;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -91,7 +92,7 @@ class SkullBuilderTest {
         for (ProfileProperty pp : meta.getPlayerProfile().getProperties()) {
             if (pp.getName().equals("texture")) {
                 Assertions.assertEquals(TextureHelper.getTexture("MHF.MHF_Alex"), pp.getValue());
-                Assertions.assertTrue(TextureHelper.isValidTexture(pp.getValue()));
+                Assertions.assertTrue(TextureValidator.isValidTexture(pp.getValue()));
             }
         }
         Assertions.assertEquals("alexa", meta.getDisplayName());

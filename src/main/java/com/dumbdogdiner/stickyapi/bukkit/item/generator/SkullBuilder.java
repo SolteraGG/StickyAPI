@@ -9,6 +9,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
+import com.dumbdogdiner.stickyapi.common.util.textures.TextureValidator;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
@@ -92,7 +93,7 @@ public class SkullBuilder {
      * @param texture Base64 string of the json of texture location
      */
     public @NotNull SkullBuilder texture(String texture) {
-        Preconditions.checkArgument(TextureHelper.isValidTexture(texture));
+        Preconditions.checkArgument(TextureValidator.isValidTexture(texture));
         this.texture = texture;
         return this;
     }

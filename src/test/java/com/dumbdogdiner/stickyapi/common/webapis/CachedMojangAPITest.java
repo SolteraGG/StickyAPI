@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.webapis;
 
-import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
+import com.dumbdogdiner.stickyapi.common.util.textures.TextureValidator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CachedMojangAPITest {
     @Test
     void getSkinTexture() {
-        assertTrue(TextureHelper.isValidTexture(CachedMojangAPI.getSkinTexture(UUID.fromString("6ab43178-89fd-4905-97f6-0f67d9d76fd9"))));
+        assertTrue(TextureValidator.isValidTexture(CachedMojangAPI.getSkinTexture(UUID.fromString("6ab43178-89fd-4905-97f6-0f67d9d76fd9"))));
 //        System.out.println(new MojangAPI(UUID.fromString("ffffffff-f53b-49d1-b8c4-ffffffffffff")).getSkinTexture());
     }
 
