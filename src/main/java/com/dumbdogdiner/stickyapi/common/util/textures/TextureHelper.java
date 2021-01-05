@@ -47,21 +47,49 @@ public class TextureHelper {
     }
 
     /**
-     * Gets the set of categories of textures in the Heads file
+     * Gets the {@link Set} of categories of textures in the Heads file
+     * @return A {@link Set} of all the categories of texture
      */
     public static Set<String> getCategories() {
         return TextureMap.keySet();
     }
 
-
+    /**
+     * Get a {@link Set} of textures
+     * @param cat The {@link #getCategories() category}of textures to get the {@link Map}
+     * @see TextureHelper#getCategories()
+     * @return A {@link Map} of texture names to texture strings for the given category
+     */
     public static Map<String, String> getTextureMapCategory(String cat) {
         return TextureMap.get(cat.toUpperCase());
     }
 
+
+    /**
+     * Get a list of all the textures for a given Category
+     * @param cat a Category of textures
+     * @return a {@link List} of the textures in a given Category
+     * @see #getCategories()
+     */
+    public static List<String> getTextures(String cat) {
+        return Collections.unmodifiableList(new ArrayList<>(getTextureMapCategory(cat).keySet()));
+    }
+
+    /**
+     *
+     * @param cat
+     * @param name
+     * @return
+     */
     public static String getTexture(String cat, String name) {
         return TextureMap.get(cat.toUpperCase()).get(name.toUpperCase());
     }
 
+    /**
+     *
+     * @param qualifiedName
+     * @return
+     */
     public static String getTexture(String qualifiedName) {
         String[] splits = qualifiedName.split("\\.");
         if (splits.length != 2 && splits.length != 1)
@@ -82,19 +110,21 @@ public class TextureHelper {
         }
     }
 
+    /**
+     * Returns a {@link List} of Qualified Names, of the format of "{CATEGORY}.{TEXTURE}"
+     * @return a {@link List} of Qualified Names of all textures
+     */
     public static List<String> getQualifiedNames() {
         ArrayList<String> qualifiedNames = new ArrayList<>();
         for (String cat : getCategories()) {
             for (String texture : getTextureMapCategory(cat).keySet()) {
-                qualifiedNames.add((cat + '.' + texture).toUpperCase());
+                qualifiedNames.add(toQualifiedName(cat, texture));
             }
         }
         return Collections.unmodifiableList(qualifiedNames);
     }
 
-    public static List<String> getTextures(String cat) {
-        return Collections.unmodifiableList(new ArrayList<>(TextureMap.get(cat.toUpperCase()).keySet()));
-    }
+
 
     /**
      * @see TextureHelper#toTextureJson(URL)
@@ -154,19 +184,32 @@ public class TextureHelper {
         return encodeJson(toTextureJson(url));
     }
 
+    /**
+     *
+     * @param texture
+     * @return
+     */
     public static String encodeJson(JsonObject texture) {
         // todo Preconditions.checkArgument(validateTextureJson(texture));
         return StringUtil.encodeBase64(GSON.toJson(texture));
     }
 
+    /**
+     *
+     * @param texture
+     * @return
+     */
     public static JsonObject decodeTextureStringToJson(String texture){
         return JsonParser.parseString(texture).getAsJsonObject();
     }
 
-
-
-
+    /**
+     *
+     * @param filter
+     * @param head
+     * @return
+     */
     public static String toQualifiedName(String filter, String head) {
-        return (filter + '.' + head).toUpperCase();
+        return String.join(".", filter, head).toUpperCase();
     }
 }

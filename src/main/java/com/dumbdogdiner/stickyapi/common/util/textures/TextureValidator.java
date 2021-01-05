@@ -16,8 +16,6 @@ import org.apache.commons.validator.routines.UrlValidator;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -30,6 +28,11 @@ public class TextureValidator {
      */
     private static final byte[] PNG_SIGNATURE = {(byte) 0x89, (byte) 0x50, (byte) 0x4e, (byte) 0x47, (byte) 0x0d, (byte) 0x0a, (byte) 0x1a, (byte) 0x0a};
 
+    /**
+     *
+     * @param url
+     * @return
+     */
     public static boolean isValidTextureUrl(String url) {
         //TODO implement
         return true;
@@ -82,10 +85,10 @@ public class TextureValidator {
                 throw new Exception("The content retrieved from " + textureURL + " was not a recognized image, was null, or was decoded to null", e);
             }
         } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
-            StickyAPI.getLogger().log(Level.INFO, sw.toString());
+            StickyAPI.getLogger().log(Level.INFO, new InvalidTextureException(texture, e).getMessage());
             return false;
         }
     }
+
+
 }
