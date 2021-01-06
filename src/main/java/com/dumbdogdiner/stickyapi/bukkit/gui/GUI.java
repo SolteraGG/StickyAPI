@@ -81,7 +81,7 @@ public class GUI {
     /**
      * Adds an item stack to the GUI.
      * @param x The x position of the item stack, must be between 0 and 8
-     * @param y The y position of the item stack, must be between 0 and {@link GUI#getRows()} - 1
+     * @param y The y position of the item stack, must be between 0 and {@link #getRows()} - 1
      * @param slot The {@link GUISlot} to put in this location.
      */
     public void addSlot(int x, int y, @NotNull GUISlot slot) {
@@ -93,7 +93,7 @@ public class GUI {
     /**
      * Adds an item stack to the GUI.
      * @param x The x position of the item stack, must be between 0 and 8
-     * @param y The y position of the item stack, must be between 0 and {@link GUI#getRows()} - 1
+     * @param y The y position of the item stack, must be between 0 and {@link #getRows()} - 1
      * @param stack The item stack to put at this location
      * @param tag An optional tag that be used to identify the item in {@link GUI#onInventoryClick(InventoryClickEvent, String)}
      * @param action An optional procedure to run when this item is clicked, receives the {@link InventoryClickEvent}
@@ -139,7 +139,7 @@ public class GUI {
     /**
      * Removes a slot in the GUI.
      * @param x The x position of the slot, must be between 0 and 8
-     * @param y The y position of the slot, must be between 0 and {@link GUI#getRows()} - 1
+     * @param y The y position of the slot, must be between 0 and {@link #getRows()} - 1
      */
     public void removeSlot(int x, int y) {
         int index = makeIndex(x, y);
@@ -150,7 +150,7 @@ public class GUI {
     /**
      * Gets a slot in the GUI.
      * @param x The x position of the slot, must be between 0 and 8
-     * @param y The y position of the slot, must be between 0 and {@link GUI#getRows()} - 1
+     * @param y The y position of the slot, must be between 0 and {@link #getRows()} - 1
      * @return The {@link GUISlot} at this location, or null if none exists
      */
     public @Nullable GUISlot getSlot(int x, int y) {

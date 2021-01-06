@@ -4,15 +4,15 @@
  */
 package com.dumbdogdiner.stickyapi.common.util.url;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class URLUtil {
 
@@ -64,7 +64,7 @@ public class URLUtil {
 
                 TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
                 urlComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.getFullPath()));
-                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7Click to open URL"), new Text("\n§8" + url.getFullPath())));
+                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.COLOR_CHAR + "" + ChatColor.GRAY + "Click to open URL"), new Text("\n§8" + url.getFullPath())));
                 urlComponent.setBold(true);
                 finalComp.addExtra(urlComponent);
             }

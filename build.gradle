@@ -105,11 +105,27 @@ tasks.delombok.shouldRunAfter(sources)
 
 tasks.publish.dependsOn build
 
+
+
+delombok {
+    finalizedBy(javadoc)
+    print(true)
+    //verbose(true)
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
 javadoc {
     options.addBooleanOption('XDignore.symbol.file', true)
     options.addBooleanOption('-frames', true)
     options.addBooleanOption('private', true)
     test.ignoreFailures true;
+    options.encoding = 'UTF-8'
     dependsOn delombok
 }
 tasks.build.finalizedBy(sources)

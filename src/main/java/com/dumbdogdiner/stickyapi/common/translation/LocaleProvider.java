@@ -31,7 +31,7 @@ public class LocaleProvider {
     /**
      * The default locale to use when
      * 
-     * @return {@link Locale}
+     * @return the Default locale
      */
     @Getter
     private Locale defaultLocale;
