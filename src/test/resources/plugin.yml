@@ -4,5 +4,7 @@
 #
 
 name: StickyApiTest
-main: com.dumbdogdiner.stickyapi_tests_common.MockedBukkitTests
+main: com.dumbdogdiner.stickyapi.mockedplugin.StickyAPIPlugin
 version: 1.0
+api-version: 1.16
+#load: STARTUP

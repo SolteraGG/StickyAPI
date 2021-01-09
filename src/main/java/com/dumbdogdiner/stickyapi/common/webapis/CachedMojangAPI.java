@@ -7,7 +7,7 @@ package com.dumbdogdiner.stickyapi.common.webapis;
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.user.StickyUser;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
-import com.dumbdogdiner.stickyapi.common.util.textures.DefaultSkins;
+import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -92,7 +92,7 @@ public class CachedMojangAPI {
             //return JsonParser.parseReader(resp.body().charStream()).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
             StickyAPI.getLogger().severe(e.getMessage() + "\n\n" + Arrays.toString(e.getStackTrace()));
-            return DefaultSkins.STEVE.getTexture();
+            return TextureHelper.getTexture("MHF.MHF_Steve");
         }
     }
 

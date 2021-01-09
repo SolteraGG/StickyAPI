@@ -9,15 +9,11 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureValidator;
-import com.dumbdogdiner.stickyapi_tests_common.MockedBukkitPlugin;
+import com.dumbdogdiner.stickyapi.mockedplugin.StickyAPIPlugin;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,16 +21,17 @@ import java.net.URL;
 class SkullBuilderTest {
     static ServerMock svr;
 
-    @Before
-    public void setup() {
+    @BeforeAll
+    static void setup() {
         svr = MockBukkit.mock();
         MockBukkit.createMockPlugin();
         svr.addPlayer();
-        MockBukkit.load(MockedBukkitPlugin.class);
+        MockBukkit.load(StickyAPIPlugin.class);
+        //Bukkit.setServer(svr);
     }
 
-    @After
-    public void tearDown() {
+    @AfterAll
+    static void tearDown() {
         MockBukkit.unmock();
     }
 

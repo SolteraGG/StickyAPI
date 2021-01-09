@@ -45,11 +45,6 @@ public class SkullBuilder {
     private String name;
     private String texture;
 
-
-    public SkullBuilder() {
-
-    }
-
     public @NotNull SkullBuilder filter(@NotNull String group) {
         Preconditions.checkArgument(TextureHelper.getCategories().contains(group.toUpperCase()),
                 "The specified group %s is not a valid filter", group);
@@ -72,8 +67,6 @@ public class SkullBuilder {
         this.quantity = i;
         return this;
     }
-
-
 
 
     /**

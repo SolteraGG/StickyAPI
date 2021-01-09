@@ -6,7 +6,7 @@ package com.dumbdogdiner.stickyapi.common.webapis;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
-import com.dumbdogdiner.stickyapi.common.util.textures.DefaultSkins;
+import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -83,7 +83,7 @@ public class MojangAPI {
             return  getJSONFromURL(url).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
             Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
-            return DefaultSkins.STEVE.getTexture();
+            return TextureHelper.getTexture("MHF.MHF_Steve");
         }
     }
 
