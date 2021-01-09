@@ -5,7 +5,11 @@
 package com.dumbdogdiner.stickyapi.common.webapis;
 
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +19,13 @@ import java.util.UUID;
  */
 
 class AshconResponse {
+    @Getter(value = AccessLevel.PRIVATE)
     String uuid = new UUID(0,0).toString();
+    public UUID getUniqueId(){
+        return UUID.fromString(getUuid());
+    }
+
+    @Getter
     String username = "Steve";
 
     List<Username> username_history = new ArrayList<>();
@@ -50,5 +60,11 @@ class AshconResponse {
             String signature;
         }
     }
-    String created_at;
+
+    private String created_at;
+    public @Nullable Instant getCreated(){
+        if(created_at == null)
+            return null;
+        return Instant.parse(created_at);
+    }
 }

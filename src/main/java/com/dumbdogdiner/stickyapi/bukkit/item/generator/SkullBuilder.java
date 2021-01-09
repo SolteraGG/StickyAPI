@@ -93,7 +93,7 @@ public class SkullBuilder {
      * @param texture Base64 string of the json of texture location
      */
     public @NotNull SkullBuilder texture(String texture) {
-        Preconditions.checkArgument(TextureValidator.isValidTexture(texture));
+        Preconditions.checkArgument(TextureValidator.isValidTextureString(texture));
         this.texture = texture;
         return this;
     }

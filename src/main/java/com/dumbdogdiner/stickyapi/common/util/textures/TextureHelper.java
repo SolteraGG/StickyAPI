@@ -76,21 +76,25 @@ public class TextureHelper {
     }
 
     /**
-     *
-     * @param cat
-     * @param name
-     * @return
+     * Gets a texture string given a category and texture name
+     * @param cat The texture category
+     * @param name The texture name
+     * @return The texture string matching
+     * @throws NoSuchElementException if the specified texture is not found
      */
-    public static String getTexture(String cat, String name) {
+    public static String getTexture(String cat, String name) throws NoSuchElementException {
         return TextureMap.get(cat.toUpperCase()).get(name.toUpperCase());
     }
 
     /**
+     * Gets a texture string given a qualified name
      *
-     * @param qualifiedName
-     * @return
+     * @param qualifiedName A given texture as a qualified name
+     * @see #toQualifiedName(String, String)
+     * @return the texture string for the given texture
+     * @throws NoSuchElementException if the specified texture is not found
      */
-    public static String getTexture(String qualifiedName) {
+    public static String getTexture(String qualifiedName) throws NoSuchElementException {
         String[] splits = qualifiedName.split("\\.");
         if (splits.length != 2 && splits.length != 1)
             throw new RuntimeException("Invalid qualified name: " + qualifiedName);
@@ -123,8 +127,6 @@ public class TextureHelper {
         }
         return Collections.unmodifiableList(qualifiedNames);
     }
-
-
 
     /**
      * @see TextureHelper#toTextureJson(URL)
@@ -180,36 +182,39 @@ public class TextureHelper {
      * 
      * @see TextureHelper#encodeJson(JsonObject)
      */
-    public static String encodeTextureString(URL url) {
+    public static String encodeTextureString(URL url) throws InvalidTextureException{
+        TextureValidator.validateTextureUrl(url.toExternalForm());
         return encodeJson(toTextureJson(url));
     }
 
     /**
-     *
-     * @param texture
-     * @return
+     * Encodes JSON wrapping a texture in Base64
+     * @param texture JSON that wraps the texture URL
+     * @return a base-64 encoded JSON that wraps a texture URL
+     * @throws InvalidTextureException if the JSON is invalid
      */
-    public static String encodeJson(JsonObject texture) {
-        // todo Preconditions.checkArgument(validateTextureJson(texture));
+    public static String encodeJson(JsonObject texture) throws InvalidTextureException{
+
+        TextureValidator.validateTextureJson(texture);
         return StringUtil.encodeBase64(GSON.toJson(texture));
     }
 
     /**
-     *
-     * @param texture
-     * @return
+     * Converts a texture string to a {@link JsonObject}
+     * @param texture The texture string
+     * @return a decoded {@link JsonObject}
      */
     public static JsonObject decodeTextureStringToJson(String texture){
         return JsonParser.parseString(texture).getAsJsonObject();
     }
 
     /**
-     *
-     * @param filter
-     * @param head
-     * @return
+     * Converts a category and head to a qualified name (in the form of <code>{category}.{name}</code>
+     * @param category The category of head
+     * @param name The specified name
+     * @return a qualified name of the category and head
      */
-    public static String toQualifiedName(String filter, String head) {
-        return String.join(".", filter, head).toUpperCase();
+    public static String toQualifiedName(String category, String name) {
+        return String.join(".", category, name).toUpperCase();
     }
 }

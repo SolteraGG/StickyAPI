@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    //id 'org.jetbrains.kotlin.multiplatform' version '1.4.21'
     id 'maven-publish'
     id 'jacoco'
     id "io.freefair.lombok" version "5.3.0"
@@ -102,10 +101,10 @@ task sources(type: Jar, dependsOn: classes) {
 }
 
 tasks.delombok.shouldRunAfter(sources)
-
 tasks.publish.dependsOn build
-
-
+tasks.build.shouldRunAfter(clean)
+tasks.javadoc.shouldRunAfter(clean)
+tasks.build.finalizedBy(sources)
 
 delombok {
     finalizedBy(javadoc)
@@ -128,8 +127,6 @@ javadoc {
     options.encoding = 'UTF-8'
     dependsOn delombok
 }
-tasks.build.finalizedBy(sources)
-
 
 task browseJavadoc {
     dependsOn javadoc
@@ -141,8 +138,6 @@ task browseJavadoc {
 task rebuild {
     dependsOn build, clean
 }
-tasks.build.shouldRunAfter(clean)
-tasks.javadoc.shouldRunAfter(clean)
 
 
 

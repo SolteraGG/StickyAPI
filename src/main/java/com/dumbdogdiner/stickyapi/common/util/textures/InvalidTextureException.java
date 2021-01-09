@@ -9,7 +9,7 @@ import java.text.MessageFormat;
 /*
  * Exception
  */
-public class InvalidTextureException extends RuntimeException{
+public class InvalidTextureException extends RuntimeException {
     public static final String EXCEPTION_MESSAGE = "The specified texture {0} was invalid";
     public InvalidTextureException(String textureString){
         super(MessageFormat.format(EXCEPTION_MESSAGE, textureString));

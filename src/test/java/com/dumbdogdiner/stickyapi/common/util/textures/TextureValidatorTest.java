@@ -30,7 +30,7 @@ class TextureValidatorTest {
 
     @Test
     void validateTexture() {
-        assertTrue(TextureValidator.isValidTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDViM2Y4Y2E0YjNhNTU1Y2NiM2QxOTQ0NDk4MDhiNGM5ZDc4MzMyNzE5NzgwMGQ0ZDY1OTc0Y2M2ODVhZjJlYSJ9fX0="));
+        assertTrue(TextureValidator.isValidTextureString("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDViM2Y4Y2E0YjNhNTU1Y2NiM2QxOTQ0NDk4MDhiNGM5ZDc4MzMyNzE5NzgwMGQ0ZDY1OTc0Y2M2ODVhZjJlYSJ9fX0="));
     }
 
     @Test
@@ -42,7 +42,7 @@ class TextureValidatorTest {
         };
         for (String invalidTest : tests) {
             System.out.println(invalidTest);
-            assertFalse(TextureValidator.isValidTexture(invalidTest));
+            assertFalse(TextureValidator.isValidTextureString(invalidTest));
         }
     }
 
@@ -122,7 +122,7 @@ class TextureValidatorTest {
     private void testMultiFail(String[] tests) {
         for (String invalidTest : tests) {
             System.out.println("Now Testing invalid texture " + invalidTest);
-            assertFalse(TextureValidator.isValidTexture(invalidTest));
+            assertFalse(TextureValidator.isValidTextureString(invalidTest));
         }
     }
 
@@ -143,7 +143,7 @@ class TextureValidatorTest {
     void validateAllTextures() {
         for(String qn : TextureHelper.getQualifiedNames()){
             System.out.println("Testing texture for " + qn + " (" + TextureHelper.getTexture(qn) + ")");
-            assertTrue(TextureValidator.isValidTexture(TextureHelper.getTexture(qn)));
+            assertTrue(TextureValidator.isValidTextureString(TextureHelper.getTexture(qn)));
         }
     }
 

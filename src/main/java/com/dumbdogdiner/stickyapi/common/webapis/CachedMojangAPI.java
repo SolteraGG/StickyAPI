@@ -155,7 +155,7 @@ public class CachedMojangAPI {
             return getResponse().username;
         } catch (Exception e) {
             StickyAPI.getLogger().severe(e.getMessage());
-            return null;//STEVE_TEXTURE;
+            return null; //STEVE_TEXTURE;
         }
     }
 /*
