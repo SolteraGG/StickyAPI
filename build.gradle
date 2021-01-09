@@ -55,7 +55,7 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.github.classgraph:classgraph:4.8.92'
+    implementation 'io.github.classgraph:classgraph:4.8.98'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'commons-validator:commons-validator:1.7'
