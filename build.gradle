@@ -66,11 +66,11 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     // Mocking
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
-    testImplementation 'org.powermock:powermock-module-junit4-rule:2.0.9'
-    testImplementation 'org.powermock:powermock-classloading-xstream:2.0.9'
-    testImplementation 'org.mockito:mockito-core:3.6.28'
+    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+    testImplementation("org.powermock:powermock-module-junit4-rule:2.0.9")
+    testImplementation("org.powermock:powermock-classloading-xstream:2.0.9")
+    testImplementation("org.mockito:mockito-core:3.7.0")
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
     testImplementation 'it.unimi.dsi:fastutil:8.4.4'
 }
