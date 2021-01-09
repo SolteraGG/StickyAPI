@@ -12,11 +12,16 @@ import java.lang.reflect.Method;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.protocol.Protocol;
 
+/**
+ * @deprecated This is unsafe.
+ */
+@Deprecated
 public class PacketRegistration {
 
     private static Method map, regPacket;
     private static Class<?> protocolMapping, protocolMappingArray;
     private static Object TO_CLIENT;
+    private static Boolean soundRegistered = false; // If this packet has been registered already
 
     // Process our reflection nonsense
     private static void processReflection() {
@@ -52,14 +57,26 @@ public class PacketRegistration {
     }
 
     // static {
-    //     registerSoundPacket();
+    // registerSoundPacket();
     // }
-    
+
     /**
      * Register our sound packet with BungeeCord
      */
     public static void registerSoundPacket() {
+        if (soundRegistered) // We don't need to do this stuff twice...
+            return;
+
+        soundRegistered = true;
         processReflection();
-        registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This should automatically register with the server's correct version
+        registerPacket(SoundPacket.class, com.dumbdogdiner.stickyapi.bungeecord.protocol.Protocol.getSoundEffectId()); // This
+                                                                                                                       // should
+                                                                                                                       // automatically
+                                                                                                                       // register
+                                                                                                                       // with
+                                                                                                                       // the
+                                                                                                                       // server's
+                                                                                                                       // correct
+                                                                                                                       // version
     }
 }
