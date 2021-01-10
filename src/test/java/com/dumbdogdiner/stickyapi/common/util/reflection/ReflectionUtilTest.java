@@ -2,7 +2,7 @@
  * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.util;
+package com.dumbdogdiner.stickyapi.common.util.reflection;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,14 +12,15 @@ public class ReflectionUtilTest {
     private class ExampleClass {
 
         private String privateString = "default_value";
-        
+
         protected String protectedString = "default_value";
 
         private final String privateFinalString = "default_value";
 
         private static final String privateStaticFinalString = "default_value";
 
-        public ExampleClass() {};
+        public ExampleClass() {
+        };
     }
 
     @Test
@@ -30,7 +31,8 @@ public class ReflectionUtilTest {
 
         ReflectionUtil.setProtectedValue(instance, "privateString", "edited_value");
 
-        //assertEquals(ReflectionUtil.getProtectedValue(instance, "privateString"), "edited_value");
+        // assertEquals(ReflectionUtil.getProtectedValue(instance, "privateString"),
+        // "edited_value");
         assertEquals(instance.privateString, "edited_value");
     }
 
@@ -44,7 +46,7 @@ public class ReflectionUtilTest {
 
         assertEquals(ReflectionUtil.getProtectedValue(instance, "privateFinalString"), "edited_value");
         // Doesn't work here - have to use ReflectionUtil's get!
-        //assertEquals(instance.privateFinalString, "edited_value");
+        // assertEquals(instance.privateFinalString, "edited_value");
     }
 
     @Test
@@ -56,10 +58,10 @@ public class ReflectionUtilTest {
         ReflectionUtil.setProtectedValue(c, "privateStaticFinalString", "edited_value");
 
         assertEquals(ReflectionUtil.getProtectedValue(c, "privateStaticFinalString"), "edited_value");
-        
+
         assertEquals(ReflectionUtil.getProtectedValue(c, "privateStaticFinalString"), "edited_value");
         // Doesn't work here - have to use ReflectionUtil's get!
-        //assertEquals(c.privateStaticFinalString, "edited_value");
+        // assertEquals(c.privateStaticFinalString, "edited_value");
     }
 
     @Test

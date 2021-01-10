@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.command;
@@ -18,7 +18,7 @@ import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
 import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
 
