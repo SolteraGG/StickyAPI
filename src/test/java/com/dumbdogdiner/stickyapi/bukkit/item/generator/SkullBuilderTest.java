@@ -42,8 +42,8 @@ class SkullBuilderTest {
     void buildSetup() {
         SkullBuilder sb = new SkullBuilder();
 
-        Assertions.assertEquals(sb, sb.filter("MHF"));
-        Assertions.assertEquals("MHF", sb.getFilter());
+        Assertions.assertEquals(sb, sb.category("MHF"));
+        Assertions.assertEquals("MHF", sb.getCategory());
 //        Assertions.assertEquals(sb, sb.filter("MHFAA"));
 //        Assertions.assertEquals("MHF", sb.getFilter());
 
@@ -81,7 +81,7 @@ class SkullBuilderTest {
     @Test
     void build() {
 
-        ItemStack head = new SkullBuilder().filter("MHF").head("MHF_Alex").name("alexa").quantity(5).build();
+        ItemStack head = new SkullBuilder().category("MHF").head("MHF_Alex").name("alexa").quantity(5).build();
         Assertions.assertEquals(5, head.getAmount());
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         Assertions.assertEquals(Material.PLAYER_HEAD, head.getType());
