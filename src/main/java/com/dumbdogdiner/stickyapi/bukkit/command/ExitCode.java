@@ -13,6 +13,7 @@
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Enum based exit codes for StickyAPI command classes.
@@ -94,7 +95,7 @@ public enum ExitCode {
      * @param message
      * @return {@link ExitCode}
      */
-    public ExitCode setMessage(String message) {
+    public @NotNull ExitCode setMessage(String message) {
         this.message = message;
         return this;
     }

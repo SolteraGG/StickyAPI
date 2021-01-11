@@ -4,6 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,17 +21,17 @@ public final class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-    public static void setProtectedValue(Object o, String field, Object newValue) {
+    public static void setProtectedValue(@NotNull Object o, @NotNull String field, Object newValue) {
         setProtectedValue(o.getClass(), o, field, newValue);
     }
 
-    public static void setProtectedValue(Class<?> c, String field, Object newValue) {
+    public static void setProtectedValue(@NotNull Class<?> c, @NotNull String field, Object newValue) {
         setProtectedValue(c, null, field, newValue);
     }
 
-    public static void setProtectedValue(Class<?> c, Object o, String field, Object newValue) {
+    public static void setProtectedValue(@NotNull Class<?> c, Object o, @NotNull String field, Object newValue) {
         try {
-            Field f = c.getDeclaredField(field);
+            @NotNull Field f = c.getDeclaredField(field);
             f.setAccessible(true);
 
             if (Modifier.isFinal(f.getModifiers())) {
@@ -44,17 +47,17 @@ public final class ReflectionUtil {
             }
 
             f.set(o, newValue);
-        } catch (NoSuchFieldException | IllegalAccessException ex) {
+        } catch (@NotNull NoSuchFieldException | IllegalAccessException ex) {
             System.out.println("*** " + c.getName() + ":" + ex);
         }
     }
 
-    public static <T> T getProtectedValue(Object obj, String fieldName) {
+    public static <T> @Nullable T getProtectedValue(@NotNull Object obj, String fieldName) {
         try {
             Class<?> c = obj.getClass();
             while (c != Object.class) {
                 Field[] fields = c.getDeclaredFields();
-                for (Field f : fields) {
+                for (@NotNull Field f : fields) {
                     if (f.getName() == fieldName) {
                         f.setAccessible(true);
                         return (T) f.get(obj);
@@ -70,9 +73,9 @@ public final class ReflectionUtil {
         }
     }
 
-    public static <T> T getProtectedValue(Class<?> c, String field) {
+    public static <T> @Nullable T getProtectedValue(@NotNull Class<?> c, @NotNull String field) {
         try {
-            Field f = c.getDeclaredField(field);
+            @NotNull Field f = c.getDeclaredField(field);
             f.setAccessible(true);
             return (T) f.get(c);
         } catch (Exception ex) {
@@ -81,20 +84,20 @@ public final class ReflectionUtil {
         }
     }
 
-    public static Object invokeProtectedMethod(Class<?> c, String method, Object... args) {
+    public static @Nullable Object invokeProtectedMethod(@NotNull Class<?> c, @NotNull String method, Object... args) {
         return invokeProtectedMethod(c, null, method, args);
     }
 
-    public static Object invokeProtectedMethod(Object o, String method, Object... args) {
+    public static @Nullable Object invokeProtectedMethod(@NotNull Object o, @NotNull String method, Object... args) {
         return invokeProtectedMethod(o.getClass(), o, method, args);
     }
 
-    public static Constructor<?> getProtectedConstructor(Class<?> clazz, Class<?>... params) {
+    public static @Nullable Constructor<?> getProtectedConstructor(@NotNull Class<?> clazz, Class<?>... params) {
         Constructor<?> c;
 
         try {
             c = clazz.getDeclaredConstructor(params);
-        } catch (NoSuchMethodException | SecurityException e) {
+        } catch (@NotNull NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
             return null;
         }
@@ -109,9 +112,9 @@ public final class ReflectionUtil {
         return c;
     }
 
-    public static Object invokeProtectedMethod(Class<?> c, Object o, String method, Object... args) {
+    public static @Nullable Object invokeProtectedMethod(@NotNull Class<?> c, Object o, @NotNull String method, Object @NotNull ... args) {
         try {
-            Class<?>[] pTypes = new Class<?>[args.length];
+            Class<?> @NotNull [] pTypes = new Class<?>[args.length];
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof Integer)
                     pTypes[i] = int.class;
@@ -119,7 +122,7 @@ public final class ReflectionUtil {
                     pTypes[i] = args[i].getClass();
             }
 
-            Method m = c.getDeclaredMethod(method, pTypes);
+            @NotNull Method m = c.getDeclaredMethod(method, pTypes);
             m.setAccessible(true);
             return m.invoke(o, args);
         } catch (Exception ex) {

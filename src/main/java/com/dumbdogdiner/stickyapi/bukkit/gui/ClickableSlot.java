@@ -44,12 +44,12 @@ public class ClickableSlot {
      * @param y The y position of the item
      * @param lore (Optional) Add lore to this item
      */
-    public ClickableSlot(@NotNull Material material, int amount, @Nullable String name, int x, int y, String... lore) {
+    public ClickableSlot(@NotNull Material material, int amount, @Nullable String name, int x, int y, String @NotNull ... lore) {
         this(makeItem(material, amount, name, lore), x, y);
     }
 
-    private static ItemStack makeItem(Material material, int amount, String name, String[] lore) {
-        ItemStack item = new ItemStack(material, amount);
+    private static @NotNull ItemStack makeItem(@NotNull Material material, int amount, @Nullable String name, String @NotNull [] lore) {
+        @NotNull ItemStack item = new ItemStack(material, amount);
 
         ItemMeta meta = item.getItemMeta();
 
@@ -57,9 +57,9 @@ public class ClickableSlot {
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         }
 
-        ArrayList<String> metaLore = new ArrayList<>();
+        @NotNull ArrayList<String> metaLore = new ArrayList<>();
 
-        for (String loreComments : lore) {
+        for (@NotNull String loreComments : lore) {
             metaLore.add(ChatColor.translateAlternateColorCodes('&', loreComments));
         }
 
@@ -91,7 +91,7 @@ public class ClickableSlot {
         item.setItemMeta(isM);
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return item.getItemMeta().getDisplayName();
     }
 }

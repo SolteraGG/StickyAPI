@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class TextureHelper {
      * Gets the {@link Set} of categories of textures in the Heads file
      * @return A {@link Set} of all the categories of texture
      */
-    public static Set<String> getCategories() {
+    public static @NotNull Set<String> getCategories() {
         return TextureMap.keySet();
     }
 
@@ -60,7 +61,7 @@ public class TextureHelper {
      * @see TextureHelper#getCategories()
      * @return A {@link Map} of texture names to texture strings for the given category
      */
-    public static Map<String, String> getTextureMapCategory(String cat) {
+    public static Map<String, String> getTextureMapCategory(@NotNull String cat) {
         return TextureMap.get(cat.toUpperCase());
     }
 
@@ -71,7 +72,7 @@ public class TextureHelper {
      * @return a {@link List} of the textures in a given Category
      * @see #getCategories()
      */
-    public static List<String> getTextures(String cat) {
+    public static @NotNull List<String> getTextures(@NotNull String cat) {
         return Collections.unmodifiableList(new ArrayList<>(getTextureMapCategory(cat).keySet()));
     }
 
@@ -82,7 +83,7 @@ public class TextureHelper {
      * @return The texture string matching
      * @throws NoSuchElementException if the specified texture is not found
      */
-    public static String getTexture(String cat, String name) throws NoSuchElementException {
+    public static String getTexture(@NotNull String cat, @NotNull String name) throws NoSuchElementException {
         return TextureMap.get(cat.toUpperCase()).get(name.toUpperCase());
     }
 
@@ -94,13 +95,13 @@ public class TextureHelper {
      * @return the texture string for the given texture
      * @throws NoSuchElementException if the specified texture is not found
      */
-    public static String getTexture(String qualifiedName) throws NoSuchElementException {
+    public static @Nullable String getTexture(@NotNull String qualifiedName) throws NoSuchElementException {
         String[] splits = qualifiedName.split("\\.");
         if (splits.length != 2 && splits.length != 1)
             throw new RuntimeException("Invalid qualified name: " + qualifiedName);
         if (splits[1].equals("*")) {
-            String texture = null;
-            for (String cat : getCategories()) {
+            @Nullable String texture = null;
+            for (@NotNull String cat : getCategories()) {
                 try {
                     texture = getTexture(cat, qualifiedName);
                 } catch (NoSuchElementException e) {
@@ -118,9 +119,9 @@ public class TextureHelper {
      * Returns a {@link List} of Qualified Names, of the format of "{CATEGORY}.{TEXTURE}"
      * @return a {@link List} of Qualified Names of all textures
      */
-    public static List<String> getQualifiedNames() {
-        ArrayList<String> qualifiedNames = new ArrayList<>();
-        for (String cat : getCategories()) {
+    public static @NotNull List<String> getQualifiedNames() {
+        @NotNull ArrayList<String> qualifiedNames = new ArrayList<>();
+        for (@NotNull String cat : getCategories()) {
             for (String texture : getTextureMapCategory(cat).keySet()) {
                 qualifiedNames.add(toQualifiedName(cat, texture));
             }
@@ -131,7 +132,7 @@ public class TextureHelper {
     /**
      * @see TextureHelper#toTextureJson(URL)
      */
-    public static @NotNull JsonObject toTextureJson(URL url) {
+    public static @NotNull JsonObject toTextureJson(@NotNull URL url) {
         return toTextureJson(url.toExternalForm());
     }
 
@@ -163,13 +164,13 @@ public class TextureHelper {
      * </pre>
      */
     public static @NotNull JsonObject toTextureJson(String url) {
-        JsonObject SKIN = new JsonObject();
+        @NotNull JsonObject SKIN = new JsonObject();
         SKIN.addProperty("url", url);
 
-        JsonObject textures = new JsonObject();
+        @NotNull JsonObject textures = new JsonObject();
         textures.add("SKIN", SKIN);
 
-        JsonObject root = new JsonObject();
+        @NotNull JsonObject root = new JsonObject();
         root.add("textures", textures);
 
         return root;
@@ -182,7 +183,7 @@ public class TextureHelper {
      * 
      * @see TextureHelper#encodeJson(JsonObject)
      */
-    public static String encodeTextureString(URL url) throws InvalidTextureException{
+    public static @NotNull String encodeTextureString(@NotNull URL url) throws InvalidTextureException{
         TextureValidator.validateTextureUrl(url.toExternalForm());
         return encodeJson(toTextureJson(url));
     }
@@ -193,7 +194,7 @@ public class TextureHelper {
      * @return a base-64 encoded JSON that wraps a texture URL
      * @throws InvalidTextureException if the JSON is invalid
      */
-    public static String encodeJson(JsonObject texture) throws InvalidTextureException{
+    public static @NotNull String encodeJson(@NotNull JsonObject texture) throws InvalidTextureException{
 
         TextureValidator.validateTextureJson(texture);
         return StringUtil.encodeBase64(GSON.toJson(texture));
@@ -204,7 +205,7 @@ public class TextureHelper {
      * @param texture The texture string
      * @return a decoded {@link JsonObject}
      */
-    public static JsonObject decodeTextureStringToJson(String texture){
+    public static JsonObject decodeTextureStringToJson(@NotNull String texture){
         return JsonParser.parseString(texture).getAsJsonObject();
     }
 
@@ -214,7 +215,7 @@ public class TextureHelper {
      * @param name The specified name
      * @return a qualified name of the category and head
      */
-    public static String toQualifiedName(String category, String name) {
+    public static @NotNull String toQualifiedName(String category, String name) {
         return String.join(".", category, name).toUpperCase();
     }
 }

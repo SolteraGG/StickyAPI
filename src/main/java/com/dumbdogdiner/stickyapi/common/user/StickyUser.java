@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.user;
 import com.dumbdogdiner.stickyapi.common.cache.Cacheable;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ public class StickyUser implements Cacheable {
     protected UUID uniqueId;
 
     @Getter
-    protected String name;
+    protected @Nullable String name;
 
     /**
      * The normal/default constructor for a {@link StickyUser}

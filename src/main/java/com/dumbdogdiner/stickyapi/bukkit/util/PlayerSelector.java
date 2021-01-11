@@ -10,6 +10,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.ServerOperator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -25,12 +26,12 @@ public class PlayerSelector {
     /**
      * This Predicate will return true if the player is not in gamemode spectator
      */
-    public static Predicate<Player> NOT_SPECTATING = player -> player.getGameMode() != GameMode.SPECTATOR;
+    public static @NotNull Predicate<Player> NOT_SPECTATING = player -> player.getGameMode() != GameMode.SPECTATOR;
 
     /**
      * This Predicate will return true if the player is in gamemode survival
      */
-    public static Predicate<Player> IN_SURVIVAL = player -> player.getGameMode() == GameMode.SURVIVAL;
+    public static @NotNull Predicate<Player> IN_SURVIVAL = player -> player.getGameMode() == GameMode.SURVIVAL;
 
     /**
      * This Predicate will return true if the player is an operator
@@ -41,7 +42,7 @@ public class PlayerSelector {
      * This Predicate will return true if the player is within the radius
      * of a given location
      */
-    public static Predicate<Player> inRange(Location center, double radius) {
+    public static @NotNull Predicate<Player> inRange(@NotNull Location center, double radius) {
         return player -> MathUtil.offset(center.toVector(), player.getLocation().toVector()) <= radius;
     }
 
@@ -72,7 +73,7 @@ public class PlayerSelector {
      * @param sender the player that should be tested
      * @return list of players matching the given condition
      */
-    public static List<Player> selectVisible(Player sender) {
+    public static List<Player> selectVisible(@NotNull Player sender) {
         return Bukkit.getOnlinePlayers().stream().filter(sender::canSee).collect(Collectors.toList());
     }
 
@@ -82,7 +83,7 @@ public class PlayerSelector {
      * @param permission the permission that should be matched
      * @return list of players matching the given condition
      */
-    public static List<Player> selectWithPermission(String permission) {
+    public static List<Player> selectWithPermission(@NotNull String permission) {
         return Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission(permission)).collect(Collectors.toList());
     }
 

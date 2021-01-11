@@ -65,9 +65,9 @@ public final class NumberUtil {
      * @param string If this should return as a string with `%` appended to the end
      * @return {@link Double}
      */
-    public static String getPercentage(@NotNull double x, @NotNull double total, @NotNull Boolean string) {
+    public static @NotNull String getPercentage(@NotNull double x, @NotNull double total, @NotNull Boolean string) {
         var percent = (x / total);
-        StringBuilder sb = new StringBuilder();
+        @NotNull StringBuilder sb = new StringBuilder();
         if (string) {
             sb.append((percent * 100) + "%");
         } else {
@@ -83,7 +83,7 @@ public final class NumberUtil {
      * @param total The total
      * @return {@link Double}
      */
-    public static Double getPercentage(@NotNull int x, @NotNull int total) {
+    public static @NotNull Double getPercentage(@NotNull int x, @NotNull int total) {
         return Double.valueOf(getPercentage(x, total, false));
     }
 
@@ -94,7 +94,7 @@ public final class NumberUtil {
      * @param total The total
      * @return {@link String}
      */
-    public static String getPercentageString(@NotNull int x, @NotNull int total) {
+    public static @NotNull String getPercentageString(@NotNull int x, @NotNull int total) {
         return getPercentage(x, total, true);
     }
 

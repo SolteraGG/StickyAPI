@@ -19,6 +19,7 @@ import com.dumbdogdiner.stickyapi.bukkit.particle.Shape;
 
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Draws a circle.
@@ -45,7 +46,7 @@ public class Circle implements Shape {
      * @param r           Size of the circle's radius.
      * @param orientation Orientation of the circle.
      */
-    public Circle(double x, double y, double z, double r, Orientation orientation) {
+    public Circle(double x, double y, double z, double r, @NotNull Orientation orientation) {
         if (r > MAX_RADIUS) {
             throw new IllegalArgumentException("Tried to draw circle with absurd radius (>250)!");
         }
@@ -115,12 +116,12 @@ public class Circle implements Shape {
     }
 
     @Override
-    public void draw(ParticleSystem system, Particle particle, DustOptions data) {
+    public void draw(@NotNull ParticleSystem system, @NotNull Particle particle, DustOptions data) {
         system.parametric(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 
     @Override
-    public void drawAbsolute(ParticleSystem system, Particle particle, DustOptions data) {
+    public void drawAbsolute(@NotNull ParticleSystem system, @NotNull Particle particle, DustOptions data) {
         system.parametricAbsolute(particle, this.parametric, 0, Math.PI * 2, Math.PI / (16 * r), 1, data);
     }
 }

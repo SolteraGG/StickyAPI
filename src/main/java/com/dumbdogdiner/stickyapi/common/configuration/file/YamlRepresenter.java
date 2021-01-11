@@ -33,8 +33,8 @@ public class YamlRepresenter extends Representer {
         @NotNull
         @Override
         public Node representData(@NotNull Object data) {
-            ConfigurationSerializable serializable = (ConfigurationSerializable) data;
-            Map<String, Object> values = new LinkedHashMap<String, Object>();
+            @NotNull ConfigurationSerializable serializable = (ConfigurationSerializable) data;
+            @NotNull Map<String, Object> values = new LinkedHashMap<String, Object>();
             values.putAll(serializable.serialize());
 
             return super.representData(values);

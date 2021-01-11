@@ -6,6 +6,8 @@ package com.dumbdogdiner.stickyapi.common.util;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -77,7 +79,7 @@ public class MathUtil {
      * @param pointB second location
      * @return the offset (distance) between the given locations
      */
-    public static double offset(Location pointA, Location pointB) {
+    public static double offset(@NotNull Location pointA, @NotNull Location pointB) {
         return offset(pointA.toVector(), pointB.toVector());
     }
 
@@ -89,7 +91,7 @@ public class MathUtil {
      * @param pointB second location vector
      * @return the offset (distance) between the given locations
      */
-    public static double offset(Vector pointA, Vector pointB) {
+    public static double offset(@NotNull Vector pointA, @NotNull Vector pointB) {
         return pointA.clone().subtract(pointB).length();
     }
 
@@ -101,7 +103,7 @@ public class MathUtil {
      * @param pointB second location
      * @return the offset (distance) between the given locations
      */
-    public static double offset2d(Location pointA, Location pointB) {
+    public static double offset2d(@NotNull Location pointA, @NotNull Location pointB) {
         return offset2d(pointA.toVector(), pointB.toVector());
     }
 
@@ -113,7 +115,7 @@ public class MathUtil {
      * @param pointB second location
      * @return the offset (distance) between the given locations
      */
-    public static double offset2d(Vector pointA, Vector pointB) {
+    public static double offset2d(@NotNull Vector pointA, @NotNull Vector pointB) {
         pointA.setY(0);
         pointB.setY(0);
         return offset(pointA, pointB);
@@ -125,7 +127,7 @@ public class MathUtil {
      * @param array the array that should be used
      * @return a random element from the specified array
      */
-    public static <T> T randomElement(T[] array) {
+    public static <T> @Nullable T randomElement(T @NotNull [] array) {
         if(array.length < 1) return null;
         return array[rInt(array.length)];
     }
@@ -136,7 +138,7 @@ public class MathUtil {
      * @param list the list that should be used
      * @return a random element from the specified list
      */
-    public static <T> T randomElement(List<T> list) {
+    public static <T> @Nullable T randomElement(@NotNull List<T> list) {
         if(list.size() < 1) return null;
         return list.get(rInt(list.size()));
     }
@@ -167,7 +169,7 @@ public class MathUtil {
             return bytes + " B";
         }
         long value = absB;
-        CharacterIterator ci = new StringCharacterIterator("KMGTPE");
+        @NotNull CharacterIterator ci = new StringCharacterIterator("KMGTPE");
         for (int i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
             value >>= 10;
             ci.next();

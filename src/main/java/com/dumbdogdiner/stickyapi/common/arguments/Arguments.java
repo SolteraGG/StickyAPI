@@ -31,7 +31,7 @@ public class Arguments {
 
     @Getter
     private ArrayList<String> unparsedArgs;
-    private HashMap<String, String> parsedArgs = new HashMap<>();
+    private @NotNull HashMap<String, String> parsedArgs = new HashMap<>();
 
     @Getter
     private String invalidatedBy;
@@ -73,7 +73,7 @@ public class Arguments {
      * @param flag The name of this flag, and flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalFlag(@NotNull String flag) {
+    public @NotNull Arguments optionalFlag(@NotNull String flag) {
         return optionalFlag(flag, flag);
     }
 
@@ -84,7 +84,7 @@ public class Arguments {
      * @param flag The flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalFlag(@NotNull String name, @NotNull String flag) {
+    public @NotNull Arguments optionalFlag(@NotNull String name, @NotNull String flag) {
         debug.print("Looking for optional flag " + name + "...");
         int index = unparsedArgs.indexOf(flag);
         if (index == -1) {
@@ -107,7 +107,7 @@ public class Arguments {
      * @param flag The flag to register
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredFlag(@NotNull String name, @NotNull String flag) {
+    public @NotNull Arguments requiredFlag(@NotNull String name, @NotNull String flag) {
         debug.print("Looking for required flag " + name + "...");
         int index = unparsedArgs.indexOf(flag);
         if (index == -1) {
@@ -124,7 +124,7 @@ public class Arguments {
         return this;
     }
 
-    private Arguments optionalStringImplementation(String name, String fallback) {
+    private @NotNull Arguments optionalStringImplementation(String name, String fallback) {
         debug.print("Looking for optional string " + name + "...");
         if (unparsedArgs.size() > position) {
             parsedArgs.put(name, unparsedArgs.get(position));
@@ -146,7 +146,7 @@ public class Arguments {
      * @param fallback the default value you want for the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalString(@NotNull String name, @NotNull String fallback) {
+    public @NotNull Arguments optionalString(@NotNull String name, @NotNull String fallback) {
         // noinspection ConstantConditions
         return optionalStringImplementation(name, fallback);
     }
@@ -157,7 +157,7 @@ public class Arguments {
      * @param name The name of this string
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalString(String name) {
+    public @NotNull Arguments optionalString(String name) {
         return optionalStringImplementation(name, null);
     }
 
@@ -167,7 +167,7 @@ public class Arguments {
      * @param name The name of this string
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredString(String name) {
+    public @NotNull Arguments requiredString(@NotNull String name) {
         debug.print("Looking for required string " + name + "...");
 
         if (unparsedArgs.size() > position) {
@@ -182,7 +182,7 @@ public class Arguments {
         return this;
     }
 
-    private Arguments optionalSentenceImplementation(String name, String fallback, int length) {
+    private @NotNull Arguments optionalSentenceImplementation(String name, String fallback, int length) {
         int end = position + length;
         debug.print("Looking for optional sentence - start = " + String.valueOf(position) + ", end = "
                 + String.valueOf(end) + ", length = " + String.valueOf(length));
@@ -200,7 +200,7 @@ public class Arguments {
             return this;
         }
 
-        String concatenated = String.join(" ",
+        @NotNull String concatenated = String.join(" ",
                 Arrays.copyOfRange(unparsedArgs.toArray(new String[unparsedArgs.size()]), position, end));
         parsedArgs.put(name, concatenated);
 
@@ -221,7 +221,7 @@ public class Arguments {
      * @param name The name of this sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name) {
+    public @NotNull Arguments optionalSentence(@NotNull String name) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
         return optionalSentence(name, unparsedArgs.size() - position);
     }
@@ -234,7 +234,7 @@ public class Arguments {
      * @param fallback The fallback sentence to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name, @Nullable String fallback) {
+    public @NotNull Arguments optionalSentence(@NotNull String name, @Nullable String fallback) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
         return optionalSentence(name, fallback, unparsedArgs.size() - position);
     }
@@ -247,7 +247,7 @@ public class Arguments {
      * @param length   The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name, @Nullable String fallback, @NotNull int length) {
+    public @NotNull Arguments optionalSentence(@NotNull String name, @Nullable String fallback, @NotNull int length) {
         if (fallback != null) {
             return optionalSentenceImplementation(name, fallback, length);
         } else {
@@ -263,7 +263,7 @@ public class Arguments {
      * @param length The length of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalSentence(@NotNull String name, @NotNull int length) {
+    public @NotNull Arguments optionalSentence(@NotNull String name, @NotNull int length) {
         optionalSentenceImplementation(name, null, length);
         return this;
     }
@@ -275,7 +275,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredSentence(@NotNull String name) {
+    public @NotNull Arguments requiredSentence(@NotNull String name) {
         debug.print("Using default length: " + String.valueOf(unparsedArgs.size() - position));
         return requiredSentence(name, unparsedArgs.size() - position);
     }
@@ -287,7 +287,7 @@ public class Arguments {
      * @param length Maximum length in words of the sentence
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredSentence(@NotNull String name, @NotNull int length) {
+    public @NotNull Arguments requiredSentence(@NotNull String name, @NotNull int length) {
         int end = position + length;
         debug.print("Looking for required sentence - start = " + String.valueOf(position) + ", end = "
                 + String.valueOf(end) + ", length = " + String.valueOf(length));
@@ -306,7 +306,7 @@ public class Arguments {
             return this;
         }
 
-        String concatenated = String.join(" ",
+        @NotNull String concatenated = String.join(" ",
                 Arrays.copyOfRange(unparsedArgs.toArray(new String[unparsedArgs.size()]), position, end));
         parsedArgs.put(name, concatenated);
 
@@ -323,7 +323,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalTimeString(@NotNull String name) {
+    public @NotNull Arguments optionalTimeString(@NotNull String name) {
         debug.print("Looking for optional timestamp " + name + "...");
         if (unparsedArgs.size() > position && TimeUtil.toTimestamp(unparsedArgs.get(position)) != null) {
             parsedArgs.put(name, String.valueOf(TimeUtil.toTimestamp(unparsedArgs.get(position)).getTime()));
@@ -342,7 +342,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredTimeString(@NotNull String name) {
+    public @NotNull Arguments requiredTimeString(@NotNull String name) {
         debug.print("Looking for required timestamp " + name + "...");
         if (unparsedArgs.size() > position && TimeUtil.toTimestamp(unparsedArgs.get(position)) != null) {
             parsedArgs.put(name, String.valueOf(TimeUtil.toTimestamp(unparsedArgs.get(position)).getTime()));
@@ -357,7 +357,7 @@ public class Arguments {
         return this;
     }
 
-    private Arguments optionalIntImplementation(@NotNull String name, @NotNull Integer fallback) {
+    private @NotNull Arguments optionalIntImplementation(@NotNull String name, @NotNull Integer fallback) {
         debug.print("Looking for optional integer " + name + "...");
         if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
             parsedArgs.put(name, unparsedArgs.get(position));
@@ -378,7 +378,7 @@ public class Arguments {
      * @param name Name of the argument
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalInt(@NotNull String name) {
+    public @NotNull Arguments optionalInt(@NotNull String name) {
         optionalIntImplementation(name, null);
         return this;
     }
@@ -390,7 +390,7 @@ public class Arguments {
      * @param fallback The fallback integer to use if one is not provided
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalInt(@NotNull String name, @NotNull Integer fallback) {
+    public @NotNull Arguments optionalInt(@NotNull String name, @NotNull Integer fallback) {
         if (fallback != null) {
             return optionalIntImplementation(name, fallback);
         } else {
@@ -405,7 +405,7 @@ public class Arguments {
      * @param name The name of the integer to create
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredInt(@NotNull String name) {
+    public @NotNull Arguments requiredInt(@NotNull String name) {
         debug.print("Looking for optional required " + name + "...");
 
         if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
@@ -427,7 +427,7 @@ public class Arguments {
      * @param name The name of the duration to create
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments optionalDuration(@NotNull String name) {
+    public @NotNull Arguments optionalDuration(@NotNull String name) {
         debug.print("Looking for optional duration " + name + "...");
 
         if (unparsedArgs.size() > position && TimeUtil.duration(unparsedArgs.get(position)).isPresent()) {
@@ -447,7 +447,7 @@ public class Arguments {
      * @param name The name of the duration to create
      * @return {@link com.dumbdogdiner.stickyapi.common.arguments.Arguments}
      */
-    public Arguments requiredDuration(@NotNull String name) {
+    public @NotNull Arguments requiredDuration(@NotNull String name) {
         debug.print("Looking for required duration " + name + "...");
 
         if (unparsedArgs.size() > position && TimeUtil.duration(unparsedArgs.get(position)).isPresent()) {
@@ -484,7 +484,7 @@ public class Arguments {
      * @deprecated Renamed in 2.0, use {@link #getString(String)} instead.
      */
     @Deprecated
-    public String get(String name) {
+    public String get(@NotNull String name) {
         return getString(name);
     }
 
@@ -496,7 +496,7 @@ public class Arguments {
      * @param name The name of the timestamp to fetch
      * @return {@link java.sql.Timestamp}
      */
-    public Timestamp getTimestamp(@NotNull String name) {
+    public @Nullable Timestamp getTimestamp(@NotNull String name) {
         if (parsedArgs.get(name) == null) {
             return null;
         }
@@ -511,7 +511,7 @@ public class Arguments {
      * @param name The name of the integer to fetch
      * @return {@link java.lang.Integer}
      */
-    public Integer getInt(@NotNull String name) {
+    public @Nullable Integer getInt(@NotNull String name) {
         try {
             return Integer.parseInt(parsedArgs.get(name));
         } catch (NumberFormatException e) {
@@ -527,7 +527,7 @@ public class Arguments {
      * @param name The name of the double to fetch
      * @return {@link java.lang.Double}
      */
-    public Double getDouble(@NotNull String name) {
+    public @Nullable Double getDouble(@NotNull String name) {
         try {
             return Double.parseDouble(parsedArgs.get(name));
         } catch (NumberFormatException e) {
@@ -543,7 +543,7 @@ public class Arguments {
      * @param name The name of the long to fetch
      * @return {@link java.lang.Long}
      */
-    public Long getLong(@NotNull String name) {
+    public @Nullable Long getLong(@NotNull String name) {
         try {
             return Long.parseLong(parsedArgs.get(name));
         } catch (NumberFormatException e) {
@@ -559,7 +559,7 @@ public class Arguments {
      * @param name The name of the argument to check for
      * @return {@link java.lang.Boolean}
      */
-    public Boolean exists(@NotNull String name) {
+    public @Nullable Boolean exists(@NotNull String name) {
         return parsedArgs.get(name) != null;
     }
 
@@ -571,7 +571,7 @@ public class Arguments {
      * @param name The name of the flag to fetch
      * @return {@link java.lang.Boolean}
      */
-    public Boolean getFlag(@NotNull String name) {
+    public @Nullable Boolean getFlag(@NotNull String name) {
         return exists(name);
     }
 
@@ -583,7 +583,7 @@ public class Arguments {
      * @param name The name of the boolean to fetch
      * @return {@link java.lang.Boolean}
      */
-    public Boolean getBoolean(@NotNull String name) {
+    public @NotNull Boolean getBoolean(@NotNull String name) {
         return Boolean.valueOf(parsedArgs.get(name));
     }
 
@@ -595,7 +595,7 @@ public class Arguments {
      * @param name The name of the duration to fetch
      * @return {@link java.lang.Long}
      */
-    public Long getDuration(@NotNull String name) {
+    public @Nullable Long getDuration(@NotNull String name) {
         return TimeUtil.duration(parsedArgs.get(name)).isPresent() ? TimeUtil.duration(parsedArgs.get(name)).get()
                 : null;
     }

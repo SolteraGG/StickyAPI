@@ -4,6 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -28,7 +31,7 @@ public final class MemoryUtil {
      * @param units  The unit to return the size in
      * @return {@link Double}
      */
-    public static Double getSizeOf(Object object, Unit units) {
+    public static @NotNull Double getSizeOf(Object object, @NotNull Unit units) {
         int bits = getSizeOf(object);
         return formatBits(bits, units);
     }
@@ -40,7 +43,7 @@ public final class MemoryUtil {
      * @param units The unit to format `bits` with
      * @return {@link Double}
      */
-    public static Double formatBits(int bits, Unit units) {
+    public static @NotNull Double formatBits(int bits, @NotNull Unit units) {
         switch (units) {
             case BITS:
                 return (double) bits;
@@ -61,7 +64,7 @@ public final class MemoryUtil {
      * @param object The object to get the size of
      * @return {@link Integer}
      */
-    public static int getSizeOf(Object object) {
+    public static int getSizeOf(@Nullable Object object) {
         if (object == null) {
             return 0;
         }
@@ -74,7 +77,7 @@ public final class MemoryUtil {
             return size;
         }
 
-        for (Field field : clazz.getDeclaredFields()) {
+        for (@NotNull Field field : clazz.getDeclaredFields()) {
             if (Modifier.isStatic(field.getModifiers())) {
                 continue;
             }
@@ -87,7 +90,7 @@ public final class MemoryUtil {
     /**
      * Get the size of a field on a given object.
      */
-    private static int getFieldSize(Object object, Field field) {
+    private static int getFieldSize(Object object, @NotNull Field field) {
         try {
             // Java complains about illegal reflective access... Too bad!
             return getSizeOf(ReflectionUtil.getProtectedValue(object, field.getName()));

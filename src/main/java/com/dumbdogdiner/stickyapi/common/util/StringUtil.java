@@ -53,10 +53,10 @@ public final class StringUtil extends StringUtils {
      *                          snuggly brackets
      * @return {@link String}
      */
-    public static String createProgressBar(double size, double percentage, boolean monospace,
-                                           boolean includePercentage, boolean includeBrackets) {
+    public static @NotNull String createProgressBar(double size, double percentage, boolean monospace,
+                                                    boolean includePercentage, boolean includeBrackets) {
         double barCount = ((percentage / 100) * size);
-        StringBuilder barBuilder = new StringBuilder();
+        @NotNull StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
             if (i < barCount) {
                 if (!monospace)
@@ -88,7 +88,7 @@ public final class StringUtil extends StringUtils {
      * @param percentage The percentage to fill the bar to
      * @return {@link String}
      */
-    public static String createProgressBar(double size, double percentage) {
+    public static @NotNull String createProgressBar(double size, double percentage) {
         return createProgressBar(size, percentage, false, false, true);
     }
 
@@ -110,8 +110,8 @@ public final class StringUtil extends StringUtils {
      * @param keepCase Whether or not to keep the uppercase characters
      * @return {@link String}
      */
-    public static String capitaliseSentence(@NotNull String string, @NotNull Boolean keepCase) {
-        StringBuilder sb = new StringBuilder();
+    public static @NotNull String capitaliseSentence(@NotNull String string, @NotNull Boolean keepCase) {
+        @NotNull StringBuilder sb = new StringBuilder();
         boolean cnl = true;
         for (char c : string.toCharArray()) {
             if (cnl && Character.isLetter(c)) {
@@ -144,7 +144,7 @@ public final class StringUtil extends StringUtils {
      * @param string The string to capitalise
      * @return {@link String}
      */
-    public static String capitaliseSentence(@NotNull String string) {
+    public static @NotNull String capitaliseSentence(@NotNull String string) {
         return capitaliseSentence(string, false);
     }
 
@@ -167,7 +167,7 @@ public final class StringUtil extends StringUtils {
      * @param string The string to capitalise
      * @return {@link String}
      */
-    public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
+    public static @NotNull String capitaliseSentenceKeepUpperCase(@NotNull String string) {
         return capitaliseSentence(string, true);
     }
 
@@ -180,8 +180,8 @@ public final class StringUtil extends StringUtils {
      * @param regex The characters to not censor
      * @return {@link String}
      */
-    public static String censorWord(@NotNull String word, @NotNull String regex) {
-        StringBuilder asterisks = new StringBuilder();
+    public static @NotNull String censorWord(@NotNull String word, @NotNull String regex) {
+        @NotNull StringBuilder asterisks = new StringBuilder();
 
         for (int i = 0; i < word.length(); i++) {
             if (String.valueOf(word.charAt(i)).matches(regex)) {
@@ -203,7 +203,7 @@ public final class StringUtil extends StringUtils {
      * @param word The word to censor
      * @return {@link String}
      */
-    public static String censorWord(@NotNull String word) {
+    public static @NotNull String censorWord(@NotNull String word) {
         return censorWord(word, "[ -/:-@\\[-`{-~¡-¿]");
     }
 
@@ -222,11 +222,11 @@ public final class StringUtil extends StringUtils {
      * @param message The message to filter
      * @return {@link String}
      */
-    public static String replaceLeet(@NotNull String message) {
+    public static @NotNull String replaceLeet(@NotNull String message) {
         if (message.trim().isEmpty())
             return message;
 
-        for (Map.Entry<String, String> entry : leetReplace.entrySet())
+        for (Map.@NotNull Entry<String, String> entry : leetReplace.entrySet())
             message = message.replaceAll(entry.getKey(), entry.getValue());
 
         return message;
@@ -242,7 +242,7 @@ public final class StringUtil extends StringUtils {
      * @param needles  things that may match the comparison string
      * @return {@link Boolean}
      */
-    public static boolean compareMany(@NotNull String haystack, @NotNull String[] needles) {
+    public static boolean compareMany(@NotNull String haystack, @NotNull String @NotNull [] needles) {
         for (String needle : needles) {
             if (haystack.equalsIgnoreCase(needle))
                 return true;
@@ -278,7 +278,7 @@ public final class StringUtil extends StringUtils {
      * @param uuid to hyphenate
      * @return {@link UUID}
      */
-    public static UUID hyphenateUUID(@NotNull String uuid) {
+    public static @NotNull UUID hyphenateUUID(@NotNull String uuid) {
         if (uuid.length() == 32) {
             return UUID.fromString(uuid.replaceFirst( // https://stackoverflow.com/a/19399768
                     "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
@@ -288,11 +288,11 @@ public final class StringUtil extends StringUtils {
         }
     }
 
-    public static String unhyphenateUUID(@NotNull UUID uuid){
+    public static @NotNull String unhyphenateUUID(@NotNull UUID uuid){
         return unhyphenate(uuid.toString());
     }
 
-    public static String unhyphenate(@NotNull String str){
+    public static @NotNull String unhyphenate(@NotNull String str){
         return str.replace("-","");
     }
 
@@ -302,7 +302,7 @@ public final class StringUtil extends StringUtils {
      * @param str The {@link String} to be encoded
      * @return The encoded {@link String}
      */
-    public static String encodeBase64(String str) {
+    public static @NotNull String encodeBase64(@NotNull String str) {
         return new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8)));
     }
 
@@ -312,7 +312,7 @@ public final class StringUtil extends StringUtils {
      * @return A string of UTF-8 Text decoded from the input
      * @throws IllegalArgumentException if the Base64 decoding fails
      */
-    public static String decodeBase64(String str) throws IllegalArgumentException {
+    public static @NotNull String decodeBase64(String str) throws IllegalArgumentException {
         return new String(Base64.getDecoder().decode(str), StandardCharsets.UTF_8);
     }
 }

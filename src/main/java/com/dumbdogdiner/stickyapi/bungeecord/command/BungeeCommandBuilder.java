@@ -27,6 +27,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.FutureTask;
@@ -34,21 +35,21 @@ import java.util.concurrent.FutureTask;
 public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
 
     // Hmm...
-    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
+    @NotNull HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
 
     Executor executor;
     TabExecutor tabExecutor;
 
     ErrorHandler errorHandler;
-    Boolean playSound = false;
+    @NotNull Boolean playSound = false;
 
     @FunctionalInterface
     public interface Executor {
-        public ExitCode apply(CommandSender sender, Arguments args, TreeMap<String, String> vars);
+        public @NotNull ExitCode apply(CommandSender sender, Arguments args, TreeMap<String, String> vars);
     }
 
     public interface TabExecutor {
-        public java.util.List<String> apply(CommandSender sender, String commandLabel, Arguments args);
+        public java.util.@NotNull List<String> apply(CommandSender sender, String commandLabel, Arguments args);
     }
 
     public interface ErrorHandler {
@@ -66,7 +67,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      */
     @Override
     @Deprecated
-    public BungeeCommandBuilder playSound(@NotNull Boolean playSound) {
+    public @NotNull BungeeCommandBuilder playSound(@NotNull Boolean playSound) {
         this.playSound = playSound;
         PacketRegistration.registerSoundPacket(); // Register our sound packet, since this probably hasn't happened
                                                   // already and if we don't, sounds will not play
@@ -83,7 +84,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      */
     @Override
     @Deprecated
-    public BungeeCommandBuilder playSound() {
+    public @NotNull BungeeCommandBuilder playSound() {
         return this.playSound(true);
     }
 
@@ -91,8 +92,8 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
         super(name);
     }
 
-    private void performAsynchronousExecution(CommandSender sender, BungeeCommandBuilder builder, String label,
-            List<String> args) {
+    private void performAsynchronousExecution(@NotNull CommandSender sender, @NotNull BungeeCommandBuilder builder, String label,
+                                              @NotNull List<String> args) {
         StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
             performExecution(sender, builder, label, args);
             return null;
@@ -103,17 +104,17 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * Execute this command. Checks for existing sub-commands, and runs the error
      * handler if anything goes wrong.
      */
-    private void performExecution(CommandSender sender, BungeeCommandBuilder builder, String label, List<String> args) {
+    private void performExecution(@NotNull CommandSender sender, @NotNull BungeeCommandBuilder builder, String label, @NotNull List<String> args) {
         // look for subcommands
         if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
-            BungeeCommandBuilder subCommand = (BungeeCommandBuilder) getSubCommands().get(args.get(0));
+            @NotNull BungeeCommandBuilder subCommand = (BungeeCommandBuilder) getSubCommands().get(args.get(0));
             if (!getSynchronous() && subCommand.getSynchronous()) {
                 throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
             }
 
             // We can't modify List, so we need to make a clone of it, because java is
             // special.
-            ArrayList<String> argsClone = new ArrayList<String>(args);
+            @NotNull ArrayList<String> argsClone = new ArrayList<String>(args);
             argsClone.remove(0);
 
             // spawn async command from sync
@@ -126,8 +127,8 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
         }
 
         ExitCode exitCode;
-        Arguments a = new Arguments(args);
-        var variables = new TreeMap<String, String>();
+        @NotNull Arguments a = new Arguments(args);
+        @NotNull var variables = new TreeMap<String, String>();
         variables.put("command", builder.getName());
         variables.put("sender", sender.getName());
         variables.put("player", sender.getName());
@@ -180,7 +181,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * @param executor to set
      * @return {@link BungeeCommandBuilder}
      */
-    public BungeeCommandBuilder onExecute(@NotNull Executor executor) {
+    public @NotNull BungeeCommandBuilder onExecute(@NotNull Executor executor) {
         this.executor = executor;
         return this;
     }
@@ -191,7 +192,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * @param executor to set
      * @return {@link BungeeCommandBuilder}
      */
-    public BungeeCommandBuilder onTabComplete(@NotNull TabExecutor executor) {
+    public @NotNull BungeeCommandBuilder onTabComplete(@NotNull TabExecutor executor) {
         this.tabExecutor = executor;
         return this;
     }
@@ -202,7 +203,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * @param handler to set
      * @return {@link BungeeCommandBuilder}
      */
-    public BungeeCommandBuilder onError(@NotNull ErrorHandler handler) {
+    public @NotNull BungeeCommandBuilder onError(@NotNull ErrorHandler handler) {
         this.errorHandler = handler;
         return this;
     }
@@ -214,7 +215,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * 
      * @return {@link Command}
      */
-    public Command build(Plugin plugin) {
+    public @NotNull Command build(Plugin plugin) {
         return new TabableCommand(this);
     }
 
@@ -224,7 +225,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
      * @param plugin to register with
      */
     public void register(Plugin plugin) {
-        Command command = build(plugin);
+        @NotNull Command command = build(plugin);
         ProxyServer.getInstance().getPluginManager().registerCommand(plugin, command);
     }
 
@@ -232,18 +233,18 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
             implements net.md_5.bungee.api.plugin.TabExecutor {
         BungeeCommandBuilder builder;
 
-        public TabableCommand(BungeeCommandBuilder builder) {
+        public TabableCommand(@NotNull BungeeCommandBuilder builder) {
             super(builder.getName(), builder.getPermission(), builder.getAliases().toArray(new String[0]));
             this.builder = builder;
         }
 
-        public void execute(net.md_5.bungee.api.CommandSender sender, String[] args) {
+        public void execute(net.md_5.bungee.api.@NotNull CommandSender sender, String[] args) {
             // CommandSender sender, CommandBuilder builder, String label, List<String> args
             builder.performExecution(sender, builder, builder.getName(), Arrays.asList(args));
         }
 
         @Override
-        public Iterable<String> onTabComplete(net.md_5.bungee.api.CommandSender sender, String[] args) {
+        public Iterable<String> onTabComplete(net.md_5.bungee.api.CommandSender sender, String @NotNull [] args) {
             if (builder.tabExecutor != null)
                 return builder.tabExecutor.apply(sender, builder.getName(), new Arguments(Arrays.asList(args)));
             else {
@@ -253,10 +254,10 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
 
                 String lastWord = args[args.length - 1];
 
-                ProxiedPlayer senderPlayer = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
+                @Nullable ProxiedPlayer senderPlayer = sender instanceof ProxiedPlayer ? (ProxiedPlayer) sender : null;
 
-                ArrayList<String> matchedPlayers = new ArrayList<String>();
-                for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+                @NotNull ArrayList<String> matchedPlayers = new ArrayList<String>();
+                for (@NotNull ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                     String name = player.getName();
                     if ((senderPlayer == null) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
                         matchedPlayers.add(name);
@@ -269,7 +270,7 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
         }
     }
 
-    private void _playSound(CommandSender sender, NotificationType type) {
+    private void _playSound(@NotNull CommandSender sender, @NotNull NotificationType type) {
         if (!this.getPlaySound())
             return;
         SoundUtil.send(sender, type);

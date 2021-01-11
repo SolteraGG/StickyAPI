@@ -134,8 +134,8 @@ public class SkullBuilder {
         Preconditions.checkNotNull(texture);
         Preconditions.checkArgument(name != null || head != null);
 
-        SkullMeta meta = (SkullMeta) (new ItemStack(Material.PLAYER_HEAD, 1)).getItemMeta();
-        PlayerProfile profile = Bukkit.createProfile(new UUID(0, 0), null);
+        @NotNull SkullMeta meta = (SkullMeta) (new ItemStack(Material.PLAYER_HEAD, 1)).getItemMeta();
+        @NotNull PlayerProfile profile = Bukkit.createProfile(new UUID(0, 0), null);
 
         profile.setName(TextureHelper.toQualifiedName(category, head == null ? name : head));
         if (name != null) {
@@ -145,7 +145,7 @@ public class SkullBuilder {
         }
 
         profile.setProperty(new ProfileProperty("texture", texture));
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD, quantity);
+        @NotNull ItemStack head = new ItemStack(Material.PLAYER_HEAD, quantity);
         head.setItemMeta(meta);
         return head;
     }

@@ -20,6 +20,8 @@ import okhttp3.Response;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,23 +44,23 @@ public class CachedMojangAPI {
 
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
 
-    protected static final HttpUrl COMBINED_API_URL = HttpUrl.parse("https://api.ashcon.app/mojang/v2/user/");
+    protected static final @Nullable HttpUrl COMBINED_API_URL = HttpUrl.parse("https://api.ashcon.app/mojang/v2/user/");
 
     protected UUID uuid;
 
-    public CachedMojangAPI(String uuid) {
+    public CachedMojangAPI(@NotNull String uuid) {
         this.uuid = StringUtil.hyphenateUUID(uuid);
     }
 
-    public CachedMojangAPI(OfflinePlayer player) {
+    public CachedMojangAPI(@NotNull OfflinePlayer player) {
         this.uuid = player.getUniqueId();
     }
 
-    public CachedMojangAPI(Player player) {
+    public CachedMojangAPI(@NotNull Player player) {
         this.uuid = player.getUniqueId();
     }
 
-    public CachedMojangAPI(ProxiedPlayer player){
+    public CachedMojangAPI(@NotNull ProxiedPlayer player){
         this.uuid = player.getUniqueId();
     }
 
@@ -66,11 +68,11 @@ public class CachedMojangAPI {
         this.uuid = uuid;
     }
 
-    public String getSkinTexture(){
+    public @Nullable String getSkinTexture(){
         return getSkinTexture(this.uuid);
     }
 
-    private static Request buildRequest(UUID uuid){
+    private static @NotNull Request buildRequest(@NotNull UUID uuid){
         return new Request.Builder().url(
                 COMBINED_API_URL.newBuilder(
                         StringUtil.unhyphenateUUID(uuid))
@@ -79,12 +81,12 @@ public class CachedMojangAPI {
     }
 
 
-    public static String getSkinTexture(StickyUser u){
+    public static @Nullable String getSkinTexture(@NotNull StickyUser u){
         return getSkinTexture(u.getUniqueId());
     }
-    public static String getSkinTexture(UUID uuid){
+    public static @Nullable String getSkinTexture(@NotNull UUID uuid){
         try {
-            Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
+            @NotNull Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
             if(resp.code() != 200)
                 throw new java.net.ConnectException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
 
@@ -98,7 +100,7 @@ public class CachedMojangAPI {
 
     AshconResponse getResponse(){
         try {
-            Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
+            @NotNull Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
             if(resp.code() != 200)
                 throw new IOException("A 404 was returned from " + buildRequest(uuid).url().url().toString() + "\n" + resp.toString());
             return (new Gson().fromJson(resp.body().charStream(), AshconResponse.class));
@@ -118,12 +120,12 @@ public class CachedMojangAPI {
         }
     }
 
-    public HashMap<String, Instant> getUsernameHistory(){
-        HashMap<String, Instant> retval = new HashMap<>();
+    public @NotNull HashMap<String, Instant> getUsernameHistory(){
+        @NotNull HashMap<String, Instant> retval = new HashMap<>();
         try{
-            URL url = new URL(COMBINED_API_URL + uuid.toString().replace("-",""));
-            for (JsonElement el : getJSONFromURL(url).getAsJsonObject().getAsJsonArray("username_history")) {
-                Instant changedAt = null;
+            @NotNull URL url = new URL(COMBINED_API_URL + uuid.toString().replace("-",""));
+            for (@NotNull JsonElement el : getJSONFromURL(url).getAsJsonObject().getAsJsonArray("username_history")) {
+                @Nullable Instant changedAt = null;
                 if(el.getAsJsonObject().has("changed_at")){
 
                     String datestr = el.getAsJsonObject().get("changed_at").getAsString();
@@ -139,7 +141,7 @@ public class CachedMojangAPI {
         return retval;
     }
 
-    private JsonElement getJSONFromURL(URL url){
+    private JsonElement getJSONFromURL(@NotNull URL url){
 
         try {
             return new JsonParser().parse(new InputStreamReader(url.openStream()));
@@ -149,7 +151,7 @@ public class CachedMojangAPI {
         }
     }
 
-    public String getUsername() {
+    public @Nullable String getUsername() {
         try {
             //Response resp = HTTP_CLIENT.newCall(buildRequest(uuid)).execute();
             return getResponse().username;

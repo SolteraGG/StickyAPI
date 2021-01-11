@@ -16,6 +16,8 @@ import okhttp3.Response;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,15 +48,15 @@ public class MojangAPI {
 
     protected UUID uuid;
 
-    public MojangAPI(String uuid) {
+    public MojangAPI(@NotNull String uuid) {
         this.uuid = StringUtil.hyphenateUUID(uuid);
     }
 
-    public MojangAPI(OfflinePlayer player) {
+    public MojangAPI(@NotNull OfflinePlayer player) {
         this.uuid = player.getUniqueId();
     }
 
-    public MojangAPI(Player player) {
+    public MojangAPI(@NotNull Player player) {
         this.uuid = player.getUniqueId();
     }
 
@@ -62,12 +64,12 @@ public class MojangAPI {
         this.uuid = uuid;
     }
 
-    public static Map<String, MojangStatus>  getMojangAPIStatus(){
-        Map<String, MojangStatus> status = new HashMap<>();
+    public static @NotNull Map<String, MojangStatus>  getMojangAPIStatus(){
+        @NotNull Map<String, MojangStatus> status = new HashMap<>();
         try {
-            Response resp = HTTP_CLIENT.newCall(new Request.Builder().url(MOJANG_STATUS_BASE_URL).build()).execute();
-            for(JsonElement obj : JsonParser.parseReader(resp.body().charStream()).getAsJsonArray()){
-                for(Map.Entry<String, JsonElement> entry : obj.getAsJsonObject().entrySet()){
+            @NotNull Response resp = HTTP_CLIENT.newCall(new Request.Builder().url(MOJANG_STATUS_BASE_URL).build()).execute();
+            for(@NotNull JsonElement obj : JsonParser.parseReader(resp.body().charStream()).getAsJsonArray()){
+                for(Map.@NotNull Entry<String, JsonElement> entry : obj.getAsJsonObject().entrySet()){
                     status.put(entry.getKey(), MojangStatus.valueOf(entry.getValue().getAsString().toUpperCase()));
                 }
             }
@@ -77,9 +79,9 @@ public class MojangAPI {
         return status;
     }
 
-    public String getSkinTexture(){
+    public @Nullable String getSkinTexture(){
         try {
-            URL url = new URL(MOJANG_API_BASE_URL + "/" + uuid.toString().replace("-",""));
+            @NotNull URL url = new URL(MOJANG_API_BASE_URL + "/" + uuid.toString().replace("-",""));
             return  getJSONFromURL(url).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
             Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
@@ -96,12 +98,12 @@ public class MojangAPI {
         }
     }
 
-    public HashMap<String, Instant> getUsernameHistory(){
-        HashMap<String, Instant> retval = new HashMap<>();
+    public @NotNull HashMap<String, Instant> getUsernameHistory(){
+        @NotNull HashMap<String, Instant> retval = new HashMap<>();
         try{
-            URL url = new URL(MOJANG_API_BASE_URL + "/" + uuid.toString().replace("-",""));
-            for (JsonElement el : getJSONFromURL(url).getAsJsonObject().getAsJsonArray("username_history")) {
-                Instant changedAt = null;
+            @NotNull URL url = new URL(MOJANG_API_BASE_URL + "/" + uuid.toString().replace("-",""));
+            for (@NotNull JsonElement el : getJSONFromURL(url).getAsJsonObject().getAsJsonArray("username_history")) {
+                @Nullable Instant changedAt = null;
                 if(el.getAsJsonObject().has("changed_at")){
 
                     String datestr = el.getAsJsonObject().get("changed_at").getAsString();
@@ -117,9 +119,9 @@ public class MojangAPI {
         return retval;
     }
 
-    public String getUsername() {
+    public @Nullable String getUsername() {
         try {
-            URL url = new URL(MOJANG_API_BASE_URL + "/" + uuid.toString().replace("-",""));
+            @NotNull URL url = new URL(MOJANG_API_BASE_URL + "/" + uuid.toString().replace("-",""));
             return  getJSONFromURL(url).getAsJsonObject().get("username").getAsString();//.getAsJsonObject("textures").getAsJsonObject("raw").get("value").getAsString();
         } catch (Exception e) {
             Bukkit.getLogger().severe(Arrays.toString(e.getStackTrace()));
@@ -127,7 +129,7 @@ public class MojangAPI {
         }
     }
 
-    private JsonElement getJSONFromURL(URL url){
+    private JsonElement getJSONFromURL(@NotNull URL url){
 
         try {
             return new JsonParser().parse(new InputStreamReader(url.openStream()));

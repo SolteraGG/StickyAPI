@@ -24,6 +24,7 @@ import com.dumbdogdiner.stickyapi.common.configuration.Configuration;
 import com.dumbdogdiner.stickyapi.common.configuration.ConfigurationSection;
 import com.dumbdogdiner.stickyapi.common.configuration.InvalidConfigurationException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -47,7 +48,7 @@ public class YamlConfiguration extends FileConfiguration {
         yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        String header = buildHeader();
+        @NotNull String header = buildHeader();
         String dump = yaml.dump(getValues(false));
 
         if (dump.equals(BLANK_CONFIG)) {
@@ -70,7 +71,7 @@ public class YamlConfiguration extends FileConfiguration {
             throw new InvalidConfigurationException("Top level is not a Map.");
         }
 
-        String header = parseHeader(contents);
+        @NotNull String header = parseHeader(contents);
         if (header.length() > 0) {
             options().header(header);
         }
@@ -81,7 +82,7 @@ public class YamlConfiguration extends FileConfiguration {
     }
 
     protected void convertMapsToSections(@NotNull Map<?, ?> input, @NotNull ConfigurationSection section) {
-        for (Map.Entry<?, ?> entry : input.entrySet()) {
+        for (Map.@NotNull Entry<?, ?> entry : input.entrySet()) {
             String key = entry.getKey().toString();
             Object value = entry.getValue();
 
@@ -96,7 +97,7 @@ public class YamlConfiguration extends FileConfiguration {
     @NotNull
     protected String parseHeader(@NotNull String input) {
         String[] lines = input.split("\r?\n", -1);
-        StringBuilder result = new StringBuilder();
+        @NotNull StringBuilder result = new StringBuilder();
         boolean readingHeader = true;
         boolean foundHeader = false;
 
@@ -126,14 +127,14 @@ public class YamlConfiguration extends FileConfiguration {
     @NotNull
     @Override
     protected String buildHeader() {
-        String header = options().header();
+        @Nullable String header = options().header();
 
         if (options().copyHeader()) {
-            Configuration def = getDefaults();
+            @Nullable Configuration def = getDefaults();
 
             if ((def != null) && (def instanceof FileConfiguration)) {
-                FileConfiguration filedefaults = (FileConfiguration) def;
-                String defaultsHeader = filedefaults.buildHeader();
+                @NotNull FileConfiguration filedefaults = (FileConfiguration) def;
+                @NotNull String defaultsHeader = filedefaults.buildHeader();
 
                 if ((defaultsHeader != null) && (defaultsHeader.length() > 0)) {
                     return defaultsHeader;
@@ -145,7 +146,7 @@ public class YamlConfiguration extends FileConfiguration {
             return "";
         }
 
-        StringBuilder builder = new StringBuilder();
+        @NotNull StringBuilder builder = new StringBuilder();
         String[] lines = header.split("\r?\n", -1);
         boolean startedHeader = false;
 
@@ -189,7 +190,7 @@ public class YamlConfiguration extends FileConfiguration {
     public static YamlConfiguration loadConfiguration(@NotNull File file) {
         Validate.notNull(file, "File cannot be null");
 
-        YamlConfiguration config = new YamlConfiguration();
+        @NotNull YamlConfiguration config = new YamlConfiguration();
 
         try {
             config.load(file);
@@ -218,7 +219,7 @@ public class YamlConfiguration extends FileConfiguration {
     public static YamlConfiguration loadConfiguration(@NotNull Reader reader) {
         Validate.notNull(reader, "Stream cannot be null");
 
-        YamlConfiguration config = new YamlConfiguration();
+        @NotNull YamlConfiguration config = new YamlConfiguration();
 
         try {
             config.load(reader);

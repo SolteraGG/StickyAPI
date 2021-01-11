@@ -17,6 +17,8 @@ import java.util.ArrayDeque;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Schedule async or sync runnables
@@ -27,12 +29,12 @@ public class Scheduler {
 	 * Array of tasks to be run on the main thread or synchronously
 	 */
 	@Getter
-	protected Queue<RunnableFuture<?>> synchronous = new ArrayDeque<RunnableFuture<?>>();
+	protected @NotNull Queue<RunnableFuture<?>> synchronous = new ArrayDeque<RunnableFuture<?>>();
 	/**
 	 * Array of tasks to be run as part of a thread pool.
 	 */
 	@Getter
-	protected Queue<RunnableFuture<?>> asynchronous = new ArrayDeque<RunnableFuture<?>>();
+	protected @NotNull Queue<RunnableFuture<?>> asynchronous = new ArrayDeque<RunnableFuture<?>>();
 
 	/**
 	 * The thread pool to use for executing tasks.
@@ -49,8 +51,8 @@ public class Scheduler {
 	 * 
 	 * @param task to execute
 	 */
-	public <V> Future<V> scheduleThreaded(Callable<V> task) {
-		RunnableFuture<V> t = new FutureTask<V>(task);
+	public <V> @NotNull Future<V> scheduleThreaded(@NotNull Callable<V> task) {
+		@NotNull RunnableFuture<V> t = new FutureTask<V>(task);
 		this.pool.execute(t);
 		return (FutureTask<V>) t;
 	}
@@ -61,7 +63,7 @@ public class Scheduler {
 	 * @param task to run
 	 * @param time to execute the task
 	 */
-	public <T> Future<T> scheduleThreaded(Callable<T> task, Date time) {
+	public <T> @NotNull Future<T> scheduleThreaded(Callable<T> task, @NotNull Date time) {
 		long future = time.getTime();
 		long now = System.currentTimeMillis();
 		if (future <= now)
@@ -77,8 +79,8 @@ public class Scheduler {
 	 * 
 	 * @param task to run
 	 */
-	public <T> Future<T> scheduleSynchronous(Callable<T> task) {
-		FutureTask<T> t = new FutureTask<T>(task);
+	public <T> @NotNull Future<T> scheduleSynchronous(@NotNull Callable<T> task) {
+		@NotNull FutureTask<T> t = new FutureTask<T>(task);
 		this.synchronous.add(t);
 		return t;
 	}
@@ -89,7 +91,7 @@ public class Scheduler {
 	 * @param task to run
 	 * @param time to execute the task
 	 */
-	public <T> Future<T> scheduleSynchronous(Callable<T> task, Date time) {
+	public <T> @NotNull Future<T> scheduleSynchronous(@NotNull Callable<T> task, Date time) {
 		// TODO: Make synchronous version of this?
 		return new FutureTask<T>(task);
 	}
@@ -99,7 +101,7 @@ public class Scheduler {
 	 * be called in the application's eventloop or in a single thread.
 	 */
 	public void schedule() {
-		RunnableFuture<?> task = null;
+		@Nullable RunnableFuture<?> task = null;
 		while ((task = this.synchronous.poll()) != null)
 			task.run();
 	}

@@ -32,8 +32,8 @@ public class ServerUtil {
      * @return {@link java.util.ArrayList}
      * @since 2.0 (in 1.x, this method did not work correctly!)
      */
-    public static double[] getRecentTps() {
-        Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
+    public static double @org.jetbrains.annotations.Nullable [] getRecentTps() {
+        @org.jetbrains.annotations.Nullable Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
 
         return ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
     }
@@ -45,7 +45,7 @@ public class ServerUtil {
      * @param args    The format arguments, if any
      */
     public static void broadcastMessage(@NotNull String message, @Nullable String... args) {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (@NotNull Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.sendMessage(
                     new TextComponent(Translation.translateColors("&", String.format(message, (Object) args))));
         }
@@ -57,7 +57,7 @@ public class ServerUtil {
      * @param title The {@link com.destroystokyo.paper.Title} to send
      */
     public static void broadcastTitle(@NotNull Title title) {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (@NotNull Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.sendTitle(title);
         }
     }

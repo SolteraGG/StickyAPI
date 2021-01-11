@@ -9,6 +9,7 @@ import com.dumbdogdiner.stickyapi.common.configuration.file.YamlConfiguration;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -19,12 +20,14 @@ public class Locale {
     private final Debugger debug = new Debugger(getClass());
 
     @Getter
+    @NotNull
     Boolean isValid = false;
 
     @Getter
     File localeFile;
 
     @Getter
+    @NotNull
     FileConfiguration localeConfig = new YamlConfiguration();
 
     /**
@@ -53,7 +56,7 @@ public class Locale {
      * @param node The node to get
      * @return {@link java.lang.String}
      */
-    public String get(@NotNull String node) {
+    public @Nullable String get(@NotNull String node) {
         debug.reset().print("fetching node " + node);
         debug.print("node value: " + localeConfig.getString(node));
 

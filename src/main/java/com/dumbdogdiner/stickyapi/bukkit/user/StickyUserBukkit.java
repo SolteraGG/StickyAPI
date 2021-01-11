@@ -13,33 +13,34 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "unused"})
 public class StickyUserBukkit extends StickyUser {
-    public StickyUserBukkit(Player p) {
+    public StickyUserBukkit(@NotNull Player p) {
         super(p.getUniqueId(), p.getName());
     }
 
-    public StickyUserBukkit(OfflinePlayer p) {
+    public StickyUserBukkit(@NotNull OfflinePlayer p) {
         super(p.getUniqueId(), Objects.requireNonNull(p.getName()));
     }
 
-    public StickyUserBukkit(StickyUser p){
+    public StickyUserBukkit(@NotNull StickyUser p){
         super(p);
     }
 
-    public StickyUserBukkit(UUID uniqueId){
+    public StickyUserBukkit(@NotNull UUID uniqueId){
         super(uniqueId);
     }
 
-    public Player getAsBukkitPlayer() {
+    public @Nullable Player getAsBukkitPlayer() {
         return Bukkit.getPlayer(uniqueId);
     }
 
-    public OfflinePlayer getAsOfflinePlayer() {
+    public @NotNull OfflinePlayer getAsOfflinePlayer() {
         return Bukkit.getOfflinePlayer(uniqueId);
     }
 
@@ -65,35 +66,35 @@ public class StickyUserBukkit extends StickyUser {
         return true;
     }
 
-    public boolean sendMessage(String msg){
+    public boolean sendMessage(@NotNull String msg){
         if(!isOnline())
             return false;
         getAsBukkitPlayer().sendMessage(msg);
         return true;
     }
 
-    public boolean sendRawMessage(String msg){
+    public boolean sendRawMessage(@NotNull String msg){
         if(!isOnline())
             return false;
         getAsBukkitPlayer().sendRawMessage(msg);
         return true;
     }
 
-    public ItemStack getHead(){
+    public @NotNull ItemStack getHead(){
         return getHead(1);
     }
 
-    public ItemStack getHead(int amt){
-        PlayerHeadBuilder gen = new PlayerHeadBuilder(this);
+    public @NotNull ItemStack getHead(int amt){
+        @NotNull PlayerHeadBuilder gen = new PlayerHeadBuilder(this);
         gen.quantity(amt);
         return gen.build();
     }
 
-    public Player toBukkitPlayer(){
+    public @Nullable Player toBukkitPlayer(){
         return Bukkit.getPlayer(uniqueId);
     }
 
-    public OfflinePlayer toOfflinePlayer() {
+    public @NotNull OfflinePlayer toOfflinePlayer() {
         return Bukkit.getOfflinePlayer(uniqueId);
     }
 }

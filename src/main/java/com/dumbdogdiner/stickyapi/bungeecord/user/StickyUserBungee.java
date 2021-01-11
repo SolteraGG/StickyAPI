@@ -7,15 +7,16 @@ package com.dumbdogdiner.stickyapi.bungeecord.user;
 import com.dumbdogdiner.stickyapi.common.user.StickyUser;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class StickyUserBungee extends StickyUser {
-    public StickyUserBungee(UUID uniqueId) {
+    public StickyUserBungee(@NotNull UUID uniqueId) {
         super(uniqueId);
     }
 
-    public StickyUserBungee(ProxiedPlayer p) {
+    public StickyUserBungee(@NotNull ProxiedPlayer p) {
         super(p.getUniqueId(), p.getName());
     }
 

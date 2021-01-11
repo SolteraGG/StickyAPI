@@ -24,7 +24,7 @@ import java.time.Instant;
 
 public class PlayerSnapshot implements Serializable {
 
-    private final Location location;
+    private final @NotNull Location location;
     private final ItemStack[] armor;
     private final ItemStack[] items;
     private final double health;
@@ -32,7 +32,7 @@ public class PlayerSnapshot implements Serializable {
     private final float saturation;
     private final float exhaustion;
     private final float exp;
-    private final Vector velocity;
+    private final @NotNull Vector velocity;
     @Getter
     private final Instant savedAt;
 

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConfigurationOptions {
     private char pathSeparator = '.';
     private boolean copyDefaults = false;
-    private final Configuration configuration;
+    private final @NotNull Configuration configuration;
 
     protected ConfigurationOptions(@NotNull Configuration configuration) {
         this.configuration = configuration;

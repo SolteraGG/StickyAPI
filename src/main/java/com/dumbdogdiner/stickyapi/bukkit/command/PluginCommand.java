@@ -34,9 +34,9 @@ import org.jetbrains.annotations.Nullable;
  */
 // We don't want this class to be used anywhere outside of this package...
 final class PluginCommand extends Command implements PluginIdentifiableCommand {
-    private final Plugin owningPlugin;
+    private final @NotNull Plugin owningPlugin;
     private CommandExecutor executor;
-    private TabCompleter completer;
+    private @Nullable TabCompleter completer;
 
     public PluginCommand(@NotNull String name, @NotNull Plugin owner) {
         super(name);
@@ -76,7 +76,7 @@ final class PluginCommand extends Command implements PluginIdentifiableCommand {
         }
 
         if (!success && usageMessage.length() > 0) {
-            for (String line : usageMessage.replace("<command>", commandLabel).split("\n")) {
+            for (@NotNull String line : usageMessage.replace("<command>", commandLabel).split("\n")) {
                 sender.sendMessage(line);
             }
         }
@@ -156,12 +156,12 @@ final class PluginCommand extends Command implements PluginIdentifiableCommand {
     @NotNull
     @Override
     public java.util.List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias,
-            @NotNull String[] args) throws CommandException, IllegalArgumentException {
+            @NotNull String @NotNull [] args) throws CommandException, IllegalArgumentException {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(args, "Arguments cannot be null");
         Validate.notNull(alias, "Alias cannot be null");
 
-        List<String> completions = null;
+        @Nullable List<String> completions = null;
         try {
             if (completer != null) {
                 completions = completer.onTabComplete(sender, this, alias, args);
@@ -170,7 +170,7 @@ final class PluginCommand extends Command implements PluginIdentifiableCommand {
                 completions = ((TabCompleter) executor).onTabComplete(sender, this, alias, args);
             }
         } catch (Throwable ex) {
-            StringBuilder message = new StringBuilder();
+            @NotNull StringBuilder message = new StringBuilder();
             message.append("Unhandled exception during tab completion for command '/").append(alias).append(' ');
             for (String arg : args) {
                 message.append(arg).append(' ');
@@ -187,8 +187,8 @@ final class PluginCommand extends Command implements PluginIdentifiableCommand {
     }
 
     @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(super.toString());
+    public @NotNull String toString() {
+        @NotNull StringBuilder stringBuilder = new StringBuilder(super.toString());
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         stringBuilder.append(", ").append(owningPlugin.getDescription().getFullName()).append(')');
         return stringBuilder.toString();

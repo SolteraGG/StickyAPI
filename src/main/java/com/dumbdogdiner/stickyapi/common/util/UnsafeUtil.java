@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -31,9 +32,9 @@ public class UnsafeUtil {
      * @throws IllegalArgumentException @see {@link sun.misc.Unsafe}
      * @throws IllegalAccessException @see {@link sun.misc.Unsafe}
      */
-    public static Unsafe getUnsafe() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+    public static @NotNull Unsafe getUnsafe() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
             IllegalAccessException {
-        Field f = Unsafe.class.getDeclaredField("theUnsafe");
+        @NotNull Field f = Unsafe.class.getDeclaredField("theUnsafe");
         f.setAccessible(true);
         return (Unsafe) f.get(null);
     }
@@ -52,10 +53,10 @@ public class UnsafeUtil {
                 .println();
         
         try {
-            Unsafe u = getUnsafe();
+            @NotNull Unsafe u = getUnsafe();
             
-            Class<?> cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
-            Field logger = cls.getDeclaredField("logger");
+            @NotNull Class<?> cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
+            @NotNull Field logger = cls.getDeclaredField("logger");
             u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
 
             l.log(Level.WARNING, "*** StickyAPI Warning: Illegal Reflective Access Warnings disabled! ***");

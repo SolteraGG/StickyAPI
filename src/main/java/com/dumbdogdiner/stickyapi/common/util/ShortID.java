@@ -6,6 +6,7 @@ package com.dumbdogdiner.stickyapi.common.util;
 
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.UUID;
@@ -23,12 +24,12 @@ final class Luhn {
      * @param card {@link String} card number
      * @return result {@link boolean} true of false
      */
-    public static boolean luhnCheck(String card) {
+    public static boolean luhnCheck(@Nullable String card) {
         if (card == null || card.length() == 0)
             return false;
 
         char checkDigit = card.charAt(card.length() - 1);
-        String digit = calculateCheckDigit(card.substring(0, card.length() - 1));
+        @Nullable String digit = calculateCheckDigit(card.substring(0, card.length() - 1));
         return checkDigit == digit.charAt(0);
     }
 
@@ -38,13 +39,13 @@ final class Luhn {
      * @param card {@link String} number
      * @return {@link String} the check digit
      */
-    public static String calculateCheckDigit(String card) {
+    public static @Nullable String calculateCheckDigit(@Nullable String card) {
         if (card == null)
             return null;
 
         String digit;
         /* convert to array of int for simplicity */
-        int[] digits = new int[card.length()];
+        int @NotNull [] digits = new int[card.length()];
 
         for (int i = 0; i < card.length(); i++)
             digits[i] = Character.getNumericValue(card.charAt(i));
@@ -79,7 +80,7 @@ public class ShortID {
     private String id;
 
     public ShortID() {
-        Random r = new Random();
+        @NotNull Random r = new Random();
         this.id = generate(r.nextInt()).toString();
     }
 
@@ -99,22 +100,22 @@ public class ShortID {
      *                                  representation as described in toString
      * @return {@link ShortID}
      */
-    public static ShortID fromString(String name) throws IllegalArgumentException {
+    public static @NotNull ShortID fromString(@NotNull String name) throws IllegalArgumentException {
         if (!validateID(name))
             throw new IllegalArgumentException("The provided String is not a valid Luhn-parsable ShortID");
         return new ShortID((name));
     }
 
-    private static ShortID generateBase(int key) {
+    private static @NotNull ShortID generateBase(int key) {
         Validate.notNull(key, "key cannot be null");
-        CRC32 crc = new CRC32();
+        @NotNull CRC32 crc = new CRC32();
 
         crc.update((int) System.nanoTime());
         // Some kind of semi-unique identifier (like last database row insertion)
         crc.update(key);
 
         // Get the hash
-        String crc32hash = Long.toHexString(crc.getValue());
+        @Nullable String crc32hash = Long.toHexString(crc.getValue());
         // Calculate the Luhn check digit
         crc32hash += Luhn.calculateCheckDigit(crc32hash);
         // return.
@@ -128,7 +129,7 @@ public class ShortID {
      *            table)
      * @return a Luhn-passable identifier
      */
-    public static ShortID generate(@NotNull int key) {
+    public static @NotNull ShortID generate(@NotNull int key) {
         return generateBase(key);
     }
 
@@ -137,7 +138,7 @@ public class ShortID {
      * 
      * @return a Luhn-passable identifier
      */
-    public static ShortID generate() {
+    public static @NotNull ShortID generate() {
         return generateBase(Integer.valueOf(UUID.randomUUID().toString().replace("[A-z\\-]", "")));
     }
 

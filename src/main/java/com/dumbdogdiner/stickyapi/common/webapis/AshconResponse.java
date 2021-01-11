@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.webapis;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
@@ -21,14 +22,15 @@ import java.util.UUID;
 class AshconResponse {
     @Getter(value = AccessLevel.PRIVATE)
     String uuid = new UUID(0,0).toString();
-    public UUID getUniqueId(){
+    public @NotNull UUID getUniqueId(){
         return UUID.fromString(getUuid());
     }
 
     @Getter
+    @NotNull
     String username = "Steve";
 
-    List<Username> username_history = new ArrayList<>();
+    @NotNull List<Username> username_history = new ArrayList<>();
 
     static class Username {
         String username;
@@ -56,7 +58,7 @@ class AshconResponse {
         Raw raw;
 
         static class Raw{
-            String value = TextureHelper.getTexture("MHF.MHF_Steve");
+            @Nullable String value = TextureHelper.getTexture("MHF.MHF_Steve");
             String signature;
         }
     }

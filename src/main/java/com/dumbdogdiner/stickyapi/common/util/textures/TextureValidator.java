@@ -14,6 +14,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -39,7 +40,7 @@ public class TextureValidator {
      * @param textureURL the URL to test
      * @return if the texture is valid
      */
-    public static boolean isValidTextureUrl(String textureURL) {
+    public static boolean isValidTextureUrl(@NotNull String textureURL) {
         try {
             validateTextureUrl(textureURL);
             return true;
@@ -54,7 +55,7 @@ public class TextureValidator {
      * @param textureURL the URL to test
      * @throws InvalidTextureException if the texture is not valid
      */
-    public static void validateTextureUrl(String textureURL) throws InvalidTextureException{
+    public static void validateTextureUrl(@NotNull String textureURL) throws InvalidTextureException{
         try {
             // Make sure URL scheme is valid
             if (!UrlValidator.getInstance().isValid(textureURL)) {
@@ -62,13 +63,13 @@ public class TextureValidator {
             }
 
             // Needs to be from minecraft.net or mojang.com
-            String host = HttpUrl.get(textureURL).host().toLowerCase();
+            @NotNull String host = HttpUrl.get(textureURL).host().toLowerCase();
             if (!(host.endsWith("mojang.com") || host.endsWith("minecraft.net"))) {
                 throw new MalformedURLException("The texture URL " + textureURL + " specified a host other than minecraft.net or mojang.com");
             }
 
             // Needs to be resolvable
-            Response resp = TextureHelper.httpClient.newCall(new Request.Builder().url(textureURL).build()).execute();
+            @NotNull Response resp = TextureHelper.httpClient.newCall(new Request.Builder().url(textureURL).build()).execute();
             if (resp.code() != 200) {
                 resp.close();
                 throw new Exception("Non 200 OK Response of " + resp.code() + " received from " + textureURL);
@@ -96,7 +97,7 @@ public class TextureValidator {
                 } else {
                     throw new NullArgumentException("The image retrieved from " + textureURL + " was decoded to null and" /* must not be null */);
                 }
-            } catch (IOException | NullArgumentException | NullPointerException e) {
+            } catch (@NotNull IOException | NullArgumentException | NullPointerException e) {
                 throw new Exception("The content retrieved from " + textureURL + " was not a recognized image, was null, or was decoded to null", e);
             }
 
@@ -118,7 +119,7 @@ public class TextureValidator {
      * @throws InvalidTextureException if the texture is invalid
      */
     public static void validateTextureString(String texture) throws InvalidTextureException {
-        String decodedTexture = new String(Base64.getDecoder().decode(texture), StandardCharsets.UTF_8);
+        @NotNull String decodedTexture = new String(Base64.getDecoder().decode(texture), StandardCharsets.UTF_8);
         validateTextureJson(JsonParser.parseString(decodedTexture));
 
     }
@@ -129,7 +130,7 @@ public class TextureValidator {
      * @param json JSON representing the texture
      * @throws InvalidTextureException if the texture is invalid
      */
-    public static void validateTextureJson(JsonElement json) throws InvalidTextureException{
+    public static void validateTextureJson(@NotNull JsonElement json) throws InvalidTextureException{
         String textureURL = json
                 .getAsJsonObject().get("textures")
                 .getAsJsonObject().get("SKIN")
@@ -145,7 +146,7 @@ public class TextureValidator {
      * @param json JSON representing the texture
      * @return if the json is valid
      */
-    public static boolean isValidTextureJson(JsonElement json) {
+    public static boolean isValidTextureJson(@NotNull JsonElement json) {
         try {
             validateTextureJson(json);
             return true;

@@ -137,8 +137,8 @@ public class ParticleSystem {
      * @param data     Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawn(@NotNull Particle particle, double x, double y, double z,
-            int count, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem spawn(@NotNull Particle particle, double x, double y, double z,
+                                         int count, @Nullable Particle.DustOptions data) {
         this.ensureRelative();
         this.world.spawnParticle(particle, this.root.getX() + x, this.root.getY() + y, this.root.getZ() + z, count, data);
         return this;
@@ -156,8 +156,8 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawn(@NotNull Particle particle, double x, double y, double z,
-            int count) {
+    public @NotNull ParticleSystem spawn(@NotNull Particle particle, double x, double y, double z,
+                                         int count) {
         return this.spawn(particle, x, y, z, count, null);
     }
 
@@ -172,7 +172,7 @@ public class ParticleSystem {
      * @param count The number of particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawn(double x, double y, double z, int count) {
+    public @NotNull ParticleSystem spawn(double x, double y, double z, int count) {
         this.ensureDefaultParticle();
         return this.spawn(this.particle, x, y, z, count, this.data);
     }
@@ -189,8 +189,8 @@ public class ParticleSystem {
      * @param data     Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawnAbsolute(@NotNull Particle particle, double x, double y,
-            double z, int count, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem spawnAbsolute(@NotNull Particle particle, double x, double y,
+                                                 double z, int count, @Nullable Particle.DustOptions data) {
         this.world.spawnParticle(particle, x, y, z, count, data);
         return this;
     }
@@ -206,8 +206,8 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawnAbsolute(@NotNull Particle particle, double x, double y,
-            double z, int count) {
+    public @NotNull ParticleSystem spawnAbsolute(@NotNull Particle particle, double x, double y,
+                                                 double z, int count) {
         return this.spawnAbsolute(particle, x, y, z, count, null);
     }
 
@@ -221,7 +221,7 @@ public class ParticleSystem {
      * @param count The number of particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawnAbsolute(double x, double y, double z, int count) {
+    public @NotNull ParticleSystem spawnAbsolute(double x, double y, double z, int count) {
         this.ensureDefaultParticle();
         return this.spawnAbsolute(this.particle, x, y, z, count, this.data);
     }
@@ -239,8 +239,8 @@ public class ParticleSystem {
      * @param data       Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem parametric(@NotNull Particle particle, @NotNull Parametric parametric, double t0,
-            double t1, double stepSize, int count, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem parametric(@NotNull Particle particle, @NotNull Parametric parametric, double t0,
+                                              double t1, double stepSize, int count, @Nullable Particle.DustOptions data) {
         this.ensureRelative();
         for (var t = t0; t < t1; t += stepSize) {
             this.spawn(particle, parametric.x(t), parametric.y(t), parametric.z(t), count, data);
@@ -260,8 +260,8 @@ public class ParticleSystem {
      * @param count      The number of particles to spawn per stepSize
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem parametric(@NotNull Particle particle, @NotNull Parametric parametric, double t0,
-            double t1, double stepSize, int count) {
+    public @NotNull ParticleSystem parametric(@NotNull Particle particle, @NotNull Parametric parametric, double t0,
+                                              double t1, double stepSize, int count) {
         return this.parametric(particle, parametric, t0, t1, stepSize, count, null);
     }
 
@@ -276,8 +276,8 @@ public class ParticleSystem {
      * @param count      The number of particles to spawn per stepSize
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem parametric(@NotNull Parametric parametric, double t0, double t1,
-            double stepSize, int count) {
+    public @NotNull ParticleSystem parametric(@NotNull Parametric parametric, double t0, double t1,
+                                              double stepSize, int count) {
         this.ensureDefaultParticle();
         return this.parametric(this.particle, parametric, t0, t1, stepSize, count, this.data);
     }
@@ -296,8 +296,8 @@ public class ParticleSystem {
      * @param data       Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem parametricAbsolute(@NotNull Particle particle, @NotNull Parametric parametric,
-            double t0, double t1, double stepSize, int count, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem parametricAbsolute(@NotNull Particle particle, @NotNull Parametric parametric,
+                                                      double t0, double t1, double stepSize, int count, @Nullable Particle.DustOptions data) {
         for (var t = t0; t < t1; t += stepSize) {
             this.spawnAbsolute(particle, parametric.x(t), parametric.y(t), parametric.z(t), count, data);
         }
@@ -317,8 +317,8 @@ public class ParticleSystem {
      * @param count      The number of particles to spawn per stepSize
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem parametricAbsolute(@NotNull Particle particle, @NotNull Parametric parametric,
-            double t0, double t1, double stepSize, int count) {
+    public @NotNull ParticleSystem parametricAbsolute(@NotNull Particle particle, @NotNull Parametric parametric,
+                                                      double t0, double t1, double stepSize, int count) {
         return this.parametricAbsolute(particle, parametric, t0, t1, stepSize, count, null);
     }
 
@@ -334,8 +334,8 @@ public class ParticleSystem {
      * @param count      The number of particles to spawn per stepSize
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem parametricAbsolute(Parametric parametric, double t0, double t1,
-            double stepSize, int count) {
+    public @NotNull ParticleSystem parametricAbsolute(@NotNull Parametric parametric, double t0, double t1,
+                                                      double stepSize, int count) {
         this.ensureDefaultParticle();
         return this.parametric(this.particle, parametric, t0, t1, stepSize, count, this.data);
     }
@@ -354,7 +354,7 @@ public class ParticleSystem {
      * @param data     Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem line(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem line(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count, @Nullable Particle.DustOptions data) {
         this.ensureRelative();
         return this.parametric(particle, new Parametric() {
             public double x(double t) {
@@ -382,7 +382,7 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn per step
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem line(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
+    public @NotNull ParticleSystem line(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
         return this.line(particle, x1, y1, z1, x2, y2, z2, steps, count, null);
     }
 
@@ -399,7 +399,7 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn per step
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem line(double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
+    public @NotNull ParticleSystem line(double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
         this.ensureDefaultParticle();
         return this.line(this.particle, x1, y1, z1, x2, y2, z2, steps, count, this.data);
     }
@@ -420,7 +420,7 @@ public class ParticleSystem {
      * @param data     Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem lineAbsolute(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem lineAbsolute(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count, @Nullable Particle.DustOptions data) {
         return this.parametricAbsolute(particle, new Parametric() {
             public double x(double t) {
                 return x2 * t + (1 - t) * x1;
@@ -447,7 +447,7 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn per step
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem lineAbsolute(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
+    public @NotNull ParticleSystem lineAbsolute(@NotNull Particle particle, double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
         return this.lineAbsolute(particle, x1, y1, z1, x2, y2, z2, steps, count, null);
     }
 
@@ -464,7 +464,7 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn per step
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem lineAbsolute(double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
+    public @NotNull ParticleSystem lineAbsolute(double x1, double y1, double z1, double x2, double y2, double z2, double steps, int count) {
         this.ensureDefaultParticle();
         return this.lineAbsolute(this.particle, x1, y1, z1, x2, y2, z2, steps, count, this.data);
     }
@@ -479,7 +479,7 @@ public class ParticleSystem {
      * @param data     Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem lineAbsolute(Particle particle, Location a, Location b, double steps, int count, Particle.DustOptions data) {
+    public @NotNull ParticleSystem lineAbsolute(@NotNull Particle particle, @NotNull Location a, @NotNull Location b, double steps, int count, Particle.DustOptions data) {
         return this.lineAbsolute(particle, a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ(), steps, count, data);
     }
 
@@ -492,7 +492,7 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn per step
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem lineAbsolute(Particle particle, Location a, Location b, double steps, int count) {
+    public @NotNull ParticleSystem lineAbsolute(@NotNull Particle particle, @NotNull Location a, @NotNull Location b, double steps, int count) {
         return this.lineAbsolute(particle, a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ(), steps, count, null);
     }
 
@@ -504,8 +504,8 @@ public class ParticleSystem {
      * @param count    The number of particles to spawn per step
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem lineAbsolute(Location a, Location b, double steps,
-            int count) {
+    public @NotNull ParticleSystem lineAbsolute(@NotNull Location a, @NotNull Location b, double steps,
+                                                int count) {
         this.ensureDefaultParticle();
         return this.lineAbsolute(this.particle, a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ(), steps, count, this.data);
     }
@@ -517,7 +517,7 @@ public class ParticleSystem {
      * @param data Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape, @Nullable Particle.DustOptions data) {
         this.ensureRelative();
         shape.draw(this, particle, data);
         return this;
@@ -529,7 +529,7 @@ public class ParticleSystem {
      * @param shape The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape) {
+    public @NotNull ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape) {
         return this.shape(particle, shape, null);
     }
 
@@ -538,7 +538,7 @@ public class ParticleSystem {
      * @param shape The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shape(Shape shape) {
+    public @NotNull ParticleSystem shape(@NotNull Shape shape) {
         this.ensureDefaultParticle();
         return this.shape(this.particle, shape, this.data);
     }
@@ -550,7 +550,7 @@ public class ParticleSystem {
      * @param data Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shapeAbsolute(@NotNull Particle particle, @NotNull Shape shape, @Nullable Particle.DustOptions data) {;
+    public @NotNull ParticleSystem shapeAbsolute(@NotNull Particle particle, @NotNull Shape shape, @Nullable Particle.DustOptions data) {;
         shape.drawAbsolute(this, particle, data);
         return this;
     }
@@ -561,7 +561,7 @@ public class ParticleSystem {
      * @param shape The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shapeAbsolute(@NotNull Particle particle, @NotNull Shape shape) {
+    public @NotNull ParticleSystem shapeAbsolute(@NotNull Particle particle, @NotNull Shape shape) {
         return this.shapeAbsolute(particle, shape, null);
     }
 
@@ -570,7 +570,7 @@ public class ParticleSystem {
      * @param shape The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shapeAbsolute(@NotNull Shape shape) {
+    public @NotNull ParticleSystem shapeAbsolute(@NotNull Shape shape) {
         this.ensureDefaultParticle();
         return this.shapeAbsolute(this.particle, shape, this.data);
     }

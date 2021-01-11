@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A class for parsing configurations
@@ -23,7 +25,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Translation {
 
     // {VARIABLE|pluralize:"y,ies"}
-    private static String pluralize(String lvalue, String arg) {
+    private static String pluralize(String lvalue, @NotNull String arg) {
         String singular = "", plural = (arg.isEmpty() ? "s" : arg);
         if (arg.contains(",")) {
             String values[] = arg.trim().split(",");
@@ -37,7 +39,7 @@ public class Translation {
             return plural;
     }
 
-    private static String yesno(String lvalue, String arg) {
+    private static String yesno(String lvalue, @NotNull String arg) {
         if (arg.isEmpty())
             return Boolean.valueOf(lvalue) ? "yes" : "no";
         else if (arg.contains(","))
@@ -62,7 +64,7 @@ public class Translation {
      * function in the map below as:
      * {@code datetime(Variables.get("TimeBanned"), "HH:MM:SS")}
      */
-    public static TreeMap<String, BiFunction<String, String, String>> functions = new TreeMap<String, BiFunction<String, String, String>>(
+    public static @NotNull TreeMap<String, BiFunction<String, String, String>> functions = new TreeMap<String, BiFunction<String, String, String>>(
             String.CASE_INSENSITIVE_ORDER) {
         {
             put("pluralize", (String lvalue, String arg) -> {
@@ -156,7 +158,7 @@ public class Translation {
      * @param message Message containing sequences of `chars` in it
      * @return {@link java.lang.String}.
      */
-    public static String translateColors(String chars, String message) {
+    public static @Nullable String translateColors(@Nullable String chars, @Nullable String message) {
         if (message == null)
             return null;
 
@@ -167,7 +169,7 @@ public class Translation {
         if (!message.contains(chars))
             return message;
 
-        StringBuilder retstr = new StringBuilder(message);
+        @NotNull StringBuilder retstr = new StringBuilder(message);
         for (int pos = message.indexOf(chars); pos != -1; pos = message.indexOf(chars, pos)) {
             if (pos + 1 > message.length())
                 break;
@@ -200,12 +202,12 @@ public class Translation {
      *                  placeholders and their functions
      * @return {@link java.lang.String}
      */
-    public static String translateVariables(LocaleProvider locale, String message, Map<String, String> Variables) {
+    public static @NotNull String translateVariables(@NotNull LocaleProvider locale, @NotNull String message, @Nullable Map<String, String> Variables) {
         // If it doesn't have the starting char for variables, skip it.
         if (!message.contains("{") || Variables == null)
             return message;
 
-        String retstr = message;
+        @NotNull String retstr = message;
         // Try and iterate over all our variables.
         for (int pos = retstr.indexOf("{"), pos2 = retstr.indexOf("}", pos); pos != -1
                 && pos2 != -1; pos = retstr.indexOf("{", pos + 1), pos2 = retstr.indexOf("}", pos + 1)) {
@@ -214,8 +216,8 @@ public class Translation {
                 break;
 
             // Substring.
-            String variable = retstr.substring(pos + 1, pos2);
-            String replacement = null;
+            @NotNull String variable = retstr.substring(pos + 1, pos2);
+            @Nullable String replacement = null;
 
             // If the variable contains a | (verticle bar), then we tokenize on `|` and
             // treat the lvalue as a variable and the rvalue as a function name. The
@@ -224,7 +226,7 @@ public class Translation {
             // like conditionally pluralize words and such in the config.
             if (variable.contains("|")) {
                 String values[] = variable.split("\\|");
-                String rvalue = values[1], lvalue = values[0].trim();
+                @NotNull String rvalue = values[1], lvalue = values[0].trim();
 
                 // Allow recursive locale nodes.
                 String value = Variables.get(lvalue);
@@ -234,7 +236,7 @@ public class Translation {
                 if (rvalue.contains(":")) {
                     int nextsplit = rvalue.indexOf(":");
                     rvalue = rvalue.substring(0, nextsplit);
-                    String argument = values[1].substring(nextsplit + 2, values[1].length() - 1);
+                    @NotNull String argument = values[1].substring(nextsplit + 2, values[1].length() - 1);
 
                     replacement = functions.get(rvalue.trim()).apply(value, argument);
                 } else // (Functions.containsKey(rvalue.trim()) &&
@@ -269,9 +271,9 @@ public class Translation {
      * @param Variables  A list of variables to be parsed by the placeholder
      * @return {@link java.lang.String}
      */
-    public static String translate(LocaleProvider locale, String message, String ColorChars,
-            Map<String, String> Variables) {
-        String retstr = Translation.translateVariables(locale, message, Variables);
+    public static @Nullable String translate(@NotNull LocaleProvider locale, @NotNull String message, String ColorChars,
+                                             Map<String, String> Variables) {
+        @Nullable String retstr = Translation.translateVariables(locale, message, Variables);
         retstr = Translation.translateColors(ColorChars, retstr);
         return retstr;
     }

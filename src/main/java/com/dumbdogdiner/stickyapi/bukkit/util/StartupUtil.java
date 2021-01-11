@@ -59,7 +59,7 @@ public class StartupUtil {
      * @param localeProvider The plugin's locale provider
      * @return False if something went wrong
      */
-    public static LocaleProvider setupLocale(@NotNull JavaPlugin plugin, @Nullable LocaleProvider localeProvider) {
+    public static @org.jetbrains.annotations.Nullable LocaleProvider setupLocale(@NotNull JavaPlugin plugin, @Nullable LocaleProvider localeProvider) {
         localeProvider = new LocaleProvider(new File(plugin.getDataFolder(), "locale"));
         int loadedLocales = localeProvider.loadAllLocales();
         boolean localeEnabled = localeProvider.setDefaultLocale("messages.en_us");

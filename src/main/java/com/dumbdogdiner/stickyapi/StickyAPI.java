@@ -6,6 +6,7 @@ package com.dumbdogdiner.stickyapi;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
@@ -25,14 +26,14 @@ public class StickyAPI {
 
     @Getter
     @Setter
-    private static ExecutorService pool = Executors.newCachedThreadPool();
+    private static @NotNull ExecutorService pool = Executors.newCachedThreadPool();
 
     /**
      * Provides a wrapper for {@link java.lang.Class#getResourceAsStream(String)} (String)}
      * @param resourceName The resource to get
      * @return an {@link InputStream} to that resource
      */
-    public static InputStream getResourceAsStream(String resourceName){
+    public static InputStream getResourceAsStream(@NotNull String resourceName){
         return StickyAPI.class.getResourceAsStream(resourceName);
     }
 

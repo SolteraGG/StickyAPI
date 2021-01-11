@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
@@ -17,18 +19,18 @@ import java.lang.reflect.Modifier;
 public final class FieldUtil {
     private FieldUtil() {}
 
-    private static final VarHandle MODIFIERS;
+    private static final @NotNull VarHandle MODIFIERS;
 
     static {
         try {
-            var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
+            @NotNull var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
             MODIFIERS = lookup.findVarHandle(Field.class, "modifiers", int.class);
-        } catch (IllegalAccessException | NoSuchFieldException ex) {
+        } catch (@NotNull IllegalAccessException | NoSuchFieldException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public static void makeNonFinal(Field field) {
+    public static void makeNonFinal(@NotNull Field field) {
         System.out.println("*** StickyAPI Warning: FieldUtil#makeNonFinal is a hacky workaround to get around limitations with Java 12+! This will probably also generate a JVM warning for illegal reflective access!***");
         int mods = field.getModifiers();
         if (Modifier.isFinal(mods)) {

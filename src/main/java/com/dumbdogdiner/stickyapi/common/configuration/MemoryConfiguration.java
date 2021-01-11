@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * This is useful for temporary Configurations for providing defaults.
  */
 public class MemoryConfiguration extends MemorySection implements Configuration {
-    protected Configuration defaults;
+    protected @Nullable Configuration defaults;
     protected MemoryConfigurationOptions options;
 
     /**
@@ -49,7 +49,7 @@ public class MemoryConfiguration extends MemorySection implements Configuration 
     public void addDefaults(@NotNull Map<String, Object> defaults) {
         Validate.notNull(defaults, "Defaults may not be null");
 
-        for (Map.Entry<String, Object> entry : defaults.entrySet()) {
+        for (Map.@NotNull Entry<String, Object> entry : defaults.entrySet()) {
             addDefault(entry.getKey(), entry.getValue());
         }
     }
