@@ -82,20 +82,6 @@ public final class NumberUtil {
     }
 
     /**
-     * Get a random number within a range
-     * 
-     * @param min minimum value
-     * @param max maximum value
-     * @return a random integer within the specified range
-     * @throws IllegalArgumentException when min is greater than max
-     */
-    public static int getRandomNumber(@NotNull int min, @NotNull int max) {
-        if (min >= max)
-            throw new IllegalArgumentException("Min may not be greater than max!");
-        return (int) ((Math.random() * (max - min)) + min);
-    }
-
-    /**
      * Try to return long as an int, capped at int max and int min
      * <p>
      * Returns the long as a capped int
