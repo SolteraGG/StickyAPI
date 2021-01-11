@@ -61,16 +61,14 @@ dependencies {
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'com.google.guava:guava:30.1-jre'
     
-    // JUnit 5 Testing
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    // Tests - JUnit 5
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 
-    // Mocking
-    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
-    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
-    testImplementation("org.powermock:powermock-module-junit4-rule:2.0.9")
-    testImplementation("org.powermock:powermock-classloading-xstream:2.0.9")
+    // Tests - Mocking Suite (eg. mocking Bukkit for tests)
     testImplementation("org.mockito:mockito-core:3.7.0")
+    
+    // Tests - Mocked Bukkit Project (Has some additional features)
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
     testImplementation 'it.unimi.dsi:fastutil:8.4.4'
 }
