@@ -10,6 +10,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.ServerOperator;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -23,41 +24,74 @@ import java.util.stream.Collectors;
 public class PlayerSelector {
 
     /**
+     * <p>
+     * Get the offset between two {@link org.bukkit.Location} objects
+     * in a 3d environment using {@link Vector} objects.
+     * </p>
+     *
+     * @param pointA first location vector
+     * @param pointB second location vector
+     * @return the offset (distance) between the given locations
+     */
+    public static double offset(Vector pointA, Vector pointB) {
+        return pointA.clone().subtract(pointB).length();
+    }
+
+    /**
+     * <p>
      * This Predicate will return true if the player is not in gamemode spectator
+     * </p>
      */
     public static Predicate<Player> NOT_SPECTATING = player -> player.getGameMode() != GameMode.SPECTATOR;
 
     /**
+     * <p>
      * This Predicate will return true if the player is in gamemode survival
+     * </p>
      */
     public static Predicate<Player> IN_SURVIVAL = player -> player.getGameMode() == GameMode.SURVIVAL;
 
     /**
+     * <p>
+     * This Predicate will return true if the player is in gamemode creative
+     * </p>
+     */
+    public static Predicate<Player> IN_CREATIVE = player -> player.getGameMode() == GameMode.CREATIVE;
+
+    /**
+     * <p>
      * This Predicate will return true if the player is an operator
+     * </p>
      */
     public static Predicate<Player> IS_OPERATOR = ServerOperator::isOp;
 
     /**
+     * <p>
      * This Predicate will return true if the player is within the radius
      * of a given location
+     * </p>
      */
     public static Predicate<Player> inRange(Location center, double radius) {
-        return player -> MathUtil.offset(center.toVector(), player.getLocation().toVector()) <= radius;
+        return player -> offset(center.toVector(), player.getLocation().toVector()) <= radius;
     }
 
     /**
+     * <p>
      * Get a random player matching a given condition
+     * </p>
      *
      * @param condition the condition the player should match
      * @return random player matching the given condition
      */
     public static Player selectRandom(Predicate<Player> condition) {
         List<Player> list = selectPlayers(condition);
-        return list.get(MathUtil.rInt(list.size()));
+        return list.get(MathUtil.randomInt(list.size()));
     }
 
     /**
+     * <p>
      * Get a all players matching a given condition
+     * </p>
      *
      * @param condition the condition the player should match
      * @return list of players matching the given condition
@@ -67,7 +101,9 @@ public class PlayerSelector {
     }
 
     /**
+     * <p>
      * Get all players visible to another player
+     * </p>
      *
      * @param sender the player that should be tested
      * @return list of players matching the given condition
@@ -77,7 +113,9 @@ public class PlayerSelector {
     }
 
     /**
+     * <p>
      * Get all players with a specific permission
+     * </p>
      *
      * @param permission the permission that should be matched
      * @return list of players matching the given condition

@@ -102,6 +102,8 @@ public final class NumberUtil {
      * Get a random number within a range
      * <p>
      * Returns a random integer within the specified range
+     *
+     * @deprecated Please use {@link MathUtil#randomInt(int)} instead!
      * 
      * @param min minimum value
      * @param max maximum value
