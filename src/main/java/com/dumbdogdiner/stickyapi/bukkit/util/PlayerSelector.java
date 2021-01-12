@@ -10,6 +10,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.ServerOperator;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import java.util.List;
@@ -57,6 +58,20 @@ public class PlayerSelector {
      * </p>
      */
     public static Predicate<Player> IN_CREATIVE = player -> player.getGameMode() == GameMode.CREATIVE;
+
+    /**
+     * <p>
+     * This Predicate will return true if the player is in gamemode adventure
+     * </p>
+     */
+    public static Predicate<Player> IN_ADVENTURE_MODE = player -> player.getGameMode() == GameMode.ADVENTURE;
+
+    /**
+     * <p>
+     * This Predicate will return true if the player is in gamemode spectator
+     * </p>
+     */
+    public static Predicate<Player> IN_SPECTATOR = player -> player.getGameMode() == GameMode.SPECTATOR;
 
     /**
      * <p>
