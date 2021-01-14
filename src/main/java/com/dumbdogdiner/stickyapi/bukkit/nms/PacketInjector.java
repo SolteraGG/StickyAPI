@@ -6,6 +6,7 @@ package com.dumbdogdiner.stickyapi.bukkit.nms;
 
 import io.netty.channel.*;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 
@@ -42,7 +43,7 @@ public class PacketInjector {
         }
     }
 
-    protected void addService(InjectionService service, Player player) {
+    protected void addService(InjectionService service, @NotNull Player player) {
         ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
             @Override
             public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
@@ -78,7 +79,7 @@ public class PacketInjector {
      * @return the NetworkManager object
      * @throws IllegalAccessException may be thrown if the <code>networkManager</code> field can not be accessed
      */
-    protected Object getNetworkManager(Player player) throws IllegalAccessException {
+    protected Object getNetworkManager(@NotNull Player player) throws IllegalAccessException {
         return networkManagerField.get(BukkitHandler.getConnection(player));
     }
 
@@ -91,9 +92,8 @@ public class PacketInjector {
      * @return The {@link io.netty.channel.Channel} object.
      *         May return <code>null</code> if there is no {@link io.netty.channel.Channel} object
      *         or when NetworkManager is null.
-     * @throws IllegalAccessException
      */
-    protected Channel getChannel(Object networkManager) throws IllegalAccessException {
+    protected Channel getChannel(@NotNull Object networkManager) {
         Channel ch = null;
         try {
             ch = (Channel) channel.get(networkManager);

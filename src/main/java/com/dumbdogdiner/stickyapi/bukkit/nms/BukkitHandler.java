@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.bukkit.nms;
 import io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -53,7 +54,7 @@ public class BukkitHandler {
      * @param player Bukkit player object.
      * @return Object of player connection.
      */
-    public static Object getConnection(Player player) {
+    public static Object getConnection(@NotNull Player player) {
         try {
             Object nmsPlayer = getCraftPlayer(player);
             Field conField = nmsPlayer.getClass().getField("playerConnection");
@@ -92,7 +93,7 @@ public class BukkitHandler {
      * @param player Bukkit player object.
      * @return Object of CraftBukkit player.
      */
-    public static Object getCraftPlayer(Player player) {
+    public static Object getCraftPlayer(@NotNull Player player) {
         try {
             return player.getClass().getMethod("getHandle").invoke(player);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -110,8 +111,10 @@ public class BukkitHandler {
      * @param player Bukkit player object
      * @param packet Packet object (Must be of type <code>net.minecraft.server.[VERSION].Packet</code>)
      */
-    public static void sendPacket(Player player, Object packet) {
+    public static void sendPacket(@NotNull Player player, @NotNull Object packet) {
         try {
+            Class<?> packetClass = getNMSClass("Packet");
+
             Class<?> nmsPacket = getNMSClass("Packet");
             Object conn = getConnection(player);
 
@@ -131,7 +134,7 @@ public class BukkitHandler {
      * @param service Code that should be executed
      * @param player Bukkit player object
      */
-    public static void injectPlayer(PacketInjector.InjectionService service, Player player) {
+    public static void injectPlayer(PacketInjector.InjectionService service, @NotNull Player player) {
         PacketInjector packetInjector = new PacketInjector();
         packetInjector.addService(service, player);
     }
@@ -145,7 +148,7 @@ public class BukkitHandler {
      *
      * @param player Bukkit player object
      */
-    public static void removeInjection(Player player) {
+    public static void removeInjection(@NotNull Player player) {
         try {
             PacketInjector packetInjector = new PacketInjector();
             Channel ch = packetInjector.getChannel(packetInjector.getNetworkManager(player));
