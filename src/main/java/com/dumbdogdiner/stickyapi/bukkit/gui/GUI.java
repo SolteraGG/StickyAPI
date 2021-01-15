@@ -24,8 +24,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
- * Represents an inventory GUI. Item stacks can be placed at locations in the GUI, and can be assigned tags and
- * callbacks. A single GUI can be shared by multiple players, as updates will appear for all players viewing the GUI.
+ * Represents an inventory GUI. Item stacks can be placed at locations in the
+ * GUI, and can be assigned tags and callbacks. A single GUI can be shared by
+ * multiple players, as updates will appear for all players viewing the GUI.
  */
 public class GUI {
     /** The number of rows in the inventory */
@@ -40,7 +41,10 @@ public class GUI {
     @Getter
     private @NotNull String name;
 
-    /** The inventory used by this GUI. The inventory is replaced each time the name of this GUI changes */
+    /**
+     * The inventory used by this GUI. The inventory is replaced each time the name
+     * of this GUI changes
+     */
     @Getter
     private @NotNull Inventory inventory;
 
@@ -50,8 +54,9 @@ public class GUI {
 
     /**
      * Create a GUI with the given number of rows.
-     * @param rows The number of rows in the inventory, must be between 1 and 6
-     * @param name The name of the GUI, displayed as the inventory's name.
+     * 
+     * @param rows   The number of rows in the inventory, must be between 1 and 6
+     * @param name   The name of the GUI, displayed as the inventory's name.
      * @param plugin The plugin responsible for this GUI
      */
     public GUI(int rows, @NotNull String name, @NotNull Plugin plugin) {
@@ -80,8 +85,10 @@ public class GUI {
 
     /**
      * Adds an item stack to the GUI.
-     * @param x The x position of the item stack, must be between 0 and 8
-     * @param y The y position of the item stack, must be between 0 and {@link GUI#getRows()} - 1
+     * 
+     * @param x    The x position of the item stack, must be between 0 and 8
+     * @param y    The y position of the item stack, must be between 0 and
+     *             {@link GUI#getRows()} - 1
      * @param slot The {@link GUISlot} to put in this location.
      */
     public void addSlot(int x, int y, @NotNull GUISlot slot) {
@@ -92,13 +99,18 @@ public class GUI {
 
     /**
      * Adds an item stack to the GUI.
-     * @param x The x position of the item stack, must be between 0 and 8
-     * @param y The y position of the item stack, must be between 0 and {@link GUI#getRows()} - 1
-     * @param stack The item stack to put at this location
-     * @param tag An optional tag that be used to identify the item in {@link GUI#onInventoryClick(InventoryClickEvent, String)}
-     * @param action An optional procedure to run when this item is clicked, receives the {@link InventoryClickEvent}
+     * 
+     * @param x      The x position of the item stack, must be between 0 and 8
+     * @param y      The y position of the item stack, must be between 0 and
+     *               {@link GUI#getRows()} - 1
+     * @param stack  The item stack to put at this location
+     * @param tag    An optional tag that be used to identify the item in
+     *               {@link GUI#onInventoryClick(InventoryClickEvent, String)}
+     * @param action An optional procedure to run when this item is clicked,
+     *               receives the {@link InventoryClickEvent}
      */
-    public void addSlot(int x, int y, @NotNull ItemStack stack, @Nullable String tag, @Nullable BiConsumer<InventoryClickEvent, GUI> action) {
+    public void addSlot(int x, int y, @NotNull ItemStack stack, @Nullable String tag,
+            @Nullable BiConsumer<InventoryClickEvent, GUI> action) {
         addSlot(x, y, new GUISlot(stack, tag, action));
     }
 
@@ -116,11 +128,15 @@ public class GUI {
 
     /**
      * Add a {@link ClickableSlot} to the GUI.
-     * @param cs The clickable slot to put into the GUI
-     * @param tag An optional tag that be used to identify the item in {@link GUI#onInventoryClick(InventoryClickEvent, String)}
-     * @param action An optional procedure to run when this item is clicked, receives the {@link InventoryClickEvent}
+     * 
+     * @param cs     The clickable slot to put into the GUI
+     * @param tag    An optional tag that be used to identify the item in
+     *               {@link GUI#onInventoryClick(InventoryClickEvent, String)}
+     * @param action An optional procedure to run when this item is clicked,
+     *               receives the {@link InventoryClickEvent}
      */
-    public void addSlot(@NotNull ClickableSlot cs, @Nullable String tag, @Nullable BiConsumer<InventoryClickEvent, GUI> action) {
+    public void addSlot(@NotNull ClickableSlot cs, @Nullable String tag,
+            @Nullable BiConsumer<InventoryClickEvent, GUI> action) {
         addSlot(cs.getX(), cs.getY(), cs.getItem(), tag, action);
     }
 
@@ -138,8 +154,10 @@ public class GUI {
 
     /**
      * Removes a slot in the GUI.
+     * 
      * @param x The x position of the slot, must be between 0 and 8
-     * @param y The y position of the slot, must be between 0 and {@link GUI#getRows()} - 1
+     * @param y The y position of the slot, must be between 0 and
+     *          {@link GUI#getRows()} - 1
      */
     public void removeSlot(int x, int y) {
         int index = makeIndex(x, y);
@@ -149,8 +167,10 @@ public class GUI {
 
     /**
      * Gets a slot in the GUI.
+     * 
      * @param x The x position of the slot, must be between 0 and 8
-     * @param y The y position of the slot, must be between 0 and {@link GUI#getRows()} - 1
+     * @param y The y position of the slot, must be between 0 and
+     *          {@link GUI#getRows()} - 1
      * @return The {@link GUISlot} at this location, or null if none exists
      */
     public @Nullable GUISlot getSlot(int x, int y) {
@@ -159,6 +179,7 @@ public class GUI {
 
     /**
      * Open this GUI for a player.
+     * 
      * @param player The player who will see this GUI
      */
     public void open(Player player) {
@@ -175,7 +196,8 @@ public class GUI {
             public void onInventoryClick(InventoryClickEvent event) {
                 if (event.getClickedInventory() == inventory) {
                     event.setCancelled(true);
-                    // only allow basic clicks, other clicks might allow players to smuggle gui items out of the inv
+                    // only allow basic clicks, other clicks might allow players to smuggle gui
+                    // items out of the inv
                     switch (event.getClick()) {
                         case LEFT:
                         case RIGHT:
@@ -204,8 +226,10 @@ public class GUI {
                     InventoryOpenEvent.getHandlerList().unregister(this);
                     InventoryClickEvent.getHandlerList().unregister(this);
                     InventoryCloseEvent.getHandlerList().unregister(this);
-                    // if a player hotbars an item and closes the gui on the same tick, their client thinks they have
-                    // the item when they really do not, and if creative, the server believes them. this prevents that
+                    // if a player hotbars an item and closes the gui on the same tick, their client
+                    // thinks they have
+                    // the item when they really do not, and if creative, the server believes them.
+                    // this prevents that
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         ((Player) event.getPlayer()).updateInventory();
                     });
@@ -217,23 +241,30 @@ public class GUI {
 
     /**
      * Fired when an inventory created by this class is opened.
+     * 
      * @param event The event
      */
-    protected void onInventoryOpen(@NotNull InventoryOpenEvent event) {}
+    protected void onInventoryOpen(@NotNull InventoryOpenEvent event) {
+    }
 
     /**
-     * Fired when a slot is clicked in an inventory created by this class. The event will automatically prevent players
-     * from taking items out of the inventory, and it is recommended not to change this behavior.
+     * Fired when a slot is clicked in an inventory created by this class. The event
+     * will automatically prevent players from taking items out of the inventory,
+     * and it is recommended not to change this behavior.
+     * 
      * @param event The event
-     * @param tag The tag associated with the item, if any
+     * @param tag   The tag associated with the item, if any
      */
-    protected void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable String tag) {}
+    protected void onInventoryClick(@NotNull InventoryClickEvent event, @Nullable String tag) {
+    }
 
     /**
      * Fired when an inventory created by this class is closed.
+     * 
      * @param event The event
      */
-    protected void onInventoryClose(@NotNull InventoryCloseEvent event) {}
+    protected void onInventoryClose(@NotNull InventoryCloseEvent event) {
+    }
 
     // custom setter for inventory name, as inv name normally cannot be changed
     public void setName(@NotNull String name) {
@@ -249,6 +280,7 @@ public class GUI {
 
     /**
      * Create a copy of this GUI.
+     * 
      * @return A copy of this GUI with no viewers.
      */
     public @NotNull GUI duplicate() {
