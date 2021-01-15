@@ -50,7 +50,7 @@ public class ReflectionUtilNoSuchFieldTest {
         ReflectionUtil.setProtectedValue(instance, "nonexistent_field", "value");
 
         assertEquals(
-                "*** com.dumbdogdiner.stickyapi.common.util.ReflectionUtilNoSuchFieldTest$ExampleClass:java.lang.NoSuchFieldException: nonexistent_field"
+                "*** com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtilNoSuchFieldTest$ExampleClass:java.lang.NoSuchFieldException: nonexistent_field"
                         + System.lineSeparator(),
                 outContent.toString());
     }
@@ -62,7 +62,7 @@ public class ReflectionUtilNoSuchFieldTest {
         ReflectionUtil.getProtectedValue(c, "nonexistent_field");
 
         assertEquals(
-                "*** com.dumbdogdiner.stickyapi.common.util.ReflectionUtilNoSuchFieldTest$ExampleClass:java.lang.NoSuchFieldException: nonexistent_field"
+                "*** com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtilNoSuchFieldTest$ExampleClass:java.lang.NoSuchFieldException: nonexistent_field"
                         + System.lineSeparator(),
                 outContent.toString());
     }
@@ -74,7 +74,7 @@ public class ReflectionUtilNoSuchFieldTest {
         ReflectionUtil.invokeProtectedMethod(c, "nonexistent_field");
 
         assertEquals(
-                "*** com.dumbdogdiner.stickyapi.common.util.ReflectionUtilNoSuchFieldTest$ExampleClass.nonexistent_field(): java.lang.NoSuchMethodException: com.dumbdogdiner.stickyapi.common.util.ReflectionUtilNoSuchFieldTest$ExampleClass.nonexistent_field()"
+                "*** com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtilNoSuchFieldTest$ExampleClass.nonexistent_field(): java.lang.NoSuchMethodException: com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtilNoSuchFieldTest$ExampleClass.nonexistent_field()"
                         + System.lineSeparator(),
                 outContent.toString());
     }
