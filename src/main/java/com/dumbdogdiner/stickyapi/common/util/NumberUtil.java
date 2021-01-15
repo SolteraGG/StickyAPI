@@ -4,10 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
-import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 /**
