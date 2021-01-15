@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration.file;
@@ -167,9 +167,8 @@ public class YamlConfiguration extends FileConfiguration {
     /**
      * Creates a new {@link YamlConfiguration}, loading from the given file.
      * <p>
-     * Any errors loading the Configuration will be logged and then ignored.
-     * If the specified input is not a valid config, a blank config will be
-     * returned.
+     * Any errors loading the Configuration will be logged and then ignored. If the
+     * specified input is not a valid config, a blank config will be returned.
      * <p>
      * The encoding used may follow the system dependent default.
      *
@@ -198,9 +197,8 @@ public class YamlConfiguration extends FileConfiguration {
     /**
      * Creates a new {@link YamlConfiguration}, loading from the given reader.
      * <p>
-     * Any errors loading the Configuration will be logged and then ignored.
-     * If the specified input is not a valid config, a blank config will be
-     * returned.
+     * Any errors loading the Configuration will be logged and then ignored. If the
+     * specified input is not a valid config, a blank config will be returned.
      *
      * @param reader input
      * @return resulting configuration

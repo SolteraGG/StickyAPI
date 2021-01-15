@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util.url;
@@ -53,18 +53,20 @@ public class URLUtil {
 
         String[] split = text.split(" ");
         int i = 0;
-        for(String s : split) {
+        for (String s : split) {
             URLPair url = findURL(s + " ");
-            if((url) == null) {
+            if ((url) == null) {
                 tmp.setText(tmp.getText() + s + " ");
-                if(split.length == i + 1) finalComp.addExtra(tmp);
+                if (split.length == i + 1)
+                    finalComp.addExtra(tmp);
             } else {
                 finalComp.addExtra(tmp);
                 tmp = new TextComponent();
 
                 TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
                 urlComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.getFullPath()));
-                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7Click to open URL"), new Text("\n§8" + url.getFullPath())));
+                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7Click to open URL"),
+                        new Text("\n§8" + url.getFullPath())));
                 urlComponent.setBold(true);
                 finalComp.addExtra(urlComponent);
             }

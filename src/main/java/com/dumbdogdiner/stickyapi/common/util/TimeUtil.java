@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
@@ -20,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
  * Utility methods for dealing with time and duration parsing.
  */
 public final class TimeUtil {
-    private TimeUtil() {}
+    private TimeUtil() {
+    }
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
 

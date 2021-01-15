@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration.serialization;
@@ -18,8 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Target(ElementType.TYPE)
 public @interface DelegateDeserialization {
     /**
-     * Which class should be used as a delegate for this classes
-     * deserialization
+     * Which class should be used as a delegate for this classes deserialization
      *
      * @return Delegate class
      */

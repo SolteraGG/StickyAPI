@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.arguments;
@@ -475,7 +475,9 @@ public class Arguments {
 
     /**
      * Fetch a parsed argument from this arguments object.
-     * <p>Returns the argument, if it exists
+     * <p>
+     * Returns the argument, if it exists
+     * 
      * @param name The name of the argument to fetch
      * @return {@link java.lang.String}
      * @deprecated Renamed in 2.0, use {@link #getString(String)} instead.

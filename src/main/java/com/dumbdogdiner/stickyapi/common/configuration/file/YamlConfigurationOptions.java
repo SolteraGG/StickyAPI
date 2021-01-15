@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration.file;
@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Various settings for controlling the input and output of a {@link
- * YamlConfiguration}
+ * Various settings for controlling the input and output of a
+ * {@link YamlConfiguration}
  */
 public class YamlConfigurationOptions extends FileConfigurationOptions {
     private int indent = 2;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.gui;
@@ -22,16 +22,23 @@ public class GUISlot {
     @Getter
     private final @NotNull ItemStack itemStack;
 
-    /** An optional tag that be used to identify the item in {@link GUI#onInventoryClick(InventoryClickEvent, String)} */
+    /**
+     * An optional tag that be used to identify the item in
+     * {@link GUI#onInventoryClick(InventoryClickEvent, String)}
+     */
     @Getter
     private final @Nullable String tag;
 
-    /** An optional procedure to run when this item is clicked, receives the {@link InventoryClickEvent} */
+    /**
+     * An optional procedure to run when this item is clicked, receives the
+     * {@link InventoryClickEvent}
+     */
     @Getter
     private final @Nullable BiConsumer<InventoryClickEvent, GUI> action;
 
     /**
      * Create a copy of this GUISlot.
+     * 
      * @return A copy of this slot.
      */
     public @NotNull GUISlot duplicate() {
