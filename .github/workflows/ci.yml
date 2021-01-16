@@ -37,3 +37,13 @@ jobs:
       run: chmod +x gradlew
     - name: Run the license formatter checker
       run: ./gradlew licenseMain licenseTest
+  javadoc-check:
+    runs-on: ubuntu-latest
+    container:
+      image: jcxldn/openjdk-alpine:11-jdk
+    steps:
+    - uses: actions/checkout@v2
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build javadocs
+      run: ./gradlew javadoc
