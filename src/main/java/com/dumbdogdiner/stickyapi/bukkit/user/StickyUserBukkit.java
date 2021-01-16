@@ -12,13 +12,19 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.UUID;
 
-@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "unused"})
+/**
+ * Debate is required as to the merits and drawbacks of this specific class
+ */
+@SuppressWarnings({"BooleanMethodIsAlwaysInverted", "unused", "ConstantConditions"})
 public class StickyUserBukkit extends StickyUser {
     public StickyUserBukkit(@NotNull Player p) {
         super(p.getUniqueId(), p.getName());
@@ -88,6 +94,21 @@ public class StickyUserBukkit extends StickyUser {
         @NotNull PlayerHeadBuilder gen = new PlayerHeadBuilder(this);
         gen.quantity(amt);
         return gen.build();
+    }
+
+    public @NotNull Collection<PotionEffect> getEffects() {
+        if(isOnline()) {
+            return toBukkitPlayer().getActivePotionEffects();
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public boolean applyEffect(@NotNull PotionEffect effect){
+        if(isOnline()){
+            return effect.apply(toBukkitPlayer());
+        }
+        return false;
     }
 
     public @Nullable Player toBukkitPlayer(){

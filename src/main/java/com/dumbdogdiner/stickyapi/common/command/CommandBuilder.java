@@ -12,13 +12,12 @@
  */
 package com.dumbdogdiner.stickyapi.common.command;
 
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-
-import lombok.Getter;
 
 public abstract class CommandBuilder<T extends CommandBuilder<T>> {
 

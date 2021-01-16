@@ -8,7 +8,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
-import com.dumbdogdiner.stickyapi.common.webapis.CachedMojangAPI;
+import com.dumbdogdiner.stickyapi.common.webapis.mojang.CachedMojangAPI;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.annotations.DoNotCall;
 import org.bukkit.Bukkit;
@@ -96,7 +96,9 @@ public class PlayerHeadBuilder extends SkullBuilder {
      */
     public @NotNull PlayerHeadBuilder freeze() {
         if (player != null) {
-            super.texture(CachedMojangAPI.getSkinTexture(player));
+            String textureString = CachedMojangAPI.getTextureString(player.getUniqueId());
+            assert textureString != null;
+            super.texture(textureString);
             frozen = true;
         }
         return this;

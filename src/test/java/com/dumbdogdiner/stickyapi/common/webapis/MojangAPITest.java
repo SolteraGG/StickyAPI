@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.common.webapis;
 
+import com.dumbdogdiner.stickyapi.common.webapis.mojang.OldAPI;
+import com.dumbdogdiner.stickyapi.common.webapis.mojang.MojangStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -12,13 +14,4 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MojangAPITest {
 
-    @Test
-    void getMojangAPIStatus() {
-        Map<String, MojangStatus> status = MojangAPI.getMojangAPIStatus();
-        assertTrue(status.size() > 0);
-        System.out.println("Current status of Mojang APIs:");
-        for (Map.Entry<String, MojangStatus>  singleStat: status.entrySet()){
-            System.out.println(singleStat.getKey() + ": " + singleStat.getValue().toString());
-        }
-    }
 }
