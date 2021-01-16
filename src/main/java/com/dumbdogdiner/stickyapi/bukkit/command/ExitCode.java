@@ -11,7 +11,7 @@ import lombok.Getter;
  * 
  * @deprecated use {@link com.dumbdogdiner.stickyapi.common.command.ExitCode} as
  *             this will be removed in the next release
- * @see {@link com.dumbdogdiner.stickyapi.common.command.ExitCode}
+ * @see ExitCode {@link com.dumbdogdiner.stickyapi.common.command.ExitCode}
  */
 @Deprecated
 public enum ExitCode {

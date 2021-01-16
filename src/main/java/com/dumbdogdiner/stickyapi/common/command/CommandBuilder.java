@@ -34,7 +34,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
     HashMap<String, T> subCommands = new HashMap<>();
 
     /**
-     * Create a new [@link CommandBuilderBase} instance
+     * Create a new [@link CommandBuilder} instance
      * <p>
      * Used to build and register Bukkit commands
      * 
@@ -48,7 +48,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * If this command should run asynchronously
      * 
      * @param synchronous if this command should run synchronously
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T synchronous(@NotNull Boolean synchronous) {
         this.synchronous = synchronous;
@@ -58,7 +58,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
     /**
      * Set this command to run asynchronously
      * 
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T synchronous() {
         return this.synchronous(true);
@@ -68,7 +68,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * Set the cooldown for this command
      * 
      * @param cooldown in milliseconds
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T cooldown(@NotNull Long cooldown) {
         this.cooldown = cooldown;
@@ -80,7 +80,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * {@link org.bukkit.entity.Player}
      * 
      * @param requiresPlayer If this command should require a player as the executor
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T requiresPlayer(@NotNull Boolean requiresPlayer) {
         this.requiresPlayer = requiresPlayer;
@@ -91,7 +91,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * If this command requires the sender to be an instance of
      * {@link org.bukkit.entity.Player}
      * 
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T requiresPlayer() {
         return this.requiresPlayer(true);
@@ -101,7 +101,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * If this command should play a sound upon exiting
      * 
      * @param playSound If this command should play a sound upon exiting
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T playSound(@NotNull Boolean playSound) {
         this.playSound = playSound;
@@ -111,7 +111,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
     /**
      * If this command should play a sound upon exiting
      * 
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T playSound() {
         return this.playSound(true);
@@ -121,7 +121,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * Set the permission of the command
      * 
      * @param permission to set
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T permission(@NotNull String permission) {
         this.permission = permission;
@@ -132,7 +132,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * Set the description of the command
      * 
      * @param description to set
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T description(@NotNull String description) {
         this.description = description;
@@ -143,7 +143,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * Add an alias to this command.
      * 
      * @param alias to add
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T alias(@NotNull String... alias) {
         for (var a : alias) {
@@ -156,7 +156,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * Set the aliases of the command
      * 
      * @param aliases to set
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T aliases(@NotNull List<String> aliases) {
         this.aliases = aliases;
@@ -167,7 +167,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * Add a subcommand to a command
      * 
      * @param builder the sub command
-     * @return {@link CommandBuilderBase}
+     * @return {@link CommandBuilder}
      */
     public T subCommand(@NotNull T builder) {
         builder.synchronous = this.synchronous;
