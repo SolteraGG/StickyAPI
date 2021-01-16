@@ -85,6 +85,16 @@ task sources(type: Jar, dependsOn: classes) {
 }
 
 
+// Javadoc Fixes
+// Some environments (such as the builder image) do not use UTF-8 as the default encoding!
+// This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
+delombok.encoding = "UTF-8"
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+javadoc.options.encoding = "UTF-8"
+
+
 tasks.publish.dependsOn build, sources
 
 
