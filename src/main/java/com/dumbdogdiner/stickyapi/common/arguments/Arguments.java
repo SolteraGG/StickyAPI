@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.arguments;
@@ -11,14 +11,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility class for handling command arguments.
@@ -475,13 +474,17 @@ public class Arguments {
     }
 
     /**
-     * Get the HashMap of parsed arguments.
+     * Fetch a parsed argument from this arguments object.
+     * <p>
+     * Returns the argument, if it exists
      * 
-     * @return {@link java.util.HashMap}
-     * @since 2.0
+     * @param name The name of the argument to fetch
+     * @return {@link java.lang.String}
+     * @deprecated Renamed in 2.0, use {@link #getString(String)} instead.
      */
-    public HashMap<String, String> get() {
-        return this.parsedArgs;
+    @Deprecated
+    public String get(String name) {
+        return getString(name);
     }
 
     /**

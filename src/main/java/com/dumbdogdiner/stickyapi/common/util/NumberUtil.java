@@ -1,13 +1,9 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
-import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -40,9 +36,11 @@ public final class NumberUtil {
      * NumberUtil.isNumeric("12-3") = false
      * NumberUtil.isNumeric("12.3") = false
      * </pre>
-     *
+     * <p>
+     * Returns <code>true</code> if only contains digits, and is non-null
+     * 
      * @param string the String to check, may be null
-     * @return <code>true</code> if only contains digits, and is non-null
+     * @return {@link Boolean}
      */
     public static boolean isNumeric(@NotNull String string) {
         int size = string.length();
@@ -57,17 +55,21 @@ public final class NumberUtil {
     /**
      * Get a number as the percentage of another.
      * 
-     * @param x            The number who's percentage of the total this method will
-     *                     return
-     * @param total        The total
-     * @param decimalPlace The number of decimal places to return
+     * @param x      The number who's percentage of the total this method will
+     *               return
+     * @param total  The total
+     * @param string If this should return as a string with `%` appended to the end
      * @return {@link Double}
      */
-    public static Double getPercentage(@NotNull int x, @NotNull int total, @NotNull Double decimalPlace) {
-        var percent = ((double) x / (double) total) * 100;
-        final DecimalFormat formatter = new DecimalFormat(String.valueOf(decimalPlace));
-        formatter.setRoundingMode(RoundingMode.HALF_EVEN);
-        return Double.valueOf(formatter.format(percent));
+    public static String getPercentage(@NotNull double x, @NotNull double total, @NotNull Boolean string) {
+        var percent = (x / total);
+        StringBuilder sb = new StringBuilder();
+        if (string) {
+            sb.append((percent * 100) + "%");
+        } else {
+            sb.append((percent));
+        }
+        return sb.toString();
     }
 
     /**
@@ -78,15 +80,30 @@ public final class NumberUtil {
      * @return {@link Double}
      */
     public static Double getPercentage(@NotNull int x, @NotNull int total) {
-        return getPercentage(x, total, 0.00);
+        return Double.valueOf(getPercentage(x, total, false));
+    }
+
+    /**
+     * Get a number as the percentage of another.
+     * 
+     * @param x     The number who's percentage of the total this method will return
+     * @param total The total
+     * @return {@link String}
+     */
+    public static String getPercentageString(@NotNull int x, @NotNull int total) {
+        return getPercentage(x, total, true);
     }
 
     /**
      * Get a random number within a range
+     * <p>
+     * Returns a random integer within the specified range
+     *
+     * @deprecated Please use {@link MathUtil#randomInt(int)} instead!
      * 
      * @param min minimum value
      * @param max maximum value
-     * @return a random integer within the specified range
+     * @return {@link Integer}
      * @throws IllegalArgumentException when min is greater than max
      */
     public static int getRandomNumber(@NotNull int min, @NotNull int max) {
@@ -100,14 +117,14 @@ public final class NumberUtil {
      * <p>
      * Returns the long as a capped int
      * 
-     * @param l The long to convert
+     * @param lng The long to convert
      * @return {@link Integer}
      */
-    public static int longToInt(@NotNull long l) {
+    public static int longToInt(@NotNull long lng) {
         try {
-            return Math.toIntExact(l);
+            return Math.toIntExact(lng);
         } catch (ArithmeticException ae) {
-            switch (Long.compare(l, 0)) {
+            switch (Long.compare(lng, 0)) {
                 case 1:
                     return Integer.MAX_VALUE;
                 case 0:

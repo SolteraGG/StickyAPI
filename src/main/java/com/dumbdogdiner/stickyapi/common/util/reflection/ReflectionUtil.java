@@ -1,8 +1,8 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.util;
+package com.dumbdogdiner.stickyapi.common.util.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -33,7 +33,8 @@ public final class ReflectionUtil {
 
             if (Modifier.isFinal(f.getModifiers())) {
 
-                // Before we do this, attempt to disabled the reflective access warnings if they aren't already disabled.
+                // Before we do this, attempt to disabled the reflective access warnings if they
+                // aren't already disabled.
                 UnsafeUtil.tryDisableIllegalReflectiveAccessWarning();
 
                 FieldUtil.makeNonFinal(f); // Hacky method to allow this to still work in java 12+

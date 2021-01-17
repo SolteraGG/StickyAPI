@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import com.destroystokyo.paper.Title;
 
 import com.dumbdogdiner.stickyapi.common.translation.Translation;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class ServerUtil {
-    private ServerUtil() {}
+    private ServerUtil() {
+    }
 
     /**
      * Get the server's TPS over the last 15 minutes (1m, 5m, 15m)
@@ -30,7 +31,7 @@ public class ServerUtil {
     public static double[] getRecentTps() {
         Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
         double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
-            
+
         return recentTps;
     }
 

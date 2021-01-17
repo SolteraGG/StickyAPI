@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.configuration;
@@ -11,14 +11,15 @@ package com.dumbdogdiner.stickyapi.common.configuration;
 public class InvalidConfigurationException extends Exception {
 
     /**
-     * Creates a new instance of InvalidConfigurationException without a
-     * message or cause.
+     * Creates a new instance of InvalidConfigurationException without a message or
+     * cause.
      */
-    public InvalidConfigurationException() {}
+    public InvalidConfigurationException() {
+    }
 
     /**
-     * Constructs an instance of InvalidConfigurationException with the
-     * specified message.
+     * Constructs an instance of InvalidConfigurationException with the specified
+     * message.
      *
      * @param msg The details of the exception.
      */
@@ -27,8 +28,8 @@ public class InvalidConfigurationException extends Exception {
     }
 
     /**
-     * Constructs an instance of InvalidConfigurationException with the
-     * specified cause.
+     * Constructs an instance of InvalidConfigurationException with the specified
+     * cause.
      *
      * @param cause The cause of the exception.
      */
@@ -37,11 +38,11 @@ public class InvalidConfigurationException extends Exception {
     }
 
     /**
-     * Constructs an instance of InvalidConfigurationException with the
-     * specified message and cause.
+     * Constructs an instance of InvalidConfigurationException with the specified
+     * message and cause.
      *
      * @param cause The cause of the exception.
-     * @param msg The details of the exception.
+     * @param msg   The details of the exception.
      */
     public InvalidConfigurationException(String msg, Throwable cause) {
         super(msg, cause);

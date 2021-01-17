@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
@@ -94,8 +94,7 @@ public class SoundUtil {
      * the sound was played.
      * 
      * @param sender {@link org.bukkit.command.CommandSender} The sender
-     * @param type   {@link NotificationType}
-     *               The type of sound
+     * @param type   {@link NotificationType} The type of sound
      * @return {@link java.lang.Boolean}
      */
     public static Boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {

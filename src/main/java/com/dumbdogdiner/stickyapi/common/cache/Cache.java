@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.common.cache;
@@ -20,7 +20,7 @@ import lombok.Setter;
  * General purpose cache for caching things that should be cached.
  */
 public class Cache<T extends Cacheable> {
-    public interface CacheTester<T extends Cacheable> {
+    public interface Predicate<T extends Cacheable> {
         /**
          * Matching function that should evaluate to true if a given object matches any
          * necessary criteria.
@@ -131,7 +131,7 @@ public class Cache<T extends Cacheable> {
      *               looking for
      * @return The first object that evaluates the tester to true, if there is one
      */
-    public T find(@NotNull CacheTester<T> tester) {
+    public T find(@NotNull Predicate<T> tester) {
         debug.reset();
         for (T object : objects.values()) {
             if (tester.match(object)) {

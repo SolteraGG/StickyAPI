@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bungeecord.protocol;
@@ -8,6 +8,10 @@ import java.util.HashMap;
 
 import net.md_5.bungee.api.ProxyServer;
 
+@Deprecated
+/**
+ * @deprecated This is unsafe.
+ */
 public class Protocol {
 
     public static HashMap<Integer, Integer> soundEffect = new HashMap<>();
@@ -45,7 +49,11 @@ public class Protocol {
      * Get the Sound Effect packet ID
      * 
      * @return {@link Integer}
-     * @throws UnsupportedOperationException if the sound id for the current minecraft protocol is not mapped yet (If this is the case, either map the correct ID or get me (Zachery) to do it)
+     * @throws UnsupportedOperationException if the sound id for the current
+     *                                       minecraft protocol is not mapped yet
+     *                                       (If this is the case, either map the
+     *                                       correct ID or get me (Zachery) to do
+     *                                       it)
      */
     public static int getSoundEffectId() {
         var protocolVersion = ProxyServer.getInstance().getProtocolVersion();

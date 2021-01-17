@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2020 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+/*
+ * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
 package com.dumbdogdiner.stickyapi.bungeecord.packet;
@@ -32,7 +32,10 @@ public class SoundPacket extends DefinedPacket {
      * @param z        coordinate of where this sound should be played
      * @param volume   to play the sound at
      * @param pitch    to play the sound at
+     * @deprecated it is not recommended to play sounds over BungeeCord as it is
+     *             very prone to issues
      */
+    @Deprecated
     public SoundPacket(int sound, int category, double x, double y, double z, float volume, float pitch) {
         this.sound = sound;
         this.category = category;
