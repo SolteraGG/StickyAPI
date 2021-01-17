@@ -33,8 +33,6 @@ public final class ServerVersion {
         }
 
         return ServerType.BUNGEE;
-
-
     }
 
     /**

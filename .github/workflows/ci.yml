@@ -14,14 +14,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Setup gradle.properties
-      run: |
-        mkdir -p ~/.gradle/
-        echo "GRADLE_USER_HOME=$HOME/.gradle" >> $GITHUB_ENV
-        echo "ghUser=${GITHUB_ACTOR}" >> ~/.gradle/gradle.properties
-        echo "ghPass=${GITHUB_TOKEN}" >> ~/.gradle/gradle.properties
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Build with Gradle
       run: ./gradlew build
     - name: Install dependencies for coverage reporter (java 11 only)
