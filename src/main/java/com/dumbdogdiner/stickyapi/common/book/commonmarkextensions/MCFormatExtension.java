@@ -4,7 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
 
-import org.commonmark.Extension;
 import org.commonmark.parser.Parser;
 
 public class MCFormatExtension implements Parser.ParserExtension {
