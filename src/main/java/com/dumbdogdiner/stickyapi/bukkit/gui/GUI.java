@@ -4,11 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.gui;
 
-import com.dumbdogdiner.stickyapi.StickyAPI;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
