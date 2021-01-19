@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 
+@SuppressWarnings("unchecked") // Supress unchecked cast warnings.
 public abstract class CommandBuilder<T extends CommandBuilder<T>> {
 
     @Getter

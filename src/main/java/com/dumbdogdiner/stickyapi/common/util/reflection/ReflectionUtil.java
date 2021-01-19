@@ -13,7 +13,7 @@ import java.lang.reflect.Modifier;
  * A class for abusing Java and using reflection to unprotect methods and
  * constructors, use this with a lot of care and try not to break things!
  */
-@SuppressWarnings({ "unchecked", "deprecation" })
+@SuppressWarnings("unchecked")
 public final class ReflectionUtil {
     private ReflectionUtil() {
     }
