@@ -10,7 +10,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.ServerOperator;
-import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import java.util.List;
