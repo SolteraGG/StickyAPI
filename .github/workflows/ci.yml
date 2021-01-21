@@ -53,3 +53,20 @@ jobs:
       run: chmod +x gradlew
     - name: Build javadocs
       run: ./gradlew javadoc
+    - name: Save javadocs
+      uses: actions/upload-artifact@v2
+      with:
+        name: javadocs
+        path: build/docs/ # upload entire directory
+    - name: Save failed javadocs build output
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: failed-javadocs-build-output
+        path: build/ # upload entire directory
+    - name: Save failed javadocs build options
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: failed-javadocs-options-file
+        path: build/tmp/javadoc/javadoc.options
