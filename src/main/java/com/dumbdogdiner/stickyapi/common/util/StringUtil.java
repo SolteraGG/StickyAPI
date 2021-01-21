@@ -275,6 +275,8 @@ public final class StringUtil {
      * 
      * @param uuid to hyphenate
      * @return {@link UUID}
+     * @throws NullPointerException if uuid string is null
+     * @throws IllegalArgumentException if uuid is not 32 characters and is invalid
      */
     public static UUID hyphenateUUID(@NotNull String uuid) {
         if (uuid.length() == 32) {
