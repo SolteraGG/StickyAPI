@@ -27,6 +27,7 @@ public class NumberUtilTest {
     }
 
     @RepeatedTest(100)
+    @SuppressWarnings("deprecation") // getRandomNumber is deprecated
     public void testGetRandomNumber() {
         int number = NumberUtil.getRandomNumber(0, 100);
         assertTrue(number >= 0); // number is 0 or more
@@ -34,6 +35,7 @@ public class NumberUtilTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation") // getRandomNumber is deprecated
     public void testGetRandomNumberIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> {
             NumberUtil.getRandomNumber(1, 0);

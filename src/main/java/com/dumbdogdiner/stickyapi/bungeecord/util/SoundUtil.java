@@ -36,6 +36,7 @@ public class SoundUtil {
      * @param pitch  The pitch of the sound
      * @param delay  T
      */
+    @SuppressWarnings("deprecation") // SoundPacket is deprecated
     public static void queueSound(@NotNull ProxiedPlayer player, @NotNull Sound sound, @NotNull float volume,
             @NotNull float pitch, @NotNull Long delay) {
         StickyAPI.getPool().submit(() -> {

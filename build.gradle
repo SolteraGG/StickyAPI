@@ -61,7 +61,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
-    testImplementation("org.mockito:mockito-core:3.7.0")
+    testImplementation("org.mockito:mockito-core:3.7.7")
 }
 
 test {
