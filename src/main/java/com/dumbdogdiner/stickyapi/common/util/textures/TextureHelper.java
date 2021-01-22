@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
@@ -29,26 +30,34 @@ import java.util.*;
 public class TextureHelper {
     // Package-local visibility
     static final OkHttpClient httpClient = new OkHttpClient();
-
-    private static Map<String, Map<String, String>> TextureMap;
-    private static final Yaml YAML = new Yaml();
     private static final Gson GSON = new Gson();
+    private static final Yaml YAML = new Yaml();
+    private static Map<String, Map<String, String>> TextureMap = generateTextureMap();
 
-    static {
 
-        try (InputStream test = StickyAPI.getResourceAsStream("/textures.yml")) {
-            TextureMap = YAML.load(test);
-            //System.out.println(a.getClass());
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("An unknown error occurred while accessing the builtin resource 'textures.yml'.", e);
-        } catch (ClassCastException e) {
-            throw new RuntimeException("The integrated textures.yml resource was invalid. Please check the format at compile-time. If you are a server owner, contact the developers of StickyAPI", e);
+
+    private static Map<String, Map<String, String>> generateTextureMap(){
+        try {
+            try (InputStream test = StickyAPI.getResourceAsStream("/textures.yml")) {
+                return YAML.load(test);
+                //System.out.println(a.getClass());
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("An unknown error occurred while accessing the builtin resource 'textures.yml'.", e);
+            } catch (ClassCastException e) {
+                throw new RuntimeException("The integrated textures.yml resource was invalid. Please check the format at compile-time. If you are a server owner, contact the developers of StickyAPI", e);
+            }
+
+        } catch (RuntimeException e) {
+            Bukkit.getLogger().severe(e.getMessage());
+            throw e;
         }
     }
 
+
     /**
      * Gets the {@link Set} of categories of textures in the Heads file
+     *
      * @return A {@link Set} of all the categories of texture
      */
     public static @NotNull Set<String> getCategories() {
@@ -57,9 +66,10 @@ public class TextureHelper {
 
     /**
      * Get a {@link Set} of textures
+     *
      * @param cat The {@link #getCategories() category}of textures to get the {@link Map}
-     * @see TextureHelper#getCategories()
      * @return A {@link Map} of texture names to texture strings for the given category
+     * @see TextureHelper#getCategories()
      */
     public static Map<String, String> getTextureMapCategory(@NotNull String cat) {
         return TextureMap.get(cat.toUpperCase());
@@ -68,6 +78,7 @@ public class TextureHelper {
 
     /**
      * Get a list of all the textures for a given Category
+     *
      * @param cat a Category of textures
      * @return a {@link List} of the textures in a given Category
      * @see #getCategories()
@@ -78,7 +89,8 @@ public class TextureHelper {
 
     /**
      * Gets a texture string given a category and texture name
-     * @param cat The texture category
+     *
+     * @param cat  The texture category
      * @param name The texture name
      * @return The texture string matching
      * @throws NoSuchElementException if the specified texture is not found
@@ -91,15 +103,15 @@ public class TextureHelper {
      * Gets a texture string given a qualified name
      *
      * @param qualifiedName A given texture as a qualified name
-     * @see #toQualifiedName(String, String)
      * @return the texture string for the given texture
      * @throws NoSuchElementException if the specified texture is not found
+     * @see #toQualifiedName(String, String)
      */
     public static @Nullable String getTexture(@NotNull String qualifiedName) throws NoSuchElementException {
         String[] splits = qualifiedName.split("\\.");
         if (splits.length != 2 && splits.length != 1)
             throw new RuntimeException("Invalid qualified name: " + qualifiedName);
-        if (splits[1].equals("*")) {
+        if (splits[0].equals("*")) {
             @Nullable String texture = null;
             for (@NotNull String cat : getCategories()) {
                 try {
@@ -117,6 +129,7 @@ public class TextureHelper {
 
     /**
      * Returns a {@link List} of Qualified Names, of the format of "{CATEGORY}.{TEXTURE}"
+     *
      * @return a {@link List} of Qualified Names of all textures
      */
     public static @NotNull List<String> getQualifiedNames() {
@@ -178,23 +191,24 @@ public class TextureHelper {
 
     /**
      * Creates a Base64-Encoded String containing the URL where the texture can be located.
+     *
      * @param url The URL of the texture
      * @return A Base-64 encoded version of the JSON provided by {@link TextureHelper#toTextureJson(String)}
-     * 
      * @see TextureHelper#encodeJson(JsonObject)
      */
-    public static @NotNull String encodeTextureString(@NotNull URL url) throws InvalidTextureException{
+    public static @NotNull String encodeTextureString(@NotNull URL url) throws InvalidTextureException {
         TextureValidator.validateTextureUrl(url.toExternalForm());
         return encodeJson(toTextureJson(url));
     }
 
     /**
      * Encodes JSON wrapping a texture in Base64
+     *
      * @param texture JSON that wraps the texture URL
      * @return a base-64 encoded JSON that wraps a texture URL
      * @throws InvalidTextureException if the JSON is invalid
      */
-    public static @NotNull String encodeJson(@NotNull JsonObject texture) throws InvalidTextureException{
+    public static @NotNull String encodeJson(@NotNull JsonObject texture) throws InvalidTextureException {
 
         TextureValidator.validateTextureJson(texture);
         return StringUtil.encodeBase64(GSON.toJson(texture));
@@ -202,17 +216,19 @@ public class TextureHelper {
 
     /**
      * Converts a texture string to a {@link JsonObject}
+     *
      * @param texture The texture string
      * @return a decoded {@link JsonObject}
      */
-    public static JsonObject decodeTextureStringToJson(@NotNull String texture){
+    public static JsonObject decodeTextureStringToJson(@NotNull String texture) {
         return JsonParser.parseString(texture).getAsJsonObject();
     }
 
     /**
      * Converts a category and head to a qualified name (in the form of <code>{category}.{name}</code>
+     *
      * @param category The category of head
-     * @param name The specified name
+     * @param name     The specified name
      * @return a qualified name of the category and head
      */
     public static @NotNull String toQualifiedName(String category, String name) {

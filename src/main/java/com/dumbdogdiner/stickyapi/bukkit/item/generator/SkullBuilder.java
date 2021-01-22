@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.VisibleForTesting;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -135,7 +136,7 @@ public class SkullBuilder {
         Preconditions.checkArgument(name != null || head != null);
 
         @NotNull SkullMeta meta = (SkullMeta) (new ItemStack(Material.PLAYER_HEAD, 1)).getItemMeta();
-        @NotNull PlayerProfile profile = Bukkit.createProfile(new UUID(0, 0), null);
+        @NotNull PlayerProfile profile = Bukkit.createProfile(new UUID(0, 0), head);
 
         profile.setName(TextureHelper.toQualifiedName(category, head == null ? name : head));
         if (name != null) {
@@ -144,9 +145,16 @@ public class SkullBuilder {
             meta.setDisplayName(StringUtil.capitalize(head));
         }
 
-        profile.setProperty(new ProfileProperty("texture", texture));
+        profile.setProperty(new ProfileProperty("textures", texture));
+        meta.setPlayerProfile(profile);
         @NotNull ItemStack head = new ItemStack(Material.PLAYER_HEAD, quantity);
         head.setItemMeta(meta);
         return head;
+    }
+
+    public SkullBuilder qualified(String qualifiedName) {
+        String [] qn = qualifiedName.toUpperCase().split("\\.");
+        category(qn[0]);
+        return head(qn[1]);
     }
 }

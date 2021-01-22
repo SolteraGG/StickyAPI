@@ -554,12 +554,10 @@ public class Arguments {
     /**
      * Return whether an argument exists.
      * <p>
-     * Returns the argument, if it exists
      * 
      * @param name The name of the argument to check for
-     * @return {@link java.lang.Boolean}
      */
-    public @Nullable Boolean exists(@NotNull String name) {
+    public boolean exists(@NotNull String name) {
         return parsedArgs.get(name) != null;
     }
 

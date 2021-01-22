@@ -6,11 +6,12 @@ package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.dumbdogdiner.stickyapi.annotation.DoNotCall;
 import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.common.webapis.mojang.CachedMojangAPI;
 import com.google.common.base.Preconditions;
-import com.google.errorprone.annotations.DoNotCall;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
