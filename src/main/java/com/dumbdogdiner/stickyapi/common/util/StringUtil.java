@@ -258,11 +258,9 @@ public final class StringUtil {
      * @param string String to check
      * @param prefix Prefix of string to compare
      * @return {@link Boolean}
-     * @throws NullPointerException     if prefix is null
-     * @throws IllegalArgumentException if string is null
+     * @throws NullPointerException if prefix or string is null
      */
-    public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix)
-            throws IllegalArgumentException, NullPointerException {
+    public static boolean startsWithIgnoreCase(@NotNull final String string, @NotNull final String prefix) {
         if (string.length() < prefix.length()) {
             return false;
         }
@@ -277,6 +275,8 @@ public final class StringUtil {
      * 
      * @param uuid to hyphenate
      * @return {@link UUID}
+     * @throws NullPointerException if uuid string is null
+     * @throws IllegalArgumentException if uuid is not 32 characters and is invalid
      */
     public static UUID hyphenateUUID(@NotNull String uuid) {
         if (uuid.length() == 32) {
