@@ -19,7 +19,6 @@ import lombok.Setter;
  * code-dupe-annihilating code for DDD plugins.
  * 
  * @author DumbDogDiner (dumbdogdiner.com)
- * @version 2.0.0
  */
 public class StickyAPI {
     @Getter
@@ -30,8 +29,21 @@ public class StickyAPI {
     private static ExecutorService pool = Executors.newCachedThreadPool();
 
     // Build Info Start
+
+    /**
+     * Get the current version of API.
+     * 
+     * @since TBA
+     * @return {@link String} version
+     * 
+     */
+    @Getter
+    private static final String version = "@BUILDINFO_VERSION";
+
+    // Getter not required
     private static final String dateFormat = "@BUILDINFO_DATEFORMAT@";
-    // Custom Getter
+
+    // Custom Getter (see below)
     private static final String timestamp = "@BUILDINFO_TIMESTAMP@";
 
     /**
@@ -42,6 +54,7 @@ public class StickyAPI {
      */
     @Getter
     private static final String commit = "@BUILDINFO_COMMIT@";
+
     /**
      * Get a string with the current branch at API's build-time.
      * 
@@ -50,7 +63,8 @@ public class StickyAPI {
      */
     @Getter
     private static final String branch = "@BUILDINFO_BRANCH@";
-    // Custom Getter
+
+    // Custom Getter (see below)
     private static final String isDirty = "@BUILDINFO_ISDIRTY@";
 
     

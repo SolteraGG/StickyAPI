@@ -106,6 +106,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 // Define the map containing the tokens we want to replace
 def tokensMap = [
+        BUILDINFO_VERSION: project.version,
         BUILDINFO_DATEFORMAT: dataBuildTimestamp,
         BUILDINFO_TIMESTAMP: new java.text.SimpleDateFormat(dataBuildTimestamp).format(new Date()),
         BUILDINFO_COMMIT: versioning.info.commit,
