@@ -1,0 +1,46 @@
+name: "code-scanning"
+
+on:
+  push:
+  schedule:
+    - cron: '30 11 * * 6'
+
+jobs:
+  # https://github.com/github/codeql-action
+  codeql-analyze:
+    runs-on: ubuntu-20.04 # Run directly on Ubuntu 20.04 for CodeQL compatibility
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v2
+    - name: Initialize CodeQL # (GitHub default): Initializes the CodeQL tools for scanning.
+      uses: github/codeql-action/init@v1
+      with:
+        languages: java
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+  # https://github.com/codacy/codacy-analysis-cli-action
+  codacy-analyze:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
+    - name: Run Codacy Analysis CLI
+      uses: codacy/codacy-analysis-cli-action@1.1.0
+      with:
+        output: results.sarif
+        format: sarif
+        # Adjust severity of non-security issues
+        gh-code-scanning-compat: true
+        # Force 0 exit code to allow SARIF file generation
+        # This will handover control about PR rejection to the GitHub side
+        max-allowed-issues: 2147483647
+    # Upload the SARIF file generated in the previous step
+    - name: Upload SARIF results file
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: results.sarif
