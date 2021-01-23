@@ -33,13 +33,33 @@ public class StickyAPI {
     private static final String dateFormat = "@BUILDINFO_DATEFORMAT@";
     // Custom Getter
     private static final String timestamp = "@BUILDINFO_TIMESTAMP@";
+
+    /**
+     * Get a string with the latest commit (id) at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link String} commit id
+     */
     @Getter
     private static final String commit = "@BUILDINFO_COMMIT@";
+    /**
+     * Get a string with the current branch at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link String} branch name
+     */
     @Getter
     private static final String branch = "@BUILDINFO_BRANCH@";
     // Custom Getter
-    private static final String isDirty = "@BUILDINFO_ISDIRTY@"; 
+    private static final String isDirty = "@BUILDINFO_ISDIRTY@";
 
+    
+    /**
+     * Get a Date object showing the current time at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link Date} date
+     */
     public static Date getTimestamp() {
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
         try {
@@ -51,10 +71,24 @@ public class StickyAPI {
         }
     }
 
+    /**
+     * Get a string with the latest commit sha at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link String} sha
+     */
     public static String getSha() {
         return commit.substring(0, 7);
     }
 
+    /**
+     * Get a boolean showing if the working tree was dirty at API's build-time.
+     * <p>
+     * If the working directory was dirty, this will return true, meaning there were modified tracked files and staged changes at build-time.
+     * 
+     * @since TBA
+     * @return {@link Boolean} isDirty
+     */
     public static Boolean getIsDirty() {
         return Boolean.parseBoolean(isDirty);
     }
