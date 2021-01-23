@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 /**
  * A color used in text components.
+ * TODO: make this a lot nicer and less hacky
  */
 public class ComponentColor {
     private static final HashMap<String, ComponentColor> VALID_NAMED_COLORS = new HashMap<>();
@@ -64,11 +65,7 @@ public class ComponentColor {
      * @return {@link ComponentColor}
      */
     public static @Nullable ComponentColor fromText(@NonNull String text) {
-        if (HEX_PATTERN.matcher(text).matches()) {
-            return new ComponentColor(text);
-        } else {
-            return VALID_NAMED_COLORS.get(text);
-        }
+        return HEX_PATTERN.matcher(text).matches() ? new ComponentColor(text) : VALID_NAMED_COLORS.get(text);
     }
 
     /**

@@ -129,7 +129,7 @@ public class JsonComponent {
         clone.strikethrough = strikethrough;
         clone.obfuscated = obfuscated;
         clone.color = color;
-        if (clickEvent != null) clone.clickEvent = clickEvent.duplicate();
+        if (clickEvent != null) clone.clickEvent = clickEvent.clone();
         if (hoverEvent != null) clone.hoverEvent = hoverEvent.duplicate();
         for (JsonComponent child : children) {
             clone.children.add(child.duplicate());

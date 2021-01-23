@@ -25,7 +25,8 @@ public abstract class ClickEvent {
      * Create a copy of this ClickEvent.
      * @return {@link ClickEvent}
      */
-    public abstract @NonNull ClickEvent duplicate();
+    @Override
+    public abstract @NonNull ClickEvent clone();
 
     /**
      * When clicked, displays a prompt to open a URL in the player's browser.
@@ -48,7 +49,7 @@ public abstract class ClickEvent {
         }
 
         @Override
-        public OpenUrl duplicate() {
+        public OpenUrl clone() {
             return new OpenUrl(url);
         }
     }
@@ -75,7 +76,7 @@ public abstract class ClickEvent {
         }
 
         @Override
-        public OpenFile duplicate() {
+        public OpenFile clone() {
             return new OpenFile(path);
         }
     }
@@ -103,7 +104,7 @@ public abstract class ClickEvent {
         }
 
         @Override
-        public RunCommand duplicate() {
+        public RunCommand clone() {
             return new RunCommand(command);
         }
     }
@@ -130,7 +131,7 @@ public abstract class ClickEvent {
         }
 
         @Override
-        public SuggestCommand duplicate() {
+        public SuggestCommand clone() {
             return new SuggestCommand(command);
         }
     }
@@ -156,7 +157,7 @@ public abstract class ClickEvent {
         }
 
         @Override
-        public ChangePage duplicate() {
+        public ChangePage clone() {
             return new ChangePage(page);
         }
     }
@@ -182,7 +183,7 @@ public abstract class ClickEvent {
         }
 
         @Override
-        public CopyToClipboard duplicate() {
+        public CopyToClipboard clone() {
             return new CopyToClipboard(text);
         }
     }
