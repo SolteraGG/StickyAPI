@@ -11,6 +11,8 @@ jobs:
     container:
       image: jcxldn/openjdk-alpine:${{matrix.version}}-jdk
     steps:
+    - name: Install git
+      run: apk add --no-cache git
     - uses: actions/checkout@v2
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -32,6 +34,8 @@ jobs:
     container:
       image: jcxldn/openjdk-alpine:11-jdk
     steps:
+    - name: Install git
+      run: apk add --no-cache git
     - uses: actions/checkout@v2
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -42,8 +46,27 @@ jobs:
     container:
       image: jcxldn/openjdk-alpine:11-jdk
     steps:
+    - name: Install git
+      run: apk add --no-cache git
     - uses: actions/checkout@v2
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build javadocs
       run: ./gradlew javadoc
+    - name: Save javadocs
+      uses: actions/upload-artifact@v2
+      with:
+        name: javadocs
+        path: build/docs/ # upload entire directory
+    - name: Save failed javadocs build output
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: failed-javadocs-build-output
+        path: build/ # upload entire directory
+    - name: Save failed javadocs build options
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: failed-javadocs-options-file
+        path: build/tmp/javadoc/javadoc.options
