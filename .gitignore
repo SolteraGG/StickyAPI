@@ -49,3 +49,4 @@ bin
 .classpath
 .project
 .idea
+*.code-workspace
