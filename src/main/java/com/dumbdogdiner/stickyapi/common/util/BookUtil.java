@@ -28,6 +28,42 @@ public class BookUtil {
 
     private static final Pattern SPLIT_PATTERN = Pattern.compile("(?<=[ \n])|(?=[ \n])");
 
+    private static final HashMap<Character, Integer> widths = new HashMap<>();
+
+    static {
+        for (char c = 32; c <= 126; ++c) {
+            widths.put(c, 5);
+        }
+        widths.put('!', 1);
+        widths.put(',', 1);
+        widths.put('\'', 1);
+        widths.put('.', 1);
+        widths.put(':', 1);
+        widths.put(';', 1);
+        widths.put('i', 1);
+        widths.put('|', 1);
+        widths.put('`', 2);
+        widths.put('l', 2);
+        widths.put(' ', 3);
+        widths.put('(', 3);
+        widths.put(')', 3);
+        widths.put('*', 3);
+        widths.put('I', 3);
+        widths.put('[', 3);
+        widths.put(']', 3);
+        widths.put('t', 3);
+        widths.put('{', 3);
+        widths.put('}', 3);
+        widths.put('\u2022', 3);
+        widths.put('<', 4);
+        widths.put('>', 4);
+        widths.put('f', 4);
+        widths.put('k', 4);
+        widths.put('\u00b7', 4);
+        widths.put('@', 6);
+        widths.put('~', 6);
+    }
+
     /**
      * Uses info from https://minecraft.gamepedia.com/Language#Font"
      *
@@ -36,47 +72,10 @@ public class BookUtil {
      * @throws IllegalArgumentException if the character is out of range
      */
     public static int getCharacterWidth(char c) {
-
-        switch (c) {
-            case '!':
-            case ',':
-            case '\'':
-            case '.':
-            case ':':
-            case ';':
-            case 'i':
-            case '|':
-                return 1;
-            case '`':
-            case 'l':
-                return 2;
-            case ' ':
-            case '(':
-            case ')':
-            case '*':
-            case 'I':
-            case '[':
-            case ']':
-            case 't':
-            case '{':
-            case '}':
-            case '\u2022':
-                return 3;
-            case '<':
-            case '>':
-            case 'f':
-            case 'k':
-            case '\u00b7':
-                return 4;
-            case '@':
-            case '~':
-                return 6;
+        Integer width = widths.get(c);
+        if (width != null) {
+            return width;
         }
-        if (c >= 32 && c <= 126) {
-            return 5;
-        }
-
-
         throw new IllegalArgumentException("Unsupported character: " + c + " code: " +  String.format("%04x", (int) c));
     }
 
