@@ -5,10 +5,12 @@
 package com.dumbdogdiner.stickyapi.common.book.chat;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A text component that can be converted to JSON. Differs slightly from BaseComponent.
+ * A text component that can be converted to JSON. Differs slightly from BaseComponent, and is not part of the UML
  */
 public class JsonComponent {
     @Getter @Setter
@@ -43,8 +45,11 @@ public class JsonComponent {
     @Getter
     private final List<JsonComponent> children = new ArrayList<>();
 
-    public JsonComponent() {}
-
+    @SuppressWarnings("deprecation")
+    public JsonComponent(){
+        // Need to find out why this is used and stuffs
+    }
+    @SuppressWarnings("deprecation")
     public JsonComponent(@NonNull String text) {
         this.text = text;
     }

@@ -14,6 +14,8 @@ import lombok.NonNull;
 import org.commonmark.node.Document;
 import org.commonmark.node.Node;
 import org.commonmark.node.ThematicBreak;
+import java.awt.Font;
+
 
 /**
  * Utilities for text and books.
@@ -25,59 +27,58 @@ public class BookUtil {
 
     private static final Pattern SPLIT_PATTERN = Pattern.compile("(?<=[ \n])|(?=[ \n])");
 
-    // TODO: Test efficiency of this vs switch/case
-    static HashMap<Character, Integer> characterWidths = new HashMap<>();
-    static {
-        characterWidths.put('!', 1);
-        characterWidths.put(',', 1);
-        characterWidths.put('\'', 1);
-        characterWidths.put('.', 1);
-        characterWidths.put(':', 1);
-        characterWidths.put(';', 1);
-        characterWidths.put('i', 1);
-        characterWidths.put('|', 1);
-
-        characterWidths.put('`', 2);
-        characterWidths.put('l', 2);
-
-        characterWidths.put(' ', 3);
-        characterWidths.put('(', 3);
-        characterWidths.put(')', 3);
-        characterWidths.put('*', 3);
-        characterWidths.put('I', 3);
-        characterWidths.put('[', 3);
-        characterWidths.put(']', 3);
-        characterWidths.put('t', 3);
-        characterWidths.put('{', 3);
-        characterWidths.put('}', 3);
-
-        characterWidths.put('<', 4);
-        characterWidths.put('>', 4);
-        characterWidths.put('f', 4);
-        characterWidths.put('k', 4);
-
-        characterWidths.put('@', 6);
-        characterWidths.put('~', 6);
-    }
-
     /**
      * Uses info from https://minecraft.gamepedia.com/Language#Font"
+     *
      * @param c The character to measure
      * @return The width of the character in pixels
+     * @throws IllegalArgumentException if the character is out of range
      */
     public static int getCharacterWidth(char c) {
-        if (c < 32 || c > 126) {
-            // Not presently implemented, would require rendering TTF
-            return -1;
+        if (c >= 32 && c <= 126) {
+            switch (c) {
+                case '!':
+                case ',':
+                case '\'':
+                case '.':
+                case ':':
+                case ';':
+                case 'i':
+                case '|':
+                    return 1;
+                case '`':
+                case 'l':
+                    return 2;
+                case ' ':
+                case '(':
+                case ')':
+                case '*':
+                case 'I':
+                case '[':
+                case ']':
+                case 't':
+                case '{':
+                case '}':
+                    return 3;
+                case '<':
+                case '>':
+                case 'f':
+                case 'k':
+                    return 4;
+                case '@':
+                case '~':
+                    return 6;
+                default:
+                    return 5;
+            }
         }
-        if (characterWidths.containsKey(c)) {
-            return characterWidths.get(c);
-        }
-        return 5;
+
+        throw new IllegalArgumentException("Unsupported character");
     }
 
     /**
      * Split a JsonComponent into pages for use in a book.
+     *
      * @param origComponent The component to split into pages
      * @return A list of JsonComponents, one for each page
      */
@@ -108,8 +109,9 @@ public class BookUtil {
 
     /**
      * Wrap a JsonComponent into lines.
+     *
      * @param origComponent The JsonComponent to wrap.
-     * @param pixels The width of the JsonComponent in pixels.
+     * @param pixels        The width of the JsonComponent in pixels.
      * @return A list of JsonComponents, one for each line
      */
     public static List<JsonComponent> wrapLines(@NonNull JsonComponent origComponent, int pixels) {
@@ -153,6 +155,7 @@ public class BookUtil {
 
     /**
      * Split a document into multiple documents, delimited by thematic breaks. Destroys the original document.
+     *
      * @param document The original document
      * @return A list of each document.
      */
@@ -175,6 +178,7 @@ public class BookUtil {
 
     /**
      * Measure the width of text in a BaseComponent in pixels.
+     *
      * @param component The component to measure
      * @return The width of the text, in pixels
      */
@@ -190,6 +194,7 @@ public class BookUtil {
 
     /**
      * Measure the width of a string, assuming it is unformatted and in the default Minecraft font.
+     *
      * @param text The string to measure
      * @return The width of the string, in pixels
      */
