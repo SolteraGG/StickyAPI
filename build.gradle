@@ -22,13 +22,12 @@ license {
     header = project.file('LICENSE_HEADER')
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
     mapping("java", "SLASHSTAR_STYLE")
+    exclude "**/*.json" // Exclude JSON to keep the font width data valid
 }
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
 }
-// Run the license formatter before compiling the source code.
-tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
 
 configurations {
     jaxDoclet
@@ -42,9 +41,24 @@ repositories {
 
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+
+    // Define a Ivy repo for the font width data (that way we don't need another plugin!
+    def ddd_mc_font = ivy {
+        url 'https://dumbdogdiner.github.io/'
+        patternLayout { artifact '/[module]/[revision]/[classifier].[ext]'}
+        metadataSources { artifact() } 
+    }
+    // Only use the Ivy repo for font width data - speeds up dependency resolution
+    exclusiveContent {
+        forRepositories(ddd_mc_font)
+        filter { includeGroup("dumbdogdiner") }
+    }
 }
 
 dependencies {
+    // Font width data (see above)
+    compile 'dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json'
+
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
@@ -130,6 +144,21 @@ task processSourceTokens(type: Sync) {
 }
 // Use the filter task as the input for compileJava
 compileJava.source = processSourceTokens.outputs
+
+
+// Font Width Info
+task copyMCFontExtractor(type: Copy) {
+    def path = project.configurations.compile.find {it.name.startsWith("mc-font-extractor") }
+    println path
+    from file(path)
+    //into file("src/main/resources")
+    destinationDir file("src/main/resources/")
+    rename 'mc-font-extractor-main-mojangles_width_data.json', 'mojangles_width_data.json'
+}
+
+
+// Run the license formatter and font data copier before compiling the source code.
+tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtractor
 
 
 tasks.publish.dependsOn build, sources

@@ -50,3 +50,6 @@ bin
 .project
 .idea
 *.code-workspace
+
+# Font Width Data
+src/main/resources/mojangles_width_data.json
