@@ -14,6 +14,7 @@ import lombok.NonNull;
 import org.commonmark.node.Document;
 import org.commonmark.node.Node;
 import org.commonmark.node.ThematicBreak;
+
 import java.awt.Font;
 
 
@@ -35,45 +36,48 @@ public class BookUtil {
      * @throws IllegalArgumentException if the character is out of range
      */
     public static int getCharacterWidth(char c) {
+
+        switch (c) {
+            case '!':
+            case ',':
+            case '\'':
+            case '.':
+            case ':':
+            case ';':
+            case 'i':
+            case '|':
+                return 1;
+            case '`':
+            case 'l':
+                return 2;
+            case ' ':
+            case '(':
+            case ')':
+            case '*':
+            case 'I':
+            case '[':
+            case ']':
+            case 't':
+            case '{':
+            case '}':
+            case '\u2022':
+                return 3;
+            case '<':
+            case '>':
+            case 'f':
+            case 'k':
+            case '\u00b7':
+                return 4;
+            case '@':
+            case '~':
+                return 6;
+        }
         if (c >= 32 && c <= 126) {
-            switch (c) {
-                case '!':
-                case ',':
-                case '\'':
-                case '.':
-                case ':':
-                case ';':
-                case 'i':
-                case '|':
-                    return 1;
-                case '`':
-                case 'l':
-                    return 2;
-                case ' ':
-                case '(':
-                case ')':
-                case '*':
-                case 'I':
-                case '[':
-                case ']':
-                case 't':
-                case '{':
-                case '}':
-                    return 3;
-                case '<':
-                case '>':
-                case 'f':
-                case 'k':
-                    return 4;
-                case '@':
-                case '~':
-                    return 6;
-                default:
-                    return 5;
-            }
+            return 5;
         }
 
-        throw new IllegalArgumentException("Unsupported character");
+
+        throw new IllegalArgumentException("Unsupported character: " + c + " code: " +  String.format("%04x", (int) c));
     }
 
     /**
