@@ -22,6 +22,7 @@ import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -72,26 +73,9 @@ public class BookGenerator {
      * @return This object, for chaining
      */
     public BookGenerator addPage(JsonObject page) {
-        Preconditions.checkState(isFull(), "Cannot add page, the book is overfilled!");
+        Preconditions.checkState(!isFull(), "Cannot add page, the book is overfilled!");
         pages.add(page);
         return this;
-    }
-
-    /**
-     * Builds a {@link BookMeta} with the data provided to the generator
-     */
-    public BookMeta toBookMeta() {
-        Preconditions.checkState(pages.size() > 0, "Cannot generate BookMeta with no pages");
-        Preconditions.checkState(pages.size() > BookUtil.PAGES_PER_BOOK, "Cannot generate BookMeta with an invalid number of pages");
-        BookMeta meta = BASE_META.clone();
-        if (bookType == Material.WRITTEN_BOOK) {
-            meta.setTitle(title != null ? title : "");
-            meta.setAuthor(author != null ? author : "");
-            meta.setGeneration(generation);
-        }
-
-        pages.forEach(page -> meta.addPage(G.toJson(page)));
-        return meta;
     }
 
     /**
@@ -101,9 +85,21 @@ public class BookGenerator {
      */
     public ItemStack toItemStack(int qty) {
         Preconditions.checkArgument(qty > 0 && qty <= 16, "Invalid quantity specified, qty should be greater than 0 and less than or equal to 16, but was " + qty);
+        Preconditions.checkState(pages.size() > 0, "Cannot generate book with no pages");
+        Preconditions.checkState(pages.size() < BookUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + BookUtil.PAGES_PER_BOOK + ")");
         ItemStack stack = new ItemStack(bookType, qty);
 
-        stack.setItemMeta(toBookMeta());
+        BookMeta meta = (BookMeta) stack.getItemMeta();
+
+        if (bookType == Material.WRITTEN_BOOK) {
+            meta.setTitle(title != null ? title : "");
+            meta.setAuthor(author != null ? author : "");
+            meta.setGeneration(generation);
+        }
+
+        stack = Bukkit.getUnsafe().modifyItemStack(stack, generateNbtString());
+
+        stack.setItemMeta(meta);
         return stack;
     }
 
@@ -121,6 +117,17 @@ public class BookGenerator {
      */
     public boolean isFull() {
         return percentFull() >= 1.0f;
+    }
+
+
+    /**
+     * Uses a {@link StringJoiner} to convert pages JsonArray to the weird NBT list
+     * @return {@link String} with NBT of the pages
+     */
+    private String generateNbtString() {
+        StringJoiner NBT = new StringJoiner("','", "{pages:['", "']}");
+        pages.forEach(jsonElement -> NBT.add(G.toJson(jsonElement)));
+        return NBT.toString().replace("\\n","\n").replace("\n","\\n");//TODO fix the new lines where they are originally
     }
 
 
