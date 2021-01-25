@@ -8,6 +8,9 @@ package com.dumbdogdiner.stickyapi.common;
  * Utility class for fetching version data.
  */
 public final class ServerVersion {
+    private ServerVersion() {
+    }
+
     public enum ServerType {
         BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL
     }
