@@ -13,6 +13,8 @@ import net.md_5.bungee.api.ProxyServer;
  * @deprecated This is unsafe.
  */
 public class Protocol {
+    private Protocol() {
+    }
 
     public static HashMap<Integer, Integer> soundEffect = new HashMap<>();
 

@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
  * </p>
  */
 public class PlayerSelector {
+    private PlayerSelector() {
+    }
 
     /**
      * <p>

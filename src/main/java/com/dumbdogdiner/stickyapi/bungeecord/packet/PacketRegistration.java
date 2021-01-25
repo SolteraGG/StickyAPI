@@ -17,6 +17,8 @@ import net.md_5.bungee.protocol.Protocol;
  */
 @Deprecated
 public class PacketRegistration {
+    private PacketRegistration() {
+    }
 
     private static Method map, regPacket;
     private static Class<?> protocolMapping, protocolMappingArray;

@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
  * Handles the playing of cute fox noises for notification purposes.
  */
 public class SoundUtil {
+    private SoundUtil() {
+    }
+
     /**
      * Check if the parsed sender can receive sounds. Returns true if valid.
      * 

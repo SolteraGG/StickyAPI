@@ -21,6 +21,9 @@ import lombok.Setter;
  * @author DumbDogDiner (dumbdogdiner.com)
  */
 public class StickyAPI {
+    private StickyAPI() {
+    }
+
     @Getter
     public static Logger logger = Logger.getLogger("StickyAPI");
 
