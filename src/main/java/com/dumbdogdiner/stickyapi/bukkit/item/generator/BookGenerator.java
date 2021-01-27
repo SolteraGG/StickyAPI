@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.awt.print.Book;
 import java.util.ArrayList;
@@ -42,8 +43,6 @@ public class BookGenerator {
     @Getter @Setter
     private String title;
 
-    /** A basic blank meta for cloning */
-    private static final BookMeta BASE_META = (BookMeta) new ItemStack(Material.WRITTEN_BOOK).getItemMeta();
 
     private static final Gson G = new GsonBuilder().create();
 
@@ -124,10 +123,11 @@ public class BookGenerator {
      * Uses a {@link StringJoiner} to convert pages JsonArray to the weird NBT list
      * @return {@link String} with NBT of the pages
      */
-    private String generateNbtString() {
+    @VisibleForTesting
+    public String generateNbtString() {
         StringJoiner NBT = new StringJoiner("','", "{pages:['", "']}");
-        pages.forEach(jsonElement -> NBT.add(G.toJson(jsonElement)));
-        return NBT.toString().replace("\\n","\n").replace("\n","\\n");//TODO fix the new lines where they are originally
+        pages.forEach(jsonElement -> NBT.add(G.toJson(jsonElement)/*.replace("'", "\\\"")*/));
+        return NBT.toString().replace("\\n","\n").replace("\n","\\\\n");//TODO fix the new lines where they are originally
     }
 
 

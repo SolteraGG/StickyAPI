@@ -105,6 +105,7 @@ public class BookUtil {
     }
 
     /**
+     * TODO move this into the commonmark parser thing instead, because it will make life like 1000 times better!
      * Wrap a JsonComponent into lines.
      *
      * @param origComponent The JsonComponent to wrap.
@@ -117,6 +118,7 @@ public class BookUtil {
         List<JsonComponent> lineComponents = new ArrayList<>();
         JsonComponent currentLine = new JsonComponent();
         int xPosition = 0;
+        //TODO make this make better json plz its real crap
         for (JsonComponent component : components) {
             String[] words = SPLIT_PATTERN.split(component.getText());
             for (String word : words) {

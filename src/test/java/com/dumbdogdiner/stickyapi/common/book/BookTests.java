@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.book;
 
+import com.dumbdogdiner.stickyapi.bukkit.item.generator.BookGenerator;
 import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponentWriter;
 import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCFormatExtension;
@@ -14,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import org.bukkit.Material;
 import org.commonmark.node.Document;
 import org.commonmark.parser.Parser;
 import org.junit.jupiter.api.AfterAll;
@@ -26,10 +28,12 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookTests {
+public class BookTests{
     private static final String BOOK_FILENAME = "/rulebook.md";
     private static Reader bookReader;
     private static Gson G;
+
+
     @BeforeAll
     static void setUp(){
         bookReader = new InputStreamReader(BookTests.class.getResourceAsStream(BOOK_FILENAME));
@@ -50,14 +54,18 @@ public class BookTests {
         Parser.Builder parserBuilder = Parser.builder();
         MCFormatExtension.create().extend(parserBuilder);
         Parser cmParser = parserBuilder.build();
-        List<Document> sections = BookUtil.splitDocumentByBreaks((Document)cmParser.parseReader(bookReader));
-        JsonArray pages = new JsonArray();
+        List<Document> sections = BookUtil.splitDocumentByBreaks(
+                (Document)cmParser
+                        .parseReader(bookReader));
+        BookGenerator bg = new BookGenerator(Material.WRITTEN_BOOK);
         sections.stream()
-                .map(section -> BookUtil.splitBookPages(renderDocument(section)))
+                .map(section -> BookUtil
+                        .splitBookPages(
+                                renderDocument(section)))
                 .flatMap(List::stream)
-                .forEach(page -> pages.add(page.toJson()));
+                .forEach(page -> bg.addPage(page.toJson()));
 
-        System.out.println(G.toJson(pages));
+        System.out.println(bg.generateNbtString());
     }
 
 
