@@ -22,7 +22,15 @@ import org.commonmark.node.ThematicBreak;
  * Utilities for text and books.
  */
 public class BookUtil {
-    public static final int HALF_PIXELS_PER_LINE = 226;
+    /**
+     * Offset for bold (in each direction)
+     */
+    public static final float BOLD_OFFSET = 0.5f;
+    public static final float SHADOW_OFFSET = 0.5f;
+
+    public static final int PIXELS_PER_LINE = 113;
+    public static final int HALF_PIXELS_PER_LINE = PIXELS_PER_LINE * 2;
+
     public static final int LINES_PER_PAGE = 14;
     public static final int PAGES_PER_BOOK = 50;
 
