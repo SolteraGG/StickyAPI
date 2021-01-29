@@ -11,7 +11,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class StickyUser implements Cacheable {
+/**
+ * A base user class to eliminate some code duplication
+ */
+public abstract class StickyUser implements Cacheable {
     @Getter
     protected UUID uniqueId;
 

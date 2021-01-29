@@ -7,7 +7,6 @@ package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.dumbdogdiner.stickyapi.annotation.DoNotCall;
-import com.dumbdogdiner.stickyapi.bukkit.user.StickyUserBukkit;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.common.webapis.mojang.CachedMojangAPI;
 import com.google.common.base.Preconditions;
@@ -28,7 +27,7 @@ import java.util.UUID;
  */
 public class PlayerHeadBuilder extends SkullBuilder {
     private @NotNull SkullMeta meta = (SkullMeta) (new ItemStack(Material.PLAYER_HEAD, 1)).getItemMeta();
-    private final @NotNull StickyUserBukkit player;
+    private final UUID playerId;
     private final @NotNull PlayerProfile ownerProfile;
     private boolean frozen;
 
@@ -39,7 +38,8 @@ public class PlayerHeadBuilder extends SkullBuilder {
     public PlayerHeadBuilder(@NotNull UUID playerId) {
         this.meta.setOwningPlayer(Bukkit.getOfflinePlayer(playerId));
         this.ownerProfile = Bukkit.getServer().createProfile(playerId);
-        this.player = new StickyUserBukkit(playerId);
+        Preconditions.checkNotNull(playerId);
+        this.playerId = playerId;
     }
 
     /**
@@ -48,16 +48,7 @@ public class PlayerHeadBuilder extends SkullBuilder {
     public PlayerHeadBuilder(@NotNull Player player) {
         this.meta.setOwningPlayer(player);
         this.ownerProfile = player.getPlayerProfile();
-        this.player = new StickyUserBukkit(player);
-    }
-
-    /**
-     * @param player The player to use for head generation
-     */
-    public PlayerHeadBuilder(@NotNull StickyUserBukkit player) {
-        this.meta.setOwningPlayer(player.getAsBukkitPlayer());
-        this.ownerProfile = player.getAsBukkitPlayer().getPlayerProfile();
-        this.player = new StickyUserBukkit(player);
+        playerId = player.getUniqueId();
     }
 
     /**
@@ -66,7 +57,7 @@ public class PlayerHeadBuilder extends SkullBuilder {
     public PlayerHeadBuilder(@NotNull OfflinePlayer player) {
         this.meta.setOwningPlayer(player);
         this.ownerProfile = Bukkit.createProfile(player.getUniqueId());
-        this.player = new StickyUserBukkit(player);
+        this.playerId = player.getUniqueId();
     }
 
     /**
@@ -89,15 +80,15 @@ public class PlayerHeadBuilder extends SkullBuilder {
                 throw new IllegalArgumentException("Invalid player profile attached to the head, with no UUID or textures!");
             }
         }
-        player = new StickyUserBukkit(ownerProfile.getId());
+        this.playerId = null;
     }
 
     /**
      * Statically sets the texture of the head so it will not update in the future
      */
     public @NotNull PlayerHeadBuilder freeze() {
-        if (player != null) {
-            String textureString = CachedMojangAPI.getTextureString(player.getUniqueId());
+        if (playerId != null) {
+            String textureString = CachedMojangAPI.getTextureString(playerId);
             assert textureString != null;
             super.texture(textureString);
             frozen = true;
@@ -115,7 +106,7 @@ public class PlayerHeadBuilder extends SkullBuilder {
         if (name != null) {
             meta.setDisplayName(name);
         } else {
-            meta.setDisplayName(StringUtil.capitalize(player.getAsBukkitPlayer().getDisplayName()));
+            meta.setDisplayName(CachedMojangAPI.getUsername(playerId) + "'s Head");
         }
 
         if (frozen) {

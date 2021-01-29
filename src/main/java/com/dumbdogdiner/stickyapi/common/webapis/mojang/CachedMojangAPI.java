@@ -29,7 +29,7 @@ import java.util.UUID;
 
 //TODO: Better error handeling in case of 404
 
-//FIXME POSSIBLE MAJOR BUG IN ASHCON: Sometimes the raw.value and the skin.data are inverted!
+// FIXME POSSIBLE MAJOR BUG IN ASHCON: Sometimes the raw.value and the skin.data are inverted!
 // Double check the occurances of this and whatnot, try to fix, etc.
 public class CachedMojangAPI {
     /**
@@ -77,11 +77,18 @@ public class CachedMojangAPI {
         return G.fromJson(getResponse(uniqueId).body().charStream(), AshconResponse.class);
     }
 
+    /**
+     * Gets the history of usernames that a given {@link UUID} has had, by time
+     * @param uniqueId The {@link UUID} of the user to check
+     * @return A {@link SortedMap} of the time of each change (With 1970-01-01T00:00:00Z meaning that it was the first Username)
+     * @throws HttpException if there is an error with the HTTP Request/Response
+     */
     public static @NotNull SortedMap<Instant, String> getUsernameHistory(UUID uniqueId) throws HttpException {
         return getAshconResponse(uniqueId).getUsernameHistory();
 
     }
 
+    
     public static byte[] getTexture(@NotNull UUID uniqueId) throws HttpException {
         return getAshconResponse(uniqueId).getTextures().getSkin().getData();
     }

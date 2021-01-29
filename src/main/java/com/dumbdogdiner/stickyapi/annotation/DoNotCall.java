@@ -6,10 +6,11 @@ package com.dumbdogdiner.stickyapi.annotation;
 
 import java.lang.annotation.Documented;
 
-@Documented
+
 /**
  * Do not call a method annotated with this, it will do bad things
  */
+@Documented
 public @interface DoNotCall {
 
 }
