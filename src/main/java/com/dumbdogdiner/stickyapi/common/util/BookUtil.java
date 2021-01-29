@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
+import com.dumbdogdiner.stickyapi.bukkit.book.chat.JsonComponent;
 import com.google.gson.Gson;
 import lombok.NonNull;
 import org.commonmark.node.Document;

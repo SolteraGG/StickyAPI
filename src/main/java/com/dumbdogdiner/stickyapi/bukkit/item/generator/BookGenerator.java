@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
 public class BookGenerator {
-    private final JsonArray pages = new JsonArray();
+    private JsonArray pages = new JsonArray();
     /** The generation of the book. */
     @Getter @Setter
     private @NonNull BookMeta.Generation generation = BookMeta.Generation.ORIGINAL;
@@ -52,6 +52,42 @@ public class BookGenerator {
         }
 
         this.bookType = material;
+    }
+
+
+    /**
+     * Creates a new BookGenerator from a given JsonObject, representing a book, which can
+     * be obtained in whatever way you want.
+     * @param bookObject A JSON object containing a JsonArray of valid Pages; If a {@link Material#WRITTEN_BOOK} is desired, it must contain a title, author, and optionally, a Generation (an integer with the value of 0, 1, 2, or 3, with 0 being the default)
+     * @return a {@link BookGenerator} with the specified pages; if a title and author are both specified, it will be a {@link Material#WRITTEN_BOOK}, otherwise it will be a {@link Material#WRITABLE_BOOK}
+     */
+    public static BookGenerator fromJson(JsonObject bookObject) {
+        BookGenerator b;
+
+        if(bookObject.has("author") && bookObject.has("title")) {
+            b = new BookGenerator(Material.WRITTEN_BOOK);
+            b.author = bookObject.get("author").getAsString();
+            b.title = bookObject.get("title").getAsString();
+            if(bookObject.has("generation"))
+                switch (bookObject.get("generation").getAsInt()){
+                    case 1:
+                        b.generation = BookMeta.Generation.COPY_OF_ORIGINAL;
+                        break;
+                    case 2:
+                        b.generation = BookMeta.Generation.COPY_OF_COPY;
+                        break;
+                    case 3:
+                        b.generation = BookMeta.Generation.TATTERED;
+                        break;
+                    case 0:
+                    default:
+                        b.generation = BookMeta.Generation.ORIGINAL;
+                }
+        } else {
+            b = new BookGenerator(Material.WRITABLE_BOOK);
+        }
+        b.pages = bookObject.get("pages").getAsJsonArray();
+        return b;
     }
 
     /**
@@ -107,7 +143,7 @@ public class BookGenerator {
      * TODO: Does not account for characters per page or packet size at this time.
      */
     public float percentFull() {
-        return (float)pages.size() / (float)BookUtil.PAGES_PER_BOOK;
+        return (float)pages.size() / (float) BookUtil.PAGES_PER_BOOK;
     }
 
     /**

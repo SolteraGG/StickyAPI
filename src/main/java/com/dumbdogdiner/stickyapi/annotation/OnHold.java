@@ -7,8 +7,9 @@ package com.dumbdogdiner.stickyapi.annotation;
 import java.lang.annotation.Documented;
 
 /**
- * Denotes beta features that are not officially stable/tested
+ * Denotes a feature or class that is in-progress but has had development halted
  */
 @Documented
-public @interface Untested {
+public @interface OnHold {
+
 }

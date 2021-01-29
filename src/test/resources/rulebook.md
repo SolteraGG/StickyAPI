@@ -1,6 +1,6 @@
 # Dumb Dog Diner MC Survival Handbook
 
-## $red The Rules$
+## $c The Rules$
 
 1. Absolutely no griefing, theft, or intentional distress!
 2. No cheating/hacking allowed. Optifine and similar are okay.
@@ -11,7 +11,7 @@
 
 ---
 
-## $dark_green Gameplay$
+## $2 Gameplay$
 
 The world border for all worlds is 8,000 blocks from the center. Because of how
 $dark_red Nether Portal$ travel works, you will not be able to light them past 1,000 blocks
@@ -23,7 +23,7 @@ drop on the ground! You can have up to 3 $red Death Chests$ at a time.
 
 ---
 
-## $dark_aqua Trading$
+## $3 Trading$
 
 We use chest chops for player to trade good for $gold Coins$. Coins may be
 earned through selling goods to other players, paying/receiving money for a

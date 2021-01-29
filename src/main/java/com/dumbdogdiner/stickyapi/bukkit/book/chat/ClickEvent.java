@@ -2,12 +2,13 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.book.chat;
+package com.dumbdogdiner.stickyapi.bukkit.book.chat;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 /**
  * An event that is fired when text associated with this event is clicked.

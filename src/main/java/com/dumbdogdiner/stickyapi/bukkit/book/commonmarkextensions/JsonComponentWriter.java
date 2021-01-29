@@ -2,12 +2,12 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.book.commonmarkextensions;
+package com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions;
 
-import com.dumbdogdiner.stickyapi.common.book.chat.ClickEvent;
-import com.dumbdogdiner.stickyapi.common.book.chat.ComponentColor;
-import com.dumbdogdiner.stickyapi.common.book.chat.HoverEvent;
-import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
+import com.dumbdogdiner.stickyapi.bukkit.book.chat.ClickEvent;
+import com.dumbdogdiner.stickyapi.bukkit.book.chat.ComponentColor;
+import com.dumbdogdiner.stickyapi.bukkit.book.chat.HoverEvent;
+import com.dumbdogdiner.stickyapi.bukkit.book.chat.JsonComponent;
 import lombok.Getter;
 
 import java.util.Stack;

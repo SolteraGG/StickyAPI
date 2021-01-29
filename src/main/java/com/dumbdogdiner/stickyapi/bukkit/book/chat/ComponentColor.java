@@ -2,7 +2,7 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.book.chat;
+package com.dumbdogdiner.stickyapi.bukkit.book.chat;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -10,8 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**

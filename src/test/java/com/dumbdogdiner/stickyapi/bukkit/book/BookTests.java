@@ -2,32 +2,31 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.book;
+package com.dumbdogdiner.stickyapi.bukkit.book;
 
 import com.dumbdogdiner.stickyapi.bukkit.item.generator.BookGenerator;
-import com.dumbdogdiner.stickyapi.common.book.chat.JsonComponent;
-import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.JsonComponentWriter;
-import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MCFormatExtension;
-import com.dumbdogdiner.stickyapi.common.book.commonmarkextensions.MarkdownJsonRenderer;
+import com.dumbdogdiner.stickyapi.bukkit.book.chat.JsonComponent;
+import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.JsonComponentWriter;
+import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.MCFormatExtension;
+import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.MarkdownJsonRenderer;
 import com.dumbdogdiner.stickyapi.common.util.BookUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import org.bukkit.Material;
 import org.commonmark.node.Document;
 import org.commonmark.parser.Parser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 public class BookTests{
     private static final String BOOK_FILENAME = "/rulebook.md";
     private static Reader bookReader;
@@ -48,6 +47,8 @@ public class BookTests{
         System.gc();
     }
 
+
+    @Disabled
     @SneakyThrows
     @Test
     public void testParser() {
