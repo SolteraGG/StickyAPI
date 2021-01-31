@@ -7,7 +7,7 @@ package com.dumbdogdiner.stickyapi.bukkit.book;
 import com.dumbdogdiner.stickyapi.bukkit.item.generator.BookGenerator;
 import com.dumbdogdiner.stickyapi.bukkit.book.chat.JsonComponent;
 import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.JsonComponentWriter;
-import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.MCFormatExtension;
+import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.ParserFormatExtension;
 import com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions.MarkdownJsonRenderer;
 import com.dumbdogdiner.stickyapi.common.util.BookUtil;
 import com.google.gson.Gson;
@@ -53,7 +53,7 @@ public class BookTests{
     @Test
     public void testParser() {
         Parser.Builder parserBuilder = Parser.builder();
-        MCFormatExtension.create().extend(parserBuilder);
+        ParserFormatExtension.create().extend(parserBuilder);
         Parser cmParser = parserBuilder.build();
         List<Document> sections = BookUtil.splitDocumentByBreaks(
                 (Document)cmParser

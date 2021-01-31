@@ -4,21 +4,20 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.book.commonmarkextensions;
 
-import org.commonmark.ext.gfm.strikethrough.internal.StrikethroughDelimiterProcessor;
 import org.commonmark.parser.Parser;
 
 
 
-public class MCFormatExtension implements Parser.ParserExtension {
-    private MCFormatExtension(){}
+public class ParserFormatExtension implements Parser.ParserExtension {
+    private ParserFormatExtension(){}
 
-    public static MCFormatExtension create() {
-        return new MCFormatExtension();
+    public static ParserFormatExtension create() {
+        return new ParserFormatExtension();
     }
 
     @Override
     public void extend(Parser.Builder parserBuilder) {
-        parserBuilder.customDelimiterProcessor(new MCColorFormatDelimiterProcessor());
+        parserBuilder.customDelimiterProcessor(new ColorFormatDelimiterProcessor());
         //parserBuilder.customDelimiterProcessor(new StrikethroughDelimiterProcessor());
         /*parserBuilder.postProcessor(null);
         parserBuilder.postProcessor(null);*/

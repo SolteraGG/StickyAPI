@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.dumbdogdiner.stickyapi.bukkit.book.chat.JsonComponent;
+import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import lombok.NonNull;
 import org.commonmark.node.Document;
@@ -74,11 +75,9 @@ public class BookUtil {
      * @throws IllegalArgumentException if the character is out of range
      */
     public static int getCharacterWidth(char c) {
-        Integer width = widths.get(c);
-        if (width != null) {
-            return width;
-        }
-        throw new IllegalArgumentException("Unsupported character: " + c + " code: " +  String.format("%04x", (int) c));
+        Preconditions.checkArgument(widths.containsKey(c), "Unsupported character: " + c + " code: " +  String.format("%04x", (int) c));
+
+        return widths.get(c);
     }
 
     /**
@@ -86,6 +85,8 @@ public class BookUtil {
      *
      * @param origComponent The component to split into pages
      * @return A list of JsonComponents, one for each page
+     *
+     * TODO There's definately a better way to do this
      */
     public static List<JsonComponent> splitBookPages(@NonNull JsonComponent origComponent) {
         List<JsonComponent> lines = wrapLines(origComponent, HALF_PIXELS_PER_LINE);
