@@ -13,6 +13,8 @@
 package com.dumbdogdiner.stickyapi.bungeecord.protocol;
 
 public class ProtocolConstants {
+    private ProtocolConstants() {
+    }
 
     public static final int MINECRAFT_1_8 = 47;
     public static final int MINECRAFT_1_9 = 107;

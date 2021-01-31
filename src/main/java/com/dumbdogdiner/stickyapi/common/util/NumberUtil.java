@@ -4,10 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
-import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -49,12 +45,14 @@ public final class NumberUtil {
     public static boolean isNumeric(@NotNull String string) {
         int size = string.length();
         for (int i = 0; i < size; i++) {
-            if (Character.isDigit(string.charAt(i)) == false) {
+            if (!Character.isDigit(string.charAt(i))) {
                 return false;
             }
         }
         return true;
     }
+
+    // TODO the percent stuff can be rewritten in a more compact manor
 
     /**
      * Get a number as the percentage of another.
@@ -62,14 +60,14 @@ public final class NumberUtil {
      * @param x      The number who's percentage of the total this method will
      *               return
      * @param total  The total
-     * @param string If this should return as a string with `%` appended to the end
+     * @param withSymbol If this should return as a string with `%` appended to the end
      * @return {@link Double}
      */
-    public static @NotNull String getPercentage(@NotNull double x, @NotNull double total, @NotNull Boolean string) {
-        var percent = (x / total);
+    public static @NotNull String getPercentage(@NotNull double x, @NotNull double total, boolean withSymbol) {
+        double percent = (x / total);
         @NotNull StringBuilder sb = new StringBuilder();
-        if (string) {
-            sb.append((percent * 100) + "%");
+        if (withSymbol) {
+            sb.append(percent * 100).append("%");
         } else {
             sb.append((percent));
         }
@@ -94,7 +92,7 @@ public final class NumberUtil {
      * @param total The total
      * @return {@link String}
      */
-    public static @NotNull String getPercentageString(@NotNull int x, @NotNull int total) {
+    public static @NotNull String getPercentageString(int x, int total) {
         return getPercentage(x, total, true);
     }
 
@@ -102,16 +100,17 @@ public final class NumberUtil {
      * Get a random number within a range
      * <p>
      * Returns a random integer within the specified range
+     *
+     * @deprecated Please use {@link MathUtil#randomInt(int)} instead!
      * 
      * @param min minimum value
      * @param max maximum value
      * @return {@link Integer}
      * @throws IllegalArgumentException when min is greater than max
      */
-    public static int getRandomNumber(@NotNull int min, @NotNull int max) {
-        if (min >= max)
-            throw new IllegalArgumentException("Min may not be greater than max!");
-        return (int) ((Math.random() * (max - min)) + min);
+    @Deprecated
+    public static int getRandomNumber(int min, int max) {
+        return MathUtil.randomInt(min, max);
     }
 
     /**

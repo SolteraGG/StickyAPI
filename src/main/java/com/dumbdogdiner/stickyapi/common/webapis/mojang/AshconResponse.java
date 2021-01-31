@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.util.*;
 
 /**
- * Utility class to easily convert the received object from the Cached API to a java object.
+ * Package-local utility class to easily convert the received object from the Cached API to a java object.
  */
 
 class AshconResponse {

@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.FutureTask;
 
+@SuppressWarnings("deprecation") // PacketRegistration is deprecated
 public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
 
     // Hmm...
@@ -120,9 +121,10 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
             // spawn async command from sync
             if (getSynchronous() && !subCommand.getSynchronous()) {
                 subCommand.performAsynchronousExecution(sender, builder, label, argsClone);
+            } else {
+                subCommand.performExecution(sender, builder, label, argsClone);
             }
 
-            subCommand.performExecution(sender, builder, label, argsClone);
             return;
         }
 
@@ -240,7 +242,11 @@ public class BungeeCommandBuilder extends CommandBuilder<BungeeCommandBuilder> {
 
         public void execute(net.md_5.bungee.api.@NotNull CommandSender sender, String[] args) {
             // CommandSender sender, CommandBuilder builder, String label, List<String> args
-            builder.performExecution(sender, builder, builder.getName(), Arrays.asList(args));
+            if (builder.getSynchronous()) {
+                builder.performExecution(sender, builder, builder.getName(), Arrays.asList(args));
+            } else {
+                builder.performAsynchronousExecution(sender, builder, builder.getName(), Arrays.asList(args));
+            }
         }
 
         @Override

@@ -14,12 +14,16 @@ import org.jetbrains.annotations.Nullable;
 // Suppress Constant conditions because they appear to always be true at compile time
 @SuppressWarnings("ConstantConditions")
 public final class ServerVersion {
+    private ServerVersion() {
+    }
+
     public enum ServerType {
         BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL
     }
 
     /**
      * Retrieve the type of server this method was called by.
+     * 
      * @return The type of the server running when this method is evaluated.
      */
     public static @NotNull ServerType getServerType() {
@@ -32,7 +36,7 @@ public final class ServerVersion {
             }
             return ServerType.BUKKIT;
         }
-       
+
         if (isWaterfall()) {
             return ServerType.WATERFALL;
         }
@@ -42,6 +46,7 @@ public final class ServerVersion {
 
     /**
      * Returns true if the server is running paper.
+     * 
      * @return Whether or not the server is running paper
      */
     public static boolean isPaper() {
@@ -54,18 +59,21 @@ public final class ServerVersion {
 
     /**
      * Returns true if the server is running spigot.
+     * 
      * @return Whether or not the server is running spigot
      */
     public static boolean isSpigot() {
-         try {
-            return Class.forName("org.spigotmc.CustomTimingsHandler") != null || Class.forName("org.spigotmc.SpigotConfig") != null;
-        } catch (@NotNull NoClassDefFoundError | ClassNotFoundException e) {
+        try {
+            return Class.forName("org.spigotmc.CustomTimingsHandler") != null
+                    || Class.forName("org.spigotmc.SpigotConfig") != null;
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }
     }
 
     /**
      * Returns true if the server is running bukkit.
+     * 
      * @return Whether or not the server is running bukkit
      */
     public static boolean isBukkit() {
@@ -75,9 +83,10 @@ public final class ServerVersion {
             return false;
         }
     }
-    
+
     /**
      * Returns true if the server is running waterfall.
+     * 
      * @return Whether or not the server is running waterfall
      */
     public static boolean isWaterfall() {
@@ -90,6 +99,7 @@ public final class ServerVersion {
 
     /**
      * Returns true if the server is running bungee.
+     * 
      * @return Whether or not the server is running bungeecord
      */
     public static boolean isBungee() {
@@ -101,25 +111,28 @@ public final class ServerVersion {
     }
 
     /**
-     * Get the current version of bukkit. This method is valid for both Bukkit, Spigot, and Paper.
+     * Get the current version of bukkit. This method is valid for both Bukkit,
+     * Spigot, and Paper.
+     * 
      * @return The current version of bukkit
      */
     public static @Nullable String getBukkitVersion() {
         try {
             return org.bukkit.Bukkit.getVersion();
-         } catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError e) {
             return null;
         }
     }
 
     /**
      * Get the current version of bungee.
+     * 
      * @return The current version of bungee
      */
     public static @Nullable String getBungeeVersion() {
         try {
             return net.md_5.bungee.api.ProxyServer.getInstance().getVersion();
-        } catch(NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError e) {
             return null;
         }
     }

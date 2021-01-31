@@ -4,6 +4,8 @@ plugins {
     id 'jacoco'
     id "io.freefair.lombok" version "5.3.0"
     id "com.github.hierynomus.license" version "0.15.0"
+    // Nemerosa Versioning Plugin for the build info
+    id "net.nemerosa.versioning" version "2.14.0"
 }
 
 
@@ -15,7 +17,7 @@ jacoco {
 
 group = 'com.dumbdogdiner'
 
-version = '2.0.0'
+version = '2.3.0'
 
 // License Plugin Options
 license {
@@ -50,12 +52,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.4-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
 
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.github.classgraph:classgraph:4.8.98'
+    implementation 'io.github.classgraph:classgraph:4.8.100'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'commons-validator:commons-validator:1.7'
@@ -68,7 +70,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
-    testImplementation("org.mockito:mockito-core:3.7.0")
+    testImplementation("org.mockito:mockito-core:3.7.7")
     
     // Tests - Mocked Bukkit Project (Has some additional features)
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
@@ -111,6 +113,49 @@ delombok {
     print(true)
     //verbose(true)
 }
+// Javadoc Fixes
+// Some environments (such as the builder image) do not use UTF-8 as the default encoding!
+// This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
+delombok.encoding = "UTF-8"
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+javadoc.options.encoding = "UTF-8"
+
+
+// Build Info
+// Set the timestamp format
+def dataBuildTimestamp = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+
+// Import the filter
+import org.apache.tools.ant.filters.ReplaceTokens
+
+// Define the map containing the tokens we want to replace
+def tokensMap = [
+        BUILDINFO_VERSION: project.version,
+        BUILDINFO_DATEFORMAT: dataBuildTimestamp,
+        BUILDINFO_TIMESTAMP: new java.text.SimpleDateFormat(dataBuildTimestamp).format(new Date()),
+        BUILDINFO_COMMIT: versioning.info.commit,
+        BUILDINFO_BRANCH: versioning.info.branch,
+        BUILDINFO_ISDIRTY: versioning.info.dirty.toString()
+    ]
+
+// Create task to replace the tokens with their actual values
+// NOTE: At the moment this replaces tokens *globally* (format eg. @BUILDINFO_COMMIT@ in source code)
+task processSourceTokens(type: Sync) {
+    from sourceSets.main.java
+    into 'build/processed/src/main/java'
+    filter(ReplaceTokens, tokens: tokensMap)
+    
+    // Pretty print the build info
+    println("\n----- StickyAPI Build Info -----\n")
+    tokensMap.each { println "${String.format("%1\$-" + 10 + "s", it.key.replace("BUILDINFO_", "").toLowerCase())}\t${it.value}" }
+}
+// Use the filter task as the input for compileJava
+compileJava.source = processSourceTokens.outputs
+
+
+tasks.publish.dependsOn build, sources
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -136,7 +181,8 @@ task browseJavadoc {
 }
 
 task rebuild {
-    dependsOn build, clean
+    dependsOn clean
+    finalizedBy build
 }
 
 

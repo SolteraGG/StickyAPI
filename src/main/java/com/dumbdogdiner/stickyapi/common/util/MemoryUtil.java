@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
+
 /**
  * Provides a very crude method of measuring the memory consumption of Java
  * objects. This can never be 100% accurate, since the JVM creates some overhead

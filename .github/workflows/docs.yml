@@ -15,7 +15,7 @@ jobs:
       image: jcxldn/openjdk-alpine:11-jdk
     steps:
       - name: Install dependencies
-        run: apk add --no-cache git rsync ca-certificates
+        run: apk add --no-cache git rsync ca-certificates gnupg
       - name: Checkout
         uses: actions/checkout@v2.3.1 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the docs deployment to work correctly.
         with:
@@ -26,6 +26,21 @@ jobs:
         run: |
           ./gradlew javadoc
           mkdir -p web && mv build/docs/javadoc web/${GITHUB_REF##*/}
+      - name: Import GPG key for docs deployment signing
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v3.0.2
+        with:
+          gpg-private-key: ${{ secrets.DOCS_GPG_PRIV_KEY }}
+          # Set GPG signing keyID for this Git repository 
+          git-user-signingkey: true
+          # Sign all commits automatically.
+          git-commit-gpgsign: true
+      - name: Print imported GPG key details
+        run: |
+          echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
+          echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
+          echo "name:        ${{ steps.import_gpg.outputs.name }}"
+          echo "email:       ${{ steps.import_gpg.outputs.email }}"
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:

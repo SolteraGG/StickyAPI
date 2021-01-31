@@ -9,6 +9,9 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -18,9 +21,11 @@ import java.util.logging.Logger;
  * code-dupe-annihilating code for DDD plugins.
  * 
  * @author DumbDogDiner (dumbdogdiner.com)
- * @version 2.0.0
  */
 public class StickyAPI {
+    private StickyAPI() {
+    }
+
     @Getter
     public static Logger logger = Logger.getLogger("StickyAPI");
 
@@ -37,5 +42,84 @@ public class StickyAPI {
         return StickyAPI.class.getResourceAsStream(resourceName);
     }
 
-    private StickyAPI() {}
+    // Build Info Start
+
+    /**
+     * Get the current version of API.
+     * 
+     * @since TBA
+     * @return {@link String} version
+     */
+    @SuppressWarnings("JavaDoc")
+    @Getter
+    private static final String version = "@BUILDINFO_VERSION";
+
+    // Getter not required
+    private static final String dateFormat = "@BUILDINFO_DATEFORMAT@";
+
+    // Custom Getter (see below)
+    private static final String timestamp = "@BUILDINFO_TIMESTAMP@";
+
+    /**
+     * Get a string with the latest commit (id) at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link String} commit id
+     */
+    @SuppressWarnings("JavaDoc")
+    @Getter
+    private static final String commit = "@BUILDINFO_COMMIT@";
+
+    /**
+     * Get a string with the current branch at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link String} branch name
+     */
+    @SuppressWarnings("JavaDoc")
+    @Getter
+    private static final String branch = "@BUILDINFO_BRANCH@";
+
+    // Custom Getter (see below)
+    private static final String isDirty = "@BUILDINFO_ISDIRTY@";
+
+    
+    /**
+     * Get a Date object showing the current time at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link Date} date
+     */
+    public static Date getTimestamp() {
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+        try {
+            return formatter.parse(timestamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Get a string with the latest commit sha at API's build-time.
+     * 
+     * @since TBA
+     * @return {@link String} sha
+     */
+    public static String getSha() {
+        return commit.substring(0, 7);
+    }
+
+    /**
+     * Get a boolean showing if the working tree was dirty at API's build-time.
+     * <p>
+     * If the working directory was dirty, this will return true, meaning there were modified tracked files and staged changes at build-time.
+     * 
+     * @since TBA
+     * @return {@link Boolean} isDirty
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static Boolean getIsDirty() {
+        return Boolean.parseBoolean(isDirty);
+    }
 }

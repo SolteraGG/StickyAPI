@@ -25,6 +25,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
  * Handles the playing of cute fox noises for notification purposes.
  */
 public class SoundUtil {
+    private SoundUtil() {
+    }
+    
     /**
      * Check if the parsed sender can receive sounds. Returns true if valid.
      * 
@@ -44,13 +47,16 @@ public class SoundUtil {
      * @param pitch  The pitch of the sound
      * @param delay  T
      */
+    @SuppressWarnings("deprecation") // SoundPacket is deprecated
     public static void queueSound(@NotNull ProxiedPlayer player, @NotNull Sound sound, @NotNull float volume,
             @NotNull float pitch, @NotNull Long delay) {
         StickyAPI.getPool().submit(() -> {
             try {
                 Thread.sleep(delay);
-                // So, since we don't have the player's position (yet...) So, we have to play this at the center of the world
-                // at the max volume... Yes, this distorts the sound, please hold while I map more packets
+                // So, since we don't have the player's position (yet...) So, we have to play
+                // this at the center of the world
+                // at the max volume... Yes, this distorts the sound, please hold while I map
+                // more packets
                 // so I can obtain the player's position and play the sound that way... -zach
                 player.unsafe().sendPacket(new SoundPacket(sound.getId(), 0, 0, 255, 0, Float.MAX_VALUE, pitch));
             } catch (InterruptedException e) {
@@ -106,8 +112,7 @@ public class SoundUtil {
      * the sound was played.
      * 
      * @param sender {@link org.bukkit.command.CommandSender} The sender
-     * @param type   {@link NotificationType}
-     *               The type of sound
+     * @param type   {@link NotificationType} The type of sound
      * @return {@link java.lang.Boolean}
      */
     public static @NotNull Boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {

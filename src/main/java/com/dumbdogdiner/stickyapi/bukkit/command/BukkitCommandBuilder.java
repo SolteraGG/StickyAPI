@@ -19,7 +19,7 @@ import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.command.*;
@@ -106,9 +106,10 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
             // spawn async command from sync
             if (getSynchronous() && !subCommand.getSynchronous()) {
                 subCommand.performAsynchronousExecution(sender, command, label, argsClone);
+            } else {
+                subCommand.performExecution(sender, command, label, argsClone);
             }
 
-            subCommand.performExecution(sender, command, label, argsClone);
             return;
         }
 
@@ -207,13 +208,19 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
             this.synchronous(false);
         }
 
+        BukkitCommandBuilder that = this;
+
         // Execute the command by creating a new CommandExecutor and passing the
         // arguments to our executor
         command.setExecutor(new CommandExecutor() {
             @Override
-            public boolean onCommand(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, String label,
-                                     String[] args) {
-                performExecution(sender, command, label, Arrays.asList(args));
+            public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label,
+                    String[] args) {
+                if (that.getSynchronous()) {
+                    performExecution(sender, command, label, Arrays.asList(args));
+                } else {
+                    performAsynchronousExecution(sender, command, label, Arrays.asList(args));
+                }
                 return true;
             }
         });

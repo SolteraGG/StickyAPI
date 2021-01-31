@@ -155,4 +155,65 @@ public class StringUtilTest {
         assertFalse(StringUtil.compareMany("hello there", new String[] { "hello ", "there" }));
         assertFalse(StringUtil.compareMany("hello there", new String[] { "goodbye" }));
     }
+
+    // startsWithIgnoreCase
+
+    @Test
+    public void testStartsWithIgnoreCasePrefixLargerThanString() {
+        // Test that value is false when prefix length is larger than string length.
+        assertFalse(StringUtil.startsWithIgnoreCase("123", "12345"));
+    }
+
+    @Test
+    public void testStartsWithIgnoreCaseValidTrue() {
+        // Test functionality: true (string starts with prefix)
+        assertTrue(StringUtil.startsWithIgnoreCase("hello world", "hello"));
+    }
+
+    @Test
+    public void testStartsWithIgnoreCaseValidFalse() {
+        // Test functionality: false (string does not start with prefix)
+        assertFalse(StringUtil.startsWithIgnoreCase("hello world", "goodbye"));
+    }
+
+    @Test
+    public void testStartsWithIgnoreCaseNullPointerExceptionPrefix() {
+        assertThrows(NullPointerException.class, () -> {
+            StringUtil.startsWithIgnoreCase("hello world", null);
+        });
+    }
+
+    @Test
+    public void testStartsWithIgnoreCaseNullPointerExceptionString() {
+        assertThrows(NullPointerException.class, () -> {
+            StringUtil.startsWithIgnoreCase(null, "hello");
+        });
+    }
+
+    // hyphenateUUID
+
+    @Test
+    public void testHyphenateUUIDValid() {
+        assertEquals("de8c89e1-2f25-424d-8078-c6ff58db7d6e",
+                StringUtil.hyphenateUUID("de8c89e12f25424d8078c6ff58db7d6e").toString());
+    }
+
+    @Test
+    public void testHyphenateUUIDValidLengthNot32() {
+        assertEquals("de8c89e1-2f25-424d-8078-c6ff58db7d6e", StringUtil.hyphenateUUID("de8c89e1-2f25-424d-8078-c6ff58db7d6e").toString());
+    }
+
+    @Test
+    public void testHyphenateUUIDInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            StringUtil.hyphenateUUID("invalid");
+        });
+    }
+
+    @Test
+    public void testHyphenateUUIDNull() {
+        assertThrows(NullPointerException.class, () -> {
+            StringUtil.hyphenateUUID(null);
+        });
+    }
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.util;
+package com.dumbdogdiner.stickyapi.common.util.reflection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +16,7 @@ import java.lang.reflect.Modifier;
  * A class for abusing Java and using reflection to unprotect methods and
  * constructors, use this with a lot of care and try not to break things!
  */
-@SuppressWarnings({ "unchecked", "deprecation" })
+@SuppressWarnings("unchecked")
 public final class ReflectionUtil {
     private ReflectionUtil() {
     }
@@ -36,7 +36,8 @@ public final class ReflectionUtil {
 
             if (Modifier.isFinal(f.getModifiers())) {
 
-                // Before we do this, attempt to disabled the reflective access warnings if they aren't already disabled.
+                // Before we do this, attempt to disabled the reflective access warnings if they
+                // aren't already disabled.
                 UnsafeUtil.tryDisableIllegalReflectiveAccessWarning();
 
                 FieldUtil.makeNonFinal(f); // Hacky method to allow this to still work in java 12+

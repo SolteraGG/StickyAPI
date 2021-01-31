@@ -11,6 +11,8 @@ jobs:
     container:
       image: jcxldn/openjdk-alpine:11-jdk
     steps:
+    - name: Install git
+      run: apk add --no-cache git
     - uses: actions/checkout@v2
     - name: Echo branch name
       run: echo ${GITHUB_REF##*/}

@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class URLUtil {
+    private URLUtil() {
+    }
 
     private static final Pattern urlPattern = Pattern.compile(
             "(https:\\/\\/|http:\\/\\/)((?:[-;:&=\\+\\$,\\w]+@)?[A-Za-z0-9.-]+|(www.|[-;:&=\\+\\$,\\w]+@)[A-Za-z0-9.-]+)((?:\\/[\\+~%\\/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[\\w]*))?");
@@ -54,18 +56,20 @@ public class URLUtil {
 
         String[] split = text.split(" ");
         int i = 0;
-        for(String s : split) {
-            @Nullable URLPair url = findURL(s + " ");
-            if((url) == null) {
+        for (String s : split) {
+            URLPair url = findURL(s + " ");
+            if ((url) == null) {
                 tmp.setText(tmp.getText() + s + " ");
-                if(split.length == i + 1) finalComp.addExtra(tmp);
+                if (split.length == i + 1)
+                    finalComp.addExtra(tmp);
             } else {
                 finalComp.addExtra(tmp);
                 tmp = new TextComponent();
 
                 @NotNull TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
                 urlComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.getFullPath()));
-                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.COLOR_CHAR + "" + ChatColor.GRAY + "Click to open URL"), new Text("\n§8" + url.getFullPath())));
+                urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7Click to open URL"),
+                        new Text("\n§8" + url.getFullPath())));
                 urlComponent.setBold(true);
                 finalComp.addExtra(urlComponent);
             }

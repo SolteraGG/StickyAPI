@@ -15,8 +15,8 @@ package com.dumbdogdiner.stickyapi.common.cache;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Mark a class as being cacheable - must provide the <code>getKey()</code> method to allow
- * for key retrieval.
+ * Mark a class as being cacheable - must provide the <code>getKey()</code>
+ * method to allow for key retrieval.
  */
 public interface Cacheable {
     @NotNull String getKey();

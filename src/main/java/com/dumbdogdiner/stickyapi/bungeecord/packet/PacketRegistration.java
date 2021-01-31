@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
  */
 @Deprecated
 public class PacketRegistration {
+    private PacketRegistration() {
+    }
 
     private static Method map, regPacket;
     private static Class<?> protocolMapping, protocolMappingArray;

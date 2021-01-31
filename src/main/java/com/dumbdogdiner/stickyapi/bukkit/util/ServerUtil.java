@@ -14,7 +14,8 @@ package com.dumbdogdiner.stickyapi.bukkit.util;
 
 import com.destroystokyo.paper.Title;
 import com.dumbdogdiner.stickyapi.common.translation.Translation;
-import com.dumbdogdiner.stickyapi.common.util.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
+
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -24,7 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class ServerUtil {
-    private ServerUtil() {}
+    private ServerUtil() {
+    }
 
     /**
      * Get the server's TPS over the last 15 minutes (1m, 5m, 15m)
@@ -32,10 +34,11 @@ public class ServerUtil {
      * @return {@link java.util.ArrayList}
      * @since 2.0 (in 1.x, this method did not work correctly!)
      */
-    public static double @org.jetbrains.annotations.Nullable [] getRecentTps() {
-        @org.jetbrains.annotations.Nullable Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
+    public static double[] getRecentTps() {
+        Object minecraftServer = ReflectionUtil.getProtectedValue(Bukkit.getServer(), "console");
+        double[] recentTps = ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
 
-        return ReflectionUtil.getProtectedValue(minecraftServer, "recentTps");
+        return recentTps;
     }
 
     /**

@@ -19,6 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
+import lombok.Getter;
+
+@SuppressWarnings("unchecked") // Supress unchecked cast warnings.
 public abstract class CommandBuilder<T extends CommandBuilder<T>> {
 
     @Getter

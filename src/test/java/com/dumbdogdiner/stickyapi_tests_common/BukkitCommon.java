@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings({"rawtypes", "unchecked", "ResultOfMethodCallIgnored"})
 public class BukkitCommon {
     public static void getMockedBukkit(Consumer<?> func) {
         // Mock the Bukkit server

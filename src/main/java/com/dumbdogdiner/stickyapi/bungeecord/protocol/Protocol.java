@@ -22,6 +22,8 @@ import java.util.HashMap;
  * @deprecated This is unsafe.
  */
 public class Protocol {
+    private Protocol() {
+    }
 
     public static @NotNull HashMap<Integer, Integer> soundEffect = new HashMap<>();
 

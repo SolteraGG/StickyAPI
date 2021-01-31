@@ -20,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
  * Utility methods for dealing with time and duration parsing.
  */
 public final class TimeUtil {
-    private TimeUtil() {}
+    private TimeUtil() {
+    }
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
 
