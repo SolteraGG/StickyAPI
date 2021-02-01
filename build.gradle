@@ -68,10 +68,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.98'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
-
-    // CommonMark for Book Text Utils
-    implementation 'org.commonmark:commonmark:0.17.0'
-    implementation 'org.commonmark:commonmark-ext-gfm-strikethrough:0.17.0'
     
     // Tests - JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
@@ -79,6 +75,10 @@ dependencies {
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
     testImplementation("org.mockito:mockito-core:3.7.7")
+//
+//    // Mocked bukkit
+//    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
+//    testImplementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 }
 
 test {
@@ -109,7 +109,6 @@ task sources(type: Jar, dependsOn: classes) {
 // Some environments (such as the builder image) do not use UTF-8 as the default encoding!
 // This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
 delombok.encoding = "UTF-8"
-
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 javadoc.options.encoding = "UTF-8"
@@ -160,12 +159,13 @@ task copyMCFontExtractor(type: Copy) {
 
 // Run the license formatter and font data copier before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtractor
+tasks.build.dependsOn sources
+tasks.publish.dependsOn build
 
-
-tasks.publish.dependsOn build, sources
-
-
-
+task rebuild{
+    dependsOn clean
+    finalizedBy build
+}
 
 publishing {
     repositories {

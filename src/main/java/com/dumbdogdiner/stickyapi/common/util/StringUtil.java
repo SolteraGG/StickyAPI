@@ -7,16 +7,18 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
+import lombok.experimental.UtilityClass;
+import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Operations on {@link java.lang.String}
  */
+@UtilityClass
 public final class StringUtil {
-    private StringUtil() {
-    }
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
@@ -287,4 +289,44 @@ public final class StringUtil {
             return UUID.fromString(uuid);
         }
     }
+
+
+
+
+    /**
+     * Creates a random string of "magic" characters of characters
+     * @param min the minimum length of the string (inclusive)
+     * @param max the maximum length of the string (exclusive)
+     * @return A string of random characters, where the length
+     */
+    public static String randomObfuscatedString(int min, int max) {
+        // Placeholder chars by width
+        char [] choices = new char[] {
+                ' ', //  1 px
+                'i', //  2 px
+                'l', //  3 px
+                't', //  4 px
+                'f', //  5 px
+                'a', //  6 px
+                '@'  //  7 px
+        };
+        StringBuilder obfuscated = new StringBuilder();
+        obfuscated.append(ChatColor.COLOR_CHAR).append(ChatColor.MAGIC);
+        int len = MathUtil.randomInt(max) - min;
+        for(int i = 0; i < max; i++){
+            obfuscated.append(choices[MathUtil.randomInt(choices.length)]);
+        }
+        obfuscated.append(ChatColor.COLOR_CHAR).append(ChatColor.RESET);
+        return obfuscated.toString();
+    }
+
+    /**
+     * Replaces &amp; followed by any valid minecraft format code (matching the regex <pre>(?=([a-f]|[0-9]|[klmnor]))</pre> with &#x00a7;
+     * @param input The input string
+     * @return A string where the relevant ampersands are replaced with section symbols
+     */
+    public static String formatChatCodes(String input){
+        return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));
+    }
+
 }

@@ -1,0 +1,25 @@
+{
+  "pages": [
+    [
+      {
+        "text": "Page 1\\nI'm text in "
+      },
+      {
+        "text": "bold",
+        "bold": true
+      },
+      {
+        "text": " owo",
+        "color": "reset"
+      }
+    ],
+    [
+      {
+        "text": "red text in page 2",
+        "color": "dark_red"
+      }
+    ]
+  ],
+  "title": "a booky book",
+  "author": "rodwuffy"
+}
