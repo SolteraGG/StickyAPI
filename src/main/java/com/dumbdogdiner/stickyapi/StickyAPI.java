@@ -30,6 +30,9 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class StickyAPI {
+    private StickyAPI() {
+    }
+
     @Getter
     public static Logger logger = Logger.getLogger("StickyAPI");
 

@@ -11,6 +11,9 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class ServerVersion {
+    private ServerVersion() {
+    }
+
     public enum ServerType {
         BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL
     }
