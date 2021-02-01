@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.util.url;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+@UtilityClass
 public class URLUtil {
 
     private static final Pattern urlPattern = Pattern.compile(

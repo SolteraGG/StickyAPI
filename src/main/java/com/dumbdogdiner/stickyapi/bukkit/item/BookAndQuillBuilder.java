@@ -25,6 +25,13 @@ import org.jetbrains.annotations.VisibleForTesting;
 import java.util.Collections;
 import java.util.StringJoiner;
 
+/**
+ * This class allows for easy construction of a writable book, which is unfortunately much
+ * simpler than a written/signed book, either manually in code, or by loading a JSON object
+ *
+ * @since 2.1.0
+ */
+
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
 public class BookAndQuillBuilder {

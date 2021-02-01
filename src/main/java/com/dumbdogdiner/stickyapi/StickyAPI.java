@@ -13,13 +13,22 @@ import java.util.logging.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 
 /**
  * <h1>StickyAPI</h1> Utility methods, classes and potentially
  * code-dupe-annihilating code for DDD plugins.
  * 
  * @author DumbDogDiner (dumbdogdiner.com)
+ * @author aakatz3
+ * @author SkyezerFox
+ * @author JCX
+ * @author NotZachery
+ * @author vladfrangu
+ * @author spazzylemons
+ * @author kokumaji
  */
+@UtilityClass
 public class StickyAPI {
     @Getter
     public static Logger logger = Logger.getLogger("StickyAPI");

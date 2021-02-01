@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Random;
  * Util class for commonly used math operations.
  * </p>
  */
+@UtilityClass
 public class MathUtil {
 
     private static final Random random = new Random();

@@ -27,6 +27,12 @@ import org.jetbrains.annotations.VisibleForTesting;
 import java.util.Collections;
 import java.util.StringJoiner;
 
+/**
+ * This class allows for easy construction of a Written Book, whether through JSON objects and manual
+ * creation, or by loading a full JSON object from a file or other source
+ *
+ * @since 2.1.0
+ */
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
 public class WrittenBookBuilder {

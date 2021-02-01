@@ -14,15 +14,14 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility methods for dealing with time and duration parsing.
  */
+@UtilityClass
 public final class TimeUtil {
-    private TimeUtil() {
-    }
-
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:mm:ss");
 
     private static final HashMap<Character, Long> DURATION_CHARS = new HashMap<>();

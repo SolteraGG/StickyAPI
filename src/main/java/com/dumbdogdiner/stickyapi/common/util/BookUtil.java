@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.util;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Utilities for text and books.
  */
+@UtilityClass
 public class BookUtil {
     /**
      * Offset for bold (in each direction)
