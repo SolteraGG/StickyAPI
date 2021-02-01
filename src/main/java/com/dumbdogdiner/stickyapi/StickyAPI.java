@@ -23,16 +23,13 @@ import lombok.experimental.UtilityClass;
  * @author aakatz3
  * @author SkyezerFox
  * @author JCX
- * @author NotZachery
+ * @author ZachyFoxx
  * @author vladfrangu
  * @author spazzylemons
  * @author kokumaji
  */
 @UtilityClass
 public class StickyAPI {
-    private StickyAPI() {
-    }
-
     @Getter
     public static Logger logger = Logger.getLogger("StickyAPI");
 
@@ -47,7 +44,6 @@ public class StickyAPI {
      * 
      * @since TBA
      * @return {@link String} version
-     * 
      */
     @Getter
     private static final String version = "@BUILDINFO_VERSION";
@@ -89,8 +85,7 @@ public class StickyAPI {
     public static Date getTimestamp() {
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
         try {
-            Date date = formatter.parse(timestamp);
-            return date;
+            return formatter.parse(timestamp);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -115,6 +110,7 @@ public class StickyAPI {
      * @since TBA
      * @return {@link Boolean} isDirty
      */
+    @SuppressWarnings("ConstantConditions")
     public static Boolean getIsDirty() {
         return Boolean.parseBoolean(isDirty);
     }

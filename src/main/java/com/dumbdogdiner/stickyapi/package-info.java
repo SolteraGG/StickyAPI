@@ -10,7 +10,7 @@
  * @author aakatz3
  * @author SkyezerFox
  * @author JCX
- * @author NotZachery
+ * @author ZachyFoxx
  * @author vladfrangu
  * @author spazzylemons
  * @author kokumaji
