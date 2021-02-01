@@ -66,6 +66,16 @@ public class BookUtil {
     }
 
     /**
+     * Check if the given character is supported in-game.
+     * 
+     * @param c The character to check
+     * @return A boolean representing if the character is supported or not
+     */
+    public static boolean isCharacterSupported(char c) {
+        return widths.containsKey(c);
+    }
+
+    /**
      * @param c The character to measure
      * @return The width of the character in half-pixels
      * @throws IllegalArgumentException if the character is out of range
