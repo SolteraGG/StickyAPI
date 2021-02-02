@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
-import com.dumbdogdiner.stickyapi.common.util.BookUtil;
+import com.dumbdogdiner.stickyapi.common.util.TextUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -50,12 +49,14 @@ public class WrittenBookBuilder {
     @Getter
     @Setter
     private @NotNull String author = StringUtil.randomObfuscatedString(1, 17);
+
     /**
      * The title of the book, can be formatted using color codes.
      */
     @Getter
     @Setter
     private @NotNull String title = StringUtil.randomObfuscatedString(1, 17);
+
     /**
      * Lore/hover text for the item
      */
@@ -71,7 +72,6 @@ public class WrittenBookBuilder {
     public WrittenBookBuilder() {
 
     }
-
 
     /**
      * Creates a new BookGenerator from a given JsonObject, representing a book, which can
@@ -142,7 +142,7 @@ public class WrittenBookBuilder {
     public @NotNull ItemStack toItemStack(int qty) {
         Preconditions.checkArgument(qty > 0 && qty <= 16, "Invalid quantity specified, qty should be greater than 0 and less than or equal to 16, but was " + qty);
         Preconditions.checkState(pages.size() > 0, "Cannot generate book with no pages");
-        Preconditions.checkState(pages.size() < BookUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + BookUtil.PAGES_PER_BOOK + ")");
+        Preconditions.checkState(pages.size() < TextUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + TextUtil.PAGES_PER_BOOK + ")");
         ItemStack stack = new ItemStack(Material.WRITTEN_BOOK, qty);
 
         stack = Bukkit.getUnsafe().modifyItemStack(stack, generatePagesNBT());
@@ -165,7 +165,7 @@ public class WrittenBookBuilder {
      * TODO: Does not account for characters per page or packet size at this time.
      */
     public float percentFull() {
-        return (float) pages.size() / (float) BookUtil.PAGES_PER_BOOK;
+        return (float) pages.size() / (float) TextUtil.PAGES_PER_BOOK;
     }
 
     /**
@@ -176,7 +176,6 @@ public class WrittenBookBuilder {
     public boolean isFull() {
         return percentFull() >= 1.0f;
     }
-
 
     /**
      * Uses a {@link StringJoiner} to convert pages JsonArray to the weird NBT list
@@ -205,6 +204,4 @@ public class WrittenBookBuilder {
         });
         return NBT.toString();
     }
-
-
 }

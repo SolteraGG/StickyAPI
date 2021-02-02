@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
-import com.dumbdogdiner.stickyapi.common.util.BookUtil;
+import com.dumbdogdiner.stickyapi.common.util.TextUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
@@ -99,7 +99,7 @@ public class BookAndQuillBuilder {
     public @NotNull ItemStack toItemStack(int qty) {
         Preconditions.checkArgument(qty > 0 && qty <= 16, "Invalid quantity specified, qty should be greater than 0 and less than or equal to 16, but was " + qty);
         Preconditions.checkState(pages.size() > 0, "Cannot generate book with no pages");
-        Preconditions.checkState(pages.size() < BookUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + BookUtil.PAGES_PER_BOOK + ")");
+        Preconditions.checkState(pages.size() < TextUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + TextUtil.PAGES_PER_BOOK + ")");
         ItemStack stack = new ItemStack(Material.WRITABLE_BOOK, qty);
 
         stack = Bukkit.getUnsafe().modifyItemStack(stack, generatePagesNBT());
@@ -120,7 +120,7 @@ public class BookAndQuillBuilder {
      * TODO: Does not account for characters per page or packet size at this time.
      */
     public float percentFull() {
-        return (float) pages.size() / (float) BookUtil.PAGES_PER_BOOK;
+        return (float) pages.size() / (float) TextUtil.PAGES_PER_BOOK;
     }
 
     /**
