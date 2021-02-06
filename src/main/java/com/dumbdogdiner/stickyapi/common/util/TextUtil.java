@@ -96,7 +96,7 @@ public class TextUtil {
 
 
     /**
-     * Returns a {@link Set<Character>} of the supported characters
+     * Returns a {@link Set} of {@link Character}of the supported characters
      */
     public static Set<Character> getSupportedCharacters() {
         return widths.keySet();

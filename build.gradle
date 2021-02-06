@@ -145,6 +145,7 @@ task processSourceTokens(type: Sync) {
 // Use the filter task as the input for compileJava
 compileJava.source = processSourceTokens.outputs
 
+// TODO: Make task to minify resources (json) on compile
 
 // Font Width Info
 task copyMCFontExtractor(type: Copy) {
@@ -173,6 +174,8 @@ javadoc {
     options.addBooleanOption('private', true)
     options.addBooleanOption("-allow-script-in-comments",true)
     options.overview('src/main/overview.html')
+    outputs.upToDateWhen { false }
+
     //TODO replace frames with JANITOR to get around removal of -frames in jdk15
     //options.footer("<script src=\"https://gitlab.com/gerib/userscripts/-/raw/master/janitor/janitor.user.js?inline=false\"></script>")
     test.ignoreFailures true;

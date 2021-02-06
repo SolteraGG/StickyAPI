@@ -11,32 +11,40 @@
     <title>Overview</title>
 </head>
 <body>
-<h1>StickyAPI</h1>
-<img src="https://cdn.discordapp.com/emojis/697795137526431756.png?v=1" alt="stixilDoggers">
+<h1 style="font-size: xxx-large">
+    <img src="https://cdn.discordapp.com/emojis/697795137526431756.png?v=1" alt="stixilDoggers" style="width: 1em; height: 1em;">
+    StickyAPI
+    <img src="https://cdn.discordapp.com/emojis/697795137526431756.png?v=1" alt="stixilDoggers" style="width: 1em; height: 1em; transform: scaleX(-1)">
+</h1>
 <p>Utility methods, classes and potentially code-dupe-annihilating code for DDD plugins.</p>
 
-<p>
-    Copyright &#x00a9; 2020-<script>document.write(new Date().getFullYear())</script><noscript>&lt;CURRENT_YEAR&gt;</noscript>
-    DumbDogDiner <a href="http://dumbdogdiner.com/">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.<br>
-    Licensed under the MIT license, see <a
-        href="https://raw.githubusercontent.com/DumbDogDiner/StickyAPI/master/LICENSE">LICENSE</a> for more
-    information...
 
-<br>
-<p>
+<div>
+    <p>
+        Copyright &#x00a9; 2020-<span id="year">CURRENT_YEAR</span> DumbDogDiner <a href="http://dumbdogdiner.com/">&lt;dumbdogdiner.com&gt;</a>. All rights reserved.<br>
+        Licensed under the MIT license, see <a href="https://raw.githubusercontent.com/DumbDogDiner/StickyAPI/master/LICENSE">LICENSE</a> for more information...
+    </p>
+</div>
+
+<p style="margin: 0;">
     Developed by: &nbsp;
-    <ul>
-        <li>DumbDogDiner (<a href="http://dumbdogdiner.com">dumbdogdiner.com</a>)</li>
-        <li><a href="https://github.com/aakatz3/">aakatz3</a></li>
-        <li><a href="https://github.com/SkyezerFox">SkyezerFox</a></li>
-        <li><a href="https://github.com/Prouser123">JCX</a></li>
-        <li><a href="https://github.com/ZachyFoxx">ZachyFoxx</a></li>
-        <li><a href="https://github.com/vladfrangu">vladfrangu</a></li>
-        <li><a href="https://github.com/spazzylemons">spazzylemons</a></li>
-        <li><a href="https://github.com/kokumaji">kokumaji</a></li>
-    </ul>
+</p>
+<ul style="margin: 0;">
+    <li>DumbDogDiner (<a href="http://dumbdogdiner.com">dumbdogdiner.com</a>)</li>
+    <li><a href="https://github.com/aakatz3/">aakatz3</a></li>
+    <li><a href="https://github.com/SkyezerFox">SkyezerFox</a></li>
+    <li><a href="https://github.com/Prouser123">JCX</a></li>
+    <li><a href="https://github.com/ZachyFoxx">ZachyFoxx</a></li>
+    <li><a href="https://github.com/vladfrangu">vladfrangu</a></li>
+    <li><a href="https://github.com/spazzylemons">spazzylemons</a></li>
+    <li><a href="https://github.com/kokumaji">kokumaji</a></li>
+</ul>
 
 <p>This code is stored at <a href="https://github.com/DumbDogDiner/StickyAPI">https://github.com/DumbDogDiner/StickyAPI</a>
-
+    <!-- Normally this would be in <head> but it goes here so that the javadoc tool includes it -->
+    <script>
+        var year = document.getElementById("year")
+        year.innerText = new Date().getFullYear()
+    </script>
 </body>
 </html>
