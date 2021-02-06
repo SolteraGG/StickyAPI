@@ -226,7 +226,7 @@ public final class TimeUtil {
             if ((ch >= '0') && (ch <= '9'))
                 subtotal = (subtotal * 10) + (ch - '0');
             else {
-                // Found something thats not a number, find out how much it multiplies the built
+                // Found something that's not a number, find out how much it multiplies the built
                 // up number by, multiply the total and reset the built up number.
 
                 Long multiplier = TimeUtil.DURATION_CHARS.get(ch);

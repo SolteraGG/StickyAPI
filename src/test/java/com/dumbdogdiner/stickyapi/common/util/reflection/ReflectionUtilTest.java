@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.util.reflection;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ReflectionUtilTest {
     private class ExampleClass {
@@ -82,6 +83,6 @@ public class ReflectionUtilTest {
 
         Object o = ReflectionUtil.getProtectedValue((Object) instance, "nonexistent_field");
 
-        assertEquals(o, null);
+        assertNull(o);
     }
 }

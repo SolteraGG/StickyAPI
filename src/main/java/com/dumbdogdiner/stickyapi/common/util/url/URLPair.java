@@ -4,24 +4,18 @@
  */
 package com.dumbdogdiner.stickyapi.common.util.url;
 
+import lombok.Data;
+
 /**
  * Sub-class for easier URL formatting between methods.
  */
+@Data
 public class URLPair {
-    String fullPath;
-    String shortened;
+    private String fullPath;
+    private String shortened;
 
     public URLPair(String fullUrl, String shortenedUrl) {
         this.fullPath = fullUrl;
         this.shortened = shortenedUrl;
     }
-
-    public String getShortened() {
-        return shortened;
-    }
-
-    public String getFullPath() {
-        return fullPath;
-    }
-
 }

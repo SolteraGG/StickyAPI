@@ -44,8 +44,8 @@ public class MathUtil {
      * Get a random number within a range
      * </p>
      *
-     * @param min minimum value <bold>(inclusive)</bold>
-     * @param max maximum value <bold>(inclusive)</bold>
+     * @param min minimum value <b>(inclusive)</b>
+     * @param max maximum value <b>(inclusive)</b>
      * @return a random integer within the specified range
      * @throws IllegalArgumentException when min is greater than max
      */

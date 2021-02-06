@@ -48,7 +48,6 @@ public class TextUtil {
     /** Number of lines per sign */
     public static final int LINES_PER_SIGN = 4;
 
-
     private static final Pattern SPLIT_PATTERN = Pattern.compile("(?<=[ \n])|(?=[ \n])");
 
     private static final HashMap<Character, Integer> widths = new HashMap<>();
@@ -126,7 +125,7 @@ public class TextUtil {
     public static int getStringWidth(@NonNull String text, boolean isBold) {
         text = ChatColor.stripColor(text);
         int width = 0;
-        
+
         for (char c : text.toCharArray()) {
             width += TextUtil.getCharacterWidth(c);
         }

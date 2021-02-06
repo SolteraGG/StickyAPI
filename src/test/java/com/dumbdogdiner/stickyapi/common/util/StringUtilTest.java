@@ -232,6 +232,7 @@ public class StringUtilTest {
 
         rand = StringUtil.randomObfuscatedString(1, 100, 0);
         assertTrue(ChatColor.stripColor(rand).length() >= 1 && ChatColor.stripColor(rand).length() <= 100);
+        assertEquals(ChatColor.stripColor(rand).length(), rand.length() - 4);
         System.out.println(rand);
     }
 }

@@ -17,5 +17,9 @@ public class BookBuilderTest {
 
         System.out.println("Pages NBT:");
         System.out.println(bb.generatePagesNBT());
+
+
+        System.out.println("Please paste the following line into a command block, and activate it");
+        System.out.println("give @p minecraft:writable_book" + bb.generatePagesNBT());
     }
 }
