@@ -23,7 +23,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Utilities for text and books.
+ * Utilities for text, such as in chat, books, and signs
+ *
+ * @since 2.1.0
  */
 @UtilityClass
 public class TextUtil {
