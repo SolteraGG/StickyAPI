@@ -34,7 +34,7 @@ import java.util.StringJoiner;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
-public class BookAndQuillBuilder {
+public class  BookAndQuillBuilder {
     private JsonArray pages = new JsonArray();
     private static final Gson G = new GsonBuilder().create();
 

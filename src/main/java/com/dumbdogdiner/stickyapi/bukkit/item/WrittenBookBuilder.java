@@ -48,14 +48,14 @@ public class WrittenBookBuilder {
      */
     @Getter
     @Setter
-    private @NotNull String author = StringUtil.randomObfuscatedString(1, 17);
+    private @NotNull String author = StringUtil.randomObfuscatedString(1, 17, 4);
 
     /**
      * The title of the book, can be formatted using color codes.
      */
     @Getter
     @Setter
-    private @NotNull String title = StringUtil.randomObfuscatedString(1, 17);
+    private @NotNull String title = StringUtil.randomObfuscatedString(1, 17, 6);
 
     /**
      * Lore/hover text for the item

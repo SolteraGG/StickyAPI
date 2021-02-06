@@ -10,8 +10,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import com.google.common.base.Preconditions;
 import lombok.experimental.UtilityClass;
+
 import net.md_5.bungee.api.ChatColor;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,10 +42,10 @@ public final class StringUtil {
 
     /**
      * Create a horizontal progress bar, similar to how htop does it.
-     * 
+     *
      * <p>
      * Returns a progress bar
-     * 
+     *
      * @param size              The size of the bar (inside)
      * @param percentage        The percentage to fill the bar to
      * @param monospace         If false, the bars will be a character with the
@@ -56,7 +59,7 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
-            @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
+                                           @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
         double barCount = ((percentage / 100) * size);
         StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
@@ -85,7 +88,7 @@ public final class StringUtil {
      * Create a horizontal progress bar, similar to how htop does it.
      * <p>
      * Returns a progress bar
-     * 
+     *
      * @param size       The size of the bar
      * @param percentage The percentage to fill the bar to
      * @return {@link String}
@@ -107,7 +110,7 @@ public final class StringUtil {
      * Returns a message with capital letters after every whitespace
      * <p>
      * See {@link #capitaliseSentenceKeepUpperCase(String)}
-     * 
+     *
      * @param string   The string to capitalise
      * @param keepCase Whether or not to keep the uppercase characters
      * @return {@link String}
@@ -142,7 +145,7 @@ public final class StringUtil {
      * <p>
      * See Alternate (keeping uppercase):
      * {@link #capitaliseSentenceKeepUpperCase(String)}
-     * 
+     *
      * @param string The string to capitalise
      * @return {@link String}
      */
@@ -158,16 +161,16 @@ public final class StringUtil {
      * Example: "hello world" == "Hello World"
      * <p>
      * Example: "hello WORLD" == "Hello WORLD"
-     * 
+     *
      * <p>
      * See Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
-     * 
+     *
      * <p>
      * Returns a message with capital letters after every whitespace
-     * 
-     * @since 2.0
+     *
      * @param string The string to capitalise
      * @return {@link String}
+     * @since 2.0
      */
     public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
         return capitaliseSentence(string, true);
@@ -177,7 +180,7 @@ public final class StringUtil {
      * Replace a word with asterisks.
      * <p>
      * The censored word
-     * 
+     *
      * @param word  The word to censor
      * @param regex The characters to not censor
      * @return {@link String}
@@ -201,7 +204,7 @@ public final class StringUtil {
      *
      * <p>
      * The censored word
-     * 
+     *
      * @param word The word to censor
      * @return {@link String}
      */
@@ -213,14 +216,14 @@ public final class StringUtil {
      * Filter "Leet Speak" out of a message
      * <p>
      * Example:
-     * 
+     *
      * <pre>
      * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
      * </pre>
-     * 
+     *
      * <p>
      * The filtered message
-     * 
+     *
      * @param message The message to filter
      * @return {@link String}
      */
@@ -236,10 +239,10 @@ public final class StringUtil {
 
     /**
      * Check if many strings equal a single comparison string
-     * 
+     *
      * <p>
      * Whether something matches.
-     * 
+     *
      * @param haystack the string to compare to
      * @param needles  things that may match the comparison string
      * @return {@link Boolean}
@@ -270,14 +273,29 @@ public final class StringUtil {
     }
 
     /**
+     * This method uses a region to check case-sensitive equality.
+     *
+     * @param string String to check
+     * @param prefix Prefix of string to compare
+     * @return {@link Boolean}
+     * @throws NullPointerException if prefix or string is null
+     */
+    public static boolean startsWith(@NotNull final String string, @NotNull final String prefix) {
+        if (string.length() < prefix.length()) {
+            return false;
+        }
+        return string.regionMatches(false, 0, prefix, 0, prefix.length());
+    }
+
+    /**
      * Put hyphens into a uuid
      * <p>
      * e.x. de8c89e12f25424d8078c6ff58db7d6e &gt;
      * de8c89e1-2f25-424d-8078-c6ff58db7d6e
-     * 
+     *
      * @param uuid to hyphenate
      * @return {@link UUID}
-     * @throws NullPointerException if uuid string is null
+     * @throws NullPointerException     if uuid string is null
      * @throws IllegalArgumentException if uuid is not 32 characters and is invalid
      */
     public static UUID hyphenateUUID(@NotNull String uuid) {
@@ -291,18 +309,20 @@ public final class StringUtil {
     }
 
 
-
-
     /**
      * Creates a random string of "magic" characters of characters
-     * @param min the minimum length of the string (inclusive)
-     * @param max the maximum length of the string (exclusive)
+     *
+     * @param min               the minimum length of the string (inclusive)
+     * @param max               the maximum length of the string (inclusive)
+     * @param minRunBeforeSpace Minimum number of characters before a space can appear, set to 0 to disable space
      * @return A string of random characters, where the length
      */
-    public static String randomObfuscatedString(int min, int max) {
+    public static String randomObfuscatedString(int min, int max, int minRunBeforeSpace) {
+        Preconditions.checkArgument(max >= min, "Max cannot be less than min");
         // Placeholder chars by width
-        char [] choices = new char[] {
-                ' ', //  1 px
+        char[] choices = new char[]{
+                // Space is boring
+                // ' ', //  1 px
                 'i', //  2 px
                 'l', //  3 px
                 't', //  4 px
@@ -311,21 +331,33 @@ public final class StringUtil {
                 '@'  //  7 px
         };
         StringBuilder obfuscated = new StringBuilder();
-        obfuscated.append(ChatColor.COLOR_CHAR).append(ChatColor.MAGIC);
-        int len = MathUtil.randomInt(max) - min;
-        for(int i = 0; i < max; i++){
-            obfuscated.append(choices[MathUtil.randomInt(choices.length)]);
+
+        int len = MathUtil.randomInt(min, max);
+        int charsSinceSpace = 0;
+        while (obfuscated.length() < len) {
+            if (    minRunBeforeSpace > 0 &&
+                    charsSinceSpace > minRunBeforeSpace &&
+                    // Set a 5% probability of the character being a space
+                    MathUtil.randomInt(1, 100) <= 5) {
+                obfuscated.append(' ');
+                charsSinceSpace = 0;
+            } else {
+                obfuscated.append(MathUtil.randomElement(choices));
+                charsSinceSpace++;
+            }
         }
-        obfuscated.append(ChatColor.COLOR_CHAR).append(ChatColor.RESET);
+        obfuscated.insert(0, ChatColor.MAGIC);
+        obfuscated.append(ChatColor.RESET);
         return obfuscated.toString();
     }
 
     /**
      * Replaces &amp; followed by any valid minecraft format code (matching the regex <pre>(?=([a-f]|[0-9]|[klmnor]))</pre> with &#x00a7;
+     *
      * @param input The input string
      * @return A string where the relevant ampersands are replaced with section symbols
      */
-    public static String formatChatCodes(String input){
+    public static String formatChatCodes(String input) {
         return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));
     }
 
