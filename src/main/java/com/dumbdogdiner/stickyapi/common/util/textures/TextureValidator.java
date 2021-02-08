@@ -33,7 +33,8 @@ public class TextureValidator {
     private static final byte[] PNG_SIGNATURE = new byte[] {
             (byte) 0x89,
             'P', 'N', 'G',
-            (byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A};
+            (byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A
+    };
 
     /**
      * Validates a URL to make sure it is a valid, loadable Minecraft texture
@@ -97,7 +98,7 @@ public class TextureValidator {
                 } else {
                     throw new NullArgumentException("The image retrieved from " + textureURL + " was decoded to null and" /* must not be null */);
                 }
-            } catch (@NotNull IOException | NullArgumentException | NullPointerException e) {
+            } catch (IOException | NullArgumentException | NullPointerException e) {
                 throw new Exception("The content retrieved from " + textureURL + " was not a recognized image, was null, or was decoded to null", e);
             }
 

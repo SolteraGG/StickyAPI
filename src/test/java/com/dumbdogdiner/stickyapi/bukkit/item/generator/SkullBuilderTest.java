@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.bukkit.item.generator;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.dumbdogdiner.stickyapi.bukkit.item.SkullBuilder;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureHelper;
 import com.dumbdogdiner.stickyapi.common.util.textures.TextureValidator;
 import com.dumbdogdiner.stickyapi.mockedplugin.StickyAPIPlugin;
@@ -47,8 +48,8 @@ class SkullBuilderTest {
 //        Assertions.assertEquals(sb, sb.filter("MHFAA"));
 //        Assertions.assertEquals("MHF", sb.getFilter());
 
-        Assertions.assertEquals(sb, sb.head("MHF_Alex"));
-        Assertions.assertEquals("MHF_ALEX", sb.getHead());
+        Assertions.assertEquals(sb, sb.head("Alex"));
+        Assertions.assertEquals("ALEX", sb.getHead());
 
 //        Assertions.assertEquals(sb, sb.head("lmaono"));
 //        Assertions.assertEquals("MHF_ALEX", sb.getHead());

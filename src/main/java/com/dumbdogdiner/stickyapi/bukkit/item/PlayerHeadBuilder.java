@@ -2,12 +2,11 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.bukkit.item.generator;
+package com.dumbdogdiner.stickyapi.bukkit.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.dumbdogdiner.stickyapi.annotation.DoNotCall;
-import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.common.webapis.mojang.CachedMojangAPI;
 import com.google.common.base.Preconditions;
 
@@ -72,6 +71,8 @@ public class PlayerHeadBuilder extends SkullBuilder {
                 "Head must be a player head or player wall head");
         meta = (SkullMeta) head.getItemMeta();
         Preconditions.checkNotNull(meta, "Player head must have metadata attached");
+        // We check this almost immediately after, so it's OK if it's null temporarily
+        //noinspection ConstantConditions
         ownerProfile = meta.getPlayerProfile();
         name(meta.getDisplayName());
         Preconditions.checkNotNull(ownerProfile, "The player head must have a PlayerProfile attached");
@@ -103,11 +104,7 @@ public class PlayerHeadBuilder extends SkullBuilder {
      */
     @Override
     public @NotNull ItemStack build() {
-        if (name != null) {
-            meta.setDisplayName(name);
-        } else {
-            meta.setDisplayName(CachedMojangAPI.getUsername(playerId) + "'s Head");
-        }
+        meta.setDisplayName(Objects.requireNonNullElseGet(name, () -> CachedMojangAPI.getUsername(playerId) + "'s Head"));
 
         if (frozen) {
             ownerProfile.setProperty(new ProfileProperty("texture", texture));

@@ -143,6 +143,7 @@ class TextureValidatorTest {
     void validateAllTextures() {
         for(String qn : TextureHelper.getQualifiedNames()){
             System.out.println("Testing texture for " + qn + " (" + TextureHelper.getTexture(qn) + ")");
+            TextureValidator.validateTextureString(TextureHelper.getTexture(qn));
             assertTrue(TextureValidator.isValidTextureString(TextureHelper.getTexture(qn)));
         }
     }

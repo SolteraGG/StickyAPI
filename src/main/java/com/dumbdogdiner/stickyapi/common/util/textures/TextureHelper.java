@@ -9,6 +9,7 @@ import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;
 import org.bukkit.Bukkit;
@@ -18,6 +19,8 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.*;
 
@@ -38,8 +41,10 @@ public class TextureHelper {
 
     private static Map<String, Map<String, String>> generateTextureMap(){
         try {
-            try (InputStream test = StickyAPI.getResourceAsStream("/textures.yml")) {
-                return YAML.load(test);
+            try (InputStream test = StickyAPI.getResourceAsStream("/generated/textures.json")) {
+                //return YAML.load(test);
+                Type mapType = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
+                return GSON.fromJson(new InputStreamReader(test),mapType);
                 //System.out.println(a.getClass());
             } catch (IOException e) {
                 e.printStackTrace();
