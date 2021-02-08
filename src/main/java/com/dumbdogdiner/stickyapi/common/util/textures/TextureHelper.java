@@ -41,16 +41,13 @@ public class TextureHelper {
 
     private static Map<String, Map<String, String>> generateTextureMap(){
         try {
-            try (InputStream test = StickyAPI.getResourceAsStream("/generated/textures.json")) {
-                //return YAML.load(test);
-                Type mapType = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
-                return GSON.fromJson(new InputStreamReader(test),mapType);
-                //System.out.println(a.getClass());
+            try (InputStream textures = StickyAPI.getResourceAsStream("/generated/textures.json")) {
+                return GSON.fromJson(new InputStreamReader(textures),new TypeToken<Map<String, Map<String, String>>>() {}.getType());
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new RuntimeException("An unknown error occurred while accessing the builtin resource 'textures.yml'.", e);
+                throw new RuntimeException("An unknown error occurred while accessing the builtin resource 'textures.json'.", e);
             } catch (ClassCastException e) {
-                throw new RuntimeException("The integrated textures.yml resource was invalid. Please check the format at compile-time. If you are a server owner, contact the developers of StickyAPI", e);
+                throw new RuntimeException("The integrated textures.json resource was invalid. Please check the format at compile-time, ensure that the resource is generated correctly. If you are a server owner, contact the developers of StickyAPI", e);
             }
 
         } catch (RuntimeException e) {
