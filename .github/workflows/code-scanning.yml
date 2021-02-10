@@ -17,7 +17,7 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         languages: java
-        queries: security-extended,security-and-quality,github/codeql/java/ql/src/codeql-suites/java-code-scanning.qls@v1.26.0,github/codeql/java/ql/src/codeql-suites/java-lgtm-full.qls@v1.26.0
+        queries: security-extended,security-and-quality
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
