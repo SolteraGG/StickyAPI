@@ -6,7 +6,7 @@ This project is open for all developers for contribution, so it's important we e
 
 -   No pushing to master without opening a pull request (The only exceptions are small hotfixes, any new features or such MUST go in a new branch)
 -   Must be backwards compatible down to Java 11
--   Javadoc your code according to google's [Javadoc guidlines](https://google.github.io/styleguide/javaguide.html#s7-javadoc)
+-   Javadoc your code according to Google's [Javadoc guidlines](https://google.github.io/styleguide/javaguide.html#s7-javadoc)
 
 ## Pull Requests
 

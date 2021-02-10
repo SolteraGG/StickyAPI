@@ -4,15 +4,17 @@
  */
 package com.dumbdogdiner.stickyapi;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * <h1>StickyAPI</h1> Utility methods, classes and potentially
@@ -29,7 +31,16 @@ public class StickyAPI {
 
     @Getter
     @Setter
-    private static ExecutorService pool = Executors.newCachedThreadPool();
+    private static @NotNull ExecutorService pool = Executors.newCachedThreadPool();
+
+    /**
+     * Provides a wrapper for {@link java.lang.Class#getResourceAsStream(String)} (String)}
+     * @param resourceName The resource to get
+     * @return an {@link InputStream} to that resource
+     */
+    public static InputStream getResourceAsStream(@NotNull String resourceName){
+        return StickyAPI.class.getResourceAsStream(resourceName);
+    }
 
     // Build Info Start
 
@@ -38,8 +49,8 @@ public class StickyAPI {
      * 
      * @since TBA
      * @return {@link String} version
-     * 
      */
+    @SuppressWarnings("JavaDoc")
     @Getter
     private static final String version = "@BUILDINFO_VERSION";
 
@@ -55,6 +66,7 @@ public class StickyAPI {
      * @since TBA
      * @return {@link String} commit id
      */
+    @SuppressWarnings("JavaDoc")
     @Getter
     private static final String commit = "@BUILDINFO_COMMIT@";
 
@@ -64,6 +76,7 @@ public class StickyAPI {
      * @since TBA
      * @return {@link String} branch name
      */
+    @SuppressWarnings("JavaDoc")
     @Getter
     private static final String branch = "@BUILDINFO_BRANCH@";
 
@@ -80,8 +93,7 @@ public class StickyAPI {
     public static Date getTimestamp() {
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
         try {
-            Date date = formatter.parse(timestamp);
-            return date;
+            return formatter.parse(timestamp);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -106,6 +118,7 @@ public class StickyAPI {
      * @since TBA
      * @return {@link Boolean} isDirty
      */
+    @SuppressWarnings("ConstantConditions")
     public static Boolean getIsDirty() {
         return Boolean.parseBoolean(isDirty);
     }

@@ -4,12 +4,13 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.util.HashMap;
-
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+
 public class TextUtil {
-    static HashMap<Character, Integer> characterWidths = new HashMap<>() {
+    @NotNull
+    private static final HashMap<Character, Integer> characterWidths = new HashMap<>() {
         {
             put('!', 1);
             put(',', 1);
@@ -19,7 +20,6 @@ public class TextUtil {
             put(';', 1);
             put('i', 1);
             put('|', 1);
-            put('!', 1);
 
             put('`', 2);
             put('l', 2);
@@ -46,13 +46,14 @@ public class TextUtil {
     };
 
     // Uses info from:
+
     /**
      * Get the width of a character (https://minecraft.gamepedia.com/Language#Font)
-     * 
-     * @param c
-     * @return
+     *
+     * @param c The character
+     * @return the width in pixels
      */
-    public static int getCharacterWidth(@NotNull char c) {
+    public static int getCharacterWidth(char c) {
         if (c < 32 || c > 126) {
             // Not presently implemented, would require rendering TTF
             return -1;

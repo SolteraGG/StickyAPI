@@ -49,8 +49,8 @@ public final class TimeUtil {
      * @param time in milliseconds (e.x. 1000 == 0.02/m)
      * @return {@link java.lang.String}
      */
-    public static String significantDurationString(@NotNull final long time) {
-        StringBuilder message = new StringBuilder();
+    public static @NotNull String significantDurationString(@NotNull final long time) {
+        @NotNull StringBuilder message = new StringBuilder();
         double timeSince = (double) (System.currentTimeMillis() / 1000L)
                 - ((double) (System.currentTimeMillis() / 1000L) - (time / 1000L) + 0.0);
         if ((timeSince /= 60.0) < 60.0) {
@@ -76,7 +76,7 @@ public final class TimeUtil {
      * @param time in milliseconds (e.x. 1000 == 1 second)
      * @return {@link java.lang.String}
      */
-    public static String durationString(@NotNull final long time) {
+    public static @NotNull String durationString(@NotNull final long time) {
         var t = time / 1000L;
         long years = t / 31449600;
         long weeks = (t / 604800) % 52;
@@ -85,7 +85,7 @@ public final class TimeUtil {
         long minutes = (t / 60) % 60;
         long seconds = t % 60;
 
-        List<String> components = new ArrayList<>();
+        @NotNull List<String> components = new ArrayList<>();
 
         if (years != 0) {
             components.add(String.format("%d %s", years, years != 1 ? "years" : "year"));
@@ -105,7 +105,7 @@ public final class TimeUtil {
         if (seconds != 0) {
             components.add(String.format("%d %s", seconds, seconds != 1 ? "seconds" : "second"));
         }
-        StringBuilder sb = new StringBuilder();
+        @NotNull StringBuilder sb = new StringBuilder();
         for (String str : components) {
             if (components.get(components.size() - 1) == str) {
                 if (components.size() == 1) {
@@ -128,7 +128,7 @@ public final class TimeUtil {
      * @param timestamp to convert to a duration string
      * @return {@link java.lang.String}
      */
-    public static String durationString(@NotNull Timestamp timestamp) {
+    public static @NotNull String durationString(@NotNull Timestamp timestamp) {
         return durationString(timestamp.getTime());
     }
 
@@ -140,7 +140,7 @@ public final class TimeUtil {
      * @param timestamp to convert to a significant duration string
      * @return {@link java.lang.String}
      */
-    public static String significantDurationString(@NotNull Timestamp timestamp) {
+    public static @NotNull String significantDurationString(@NotNull Timestamp timestamp) {
         return significantDurationString(timestamp.getTime());
     }
 
@@ -254,7 +254,7 @@ public final class TimeUtil {
      *             {@link java.text.SimpleDateFormat}
      */
     @Deprecated
-    public static String timeString(@Nullable long t) {
+    public static @NotNull String timeString(@Nullable long t) {
         return TimeUtil.timeString(new Timestamp(t));
     }
 
@@ -269,7 +269,7 @@ public final class TimeUtil {
      *             {@link java.text.SimpleDateFormat}
      */
     @Deprecated
-    public static String timeString(@Nullable Timestamp ts) {
+    public static @NotNull String timeString(@Nullable Timestamp ts) {
         if (ts == null)
             return "";
         return sdf.format(ts);
@@ -281,7 +281,7 @@ public final class TimeUtil {
      * @param timePeriod A duration string (eg, "2y1w10d40m6s")
      * @return {@link java.sql.Timestamp}
      */
-    public static Timestamp toTimestamp(@NotNull String timePeriod) {
+    public static @org.jetbrains.annotations.Nullable Timestamp toTimestamp(@NotNull String timePeriod) {
         boolean compare = StringUtil.compareMany(timePeriod, new String[] { "*", "0" });
         if (compare)
             return null;
@@ -300,7 +300,7 @@ public final class TimeUtil {
         return null;
     }
 
-    private static Timestamp _toTimestamp(String timePeriod) {
+    private static @org.jetbrains.annotations.Nullable Timestamp _toTimestamp(@NotNull String timePeriod) {
         Optional<Long> dur = TimeUtil.duration(timePeriod);
         if (dur.isPresent())
             return ((TimeUtil.getUnixTime() + dur.get()) * 1000L) >= (253402261199L * 1000L) ? null
@@ -322,7 +322,7 @@ public final class TimeUtil {
      * 
      * @return {@link java.sql.Timestamp}
      */
-    public static Timestamp now() {
+    public static @NotNull Timestamp now() {
         return new Timestamp(TimeUtil.getUnixTime() * 1000L);
     }
 }

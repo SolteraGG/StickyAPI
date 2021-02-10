@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+# Licensed under the MIT license, see LICENSE for more information...
+#
+
+database:
+  host: localhost
+  port: 3306
+  name: dbname
+  username: root
+  password: root
+  table-prefix: stickyapi_
+  # Maximum number of times mysql will try to reconnect before giving up.
+  max-reconnects: 5
+  # Use SSL?
+  use-ssl: false

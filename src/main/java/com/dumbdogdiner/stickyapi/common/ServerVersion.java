@@ -4,9 +4,15 @@
  */
 package com.dumbdogdiner.stickyapi.common;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Utility class for fetching version data.
  */
+
+// Suppress Constant conditions because they appear to always be true at compile time
+@SuppressWarnings("ConstantConditions")
 public final class ServerVersion {
     private ServerVersion() {
     }
@@ -20,7 +26,7 @@ public final class ServerVersion {
      * 
      * @return The type of the server running when this method is evaluated.
      */
-    public static ServerType getServerType() {
+    public static @NotNull ServerType getServerType() {
         if (isBukkit()) {
             if (isPaper()) {
                 return ServerType.PAPER;
@@ -46,7 +52,7 @@ public final class ServerVersion {
     public static boolean isPaper() {
         try {
             return Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData") != null;
-        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+        } catch (@NotNull NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }
     }
@@ -73,7 +79,7 @@ public final class ServerVersion {
     public static boolean isBukkit() {
         try {
             return Class.forName("org.bukkit.Server") != null;
-        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+        } catch (@NotNull NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }
     }
@@ -86,7 +92,7 @@ public final class ServerVersion {
     public static boolean isWaterfall() {
         try {
             return Class.forName("io.github.waterfallmc.waterfall.QueryResult") != null;
-        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+        } catch (@NotNull NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }
     }
@@ -99,7 +105,7 @@ public final class ServerVersion {
     public static boolean isBungee() {
         try {
             return Class.forName("net.md_5.bungee.api.ProxyServer") != null;
-        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+        } catch (@NotNull NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }
     }
@@ -110,7 +116,7 @@ public final class ServerVersion {
      * 
      * @return The current version of bukkit
      */
-    public static String getBukkitVersion() {
+    public static @Nullable String getBukkitVersion() {
         try {
             return org.bukkit.Bukkit.getVersion();
         } catch (NoClassDefFoundError e) {
@@ -123,7 +129,7 @@ public final class ServerVersion {
      * 
      * @return The current version of bungee
      */
-    public static String getBungeeVersion() {
+    public static @Nullable String getBungeeVersion() {
         try {
             return net.md_5.bungee.api.ProxyServer.getInstance().getVersion();
         } catch (NoClassDefFoundError e) {

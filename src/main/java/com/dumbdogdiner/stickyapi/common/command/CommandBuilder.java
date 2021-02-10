@@ -4,6 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.common.command;
 
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
     @Getter
     Boolean synchronous = false;
     @Getter
+    @NotNull
     Boolean requiresPlayer = false;
     @Getter
     String name;
@@ -26,12 +30,16 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
     @Getter
     String description;
     @Getter
+    @NotNull
     Boolean playSound = false;
     @Getter
+    @NotNull
     List<String> aliases = new ArrayList<>();
     @Getter
+    @NotNull
     Long cooldown = 0L;
     @Getter
+    @NotNull
     HashMap<String, T> subCommands = new HashMap<>();
 
     /**
@@ -51,7 +59,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param synchronous if this command should run synchronously
      * @return {@link CommandBuilder}
      */
-    public T synchronous(@NotNull Boolean synchronous) {
+    public @NotNull T synchronous(@NotNull Boolean synchronous) {
         this.synchronous = synchronous;
         return (T) this;
     }
@@ -61,7 +69,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * 
      * @return {@link CommandBuilder}
      */
-    public T synchronous() {
+    public @NotNull T synchronous() {
         return this.synchronous(true);
     }
 
@@ -71,7 +79,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param cooldown in milliseconds
      * @return {@link CommandBuilder}
      */
-    public T cooldown(@NotNull Long cooldown) {
+    public @NotNull T cooldown(@NotNull Long cooldown) {
         this.cooldown = cooldown;
         return (T) this;
     }
@@ -83,7 +91,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param requiresPlayer If this command should require a player as the executor
      * @return {@link CommandBuilder}
      */
-    public T requiresPlayer(@NotNull Boolean requiresPlayer) {
+    public @NotNull T requiresPlayer(@NotNull Boolean requiresPlayer) {
         this.requiresPlayer = requiresPlayer;
         return (T) this;
     }
@@ -94,7 +102,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * 
      * @return {@link CommandBuilder}
      */
-    public T requiresPlayer() {
+    public @NotNull T requiresPlayer() {
         return this.requiresPlayer(true);
     }
 
@@ -124,7 +132,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param permission to set
      * @return {@link CommandBuilder}
      */
-    public T permission(@NotNull String permission) {
+    public @NotNull T permission(@NotNull String permission) {
         this.permission = permission;
         return (T) this;
     }
@@ -135,7 +143,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param description to set
      * @return {@link CommandBuilder}
      */
-    public T description(@NotNull String description) {
+    public @NotNull T description(@NotNull String description) {
         this.description = description;
         return (T) this;
     }
@@ -146,7 +154,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param alias to add
      * @return {@link CommandBuilder}
      */
-    public T alias(@NotNull String... alias) {
+    public @NotNull T alias(@NotNull String @NotNull ... alias) {
         for (var a : alias) {
             this.aliases.add(a);
         }
@@ -159,7 +167,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param aliases to set
      * @return {@link CommandBuilder}
      */
-    public T aliases(@NotNull List<String> aliases) {
+    public @NotNull T aliases(@NotNull List<String> aliases) {
         this.aliases = aliases;
         return (T) this;
     }
@@ -170,7 +178,7 @@ public abstract class CommandBuilder<T extends CommandBuilder<T>> {
      * @param builder the sub command
      * @return {@link CommandBuilder}
      */
-    public T subCommand(@NotNull T builder) {
+    public @NotNull T subCommand(@NotNull T builder) {
         builder.synchronous = this.synchronous;
         this.subCommands.put(builder.name, builder);
         return (T) this;

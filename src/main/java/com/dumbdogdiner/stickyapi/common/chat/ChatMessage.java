@@ -57,7 +57,7 @@ public class ChatMessage {
      * @param content The new content this ChatMessage object should contain
      * @return {@link ChatMessage}
      */
-    public ChatMessage setContent(@NotNull String content) {
+    public @NotNull ChatMessage setContent(@NotNull String content) {
         this.component = new TextComponent(content);
         this.rawContent = content;
         return this;
@@ -70,7 +70,7 @@ public class ChatMessage {
      * @param apply Whether URLs should be formatted.
      * @return {@link ChatMessage}
      */
-    public ChatMessage applyURLs(@NotNull boolean apply) {
+    public @NotNull ChatMessage applyURLs(@NotNull boolean apply) {
         if (apply) {
             String original = this.component.getText();
             component = URLUtil.convertURLs(original);
@@ -86,7 +86,7 @@ public class ChatMessage {
      * @param chatMessage The ChatMessage that should be added.
      * @return {@link ChatMessage}
      */
-    public ChatMessage appendMessage(@NotNull ChatMessage chatMessage) {
+    public @NotNull ChatMessage appendMessage(@NotNull ChatMessage chatMessage) {
         if (chatMessage != null) {
             this.component.addExtra(chatMessage.getComponent());
             this.rawContent = rawContent + chatMessage.getRawContent();
@@ -103,8 +103,8 @@ public class ChatMessage {
      *
      * @return {@link ChatMessage}
      */
-    public ChatMessage setHoverMessage(@NotNull String... text) {
-        StringBuilder tooltip = new StringBuilder();
+    public @NotNull ChatMessage setHoverMessage(@NotNull String @NotNull ... text) {
+        @NotNull StringBuilder tooltip = new StringBuilder();
         int i = 0;
         for (String s : text) {
             tooltip.append(s);
@@ -127,7 +127,7 @@ public class ChatMessage {
      * @param url The URL this message should suggest when clicked.
      * @return {@link ChatMessage}
      */
-    public ChatMessage setLink(@NotNull String url) {
+    public @NotNull ChatMessage setLink(@NotNull String url) {
         this.component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
         return this;
     }
@@ -139,7 +139,7 @@ public class ChatMessage {
      * @param command The command that should run when message is clicked.
      * @return {@link ChatMessage}
      */
-    public ChatMessage setCommand(@NotNull String command) {
+    public @NotNull ChatMessage setCommand(@NotNull String command) {
         this.component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
         return this;
     }

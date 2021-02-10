@@ -4,15 +4,13 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.util.Random;
-import java.util.logging.Logger;
-
-import javax.annotation.Nullable;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import lombok.Setter;
-import lombok.Getter;
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Utility class for debugging.
@@ -45,9 +43,9 @@ public class Debugger {
     @Getter
     private int logCount = 0;
 
-    private final Class<?> clazz;
+    private final @NotNull Class<?> clazz;
 
-    private Random r = new Random();
+    private @NotNull Random r = new Random();
     private final String ALPHABET = "3569abcde";
     private final String COLOR = "\u00A7" + ALPHABET.charAt(r.nextInt(ALPHABET.length()));
 
@@ -82,7 +80,7 @@ public class Debugger {
      * 
      * @return {@link Debugger}
      */
-    public Debugger reset() {
+    public @NotNull Debugger reset() {
         startTime = System.nanoTime();
         logCount = 0;
         return this;
@@ -103,8 +101,8 @@ public class Debugger {
         boolean thisOne = false;
         int thisOneCountDown = 1;
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        for (StackTraceElement element : elements) {
-            String methodName = element.getMethodName();
+        for (@NotNull StackTraceElement element : elements) {
+            @NotNull String methodName = element.getMethodName();
             int lineNum = element.getLineNumber();
             if (thisOne && (thisOneCountDown == 0)) {
                 return lineNum;

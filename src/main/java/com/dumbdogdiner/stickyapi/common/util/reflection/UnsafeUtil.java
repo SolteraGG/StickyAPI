@@ -14,7 +14,7 @@ import sun.misc.Unsafe;
  * A utility class for the Java internal {@link sun.misc.Unsafe Unsafe} class -
  * a class with low-level mechanisms designed only to be used by the core Java
  * library.
- * 
+ *
  * @since 2.0
  */
 public class UnsafeUtil {
@@ -23,9 +23,9 @@ public class UnsafeUtil {
 
     /**
      * Get an instance of the Unsafe class.
-     * 
+     *
      * This method uses reflection to avoid a SecurityException.
-     * 
+     *
      * @return {@link sun.misc.Unsafe Unsafe} - an instance of the Unsafe class.
      * @throws NoSuchFieldException
      * @throws SecurityException

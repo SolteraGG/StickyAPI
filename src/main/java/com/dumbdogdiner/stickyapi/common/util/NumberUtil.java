@@ -45,12 +45,14 @@ public final class NumberUtil {
     public static boolean isNumeric(@NotNull String string) {
         int size = string.length();
         for (int i = 0; i < size; i++) {
-            if (Character.isDigit(string.charAt(i)) == false) {
+            if (!Character.isDigit(string.charAt(i))) {
                 return false;
             }
         }
         return true;
     }
+
+    // TODO the percent stuff can be rewritten in a more compact manor
 
     /**
      * Get a number as the percentage of another.
@@ -58,14 +60,14 @@ public final class NumberUtil {
      * @param x      The number who's percentage of the total this method will
      *               return
      * @param total  The total
-     * @param string If this should return as a string with `%` appended to the end
+     * @param withSymbol If this should return as a string with `%` appended to the end
      * @return {@link Double}
      */
-    public static String getPercentage(@NotNull double x, @NotNull double total, @NotNull Boolean string) {
-        var percent = (x / total);
-        StringBuilder sb = new StringBuilder();
-        if (string) {
-            sb.append((percent * 100) + "%");
+    public static @NotNull String getPercentage(@NotNull double x, @NotNull double total, boolean withSymbol) {
+        double percent = (x / total);
+        @NotNull StringBuilder sb = new StringBuilder();
+        if (withSymbol) {
+            sb.append(percent * 100).append("%");
         } else {
             sb.append((percent));
         }
@@ -79,7 +81,7 @@ public final class NumberUtil {
      * @param total The total
      * @return {@link Double}
      */
-    public static Double getPercentage(@NotNull int x, @NotNull int total) {
+    public static @NotNull Double getPercentage(@NotNull int x, @NotNull int total) {
         return Double.valueOf(getPercentage(x, total, false));
     }
 
@@ -90,7 +92,7 @@ public final class NumberUtil {
      * @param total The total
      * @return {@link String}
      */
-    public static String getPercentageString(@NotNull int x, @NotNull int total) {
+    public static @NotNull String getPercentageString(int x, int total) {
         return getPercentage(x, total, true);
     }
 
@@ -106,10 +108,9 @@ public final class NumberUtil {
      * @return {@link Integer}
      * @throws IllegalArgumentException when min is greater than max
      */
-    public static int getRandomNumber(@NotNull int min, @NotNull int max) {
-        if (min >= max)
-            throw new IllegalArgumentException("Min may not be greater than max!");
-        return (int) ((Math.random() * (max - min)) + min);
+    @Deprecated
+    public static int getRandomNumber(int min, int max) {
+        return MathUtil.randomInt(min, max);
     }
 
     /**

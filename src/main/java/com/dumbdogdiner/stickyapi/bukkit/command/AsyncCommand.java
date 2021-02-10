@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * 
  * @deprecated Use
  *             {@link com.dumbdogdiner.stickyapi.bukkit.command.BukkitCommandBuilder}
- *             as this will be removed in the next release
+ *             as this will be removed in a future release
  */
 @Deprecated
 public abstract class AsyncCommand extends Command implements PluginIdentifiableCommand {
@@ -43,7 +43,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @param commandName The name of the command the user will execute
      * @param owner       The plugin that owns this command.
      */
-    public AsyncCommand(String commandName, Plugin owner) {
+    public AsyncCommand(@NotNull String commandName, Plugin owner) {
         super(commandName);
         this.owner = owner;
     }
@@ -60,7 +60,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
     // public abstract int executeCommand(Sender sender, String commandLabel,
     // String[] args);
 
-    public abstract ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
+    public abstract @NotNull ExitCode executeCommand(CommandSender sender, String commandLabel, String[] args);
 
     /**
      * This is a vastly simplified command class. We only check if the plugin is
@@ -77,17 +77,17 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @return {@link ExitCode}
      */
     @Override
-    public final boolean execute(CommandSender sender, String commandLabel, String[] args) {
+    public final boolean execute(@NotNull CommandSender sender, String commandLabel, String[] args) {
         if (!this.owner.isEnabled())
             throw new CommandException(String.format("Cannot execute command \"%s\" in plugin %s - plugin is disabled.",
                     commandLabel, this.owner.getDescription().getFullName()));
 
-        AsyncCommand self = this;
-        FutureTask<Boolean> t = new FutureTask<>(new Callable<Boolean>() {
+        @NotNull AsyncCommand self = this;
+        @NotNull FutureTask<Boolean> t = new FutureTask<>(new Callable<Boolean>() {
             @Override
-            public Boolean call() {
+            public @NotNull Boolean call() {
                 try {
-                    ExitCode resultingExitCode = self.executeCommand(sender, commandLabel, args);
+                    @NotNull ExitCode resultingExitCode = self.executeCommand(sender, commandLabel, args);
 
                     if (resultingExitCode == null) {
                         throw new IllegalArgumentException("A null exit code was returned");
@@ -116,7 +116,7 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @return Plugin that owns this command
      */
     @Override
-    public Plugin getPlugin() {
+    public @NotNull Plugin getPlugin() {
         return this.owner;
     }
 
@@ -181,16 +181,16 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      */
     @Override
     public java.util.@NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias,
-            String[] args) throws CommandException, IllegalArgumentException {
+            String @org.jetbrains.annotations.Nullable [] args) throws CommandException, IllegalArgumentException {
         if (args == null)
             throw new NullPointerException("arguments to tabComplete cannot be null");
 
-        List<String> completions = null;
+        @org.jetbrains.annotations.Nullable List<String> completions = null;
         try {
             if (completer != null)
                 completions = completer.onTabComplete(sender, this, alias, args);
         } catch (Throwable ex) {
-            StringBuilder message = new StringBuilder();
+            @NotNull StringBuilder message = new StringBuilder();
             message.append("Unhandled exception during tab completion for command '/").append(alias).append(' ');
             for (String arg : args)
                 message.append(arg).append(' ');
@@ -212,8 +212,8 @@ public abstract class AsyncCommand extends Command implements PluginIdentifiable
      * @return the human readable name of the class
      */
     @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(super.toString());
+    public @NotNull String toString() {
+        @NotNull StringBuilder stringBuilder = new StringBuilder(super.toString());
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         stringBuilder.append(", ").append(owner.getDescription().getFullName()).append(')');
         return stringBuilder.toString();

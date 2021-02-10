@@ -26,7 +26,7 @@ public class SoundUtil {
      * @param sender {@link org.bukkit.command.CommandSender} The sender to validate
      * @return {@link java.lang.Boolean}
      */
-    private static Boolean validate(CommandSender sender) {
+    private static @NotNull Boolean validate(CommandSender sender) {
         return sender instanceof ProxiedPlayer;
     }
 
@@ -107,11 +107,11 @@ public class SoundUtil {
      * @param type   {@link NotificationType} The type of sound
      * @return {@link java.lang.Boolean}
      */
-    public static Boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {
+    public static @NotNull Boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {
         if (!validate(sender)) {
             return false;
         }
-        var player = (ProxiedPlayer) sender;
+        @NotNull var player = (ProxiedPlayer) sender;
         switch (type) {
             case ERROR:
                 sendError(player);

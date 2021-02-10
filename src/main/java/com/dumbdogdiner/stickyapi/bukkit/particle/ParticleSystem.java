@@ -166,7 +166,7 @@ public class ParticleSystem {
      * @param count The number of particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawn(double x, double y, double z, int count) {
+    public @NotNull ParticleSystem spawn(double x, double y, double z, int count) {
         this.ensureDefaultParticle();
         return this.spawn(this.particle, x, y, z, count, this.data);
     }
@@ -214,7 +214,7 @@ public class ParticleSystem {
      * @param count The number of particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem spawnAbsolute(double x, double y, double z, int count) {
+    public @NotNull ParticleSystem spawnAbsolute(double x, double y, double z, int count) {
         this.ensureDefaultParticle();
         return this.spawnAbsolute(this.particle, x, y, z, count, this.data);
     }
@@ -527,7 +527,7 @@ public class ParticleSystem {
      * @param data     Data of the particles to spawn
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape, @Nullable Particle.DustOptions data) {
+    public @NotNull ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape, @Nullable Particle.DustOptions data) {
         this.ensureRelative();
         shape.draw(this, particle, data);
         return this;
@@ -540,7 +540,7 @@ public class ParticleSystem {
      * @param shape    The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape) {
+    public @NotNull ParticleSystem shape(@NotNull Particle particle, @NotNull Shape shape) {
         return this.shape(particle, shape, null);
     }
 
@@ -550,7 +550,7 @@ public class ParticleSystem {
      * @param shape The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shape(Shape shape) {
+    public @NotNull ParticleSystem shape(@NotNull Shape shape) {
         this.ensureDefaultParticle();
         return this.shape(this.particle, shape, this.data);
     }
@@ -577,7 +577,7 @@ public class ParticleSystem {
      * @param shape    The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shapeAbsolute(@NotNull Particle particle, @NotNull Shape shape) {
+    public @NotNull ParticleSystem shapeAbsolute(@NotNull Particle particle, @NotNull Shape shape) {
         return this.shapeAbsolute(particle, shape, null);
     }
 
@@ -587,7 +587,7 @@ public class ParticleSystem {
      * @param shape The shape
      * @return {@link ParticleSystem}
      */
-    public ParticleSystem shapeAbsolute(@NotNull Shape shape) {
+    public @NotNull ParticleSystem shapeAbsolute(@NotNull Shape shape) {
         this.ensureDefaultParticle();
         return this.shapeAbsolute(this.particle, shape, this.data);
     }

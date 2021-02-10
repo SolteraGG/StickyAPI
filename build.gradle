@@ -14,19 +14,21 @@ jacoco {
 }
 
 group = 'com.dumbdogdiner'
-
-version = '2.1.0'
+version = '2.3.0'
 
 // License Plugin Options
 license {
     header = project.file('LICENSE_HEADER')
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
     mapping("java", "SLASHSTAR_STYLE")
+    exclude("**/*.json")
 }
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+    options.encoding = "UTF-8"
 }
+
 // Run the license formatter before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
 
@@ -39,6 +41,7 @@ configurations {
 repositories {
     mavenCentral()
     jcenter()
+    google()
 
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
@@ -50,10 +53,14 @@ dependencies {
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
+
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.100'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'commons-validator:commons-validator:1.7'
+    implementation 'com.google.guava:guava:30.1-jre'
     
     // Tests - JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
@@ -61,6 +68,19 @@ dependencies {
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
     testImplementation("org.mockito:mockito-core:3.7.7")
+    
+    // Tests - Mocked Bukkit Project (Has some additional features)
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
+    testImplementation 'it.unimi.dsi:fastutil:8.4.4'
+}
+
+task downloadTextures(type: Download) {
+    sourceUrl = 'https://dumbdogdiner.github.io/mc-heads-resource/textures.json'
+    target = new File('src/main/resources/generated/textures.json')
+}
+
+task cleanGenerated(type: Delete){
+    delete('src/main/resources/generated')
 }
 
 test {
@@ -70,6 +90,7 @@ test {
         // Show System.out for code ran by tests
         showStandardStreams = true
 	}
+    //ignoreFailures = true
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
@@ -86,15 +107,22 @@ task sources(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+tasks.delombok.shouldRunAfter(sources)
+tasks.publish.dependsOn build
+tasks.build.shouldRunAfter(clean)
+tasks.javadoc.shouldRunAfter(clean)
+tasks.build.finalizedBy(sources)
+tasks.clean.dependsOn(cleanGenerated)
+tasks.processResources.dependsOn(downloadTextures)
 
 // Javadoc Fixes
 // Some environments (such as the builder image) do not use UTF-8 as the default encoding!
-// This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
-delombok.encoding = "UTF-8"
-
-compileJava.options.encoding = "UTF-8"
-compileTestJava.options.encoding = "UTF-8"
-javadoc.options.encoding = "UTF-8"
+delombok {
+    finalizedBy(javadoc)
+    print(true)
+    encoding = "UTF-8"
+    //verbose(true)
+}
 
 
 // Build Info
@@ -127,10 +155,35 @@ task processSourceTokens(type: Sync) {
 }
 // Use the filter task as the input for compileJava
 compileJava.source = processSourceTokens.outputs
-
-
 tasks.publish.dependsOn build, sources
 
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+javadoc {
+    options.addBooleanOption('XDignore.symbol.file', true)
+    options.addBooleanOption('-frames', true)
+    options.addBooleanOption('private', true)
+    test.ignoreFailures true;
+    options.encoding = 'UTF-8'
+    dependsOn delombok
+}
+
+task browseJavadoc {
+    dependsOn javadoc
+    doLast {
+        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
+    }
+}
+
+task rebuild {
+    dependsOn clean
+    finalizedBy build
+}
 
 
 
@@ -150,5 +203,18 @@ publishing {
             from(components.java)
             artifact sources // Publish the output of the sources task
         }
+    }
+}
+
+class Download extends DefaultTask {
+    @Input
+    String sourceUrl
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void download() {
+        ant.get(src: sourceUrl, dest: target)
     }
 }

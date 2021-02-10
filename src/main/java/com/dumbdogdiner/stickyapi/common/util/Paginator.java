@@ -4,12 +4,10 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import java.lang.Math;
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class Paginator<T> {
@@ -24,7 +22,7 @@ public class Paginator<T> {
 	 * @param objects array of objects to paginate
 	 * @param max     maximum number of objects per page
 	 */
-	public Paginator(@NotNull T[] objects, @NotNull Integer max) {
+	public Paginator(@NotNull T @NotNull [] objects, @NotNull Integer max) {
 		this.objects = objects;
 		this.pagSize = Double.valueOf(max);
 		this.amountOfPages = (int) Math.ceil(objects.length / pagSize);
@@ -110,8 +108,8 @@ public class Paginator<T> {
 	 * @param pageNum the page number.
 	 * @return List of objects that make up this page
 	 */
-	public List<T> getPage(@NotNull Integer pageNum) {
-		List<T> page = new ArrayList<>();
+	public @NotNull List<T> getPage(@NotNull Integer pageNum) {
+		@NotNull List<T> page = new ArrayList<>();
 		double total = objects.length / pagSize;
 		amountOfPages = (int) Math.ceil(total);
 		currentPage = pageNum;

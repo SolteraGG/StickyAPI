@@ -27,7 +27,7 @@ public class YamlConstructor extends SafeConstructor {
                 throw new YAMLException("Unexpected referential mapping structure. Node: " + node);
             }
 
-            Map<?, ?> raw = (Map<?, ?>) super.construct(node);
+            @NotNull Map<?, ?> raw = (Map<?, ?>) super.construct(node);
 
             return raw;
         }

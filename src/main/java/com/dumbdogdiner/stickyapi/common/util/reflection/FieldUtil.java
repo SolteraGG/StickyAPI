@@ -11,7 +11,7 @@ import java.lang.reflect.Modifier;
 
 /**
  * A class for manipulating {@link java.lang.reflect.Field Fields}.
- * 
+ *
  * @since 2.0
  */
 public final class FieldUtil {

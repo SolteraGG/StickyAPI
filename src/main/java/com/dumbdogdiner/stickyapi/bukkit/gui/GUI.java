@@ -9,7 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -138,15 +140,15 @@ public class GUI {
         addSlot(cs.getX(), cs.getY(), cs.getItem(), tag, action);
     }
 
-    public void addSlot(ClickableSlot cs, String tag) {
+    public void addSlot(@NotNull ClickableSlot cs, String tag) {
         addSlot(cs, tag, null);
     }
 
-    public void addSlot(ClickableSlot cs, BiConsumer<InventoryClickEvent, GUI> action) {
+    public void addSlot(@NotNull ClickableSlot cs, BiConsumer<InventoryClickEvent, GUI> action) {
         addSlot(cs, null, action);
     }
 
-    public void addSlot(ClickableSlot cs) {
+    public void addSlot(@NotNull ClickableSlot cs) {
         addSlot(cs, null, null);
     }
 
@@ -180,18 +182,18 @@ public class GUI {
      * 
      * @param player The player who will see this GUI
      */
-    public void open(Player player) {
-        var self = this;
+    public void open(@NotNull Player player) {
+        @NotNull var self = this;
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
-            public void onInventoryOpen(InventoryOpenEvent event) {
+            public void onInventoryOpen(@NotNull InventoryOpenEvent event) {
                 if (event.getInventory() == inventory) {
                     self.onInventoryOpen(event);
                 }
             }
 
             @EventHandler
-            public void onInventoryClick(InventoryClickEvent event) {
+            public void onInventoryClick(@NotNull InventoryClickEvent event) {
                 if (event.getClickedInventory() == inventory) {
                     event.setCancelled(true);
                     // only allow basic clicks, other clicks might allow players to smuggle gui
@@ -205,10 +207,10 @@ public class GUI {
                     }
 
                     var slot = slots.get(event.getSlot());
-                    String tag = null;
+                    @Nullable String tag = null;
                     if (slot != null) {
                         tag = slot.getTag();
-                        var action = slot.getAction();
+                        @Nullable var action = slot.getAction();
                         if (action != null) {
                             action.accept(event, self);
                         }
@@ -218,7 +220,7 @@ public class GUI {
             }
 
             @EventHandler
-            public void onInventoryClose(InventoryCloseEvent event) {
+            public void onInventoryClose(@NotNull InventoryCloseEvent event) {
                 if (event.getInventory() == inventory) {
                     self.onInventoryClose(event);
                     InventoryOpenEvent.getHandlerList().unregister(this);
@@ -266,11 +268,11 @@ public class GUI {
 
     // custom setter for inventory name, as inv name normally cannot be changed
     public void setName(@NotNull String name) {
-        var viewers = new ArrayList<>(inventory.getViewers());
+        @NotNull var viewers = new ArrayList<>(inventory.getViewers());
         var contents = inventory.getContents();
         inventory = Bukkit.createInventory(null, ROW_LENGTH * rows, name);
         inventory.setContents(contents);
-        for (var viewer : viewers) {
+        for (@NotNull var viewer : viewers) {
             viewer.openInventory(inventory);
         }
         this.name = name;
@@ -282,8 +284,8 @@ public class GUI {
      * @return A copy of this GUI with no viewers.
      */
     public @NotNull GUI duplicate() {
-        var gui = new GUI(rows, name, plugin);
-        for (var slot : slots.entrySet()) {
+        @NotNull var gui = new GUI(rows, name, plugin);
+        for (@NotNull var slot : slots.entrySet()) {
             int index = slot.getKey();
             gui.addSlot(index % 9, index / 9, slot.getValue().duplicate());
         }

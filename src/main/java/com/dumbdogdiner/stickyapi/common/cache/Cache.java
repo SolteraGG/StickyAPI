@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * General purpose cache for caching things that should be cached.
@@ -31,12 +32,12 @@ public class Cache<T extends Cacheable> {
         boolean match(T object);
     }
 
-    private ConcurrentHashMap<String, T> objects = new ConcurrentHashMap<String, T>();
-    private ConcurrentHashMap<String, Long> objectInsertionTimestamps = new ConcurrentHashMap<String, Long>();
+    private @NotNull ConcurrentHashMap<String, T> objects = new ConcurrentHashMap<String, T>();
+    private @NotNull ConcurrentHashMap<String, Long> objectInsertionTimestamps = new ConcurrentHashMap<String, Long>();
 
     @Getter
     @Setter
-    private Long ttl = (long) (30 * 60e3);
+    private @NotNull Long ttl = (long) (30 * 60e3);
 
     // private int memoryUsage = 0;
     // @Getter @Setter
@@ -47,9 +48,9 @@ public class Cache<T extends Cacheable> {
     private int maxSize = 0;
 
     @Getter
-    private FutureTask<?> objectExpiryTask = new FutureTask<>(new Callable<Boolean>() {
+    private @NotNull FutureTask<?> objectExpiryTask = new FutureTask<>(new Callable<Boolean>() {
         @Override
-        public Boolean call() {
+        public @NotNull Boolean call() {
             if (ttl <= 0) {
                 return false;
             }
@@ -70,7 +71,7 @@ public class Cache<T extends Cacheable> {
         this.clazz = clazz;
     }
 
-    private Debugger debug = new Debugger(getClass());
+    private @NotNull Debugger debug = new Debugger(getClass());
 
     /**
      * Return the size of this cache.
@@ -120,7 +121,7 @@ public class Cache<T extends Cacheable> {
      * 
      * @return All values in the cache
      */
-    public Collection<T> getAll() {
+    public @NotNull Collection<T> getAll() {
         return objects.values();
     }
 
@@ -131,9 +132,9 @@ public class Cache<T extends Cacheable> {
      *               looking for
      * @return The first object that evaluates the tester to true, if there is one
      */
-    public T find(@NotNull Predicate<T> tester) {
+    public @Nullable T find(@NotNull Predicate<T> tester) {
         debug.reset();
-        for (T object : objects.values()) {
+        for (@NotNull T object : objects.values()) {
             if (tester.match(object)) {
                 debug.print("Found cached entry for " + clazz.getSimpleName() + " with key " + object.getKey());
                 return object;
@@ -207,7 +208,7 @@ public class Cache<T extends Cacheable> {
      * @param object The object to remove
      * @return The removed object, if it exists
      */
-    public T remove(@NotNull T object) {
+    public @Nullable T remove(@NotNull T object) {
         debug.reset();
         T didRemove = objects.remove(object.getKey());
 
@@ -231,7 +232,7 @@ public class Cache<T extends Cacheable> {
      * @param key The key to remove
      * @return The removed object, if it exists
      */
-    public T removeKey(@NotNull String key) {
+    public @Nullable T removeKey(@NotNull String key) {
         T object = objects.get(key);
         if (object == null) {
             return null;
@@ -246,7 +247,7 @@ public class Cache<T extends Cacheable> {
      * @return The oldest entry in the cache, if it exists
      */
     public T getOldestEntry() {
-        String oldest = null;
+        @Nullable String oldest = null;
         Long oldestTimestamp = Long.MAX_VALUE;
 
         for (String k : objectInsertionTimestamps.keySet()) {
@@ -264,7 +265,7 @@ public class Cache<T extends Cacheable> {
      * 
      * @return The oldest entry in the cache, if it exists
      */
-    public T removeOldestEntry() {
+    public @Nullable T removeOldestEntry() {
         return remove(getOldestEntry());
     }
 }

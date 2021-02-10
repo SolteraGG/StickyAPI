@@ -4,39 +4,35 @@
  */
 package com.dumbdogdiner.stickyapi.common.translation;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
+import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
-
-import org.jetbrains.annotations.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.*;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Provides an interface between locale files and your plugin.
  */
 public class LocaleProvider {
-    Debugger debug = new Debugger(getClass());
+    @NotNull Debugger debug = new Debugger(getClass());
 
     @Getter
     @Setter
     private File localeFolder;
 
     @Getter
-    private ConcurrentHashMap<String, Locale> loadedLocales = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Locale> loadedLocales = new ConcurrentHashMap<>();
 
     /**
      * The default locale to use when
      * 
-     * @return {@link Locale}
+     * @return the Default locale
      */
     @Getter
     private Locale defaultLocale;
@@ -50,7 +46,9 @@ public class LocaleProvider {
     public LocaleProvider(@NotNull File localeFolder) {
         this.localeFolder = localeFolder;
         if (!localeFolder.exists())
-            localeFolder.mkdir();
+            if(!localeFolder.mkdir()){
+                StickyAPI.getLogger().severe("Directory " + localeFolder.getPath() + " did not exist and could not be created!");
+            }
     }
 
     /**
@@ -90,7 +88,7 @@ public class LocaleProvider {
             return false;
         }
 
-        Locale locale = new Locale(file);
+        @NotNull Locale locale = new Locale(file);
         if (!locale.getIsValid()) {
             debug.print("Encountered an error while loading the locale configuration - skipping load");
             return false;
@@ -112,7 +110,7 @@ public class LocaleProvider {
     public int loadAllLocales() {
         int accumulator = 0;
 
-        for (File file : this.localeFolder.listFiles()) {
+        for (@NotNull File file : this.localeFolder.listFiles()) {
             if (!file.getName().endsWith(".yml"))
                 continue;
 
@@ -133,7 +131,7 @@ public class LocaleProvider {
      * @param vars A map of variables to interpolate into the configured node value
      * @return {@link java.lang.String}
      */
-    public String translate(@NotNull String node, @NotNull Map<String, String> vars) {
+    public @Nullable String translate(@NotNull String node, @NotNull Map<String, String> vars) {
         debug.reset();
 
         if (node == null || node.equals("")) {
@@ -141,7 +139,7 @@ public class LocaleProvider {
             return null;
         }
 
-        String message = get(node);
+        @Nullable String message = get(node);
         if (message == null) {
             debug.print("node does not exist");
             return null;
@@ -160,11 +158,11 @@ public class LocaleProvider {
      * @param vars A map of variables to interpolate into the configured node value
      * @return {@link java.lang.String}
      */
-    public String translateNoColor(@NotNull String node, @NotNull Map<String, String> vars) {
+    public @Nullable String translateNoColor(@NotNull String node, @NotNull Map<String, String> vars) {
         if (node == null || node.equals(""))
             return null;
 
-        String message = get(node);
+        @Nullable String message = get(node);
         if (message == null)
             return null;
 
@@ -180,7 +178,7 @@ public class LocaleProvider {
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String get(@NotNull String node) {
+    public @Nullable String get(@NotNull String node) {
         return defaultLocale == null ? null : defaultLocale.get(node);
     }
 
@@ -193,7 +191,7 @@ public class LocaleProvider {
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String get(@NotNull Enum<?> node) {
+    public @Nullable String get(@NotNull Enum<?> node) {
         return get(node.name().toLowerCase().replace("_", "-"));
     }
 
@@ -207,7 +205,7 @@ public class LocaleProvider {
      * @param node The configuration node to retrieve
      * @return {@link java.lang.String}
      */
-    public String get(@NotNull String name, @NotNull String node) throws IllegalArgumentException {
+    public @Nullable String get(@NotNull String name, @NotNull String node) throws IllegalArgumentException {
         checkForLoadedLocale(name);
         return loadedLocales.get(name).get(node);
     }
@@ -222,7 +220,7 @@ public class LocaleProvider {
      * @param defaultValue The default value to use
      * @return {@link java.lang.String}
      */
-    public String getDefault(@NotNull String node, @NotNull String defaultValue) {
+    public @Nullable String getDefault(@NotNull String node, @NotNull String defaultValue) {
         return get(node) == null ? defaultValue : get(node);
     }
 
@@ -278,9 +276,9 @@ public class LocaleProvider {
             throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found");
         }
 
-        File outFile = new File(localeFolder, resourcePath);
+        @NotNull File outFile = new File(localeFolder, resourcePath);
         int lastIndex = resourcePath.lastIndexOf('/');
-        File outDir = new File(localeFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+        @NotNull File outDir = new File(localeFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
 
         if (!outDir.exists()) {
             outDir.mkdirs();
@@ -291,8 +289,8 @@ public class LocaleProvider {
             return;
         }
 
-        OutputStream out = new FileOutputStream(outFile);
-        byte[] buf = new byte[1024];
+        @NotNull OutputStream out = new FileOutputStream(outFile);
+        byte @NotNull [] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
             out.write(buf, 0, len);
@@ -316,7 +314,7 @@ public class LocaleProvider {
      * 
      * @return {@link java.util.TreeMap}
      */
-    public TreeMap<String, String> newVariables() {
+    public @NotNull TreeMap<String, String> newVariables() {
         return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
     }
 }

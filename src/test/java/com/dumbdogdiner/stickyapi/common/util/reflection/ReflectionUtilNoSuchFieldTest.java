@@ -8,10 +8,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReflectionUtilNoSuchFieldTest {
     private class ExampleClass {
@@ -37,6 +37,11 @@ public class ReflectionUtilNoSuchFieldTest {
     public void restoreStreams() {
         System.setOut(originalOut);
         System.setErr(originalErr);
+
+        System.out.println("Restoring PrintStreams");
+
+        System.out.println(outContent.toString());
+        System.err.println(errContent.toString());
 
         System.out.println("Restored PrintStreams.");
     }

@@ -4,13 +4,14 @@
  */
 package com.dumbdogdiner.stickyapi.bungeecord.packet;
 
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.protocol.Protocol;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.protocol.Protocol;
 
 /**
  * @deprecated This is unsafe.
@@ -23,12 +24,12 @@ public class PacketRegistration {
     private static Method map, regPacket;
     private static Class<?> protocolMapping, protocolMappingArray;
     private static Object TO_CLIENT;
-    private static Boolean soundRegistered = false; // If this packet has been registered already
+    private static @NotNull Boolean soundRegistered = false; // If this packet has been registered already
 
     // Process our reflection nonsense
     private static void processReflection() {
         try {
-            Field f = Protocol.class.getDeclaredField("TO_CLIENT");
+            @NotNull Field f = Protocol.class.getDeclaredField("TO_CLIENT");
             map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
             f.setAccessible(true);
             map.setAccessible(true);
@@ -37,7 +38,7 @@ public class PacketRegistration {
             TO_CLIENT = f.get(Protocol.GAME);
             regPacket = TO_CLIENT.getClass().getDeclaredMethod("registerPacket", Class.class, protocolMappingArray);
             regPacket.setAccessible(true);
-        } catch (IllegalAccessException | NoSuchFieldException | NoSuchMethodException e) {
+        } catch (@NotNull IllegalAccessException | NoSuchFieldException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
@@ -49,11 +50,11 @@ public class PacketRegistration {
      * @param id    the protocol ID for the packet (see: https://wiki.vg/Protocol)
      */
     public static void registerPacket(Class<?> clazz, Integer id) {
-        Object[] array = (Object[]) Array.newInstance(protocolMapping, 1);
+        Object @NotNull [] array = (Object[]) Array.newInstance(protocolMapping, 1);
         try {
             array[0] = map.invoke(null, ProxyServer.getInstance().getProtocolVersion(), id);
             regPacket.invoke(TO_CLIENT, clazz, array);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (@NotNull IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

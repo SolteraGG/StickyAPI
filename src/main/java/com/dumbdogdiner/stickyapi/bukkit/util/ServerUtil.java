@@ -4,19 +4,17 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
-import javax.annotation.Nullable;
-
 import com.destroystokyo.paper.Title;
-
 import com.dumbdogdiner.stickyapi.common.translation.Translation;
 import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import javax.annotation.Nullable;
 
 public class ServerUtil {
     private ServerUtil() {
@@ -42,7 +40,7 @@ public class ServerUtil {
      * @param args    The format arguments, if any
      */
     public static void broadcastMessage(@NotNull String message, @Nullable String... args) {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (@NotNull Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.sendMessage(
                     new TextComponent(Translation.translateColors("&", String.format(message, (Object) args))));
         }
@@ -54,7 +52,7 @@ public class ServerUtil {
      * @param title The {@link com.destroystokyo.paper.Title} to send
      */
     public static void broadcastTitle(@NotNull Title title) {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (@NotNull Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.sendTitle(title);
         }
     }

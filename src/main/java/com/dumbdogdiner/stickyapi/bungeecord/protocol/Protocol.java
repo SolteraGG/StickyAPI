@@ -4,9 +4,10 @@
  */
 package com.dumbdogdiner.stickyapi.bungeecord.protocol;
 
-import java.util.HashMap;
-
 import net.md_5.bungee.api.ProxyServer;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
 
 @Deprecated
 /**
@@ -16,7 +17,7 @@ public class Protocol {
     private Protocol() {
     }
 
-    public static HashMap<Integer, Integer> soundEffect = new HashMap<>();
+    public static @NotNull HashMap<Integer, Integer> soundEffect = new HashMap<>();
 
     static {
         soundEffect.put(ProtocolConstants.MINECRAFT_1_8, 0x29);

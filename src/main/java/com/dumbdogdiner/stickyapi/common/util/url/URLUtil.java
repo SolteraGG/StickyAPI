@@ -4,15 +4,16 @@
  */
 package com.dumbdogdiner.stickyapi.common.util.url;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import org.jetbrains.annotations.NotNull;
-
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class URLUtil {
     private URLUtil() {
@@ -30,8 +31,8 @@ public class URLUtil {
      * @param text The text that should be checked for URLs
      * @return {@link URLPair}
      */
-    public static URLPair findURL(@NotNull String text) {
-        Matcher matcher = urlPattern.matcher(text);
+    public static @Nullable URLPair findURL(@NotNull String text) {
+        @NotNull Matcher matcher = urlPattern.matcher(text);
 
         if (matcher.find()) {
             return new URLPair(matcher.group(0), matcher.group(2));
@@ -49,9 +50,9 @@ public class URLUtil {
      * @return {@link TextComponent}
      */
 
-    public static TextComponent convertURLs(@NotNull String text) {
-        TextComponent finalComp = new TextComponent();
-        TextComponent tmp = new TextComponent();
+    public static @NotNull TextComponent convertURLs(@NotNull String text) {
+        @NotNull TextComponent finalComp = new TextComponent();
+        @NotNull TextComponent tmp = new TextComponent();
 
         String[] split = text.split(" ");
         int i = 0;
@@ -65,7 +66,7 @@ public class URLUtil {
                 finalComp.addExtra(tmp);
                 tmp = new TextComponent();
 
-                TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
+                @NotNull TextComponent urlComponent = new TextComponent(url.getShortened() + " ");
                 urlComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url.getFullPath()));
                 urlComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§7Click to open URL"),
                         new Text("\n§8" + url.getFullPath())));

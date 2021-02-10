@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
+import org.jetbrains.annotations.NotNull;
 
 public class SoundPacket extends DefinedPacket {
 
@@ -64,7 +65,7 @@ public class SoundPacket extends DefinedPacket {
     }
 
     @Override
-    public void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
+    public void read(@NotNull ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
         this.sound = readVarInt(buf);
         this.category = readVarInt(buf);
         this.x = buf.readInt();
@@ -75,7 +76,7 @@ public class SoundPacket extends DefinedPacket {
     }
 
     @Override
-    public void write(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
+    public void write(@NotNull ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
         writeVarInt(sound, buf);
         writeVarInt(category, buf);
 
@@ -98,7 +99,7 @@ public class SoundPacket extends DefinedPacket {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return getClass().getName();
     }
 }

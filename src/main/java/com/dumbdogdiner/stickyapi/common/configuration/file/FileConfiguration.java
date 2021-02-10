@@ -66,9 +66,9 @@ public abstract class FileConfiguration extends MemoryConfiguration {
 
         Files.createParentDirs(file);
 
-        String data = saveToString();
+        @NotNull String data = saveToString();
 
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
+        @NotNull Writer writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
 
         try {
             writer.write(data);
@@ -127,7 +127,7 @@ public abstract class FileConfiguration extends MemoryConfiguration {
     public void load(@NotNull File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
         Validate.notNull(file, "File cannot be null");
 
-        final FileInputStream stream = new FileInputStream(file);
+        final @NotNull FileInputStream stream = new FileInputStream(file);
 
         load(new InputStreamReader(stream, Charsets.UTF_8));
     }
@@ -147,9 +147,9 @@ public abstract class FileConfiguration extends MemoryConfiguration {
      * @throws IllegalArgumentException      thrown when reader is null
      */
     public void load(@NotNull Reader reader) throws IOException, InvalidConfigurationException {
-        BufferedReader input = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
+        @NotNull BufferedReader input = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
 
-        StringBuilder builder = new StringBuilder();
+        @NotNull StringBuilder builder = new StringBuilder();
 
         try {
             String line;

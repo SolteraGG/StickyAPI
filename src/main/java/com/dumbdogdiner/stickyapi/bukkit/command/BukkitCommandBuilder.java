@@ -4,32 +4,24 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.FutureTask;
-
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
+import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
 import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
 import com.dumbdogdiner.stickyapi.common.command.ExitCode;
-import com.dumbdogdiner.stickyapi.common.ServerVersion;
 import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.collect.ImmutableList;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.concurrent.FutureTask;
 
 /**
  * CommandBuilder for avoiding bukkit's terrible command API and making creating
@@ -40,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
 
     // Hmm...
-    HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
+    @NotNull HashMap<CommandSender, Long> cooldownSenders = new HashMap<>();
 
     Executor executor;
     TabExecutor tabExecutor;
@@ -50,11 +42,11 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
 
     @FunctionalInterface
     public interface Executor {
-        public ExitCode apply(CommandSender sender, Arguments args, HashMap<String, String> vars);
+        public @NotNull ExitCode apply(CommandSender sender, Arguments args, HashMap<String, String> vars);
     }
 
     public interface TabExecutor {
-        public java.util.List<String> apply(CommandSender sender, String commandLabel, Arguments args);
+        public java.util.@NotNull List<String> apply(CommandSender sender, String commandLabel, Arguments args);
     }
 
     public interface ErrorHandler {
@@ -77,8 +69,8 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
         this.owner = owner;
     }
 
-    private void performAsynchronousExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
+    private void performAsynchronousExecution(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, String label,
+                                              @NotNull List<String> args) {
         StickyAPI.getPool().execute(new FutureTask<Void>(() -> {
             performExecution(sender, command, label, args);
             return null;
@@ -89,18 +81,18 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
      * Execute this command. Checks for existing sub-commands, and runs the error
      * handler if anything goes wrong.
      */
-    private void performExecution(CommandSender sender, org.bukkit.command.Command command, String label,
-            List<String> args) {
+    private void performExecution(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command command, String label,
+                                  @NotNull List<String> args) {
         // look for subcommands
         if (args.size() > 0 && getSubCommands().containsKey(args.get(0))) {
-            BukkitCommandBuilder subCommand = (BukkitCommandBuilder) getSubCommands().get(args.get(0));
+            @NotNull BukkitCommandBuilder subCommand = (BukkitCommandBuilder) getSubCommands().get(args.get(0));
             if (!getSynchronous() && subCommand.getSynchronous()) {
                 throw new RuntimeException("Attempted to asynchronously execute a synchronous sub-command!");
             }
 
             // We can't modify List, so we need to make a clone of it, because java is
             // special.
-            ArrayList<String> argsClone = new ArrayList<String>(args);
+            @NotNull ArrayList<String> argsClone = new ArrayList<String>(args);
             argsClone.remove(0);
 
             // spawn async command from sync
@@ -114,8 +106,8 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
         }
 
         ExitCode exitCode;
-        Arguments a = new Arguments(args);
-        var variables = new HashMap<String, String>();
+        @NotNull Arguments a = new Arguments(args);
+        @NotNull var variables = new HashMap<String, String>();
         variables.put("command", command.getName());
         variables.put("sender", sender.getName());
         variables.put("player", sender.getName());
@@ -168,7 +160,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
      * @param executor to set
      * @return {@link CommandBuilder}
      */
-    public BukkitCommandBuilder onExecute(@NotNull Executor executor) {
+    public @NotNull BukkitCommandBuilder onExecute(@NotNull Executor executor) {
         this.executor = executor;
         return this;
     }
@@ -179,7 +171,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
      * @param executor to set
      * @return {@link CommandBuilder}
      */
-    public BukkitCommandBuilder onTabComplete(@NotNull TabExecutor executor) {
+    public @NotNull BukkitCommandBuilder onTabComplete(@NotNull TabExecutor executor) {
         this.tabExecutor = executor;
         return this;
     }
@@ -190,7 +182,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
      * @param handler to set
      * @return {@link CommandBuilder}
      */
-    public BukkitCommandBuilder onError(@NotNull ErrorHandler handler) {
+    public @NotNull BukkitCommandBuilder onError(@NotNull ErrorHandler handler) {
         this.errorHandler = handler;
         return this;
     }
@@ -201,8 +193,8 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
      * @param plugin to build it for
      * @return {@link org.bukkit.command.Command}
      */
-    public org.bukkit.command.Command build(@NotNull Plugin plugin) {
-        PluginCommand command = new PluginCommand(this.getName(), plugin);
+    public org.bukkit.command.@NotNull Command build(@NotNull Plugin plugin) {
+        @NotNull PluginCommand command = new PluginCommand(this.getName(), plugin);
 
         if (this.getSynchronous() == null) {
             this.synchronous(false);
@@ -227,7 +219,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
 
         command.setTabCompleter(new TabCompleter() {
             @Override
-            public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+            public List<String> onTabComplete(CommandSender sender, Command command, String alias, String @NotNull [] args) {
                 if (tabExecutor == null) {
                     if (args.length == 0) {
                         return ImmutableList.of();
@@ -235,11 +227,11 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
 
                     String lastWord = args[args.length - 1];
 
-                    Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+                    @NotNull Player senderPlayer = sender instanceof Player ? (Player) sender : null;
 
-                    ArrayList<String> matchedPlayers = new ArrayList<String>();
-                    for (Player player : sender.getServer().getOnlinePlayers()) {
-                        String name = player.getName();
+                    @NotNull ArrayList<String> matchedPlayers = new ArrayList<String>();
+                    for (@NotNull Player player : sender.getServer().getOnlinePlayers()) {
+                        @NotNull String name = player.getName();
                         if ((senderPlayer == null || senderPlayer.canSee(player))
                                 && StringUtil.startsWithIgnoreCase(name, lastWord)) {
                             matchedPlayers.add(name);
@@ -268,7 +260,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
      * 
      * @return {@link org.bukkit.command.Command}
      */
-    public org.bukkit.command.Command build() throws NullPointerException {
+    public org.bukkit.command.@NotNull Command build() throws NullPointerException {
         if (this.owner == null) {
             throw new NullPointerException("Owning plugin is null, did you construct this object without an owner?");
         }
@@ -304,7 +296,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
         this.register(this.owner);
     }
 
-    private void _playSound(CommandSender sender, NotificationType type) {
+    private void _playSound(@NotNull CommandSender sender, @NotNull NotificationType type) {
         if (!this.getPlaySound())
             return;
         SoundUtil.send(sender, type);
