@@ -16,10 +16,10 @@ public class BookBuilderTest {
         bb.addPages(new String [] {"yet more", "and more still"});
 
         System.out.println("Pages NBT:");
-        System.out.println(bb.generatePagesNBT());
+        System.out.println(bb.generateNBT());
 
 
         System.out.println("Please paste the following line into a command block, and activate it");
-        System.out.println("give @p minecraft:writable_book" + bb.generatePagesNBT());
+        System.out.println("give @p minecraft:writable_book" + bb.generateNBT());
     }
 }

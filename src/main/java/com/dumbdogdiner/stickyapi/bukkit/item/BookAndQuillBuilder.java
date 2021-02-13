@@ -4,6 +4,10 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
+import com.dumbdogdiner.stickyapi.common.nbt.NbtCompoundTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtJsonTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtListTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
 import com.dumbdogdiner.stickyapi.common.util.TextUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.base.Preconditions;
@@ -23,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
+import java.awt.print.Book;
 import java.util.Collections;
 import java.util.StringJoiner;
 
@@ -37,16 +42,14 @@ import java.util.StringJoiner;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class  BookAndQuillBuilder {
-    private JsonArray pages = new JsonArray();
+    private @NotNull JsonArray pages = new JsonArray();
     private static final Gson G = new GsonBuilder().create();
 
     @Setter
     @Getter
     private @Nullable String displayName;
 
-    @Setter
-    @Getter
-    private @Nullable String lore;
+    private JsonArray lore = new JsonArray();
 
     /**
      * Creates a new BookGenerator from a given JsonObject, representing a book, which can
@@ -57,7 +60,12 @@ public class  BookAndQuillBuilder {
      */
     public static @NotNull BookAndQuillBuilder fromJson(@NotNull JsonObject bookObject) {
         BookAndQuillBuilder b = new BookAndQuillBuilder();
-        b.pages = bookObject.get("pages").getAsJsonArray();
+        JsonArray pages = bookObject.get("pages").getAsJsonArray();
+        Preconditions.checkNotNull(pages);
+        b.pages =  pages;
+        if(bookObject.has("lore") && bookObject.get("lore").isJsonArray()){
+            b.lore = bookObject.get("lore").getAsJsonArray();
+        }
         return b;
     }
 
@@ -97,15 +105,7 @@ public class  BookAndQuillBuilder {
         Preconditions.checkState(pages.size() < TextUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + TextUtil.PAGES_PER_BOOK + ")");
         ItemStack stack = new ItemStack(Material.WRITABLE_BOOK, 1);
 
-        stack = Bukkit.getUnsafe().modifyItemStack(stack, generatePagesNBT());
-
-        ItemMeta im = stack.getItemMeta();
-        if (displayName != null)
-            im.setDisplayName(StringUtil.formatChatCodes(displayName));
-
-        if (lore != null)
-            im.setLore(Collections.singletonList(lore));
-        stack.setItemMeta(im);
+        stack = Bukkit.getUnsafe().modifyItemStack(stack, generateNBT());
 
         return stack;
     }
@@ -128,20 +128,37 @@ public class  BookAndQuillBuilder {
     }
 
     /**
+     * Adds a line of lore (formatted JSON text stuffs) to the book
+     */
+    public @NotNull BookAndQuillBuilder addLoreLine(JsonObject lore){
+        this.lore.add(lore);
+        return this;
+    }
+
+    public @NotNull BookAndQuillBuilder addLoreLines(JsonObject ... lores){
+        for(JsonObject lore : lores){
+            addLoreLine(lore);
+        }
+        return this;
+    }
+
+    /**
      * Uses a {@link StringJoiner} to convert pages JsonArray to the weird NBT list
      *
      * @return {@link String} with NBT of the pages
      */
     @VisibleForTesting
-    public @NotNull String generatePagesNBT() {
-        StringJoiner NBT = new StringJoiner(",", "{pages:[", "]}");
-        pages.forEach(jsonElement ->
-                NBT.add(G.toJson(jsonElement)
-                        // Because minecraft json is a hack on a hack.....
-                        .replace("\n", "\\n")
-                        .replace("\\", "\\\\"))
-
-        );
-        return NBT.toString();
+    public @NotNull String generateNBT() {
+        NbtCompoundTag bookNBT = new NbtCompoundTag();
+        bookNBT.put("pages", NbtListTag.fromJsonArray(this.pages));
+        NbtCompoundTag display = new NbtCompoundTag();
+        if(displayName != null)
+            display.put("Name", displayName);
+        if(lore.size() > 0){
+            display.put("Lore", NbtListTag.fromJsonArrayQuoted(lore));
+        }
+        if(!display.isEmpty())
+            bookNBT.put("display", display);
+        return bookNBT.toSNbt();
     }
 }

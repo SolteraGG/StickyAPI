@@ -443,5 +443,16 @@
     ]
   ],
   "title": "\u0026ddddMC Survival Handbook v1.0",
-  "author": "Stixil"
+  "author": "Stixil",
+  "lore" : [
+    {
+      "text": "dddMC 2020",
+      "bold": true,
+      "color": "dark_purple"
+    },
+    {
+      "text" : "",
+      "color": "reset"
+    }
+  ]
 }

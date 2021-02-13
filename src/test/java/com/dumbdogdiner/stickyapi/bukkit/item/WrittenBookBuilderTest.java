@@ -15,7 +15,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import com.google.gson.stream.JsonReader;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -81,21 +80,10 @@ public class WrittenBookBuilderTest {
         JsonObject bookObject = JsonParser.parseReader(bookReader).getAsJsonObject();
         WrittenBookBuilder bb = WrittenBookBuilder.fromJson(bookObject);
         System.out.println("Testing BookBuilder, please make sure the following NBT string is valid (It does not yet contain the title or author):");
-        System.out.println(bb.generatePagesNBT());
+        bb.addLoreLines(new NbtStringTag("The rules owo"));
+        System.out.println(bb.generateNBT());
 
         System.out.println("Please paste the following line into a command block, and activate it");
-        System.out.println("give @p minecraft:written_book" + makeValidWrittenBookNBT(bb));
-    }
-
-    /**
-     * Fix the command so it actually is valid, in a hacky way
-     * @param bookBuilder Original bookbuilder
-     * @return NBT that has the title forcibly put in
-     */
-    private String makeValidWrittenBookNBT(WrittenBookBuilder bookBuilder) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(bookBuilder.generatePagesNBT());
-        sb.insert(sb.length() - 1, StringUtil.formatChatCodes(MessageFormat.format(",title:\"{0}\",author:\"{1}\"", bookBuilder.getTitle(), bookBuilder.getAuthor())));
-        return sb.toString();
+        System.out.println("give @p minecraft:written_book" + bb.generateNBT());
     }
 }

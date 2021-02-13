@@ -4,6 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
+import com.dumbdogdiner.stickyapi.common.nbt.NbtCompoundTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtListTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
 import com.dumbdogdiner.stickyapi.common.util.TextUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.base.Preconditions;
@@ -62,9 +65,14 @@ public class WrittenBookBuilder {
     /**
      * Lore/hover text for the item
      */
+    private @NotNull JsonArray lore = new JsonArray();
+
+    /**
+     * The book display name (In inventory)
+     */
     @Getter
     @Setter
-    private @Nullable String lore;
+    private @Nullable String displayName;
 
     private static final Gson G = new GsonBuilder()
             // Make sure things aren't weirdly escaped, may need to turn this back on
@@ -101,9 +109,41 @@ public class WrittenBookBuilder {
                 default:
                     b.generation = BookMeta.Generation.ORIGINAL;
             }
+        if(bookObject.has("lore") && bookObject.get("lore").isJsonArray())
+            b.lore = bookObject.get("lore").getAsJsonArray();
 
         b.pages = bookObject.get("pages").getAsJsonArray();
         return b;
+    }
+
+    /**
+     * Adds a line of lore (formatted JSON text stuffs) to the book
+     */
+    public @NotNull WrittenBookBuilder addLoreLine(JsonObject lore){
+        this.lore.add(lore);
+        return this;
+    }
+
+    public @NotNull WrittenBookBuilder addLoreLines(JsonObject ... lores){
+        for(JsonObject lore : lores){
+            addLoreLine(lore);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a line of lore (formatted JSON text stuffs) to the book
+     */
+    public @NotNull WrittenBookBuilder addLoreLine(NbtStringTag lore){
+        this.lore.add(lore.toJson());
+        return this;
+    }
+
+    public @NotNull WrittenBookBuilder addLoreLines(NbtStringTag ... lores){
+        for(NbtStringTag lore : lores){
+            addLoreLine(lore);
+        }
+        return this;
     }
 
     /**
@@ -144,17 +184,7 @@ public class WrittenBookBuilder {
         Preconditions.checkState(pages.size() < TextUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + TextUtil.PAGES_PER_BOOK + ")");
         ItemStack stack = new ItemStack(Material.WRITTEN_BOOK, quantity);
 
-        stack = Bukkit.getUnsafe().modifyItemStack(stack, generatePagesNBT());
-
-        BookMeta meta = (BookMeta) stack.getItemMeta();
-        //noinspection ConstantConditions
-        meta.setTitle(title != null ? StringUtil.formatChatCodes(title) : "");
-        //noinspection ConstantConditions
-        meta.setAuthor(author != null ? StringUtil.formatChatCodes(author) : "");
-        meta.setGeneration(generation);
-        if (lore != null)
-            meta.setLore(Collections.singletonList(StringUtil.formatChatCodes(lore)));
-        stack.setItemMeta(meta);
+        stack = Bukkit.getUnsafe().modifyItemStack(stack, generateNBT());
 
         return stack;
     }
@@ -182,26 +212,38 @@ public class WrittenBookBuilder {
      * @return {@link String} with NBT of the pages
      */
     @VisibleForTesting
-    public @NotNull String generatePagesNBT() {
-        StringJoiner NBT = new StringJoiner(",", "{pages:[", "]}");
-        pages.forEach(jsonElement -> {
-            if (jsonElement instanceof JsonArray) {
-                JsonArray newArr = new JsonArray();
-                newArr.add(""); // TODO test without this and see what happens, if bad things then make custom element i guess
-                newArr.addAll(jsonElement.getAsJsonArray());
-                jsonElement = newArr;
-            }
-            NBT.add("'" +
-                    G.toJson(jsonElement)
-                            // Because minecraft json is a hack on a hack.....
-                            // And we don't have any NBT compound tag classes or similar
+    public @NotNull String generateNBT() {
+        NbtCompoundTag bookNBT = new NbtCompoundTag();
+        bookNBT.put("author", author);
+        bookNBT.put("generation", getGenerationInt());
+        bookNBT.put("title", title);
+        NbtCompoundTag display = new NbtCompoundTag();
+        if(displayName != null)
+            display.put("Name", displayName);
+        if(lore.size() > 0){
+            display.put("Lore", NbtListTag.fromJsonArrayQuoted(lore));
+        }
+        if(!display.isEmpty())
+            bookNBT.put("display", display);
+        bookNBT.put("pages", NbtListTag.fromJsonArrayQuoted(pages));
+        return bookNBT.toSNbt();
+    }
 
-                            .replaceAll("(?<!\\\\)'", "\\\\'") // Escape single quotes
-                            .replace("\n", "\\n") // Replace new lines with escaped versions
-                            .replaceAll("\\+n", "\\\\n") // Fix formatting of any escaped new lines already in there
-                    + "'");
-
-        });
-        return NBT.toString();
+    /**
+     * Gets the generation as an int
+     */
+    private int getGenerationInt() {
+        switch (generation){
+            case ORIGINAL:
+                return 0;
+            case COPY_OF_ORIGINAL:
+                return 1;
+            case COPY_OF_COPY:
+                return 2;
+            case TATTERED:
+                return 3;
+            default:
+                throw new IllegalStateException();
+        }
     }
 }
