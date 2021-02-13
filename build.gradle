@@ -153,7 +153,9 @@ task copyMCFontExtractor(type: Copy) {
     def path = project.configurations.compile.find {it.name.startsWith("mc-font-extractor") }
     println path
     from file(path)
-    //into file("src/main/resources")
+    // into file("src/main/resources")
+    // - Please keep this comment for future reference.
+    // - This is how we would do this if we weren't also adding build info (see processSourceTokens)
     destinationDir file("src/main/resources/generated/")
     rename 'mc-font-extractor-main-mojangles_width_data.json', 'mojangles_width_data.json'
 }
