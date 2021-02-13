@@ -106,7 +106,6 @@ public final class NumberUtil {
      * @return {@link Integer}
      * @throws IllegalArgumentException when min is greater than max
      */
-    @Deprecated
     public static int getRandomNumber(@NotNull int min, @NotNull int max) {
         if (min >= max)
             throw new IllegalArgumentException("Min may not be greater than max!");
