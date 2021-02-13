@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
@@ -34,6 +35,7 @@ import java.util.StringJoiner;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
+@NoArgsConstructor
 public class  BookAndQuillBuilder {
     private JsonArray pages = new JsonArray();
     private static final Gson G = new GsonBuilder().create();
@@ -45,11 +47,6 @@ public class  BookAndQuillBuilder {
     @Setter
     @Getter
     private @Nullable String lore;
-
-    public BookAndQuillBuilder() {
-
-    }
-
 
     /**
      * Creates a new BookGenerator from a given JsonObject, representing a book, which can
@@ -90,17 +87,15 @@ public class  BookAndQuillBuilder {
     }
 
     /**
-     * Build a book from this generator.
+     * Build a book and quill from this generator.
      *
-     * @param qty Quantity of the item stack.
      * @return an {@link ItemStack} of the book, with pages and all other data
      */
     @SuppressWarnings("deprecation")
-    public @NotNull ItemStack toItemStack(int qty) {
-        Preconditions.checkArgument(qty > 0 && qty <= 16, "Invalid quantity specified, qty should be greater than 0 and less than or equal to 16, but was " + qty);
+    public @NotNull ItemStack toItemStack() {
         Preconditions.checkState(pages.size() > 0, "Cannot generate book with no pages");
         Preconditions.checkState(pages.size() < TextUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + TextUtil.PAGES_PER_BOOK + ")");
-        ItemStack stack = new ItemStack(Material.WRITABLE_BOOK, qty);
+        ItemStack stack = new ItemStack(Material.WRITABLE_BOOK, 1);
 
         stack = Bukkit.getUnsafe().modifyItemStack(stack, generatePagesNBT());
 

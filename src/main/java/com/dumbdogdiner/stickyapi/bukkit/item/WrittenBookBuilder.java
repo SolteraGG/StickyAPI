@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -34,6 +35,7 @@ import java.util.StringJoiner;
  */
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
+@NoArgsConstructor
 public class WrittenBookBuilder {
     private @NotNull JsonArray pages = new JsonArray();
     /**
@@ -69,9 +71,6 @@ public class WrittenBookBuilder {
             .disableHtmlEscaping()
             .create();
 
-    public WrittenBookBuilder() {
-
-    }
 
     /**
      * Creates a new BookGenerator from a given JsonObject, representing a book, which can
@@ -135,15 +134,15 @@ public class WrittenBookBuilder {
     /**
      * Build a book from this generator.
      *
-     * @param qty Quantity of the item stack.
+     * @param quantity Quantity of the item stack.
      * @return an {@link ItemStack} of the book, with pages and all other data
      */
     @SuppressWarnings("deprecation")
-    public @NotNull ItemStack toItemStack(int qty) {
-        Preconditions.checkArgument(qty > 0 && qty <= 16, "Invalid quantity specified, qty should be greater than 0 and less than or equal to 16, but was " + qty);
+    public @NotNull ItemStack toItemStack(int quantity) {
+        Preconditions.checkArgument(quantity > 0 && quantity <= 16, "Invalid quantity specified, quantity should be greater than 0 and less than or equal to 16, but was " + quantity);
         Preconditions.checkState(pages.size() > 0, "Cannot generate book with no pages");
         Preconditions.checkState(pages.size() < TextUtil.PAGES_PER_BOOK, "Cannot generate book with an invalid number of pages (must be less than " + TextUtil.PAGES_PER_BOOK + ")");
-        ItemStack stack = new ItemStack(Material.WRITTEN_BOOK, qty);
+        ItemStack stack = new ItemStack(Material.WRITTEN_BOOK, quantity);
 
         stack = Bukkit.getUnsafe().modifyItemStack(stack, generatePagesNBT());
 
@@ -188,13 +187,14 @@ public class WrittenBookBuilder {
         pages.forEach(jsonElement -> {
             if (jsonElement instanceof JsonArray) {
                 JsonArray newArr = new JsonArray();
-                newArr.add("");
+                newArr.add(""); // TODO test without this and see what happens, if bad things then make custom element i guess
                 newArr.addAll(jsonElement.getAsJsonArray());
                 jsonElement = newArr;
             }
             NBT.add("'" +
                     G.toJson(jsonElement)
                             // Because minecraft json is a hack on a hack.....
+                            // And we don't have any NBT compound tag classes or similar
 
                             .replaceAll("(?<!\\\\)'", "\\\\'") // Escape single quotes
                             .replace("\n", "\\n") // Replace new lines with escaped versions

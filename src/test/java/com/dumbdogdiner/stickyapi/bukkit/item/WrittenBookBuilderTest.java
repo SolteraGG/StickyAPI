@@ -4,9 +4,14 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
+import com.dumbdogdiner.stickyapi.common.nbt.NbtCompoundTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtJsonTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtListTag;
+import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -51,6 +56,24 @@ public class WrittenBookBuilderTest {
     @Test
     public void testProdRulebook() {
         testJSON("/rulebook.json");
+    }
+
+    @Test
+    void testNbtStuff() {
+        bookReader = new InputStreamReader(WrittenBookBuilderTest.class.getResourceAsStream("/rulebook.json"));
+        JsonObject bookObject = JsonParser.parseReader(bookReader).getAsJsonObject();
+
+
+
+        NbtCompoundTag test123 = new NbtCompoundTag();
+        test123.put("title", new NbtStringTag(bookObject.get("title").getAsString()));
+        test123.put("author", NbtStringTag.fromPrimitive(bookObject.get("author").getAsJsonPrimitive()));
+        NbtListTag pages = new NbtListTag();
+        for(JsonElement element : bookObject.get("pages").getAsJsonArray()){
+            pages.add(new NbtJsonTag(element));
+        }
+        test123.put("pages", pages);
+        System.out.println("give @p minecraft:written_book" + test123.toSNbt());
     }
 
     public void testJSON(String filename) {
