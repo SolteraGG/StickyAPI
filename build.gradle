@@ -22,11 +22,16 @@ license {
     header = project.file('LICENSE_HEADER')
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
     mapping("java", "SLASHSTAR_STYLE")
+    exclude "**/*.json" // Exclude JSON to keep the font width data valid
+    exclude "**/org.mockito.plugins.MockMaker" // Exclude Mokito files
+    exclude "**/*.md" // Exclude markdown files since it doesn't know what to do
 }
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+    options.encoding = "UTF-8"
 }
+
 // Run the license formatter before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
 
@@ -39,6 +44,7 @@ configurations {
 repositories {
     mavenCentral()
     jcenter()
+    google()
 
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
@@ -54,13 +60,30 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'io.github.classgraph:classgraph:4.8.100'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
-    
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'commons-validator:commons-validator:1.7'
+    implementation 'com.google.guava:guava:30.1-jre'
+
     // Tests - JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
     testImplementation("org.mockito:mockito-core:3.7.7")
+}
+
+task downloadTextures(type: Download) {
+    sourceUrl = 'https://dumbdogdiner.github.io/mc-heads-resource/textures.json'
+    target = new File('src/main/resources/generated/textures.json')
+}
+
+task downloadFontData(type: Download) {
+    sourceUrl = "https://dumbdogdiner.github.io/mc-font-extractor/main/mojangles_width_data.json"
+    target = new File('src/main/resources/generated/mojangles_width_data.json')
+}
+
+task cleanGenerated(type: Delete){
+    delete('src/main/resources/generated')
 }
 
 test {
@@ -73,6 +96,10 @@ test {
     finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
+build {
+    shouldRunAfter(clean)
+}
+
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
     reports {
@@ -83,19 +110,15 @@ jacocoTestReport {
 
 task sources(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+    from 'build/processed/src/main/java'
 }
 
-
-// Javadoc Fixes
-// Some environments (such as the builder image) do not use UTF-8 as the default encoding!
-// This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
-delombok.encoding = "UTF-8"
-
-compileJava.options.encoding = "UTF-8"
-compileTestJava.options.encoding = "UTF-8"
-javadoc.options.encoding = "UTF-8"
-
+delombok {
+    encoding = "UTF-8"
+    finalizedBy(javadoc)
+    print(true)
+    //verbose(true)
+}
 
 // Build Info
 // Set the timestamp format
@@ -129,10 +152,50 @@ task processSourceTokens(type: Sync) {
 compileJava.source = processSourceTokens.outputs
 
 
-tasks.publish.dependsOn build, sources
+// Run the license formatter and font data copier before compiling the source code.
+tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, processResources
+tasks.build.dependsOn sources
+tasks.publish.dependsOn build
 
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
 
+processResources {
+    dependsOn(downloadTextures, downloadFontData)
+}
 
+javadoc {
+    options.addBooleanOption('XDignore.symbol.file', true)
+    options.addBooleanOption('-frames', true)
+    options.addBooleanOption('private', true)
+    options.addBooleanOption("-allow-script-in-comments",true)
+    options.overview('src/main/overview.html')
+    outputs.upToDateWhen { false }
+    options.encoding("UTF-8")
+
+    //TODO replace frames with JANITOR to get around removal of -frames in jdk15
+    //options.footer("<script src=\"https://gitlab.com/gerib/userscripts/-/raw/master/janitor/janitor.user.js?inline=false\"></script>")
+    test.ignoreFailures true;
+    dependsOn(delombok)
+    shouldRunAfter(clean)
+}
+
+publish {
+    dependsOn(build, sources)
+}
+
+task browseJavadoc {
+    dependsOn javadoc
+    doLast {
+        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
+    }
+}
+
+task rebuild {
+    dependsOn clean
+    finalizedBy build
+}
 
 publishing {
     repositories {
@@ -150,5 +213,18 @@ publishing {
             from(components.java)
             artifact sources // Publish the output of the sources task
         }
+    }
+}
+
+class Download extends DefaultTask {
+    @Input
+    String sourceUrl
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void download() {
+        ant.get(src: sourceUrl, dest: target)
     }
 }
