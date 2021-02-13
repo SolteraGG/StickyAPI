@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -86,4 +87,32 @@ public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
         });
         return SNBT.toString();
     }
+
+    /**
+     * Convenience method to add a number directly to the compound tag with a given key
+     * @return The original number
+     */
+    public @NotNull Number put(@NotNull String key, @NotNull Number n) {
+        put(key, new NbtNumberTag(n));
+        return n;
+    }
+
+    /**
+     * Convenience method to add a boolean directly to the compound tag with a given key
+     * @return The original boolean
+     */
+    public boolean put(@NotNull String key, boolean b) {
+        put(key, new NbtBooleanTag(b));
+        return b;
+    }
+
+    /**
+     * Convenience method to add a String directly to the compound tag with a given key
+     * @return The original String
+     */
+    public String put(@NotNull String key, @NotNull String s){
+        put(key, new NbtStringTag(s));
+        return s;
+    }
+
 }
