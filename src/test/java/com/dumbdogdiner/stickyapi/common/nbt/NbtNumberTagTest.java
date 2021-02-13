@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
 
 class NbtNumberTagTest {
-    private static final int REPEAT = 1000;
+    private static final int REPEAT = 100; // originally 1000, moved to 100 for now
     int i;
     float f;
 
