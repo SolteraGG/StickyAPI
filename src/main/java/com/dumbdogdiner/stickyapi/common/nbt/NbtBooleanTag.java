@@ -4,7 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.nbt;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import org.jetbrains.annotations.NotNull;
