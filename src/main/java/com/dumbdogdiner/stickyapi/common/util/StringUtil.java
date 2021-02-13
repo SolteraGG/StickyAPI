@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-import lombok.experimental.UtilityClass;
-
 import net.md_5.bungee.api.ChatColor;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +16,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Operations on {@link java.lang.String}
  */
-@UtilityClass
 public final class StringUtil {
+    private StringUtil() {
+    }
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
