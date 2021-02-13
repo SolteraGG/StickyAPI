@@ -16,7 +16,7 @@ import java.util.StringJoiner;
 /**
  * A wrapper tag that allows working with Compound NBT tags as maps!
  */
-public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
+public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag {
 
     /**
      * Creates a new {@link NbtCompoundTag} from an existing {@link Map}

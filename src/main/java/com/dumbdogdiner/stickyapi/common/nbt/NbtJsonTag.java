@@ -41,7 +41,7 @@ public class NbtJsonTag implements NbtTag{
                 // And sometimes the NBT is just json that gets quoted
 
                 .replaceAll("(?<!\\\\)[']", "\\\\'") // Escape single quotes
-                // FIXME do we need to escape double quotes too?? In theory we don't as long as we are using a single quote style!
+                // FIXME: do we need to escape double quotes too?? In theory we don't as long as we are using a single quote style!
                 .replace("\n", "\\n") // Replace new lines with escaped versions
                 .replaceAll("\\+n", "\\\\n") // Fix formatting of any escaped new lines already in there
             +'\'';
