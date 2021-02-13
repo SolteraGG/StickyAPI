@@ -35,6 +35,16 @@ public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
     }
 
     /**
+     * Create a new {@link NbtCompoundTag} with an existing key and tag (useful for 1-element compound tags!)
+     * @param key The key to set
+     * @param tag The tag to assign
+     */
+    public NbtCompoundTag(String key, NbtTag tag){
+        super();
+        put(key, tag);
+    }
+
+    /**
      * Constructs a new {@link NbtCompoundTag} from a given {@link JsonObject}
      */
     public static NbtCompoundTag fromJsonObject(JsonObject object){
