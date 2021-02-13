@@ -146,8 +146,6 @@ task processSourceTokens(type: Sync) {
 // Use the filter task as the input for compileJava
 compileJava.source = processSourceTokens.outputs
 
-// TODO: Make task to minify resources (json) on compile
-
 // Font Width Info
 task copyMCFontExtractor(type: Copy) {
     def path = project.configurations.compile.find {it.name.startsWith("mc-font-extractor") }
