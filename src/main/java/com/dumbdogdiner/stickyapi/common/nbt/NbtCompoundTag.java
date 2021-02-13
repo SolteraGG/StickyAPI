@@ -51,7 +51,7 @@ public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag {
     public static NbtCompoundTag fromJsonObject(JsonObject object){
         NbtCompoundTag tag = new NbtCompoundTag();
         for(String elementName : object.keySet()){
-            tag.put(elementName, NbtJsonAdapter.jsonToNbt(object.get(elementName)));
+            tag.put(elementName, NbtJsonAdapter.fromJson(object.get(elementName)));
         }
         return tag;
     }

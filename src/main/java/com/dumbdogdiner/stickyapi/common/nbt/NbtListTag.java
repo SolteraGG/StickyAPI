@@ -40,7 +40,7 @@ public class NbtListTag extends ArrayList<NbtTag> implements NbtTag  {
     public static NbtListTag fromJsonArray(JsonArray arr){
         NbtListTag listTag = new NbtListTag();
         for(JsonElement jse : arr){
-            listTag.add(NbtJsonAdapter.jsonToNbt(jse));
+            listTag.add(NbtJsonAdapter.fromJson(jse));
         }
         return listTag;
     }
