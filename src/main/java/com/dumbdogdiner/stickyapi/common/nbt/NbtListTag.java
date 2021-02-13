@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 
 /**
- * A wrapper class that allows the construction of or conversion (from JSON) of SNBT List Tags
+ * A wrapper class that allows the construction of or conversion (from JSON) of NBT List Tags
  */
 
 public class NbtListTag extends ArrayList<NbtTag> implements NbtTag  {
@@ -68,9 +68,9 @@ public class NbtListTag extends ArrayList<NbtTag> implements NbtTag  {
     }
 
     @Override
-    public @NotNull String toSNbt() {
+    public @NotNull String toNbtString() {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
-        forEach(nbtTag -> joiner.add(nbtTag.toSNbt()));
+        forEach(nbtTag -> joiner.add(nbtTag.toNbtString()));
         return joiner.toString();
     }
 
@@ -78,6 +78,6 @@ public class NbtListTag extends ArrayList<NbtTag> implements NbtTag  {
      * Creates a {@link NbtStringTag} of escaped NBT as a string
      */
     public NbtStringTag toNbtStringTag() {
-         return new NbtStringTag(toSNbt(), true);
+         return new NbtStringTag(toNbtString(), true);
     }
 }

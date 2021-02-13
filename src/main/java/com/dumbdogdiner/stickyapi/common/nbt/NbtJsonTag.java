@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A special type of {@link NbtTag} that converts an arbitrary {@link JsonElement} into an appropriately escaped string as SNBT
+ * A special type of {@link NbtTag} that converts an arbitrary {@link JsonElement} into an appropriately escaped string as NBT
  */
 public class NbtJsonTag implements NbtTag{
     private final @NotNull JsonElement element;
@@ -35,7 +35,7 @@ public class NbtJsonTag implements NbtTag{
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String toSNbt() {
+    public @NotNull String toNbtString() {
         return '\'' + G.toJson(element)
                 // Because minecraft json is a hack on a hack.....
                 // And sometimes the NBT is just json that gets quoted
@@ -49,6 +49,6 @@ public class NbtJsonTag implements NbtTag{
 
     @Override
     public boolean equals(Object other){
-        return ((other instanceof NbtJsonTag || other instanceof NbtStringTag) && toSNbt().equals(((NbtTag) other).toSNbt()));
+        return ((other instanceof NbtJsonTag || other instanceof NbtStringTag) && toNbtString().equals(((NbtTag) other).toNbtString()));
     }
 }

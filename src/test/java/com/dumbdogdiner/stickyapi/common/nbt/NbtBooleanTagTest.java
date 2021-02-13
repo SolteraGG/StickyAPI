@@ -42,9 +42,9 @@ class NbtBooleanTagTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void toSNbt(boolean b) {
+    void toNbtString(boolean b) {
         int i = b ? 1 : 0;
-        assertEquals(Integer.toString(i), new NbtBooleanTag(b).toSNbt());
+        assertEquals(Integer.toString(i), new NbtBooleanTag(b).toNbtString());
     }
 
     @SuppressWarnings("AssertBetweenInconvertibleTypes")

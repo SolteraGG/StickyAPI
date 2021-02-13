@@ -77,15 +77,15 @@ public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
     }
 
     @Override
-    public @NotNull String toSNbt() {
-        StringJoiner SNBT = new StringJoiner(",", "{", "}");
+    public @NotNull String toNbtString() {
+        StringJoiner stringNbt = new StringJoiner(",", "{", "}");
         forEach((name, nbtTag) -> {
             StringJoiner element = new StringJoiner(":");
             element.add(name);
-            element.add(nbtTag.toSNbt());
-            SNBT.add(element.toString());
+            element.add(nbtTag.toNbtString());
+            stringNbt.add(element.toString());
         });
-        return SNBT.toString();
+        return stringNbt.toString();
     }
 
     /**

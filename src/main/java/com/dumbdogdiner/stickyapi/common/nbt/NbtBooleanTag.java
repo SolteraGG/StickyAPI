@@ -45,8 +45,8 @@ public class NbtBooleanTag extends NbtPrimitiveTag<Boolean> {
     }
 
     @Override
-    public @NotNull String toSNbt() {
-        return bool ? NbtNumberTag.TRUE.toSNbt() : NbtNumberTag.FALSE.toSNbt();
+    public @NotNull String toNbtString() {
+        return bool ? NbtNumberTag.TRUE.toNbtString() : NbtNumberTag.FALSE.toNbtString();
     }
 
     @Override

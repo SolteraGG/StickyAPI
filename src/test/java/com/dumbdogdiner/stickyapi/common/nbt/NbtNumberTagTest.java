@@ -60,12 +60,12 @@ class NbtNumberTagTest {
     }
 
     @RepeatedTest(REPEAT)
-    void toSNbt() {
+    void toNbtString() {
         System.out.println(MessageFormat.format("i={0,number,#.##########}; f={1,number,#.##########}", i, f));
-        String iString = new NbtNumberTag(i).toSNbt();
-        String negativeIString = new NbtNumberTag(-i).toSNbt();
-        String fString = new NbtNumberTag(f).toSNbt();
-        String negativeFString = new NbtNumberTag(-f).toSNbt();
+        String iString = new NbtNumberTag(i).toNbtString();
+        String negativeIString = new NbtNumberTag(-i).toNbtString();
+        String fString = new NbtNumberTag(f).toNbtString();
+        String negativeFString = new NbtNumberTag(-f).toNbtString();
         assertEquals(NbtNumberTag.NUMBER_FORMAT.format(i), iString);
         assertEquals(NbtNumberTag.NUMBER_FORMAT.format(f), fString);
         assertEquals(NbtNumberTag.NUMBER_FORMAT.format(-i), negativeIString);

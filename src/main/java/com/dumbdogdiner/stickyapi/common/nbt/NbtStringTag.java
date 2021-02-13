@@ -61,7 +61,7 @@ public class NbtStringTag extends NbtPrimitiveTag<String> {
 
     @SuppressWarnings("UnnecessaryStringEscape")
     @Override
-    public @NotNull String toSNbt() {
+    public @NotNull String toNbtString() {
         // Make sure there are no other escapes needed
         return '\'' +
                 (escaped ? string : StringUtil.formatChatCodes(string)

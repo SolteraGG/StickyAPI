@@ -68,7 +68,7 @@ public class NbtNumberTag extends NbtPrimitiveTag<Number> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String toSNbt() {
+    public @NotNull String toNbtString() {
         return NUMBER_FORMAT.format(number);
     }
 

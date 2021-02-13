@@ -17,8 +17,8 @@ public interface NbtTag {
 
     /**
      * Converts a tag into <a href="https://minecraft.gamepedia.com/NBT_format">Stringified NBT</a>
-     * @return A representation of the object as Stringified NBT (SNbt)
+     * @return A representation of the object as Stringified NBT
      */
     @NotNull
-    String toSNbt();
+    String toNbtString();
 }

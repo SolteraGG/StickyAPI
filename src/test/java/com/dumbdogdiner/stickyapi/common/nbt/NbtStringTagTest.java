@@ -24,7 +24,7 @@ class NbtStringTagTest {
     }
 
     @Test
-    void toSNbt() {
+    void toNbtString() {
     }
 
     @Test
