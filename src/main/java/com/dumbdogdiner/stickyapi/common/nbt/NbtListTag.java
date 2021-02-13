@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringJoiner;
 
 /**
@@ -16,6 +17,21 @@ import java.util.StringJoiner;
  */
 
 public class NbtListTag extends ArrayList<NbtTag> implements NbtTag  {
+    /**
+     * Generates a new, empty {@link NbtListTag}
+     * {@inheritDoc}
+     */
+    public NbtListTag() {
+        super();
+    }
+
+    /**
+     * Generate a new {@link NbtListTag} with elements from an existing array or individual objects
+     */
+    public NbtListTag(NbtTag ... tags){
+        super(Arrays.asList(tags));
+    }
+
     /**
      * Converts a JSON array into an NBT List tag of the native types
      * @param arr The Json Array to convert
