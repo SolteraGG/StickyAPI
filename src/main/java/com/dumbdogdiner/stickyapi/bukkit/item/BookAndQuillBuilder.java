@@ -11,8 +11,6 @@ import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
 import com.dumbdogdiner.stickyapi.common.util.TextUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
@@ -43,7 +41,6 @@ import java.util.StringJoiner;
 @NoArgsConstructor
 public class  BookAndQuillBuilder {
     private @NotNull JsonArray pages = new JsonArray();
-    private static final Gson G = new GsonBuilder().create();
 
     @Setter
     @Getter
