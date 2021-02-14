@@ -89,31 +89,31 @@ public class WrittenBookBuilder {
      */
     public static @NotNull WrittenBookBuilder fromJson(@NotNull JsonObject bookObject) {
         Preconditions.checkArgument(bookObject.has("pages") && bookObject.get("pages").isJsonArray(), "The provided JSON object must have a pages array!");
-        WrittenBookBuilder b = new WrittenBookBuilder();
+        WrittenBookBuilder bookBuilder = new WrittenBookBuilder();
         if (bookObject.has("author"))
-            b.author = bookObject.get("author").getAsString();
+            bookBuilder.author = bookObject.get("author").getAsString();
         if (bookObject.has("title"))
-            b.title = bookObject.get("title").getAsString();
+            bookBuilder.title = bookObject.get("title").getAsString();
         if (bookObject.has("generation"))
             switch (bookObject.get("generation").getAsInt()) {
                 case 1:
-                    b.generation = BookMeta.Generation.COPY_OF_ORIGINAL;
+                    bookBuilder.generation = BookMeta.Generation.COPY_OF_ORIGINAL;
                     break;
                 case 2:
-                    b.generation = BookMeta.Generation.COPY_OF_COPY;
+                    bookBuilder.generation = BookMeta.Generation.COPY_OF_COPY;
                     break;
                 case 3:
-                    b.generation = BookMeta.Generation.TATTERED;
+                    bookBuilder .generation = BookMeta.Generation.TATTERED;
                     break;
                 case 0:
                 default:
-                    b.generation = BookMeta.Generation.ORIGINAL;
+                    bookBuilder.generation = BookMeta.Generation.ORIGINAL;
             }
         if(bookObject.has("lore") && bookObject.get("lore").isJsonArray())
-            b.lore = bookObject.get("lore").getAsJsonArray();
+            bookBuilder.lore = bookObject.get("lore").getAsJsonArray();
 
-        b.pages = bookObject.get("pages").getAsJsonArray();
-        return b;
+        bookBuilder.pages = bookObject.get("pages").getAsJsonArray();
+        return bookBuilder;
     }
 
     /**

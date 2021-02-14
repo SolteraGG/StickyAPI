@@ -59,14 +59,14 @@ public class  BookAndQuillBuilder {
      * @return a {@link BookAndQuillBuilder} with the specified pages; if a title and author are both specified, it will be a {@link Material#WRITTEN_BOOK}, otherwise it will be a {@link Material#WRITABLE_BOOK}
      */
     public static @NotNull BookAndQuillBuilder fromJson(@NotNull JsonObject bookObject) {
-        BookAndQuillBuilder b = new BookAndQuillBuilder();
+        BookAndQuillBuilder bookBuilder = new BookAndQuillBuilder();
         JsonArray pages = bookObject.get("pages").getAsJsonArray();
         Preconditions.checkNotNull(pages);
-        b.pages =  pages;
+        bookBuilder.pages =  pages;
         if(bookObject.has("lore") && bookObject.get("lore").isJsonArray()){
-            b.lore = bookObject.get("lore").getAsJsonArray();
+            bookBuilder.lore = bookObject.get("lore").getAsJsonArray();
         }
-        return b;
+        return bookBuilder;
     }
 
     /**
