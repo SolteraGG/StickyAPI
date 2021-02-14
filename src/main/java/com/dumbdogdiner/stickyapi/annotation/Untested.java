@@ -6,9 +6,6 @@ package com.dumbdogdiner.stickyapi.annotation;
 
 import java.lang.annotation.Documented;
 
-/**
- * Denotes beta features that are not officially stable/tested
- */
 @Documented
 public @interface Untested {
 }
