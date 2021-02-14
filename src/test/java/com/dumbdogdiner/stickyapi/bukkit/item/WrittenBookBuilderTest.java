@@ -72,7 +72,7 @@ public class WrittenBookBuilderTest {
             pages.add(new NbtJsonTag(element));
         }
         test123.put("pages", pages);
-        System.out.println("give @p minecraft:written_book" + test123.toSNbt());
+        System.out.println("give @p minecraft:written_book" + test123.toNbtString());
     }
 
     public void testJSON(String filename) {

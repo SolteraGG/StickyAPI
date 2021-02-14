@@ -226,7 +226,7 @@ public class WrittenBookBuilder {
         if(!display.isEmpty())
             bookNBT.put("display", display);
         bookNBT.put("pages", NbtListTag.fromJsonArrayQuoted(pages));
-        return bookNBT.toSNbt();
+        return bookNBT.toNbtString();
     }
 
     /**

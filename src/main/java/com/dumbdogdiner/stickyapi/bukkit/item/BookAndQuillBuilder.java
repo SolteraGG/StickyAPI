@@ -159,6 +159,6 @@ public class  BookAndQuillBuilder {
         }
         if(!display.isEmpty())
             bookNBT.put("display", display);
-        return bookNBT.toSNbt();
+        return bookNBT.toNbtString();
     }
 }
