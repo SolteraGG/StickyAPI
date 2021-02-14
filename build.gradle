@@ -166,16 +166,12 @@ task rebuild{
 }
 
 javadoc {
-    options.addBooleanOption('XDignore.symbol.file', true)
-    options.addBooleanOption('-frames', true)
-    options.addBooleanOption('private', true)
+    options.addBooleanOption('private', true) // Show all classes and members
     options.addBooleanOption("-allow-script-in-comments",true)
-    options.overview('src/main/overview.html')
+    options.overview('src/main/overview.html') // Customized overview HTML
     outputs.upToDateWhen { false }
 
-    // TODO: replace frames with JANITOR to get around removal of -frames in jdk15
-    // options.footer("<script src=\"https://gitlab.com/gerib/userscripts/-/raw/master/janitor/janitor.user.js?inline=false\"></script>")
-    test.ignoreFailures true;
+    // TODO: Is this line neded?
     dependsOn delombok
 }
 
