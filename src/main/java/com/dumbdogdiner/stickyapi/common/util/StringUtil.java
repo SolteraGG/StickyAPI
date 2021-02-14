@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -287,4 +289,15 @@ public final class StringUtil {
             return UUID.fromString(uuid);
         }
     }
+
+    /**
+     * Replaces &amp; followed by any valid minecraft format code (matching the regex <pre>(?=([a-f]|[0-9]|[klmnor]))</pre> with &#x00a7;
+     *
+     * @param input The input string
+     * @return A string where the relevant ampersands are replaced with section symbols
+     */
+    public static String formatChatCodes(String input) {
+        return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));
+    }
+
 }
