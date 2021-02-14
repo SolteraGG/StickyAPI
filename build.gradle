@@ -186,6 +186,14 @@ task browseJavadoc {
     }
 }
 
+task browseTests {
+    dependsOn test
+    doLast {
+        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/reports/tests/test/index.html").toString())
+        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/reports/jacoco/test/html/index.html").toString())
+    }
+}
+
 publishing {
     repositories {
         maven {
