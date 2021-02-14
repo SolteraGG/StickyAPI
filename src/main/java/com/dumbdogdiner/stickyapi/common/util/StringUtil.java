@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.google.common.base.Preconditions;
+
 import net.md_5.bungee.api.ChatColor;
 
 import org.jetbrains.annotations.NotNull;
@@ -270,6 +272,21 @@ public final class StringUtil {
     }
 
     /**
+     * This method uses a region to check case-sensitive equality.
+     *
+     * @param string String to check
+     * @param prefix Prefix of string to compare
+     * @return {@link Boolean}
+     * @throws NullPointerException if prefix or string is null
+     */
+    public static boolean startsWith(@NotNull final String string, @NotNull final String prefix) {
+        if (string.length() < prefix.length()) {
+            return false;
+        }
+        return string.regionMatches(false, 0, prefix, 0, prefix.length());
+    }
+
+    /**
      * Put hyphens into a uuid
      * <p>
      * e.x. de8c89e12f25424d8078c6ff58db7d6e &gt;
@@ -277,7 +294,7 @@ public final class StringUtil {
      * 
      * @param uuid to hyphenate
      * @return {@link UUID}
-     * @throws NullPointerException if uuid string is null
+     * @throws NullPointerException     if uuid string is null
      * @throws IllegalArgumentException if uuid is not 32 characters and is invalid
      */
     public static UUID hyphenateUUID(@NotNull String uuid) {
@@ -291,10 +308,60 @@ public final class StringUtil {
     }
 
     /**
-     * Replaces &amp; followed by any valid minecraft format code (matching the regex <pre>(?=([a-f]|[0-9]|[klmnor]))</pre> with &#x00a7;
+     * Creates a random string of "magic" characters of characters
+     *
+     * @param min               the minimum length of the string (inclusive)
+     * @param max               the maximum length of the string (inclusive)
+     * @param minRunBeforeSpace Minimum number of characters before a space can
+     *                          appear, set to 0 to disable space
+     * @return A string of random characters, where the length
+     */
+    public static String randomObfuscatedString(int min, int max, int minRunBeforeSpace) {
+        Preconditions.checkArgument(max >= min, "Max cannot be less than min");
+        // Placeholder chars by width
+        char[] choices = new char[] {
+                // Space is boring
+                // ' ', // 1 px
+                'i', // 2 px
+                'l', // 3 px
+                't', // 4 px
+                'f', // 5 px
+                'a', // 6 px
+                '@' // 7 px
+        };
+        StringBuilder obfuscated = new StringBuilder();
+
+        int len = MathUtil.randomInt(min, max);
+        int charsSinceSpace = 0;
+        while (obfuscated.length() < len) {
+            if (minRunBeforeSpace > 0 && charsSinceSpace > minRunBeforeSpace &&
+            // Set a 5% probability of the character being a space
+                    MathUtil.randomInt(1, 100) <= 5) {
+                obfuscated.append(' ');
+                charsSinceSpace = 0;
+            } else {
+                obfuscated.append(MathUtil.randomElement(choices));
+                charsSinceSpace++;
+            }
+        }
+        obfuscated.insert(0, ChatColor.MAGIC);
+        obfuscated.append(ChatColor.RESET);
+        return obfuscated.toString();
+    }
+
+    /**
+     * Replaces &amp; followed by any valid minecraft format code (matching the
+     * regex
+     * 
+     * <pre>
+     * (?=([a-f]|[0-9]|[klmnor]))
+     * </pre>
+     * 
+     * with &#x00a7;
      *
      * @param input The input string
-     * @return A string where the relevant ampersands are replaced with section symbols
+     * @return A string where the relevant ampersands are replaced with section
+     *         symbols
      */
     public static String formatChatCodes(String input) {
         return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));

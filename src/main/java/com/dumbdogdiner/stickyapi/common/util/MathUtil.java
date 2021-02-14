@@ -4,9 +4,14 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import com.google.common.primitives.Chars;
+import com.google.common.primitives.Ints;
+import org.jetbrains.annotations.NotNull;
+
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -15,6 +20,8 @@ import java.util.Random;
  * </p>
  */
 public class MathUtil {
+    private MathUtil() {
+    }
 
     private static final Random random = new Random();
 
@@ -35,13 +42,15 @@ public class MathUtil {
      * Get a random number within a range
      * </p>
      *
-     * @param min minimum value
-     * @param max maximum value
+     * @param min minimum value <b>(inclusive)</b>
+     * @param max maximum value <b>(inclusive)</b>
      * @return a random integer within the specified range
      * @throws IllegalArgumentException when min is greater than max
      */
     public static int randomInt(int min, int max) {
-        if (min >= max)
+        if (min == max)
+            return min;
+        if (min > max)
             throw new IllegalArgumentException("Min may not be greater than max!");
         return min + randomInt(1 + max - min);
     }
@@ -82,8 +91,8 @@ public class MathUtil {
      * @param array the array that should be used
      * @return a random element from the specified array
      */
-    public static <T> T randomElement(T[] array) {
-        if(array.length < 1) return null;
+    public static <T> T randomElement(@NotNull T @NotNull [] array) {
+        if (array.length < 1) return null;
         return array[randomInt(array.length)];
     }
 
@@ -95,8 +104,8 @@ public class MathUtil {
      * @param list the list that should be used
      * @return a random element from the specified list
      */
-    public static <T> T randomElement(List<T> list) {
-        if(list.size() < 1) return null;
+    public static <T> T randomElement(@NotNull List<T> list) {
+        if (list.size() < 1) return null;
         return list.get(randomInt(list.size()));
     }
 
@@ -105,7 +114,7 @@ public class MathUtil {
      * Round a double value
      * </p>
      *
-     * @param value the value that should be rounded
+     * @param value  the value that should be rounded
      * @param places amount of decimal places
      * @return {@link Double}
      */
@@ -145,12 +154,25 @@ public class MathUtil {
      * </p>
      *
      * @param number the number that should be tested
-     * @param min minimum value
-     * @param max maximum value
+     * @param min    minimum value
+     * @param max    maximum value
      * @return <code>true</code> if given number is in range
      */
     public static boolean inRange(int number, int min, int max) {
         return number >= min && number <= max;
     }
 
+    /**
+     * @see #randomElement(List)
+     */
+    public static char randomElement(char @NotNull [] choices) {
+        return Objects.requireNonNull(randomElement(Chars.asList(choices)));
+    }
+
+    /**
+     * @see #randomElement(List)
+     */
+    public static int randomElement(int @NotNull [] choices) {
+        return Objects.requireNonNull(randomElement(Ints.asList(choices)));
+    }
 }

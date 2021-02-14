@@ -49,3 +49,7 @@ bin
 .classpath
 .project
 .idea
+*.code-workspace
+
+# Generated resources
+src/main/resources/generated/*
