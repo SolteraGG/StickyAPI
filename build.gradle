@@ -59,7 +59,7 @@ dependencies {
     // Font width data (see above)
     compile 'dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json'
 
-    compileOnly 'org.projectlombok:lombok:1.18.16'
+    compileOnly 'org.projectlombok:lombok:1.18.18'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
