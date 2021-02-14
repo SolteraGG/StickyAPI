@@ -48,7 +48,13 @@ public class NbtJsonTag implements NbtTag{
     }
 
     @Override
-    public boolean equals(Object other){
-        return ((other instanceof NbtJsonTag || other instanceof NbtStringTag) && toNbtString().equals(((NbtTag) other).toNbtString()));
+    public boolean equals(Object other) {
+        return ((other instanceof NbtJsonTag || other instanceof NbtStringTag)
+                && toNbtString().equals(((NbtTag) other).toNbtString()));
+    }
+    
+    @Override
+    public int hashCode() {
+        return element.hashCode();
     }
 }

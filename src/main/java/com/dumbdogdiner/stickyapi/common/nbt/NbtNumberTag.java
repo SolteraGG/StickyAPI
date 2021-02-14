@@ -71,13 +71,19 @@ public class NbtNumberTag extends NbtPrimitiveTag<Number> {
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof NbtNumberTag){
+    public boolean equals(Object other) {
+        if (other instanceof NbtNumberTag) {
             return number.equals(((NbtNumberTag) other).asPrimitive());
-        } else if(other instanceof NbtBooleanTag){
+        } else if (other instanceof NbtBooleanTag) {
             return other.equals(this);
         } else {
             return false;
         }
+    }
+    
+    @Override
+    public int hashCode() {
+        // Relatively standard impl based on what IntelliJ IDEA could generate
+        return (int) (number.intValue() ^ (number.intValue() >>> 32));
     }
 }

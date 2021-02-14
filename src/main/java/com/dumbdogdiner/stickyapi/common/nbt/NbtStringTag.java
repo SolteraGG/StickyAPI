@@ -78,13 +78,22 @@ public class NbtStringTag extends NbtPrimitiveTag<String> {
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof NbtStringTag){
+    public boolean equals(Object other) {
+        if (other instanceof NbtStringTag) {
             return escaped == ((NbtStringTag) other).escaped && string.equals(((NbtStringTag) other).asPrimitive());
-        } else if(other instanceof NbtJsonTag){
+        } else if (other instanceof NbtJsonTag) {
             return other.equals(this);
         } else {
             return false;
         }
     }
+    
+    @Override
+    public int hashCode() {
+        // Relatively standard impl based on what IntelliJ IDEA could generate
+        int result = Boolean.hashCode(escaped);
+        result = 31 * result + string.hashCode();
+        return result;
+
+    }   
 }

@@ -58,4 +58,9 @@ public class NbtBooleanTag extends NbtPrimitiveTag<Boolean> {
             return false;
         }
     }
+
+    @Override
+    public int hashCode() {
+        return Boolean.hashCode(bool);
+    }
 }
