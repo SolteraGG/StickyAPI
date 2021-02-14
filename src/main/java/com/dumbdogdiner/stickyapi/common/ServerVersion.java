@@ -4,13 +4,13 @@
  */
 package com.dumbdogdiner.stickyapi.common;
 
-import lombok.experimental.UtilityClass;
-
 /**
  * Utility class for fetching version data.
  */
-@UtilityClass
 public final class ServerVersion {
+    private ServerVersion() {
+    }
+
     public enum ServerType {
         BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL
     }

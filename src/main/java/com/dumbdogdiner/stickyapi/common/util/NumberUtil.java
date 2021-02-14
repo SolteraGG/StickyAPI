@@ -4,7 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,8 +11,10 @@ import org.jetbrains.annotations.NotNull;
  * Provides extra functionality for Java Number classes.
  * </p>
  */
-@UtilityClass
 public final class NumberUtil {
+    private NumberUtil() {
+    }
+
     /**
      * <p>
      * Checks if the String contains only unicode digits. A decimal point is not a

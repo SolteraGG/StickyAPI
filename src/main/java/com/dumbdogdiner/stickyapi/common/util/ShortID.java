@@ -8,13 +8,12 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.zip.CRC32;
 
-import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 
-// TODO this is in the apache validation used in another PR
-@UtilityClass
 final class Luhn {
+    private Luhn() {
+    }
 
     /**
      * Checks if the card is valid

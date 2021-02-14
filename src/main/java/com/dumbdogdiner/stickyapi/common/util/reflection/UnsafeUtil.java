@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lombok.experimental.UtilityClass;
 import sun.misc.Unsafe;
 
 /**
@@ -18,8 +17,10 @@ import sun.misc.Unsafe;
  * 
  * @since 2.0
  */
-@UtilityClass
 public class UnsafeUtil {
+    private UnsafeUtil() {
+    }
+
     /**
      * Get an instance of the Unsafe class.
      * 

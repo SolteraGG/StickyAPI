@@ -4,7 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import inet.ipaddr.IPAddress;
@@ -13,8 +12,10 @@ import inet.ipaddr.IPAddressString;
 /**
  * Utility class for IP Addresses
  */
-@UtilityClass
 public final class IPUtil {
+	private IPUtil() {
+	}
+
 	/**
 	 * Check if an IP Address is within a CIDR range
 	 * <p>

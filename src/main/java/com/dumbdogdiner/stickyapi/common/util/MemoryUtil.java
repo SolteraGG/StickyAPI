@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
-import lombok.experimental.UtilityClass;
 
 /**
  * Provides a very crude method of measuring the memory consumption of Java
@@ -16,8 +15,10 @@ import lombok.experimental.UtilityClass;
  * with each new object, but can be useful to measure the estimated size of an
  * object.
  */
-@UtilityClass
 public final class MemoryUtil {
+    private MemoryUtil() {
+    }
+
     public enum Unit {
         BITS, BYTES, KILOBYTES, MEGABYTES
     }
