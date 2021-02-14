@@ -4,7 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.nbt;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import org.jetbrains.annotations.NotNull;
@@ -45,8 +44,8 @@ public class NbtBooleanTag extends NbtPrimitiveTag<Boolean> {
     }
 
     @Override
-    public @NotNull String toSNbt() {
-        return bool ? NbtNumberTag.TRUE.toSNbt() : NbtNumberTag.FALSE.toSNbt();
+    public @NotNull String toNbtString() {
+        return bool ? NbtNumberTag.TRUE.toNbtString() : NbtNumberTag.FALSE.toNbtString();
     }
 
     @Override
@@ -58,5 +57,10 @@ public class NbtBooleanTag extends NbtPrimitiveTag<Boolean> {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Boolean.hashCode(bool);
     }
 }

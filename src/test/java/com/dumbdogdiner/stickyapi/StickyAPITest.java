@@ -14,6 +14,15 @@ import org.junit.jupiter.api.Test;
 public class StickyAPITest {
 
     @Test
+    public void debugPrintAll() {
+        System.out.printf("Version\t %s", StickyAPI.getVersion());
+        System.out.printf("\nTimestamp\t %s", StickyAPI.getTimestamp().toString());
+        System.out.printf("\nCommit\t %s", StickyAPI.getCommit());
+        System.out.printf("\nBranch\t %s", StickyAPI.getBranch());
+        System.out.printf("\nDirty ws?\t %b", StickyAPI.getIsDirty());
+    }
+
+    @Test
     public void testGetVersion() {
         String version = StickyAPI.getVersion();
         

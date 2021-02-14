@@ -18,16 +18,18 @@ import java.text.MessageFormat;
 public final class NbtJsonAdapter {
     /**
      * Creates the appropriate tag from a given {@link JsonElement}, but never creates a {@link NbtJsonTag}
-     * @param jse The incoming {@link JsonElement} to convert
+     * @param element The incoming {@link JsonElement} to convert
      * @return the new {@link NbtTag}
      */
-    public static NbtTag jsonToNbt(@NotNull JsonElement jse) {
-        if(jse.isJsonArray()){
-            return NbtListTag.fromJsonArray(jse.getAsJsonArray());
-        } else if(jse.isJsonObject()){
-            return NbtCompoundTag.fromJsonObject(jse.getAsJsonObject());
-        } else if(jse.isJsonPrimitive()){
-            JsonPrimitive primitive = jse.getAsJsonPrimitive();
+    public static NbtTag fromJson(@NotNull JsonElement element) {
+        if(element.isJsonArray()){
+            return NbtListTag.fromJsonArray(element.getAsJsonArray());
+        } else if(element.isJsonObject()){
+            return NbtCompoundTag.fromJsonObject(element.getAsJsonObject());
+        } else if (element.isJsonPrimitive()) {
+            // TODO: Rewrite to look cleaner?
+            // https://github.com/DumbDogDiner/StickyAPI/pull/92/files#r575639999
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
             if(primitive.isBoolean()){
                 return NbtBooleanTag.fromPrimitive(primitive);
             } else if(primitive.isNumber()){
@@ -37,10 +39,10 @@ public final class NbtJsonAdapter {
             } else {
                 throw new UnsupportedOperationException("Illegal type of NBT primitive");
             }
-        } else if(jse.isJsonNull()) {
+        } else if(element.isJsonNull()) {
             return null;
         } else {
-            throw new UnsupportedOperationException(MessageFormat.format("This type of JSONElement is unsupported ({0})", jse.getClass().getName()));
+            throw new UnsupportedOperationException(MessageFormat.format("This type of JSONElement is unsupported ({0})", element.getClass().getName()));
         }
 
     }

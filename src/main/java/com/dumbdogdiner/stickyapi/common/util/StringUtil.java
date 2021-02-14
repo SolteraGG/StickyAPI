@@ -10,9 +10,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-import lombok.experimental.UtilityClass;
-
 import net.md_5.bungee.api.ChatColor;
 
 import org.jetbrains.annotations.NotNull;
@@ -308,36 +305,35 @@ public final class StringUtil {
         }
     }
 
-
     /**
      * Creates a random string of "magic" characters of characters
      *
      * @param min               the minimum length of the string (inclusive)
      * @param max               the maximum length of the string (inclusive)
-     * @param minRunBeforeSpace Minimum number of characters before a space can appear, set to 0 to disable space
+     * @param minRunBeforeSpace Minimum number of characters before a space can
+     *                          appear, set to 0 to disable space
      * @return A string of random characters, where the length
      */
     public static String randomObfuscatedString(int min, int max, int minRunBeforeSpace) {
         Preconditions.checkArgument(max >= min, "Max cannot be less than min");
         // Placeholder chars by width
-        char[] choices = new char[]{
+        char[] choices = new char[] {
                 // Space is boring
-                // ' ', //  1 px
-                'i', //  2 px
-                'l', //  3 px
-                't', //  4 px
-                'f', //  5 px
-                'a', //  6 px
-                '@'  //  7 px
+                // ' ', // 1 px
+                'i', // 2 px
+                'l', // 3 px
+                't', // 4 px
+                'f', // 5 px
+                'a', // 6 px
+                '@' // 7 px
         };
         StringBuilder obfuscated = new StringBuilder();
 
         int len = MathUtil.randomInt(min, max);
         int charsSinceSpace = 0;
         while (obfuscated.length() < len) {
-            if (    minRunBeforeSpace > 0 &&
-                    charsSinceSpace > minRunBeforeSpace &&
-                    // Set a 5% probability of the character being a space
+            if (minRunBeforeSpace > 0 && charsSinceSpace > minRunBeforeSpace &&
+            // Set a 5% probability of the character being a space
                     MathUtil.randomInt(1, 100) <= 5) {
                 obfuscated.append(' ');
                 charsSinceSpace = 0;

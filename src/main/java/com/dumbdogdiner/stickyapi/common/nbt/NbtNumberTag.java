@@ -7,12 +7,10 @@ package com.dumbdogdiner.stickyapi.common.nbt;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -68,18 +66,24 @@ public class NbtNumberTag extends NbtPrimitiveTag<Number> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String toSNbt() {
+    public @NotNull String toNbtString() {
         return NUMBER_FORMAT.format(number);
     }
 
     @Override
-    public boolean equals(Object other){
-        if(other instanceof NbtNumberTag){
+    public boolean equals(Object other) {
+        if (other instanceof NbtNumberTag) {
             return number.equals(((NbtNumberTag) other).asPrimitive());
-        } else if(other instanceof NbtBooleanTag){
+        } else if (other instanceof NbtBooleanTag) {
             return other.equals(this);
         } else {
             return false;
         }
+    }
+    
+    @Override
+    public int hashCode() {
+        // Relatively standard impl based on what IntelliJ IDEA could generate
+        return (int) (number.intValue() ^ (number.intValue() >>> 32));
     }
 }

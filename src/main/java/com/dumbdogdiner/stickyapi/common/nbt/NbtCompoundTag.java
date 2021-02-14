@@ -10,13 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
  * A wrapper tag that allows working with Compound NBT tags as maps!
  */
-public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
+public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag {
 
     /**
      * Creates a new {@link NbtCompoundTag} from an existing {@link Map}
@@ -51,7 +50,7 @@ public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
     public static NbtCompoundTag fromJsonObject(JsonObject object){
         NbtCompoundTag tag = new NbtCompoundTag();
         for(String elementName : object.keySet()){
-            tag.put(elementName, NbtJsonAdapter.jsonToNbt(object.get(elementName)));
+            tag.put(elementName, NbtJsonAdapter.fromJson(object.get(elementName)));
         }
         return tag;
     }
@@ -77,15 +76,15 @@ public class NbtCompoundTag extends HashMap<String, NbtTag> implements NbtTag{
     }
 
     @Override
-    public @NotNull String toSNbt() {
-        StringJoiner SNBT = new StringJoiner(",", "{", "}");
+    public @NotNull String toNbtString() {
+        StringJoiner stringNbt = new StringJoiner(",", "{", "}");
         forEach((name, nbtTag) -> {
             StringJoiner element = new StringJoiner(":");
             element.add(name);
-            element.add(nbtTag.toSNbt());
-            SNBT.add(element.toString());
+            element.add(nbtTag.toNbtString());
+            stringNbt.add(element.toString());
         });
-        return SNBT.toString();
+        return stringNbt.toString();
     }
 
     /**
