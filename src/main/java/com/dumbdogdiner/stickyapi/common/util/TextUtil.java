@@ -72,13 +72,18 @@ public class TextUtil {
             }
         } catch (Exception e) {
             StickyAPI.getLogger().severe(e.getMessage());
-            // fallback to a minimal , in case anything fails
+            // fallback to a minimal configuration, in case anything fails
             for (char c = 32; c <= 126; ++c) {
                 widths.put(c, 12);
             }
+            // Extra fallback data to load in in case anything fails
+            // Minecraft font data is formatted in a very particular way
+            // so we are forced to use unfriendly code to load in extra fallback data.
             "\0 ".chars().forEach(c -> widths.put((char) c, 2));
             "!',.:;i|".chars().forEach(c -> widths.put((char) c, 4));
             "`l".chars().forEach(c -> widths.put((char) c, 6));
+            // Some characters are represented by their Unicode code point to ensure they
+            // load correctly
             "\"()*I[]t{}\u2022".chars().forEach(c -> widths.put((char) c, 8));
             "<>fk\u00b7".chars().forEach(c -> widths.put((char) c, 10));
             "@~".chars().forEach(c -> widths.put((char) c, 14));
