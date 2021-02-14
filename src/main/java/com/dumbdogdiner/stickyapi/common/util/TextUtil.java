@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.protocol.packet.Chat;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
