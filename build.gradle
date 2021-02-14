@@ -76,10 +76,6 @@ dependencies {
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
     testImplementation("org.mockito:mockito-core:3.7.7")
-//
-//    // Mocked bukkit
-//    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
-//    testImplementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 }
 
 test {
@@ -177,8 +173,8 @@ javadoc {
     options.overview('src/main/overview.html')
     outputs.upToDateWhen { false }
 
-    //TODO replace frames with JANITOR to get around removal of -frames in jdk15
-    //options.footer("<script src=\"https://gitlab.com/gerib/userscripts/-/raw/master/janitor/janitor.user.js?inline=false\"></script>")
+    // TODO: replace frames with JANITOR to get around removal of -frames in jdk15
+    // options.footer("<script src=\"https://gitlab.com/gerib/userscripts/-/raw/master/janitor/janitor.user.js?inline=false\"></script>")
     test.ignoreFailures true;
     dependsOn delombok
 }
