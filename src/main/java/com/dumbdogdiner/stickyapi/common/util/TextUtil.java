@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Utilities for text, such as in chat, books, and signs
@@ -49,8 +48,6 @@ public class TextUtil {
     public static final int PIXELS_PER_SIGN_LINE = 96;
     /** Number of lines per sign */
     public static final int LINES_PER_SIGN = 4;
-
-    private static final Pattern SPLIT_PATTERN = Pattern.compile("(?<=[ \n])|(?=[ \n])");
 
     private static final HashMap<Character, Integer> widths = new HashMap<>();
 
