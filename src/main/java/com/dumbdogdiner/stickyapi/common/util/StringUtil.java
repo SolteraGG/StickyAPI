@@ -7,8 +7,9 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
+
+import com.google.common.base.Preconditions;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -17,8 +18,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Operations on {@link java.lang.String}
  */
-@UtilityClass
 public final class StringUtil {
+    private StringUtil() {
+    }
 
     private static HashMap<String, String> leetReplace = new HashMap<>();
 
@@ -39,10 +41,10 @@ public final class StringUtil {
 
     /**
      * Create a horizontal progress bar, similar to how htop does it.
-     *
+     * 
      * <p>
      * Returns a progress bar
-     *
+     * 
      * @param size              The size of the bar (inside)
      * @param percentage        The percentage to fill the bar to
      * @param monospace         If false, the bars will be a character with the
@@ -56,7 +58,7 @@ public final class StringUtil {
      * @return {@link String}
      */
     public static String createProgressBar(@NotNull double size, @NotNull double percentage, @NotNull boolean monospace,
-                                           @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
+            @NotNull boolean includePercentage, @NotNull boolean includeBrackets) {
         double barCount = ((percentage / 100) * size);
         StringBuilder barBuilder = new StringBuilder();
         for (double i = 0; i < size; i++) {
@@ -85,7 +87,7 @@ public final class StringUtil {
      * Create a horizontal progress bar, similar to how htop does it.
      * <p>
      * Returns a progress bar
-     *
+     * 
      * @param size       The size of the bar
      * @param percentage The percentage to fill the bar to
      * @return {@link String}
@@ -107,7 +109,7 @@ public final class StringUtil {
      * Returns a message with capital letters after every whitespace
      * <p>
      * See {@link #capitaliseSentenceKeepUpperCase(String)}
-     *
+     * 
      * @param string   The string to capitalise
      * @param keepCase Whether or not to keep the uppercase characters
      * @return {@link String}
@@ -142,7 +144,7 @@ public final class StringUtil {
      * <p>
      * See Alternate (keeping uppercase):
      * {@link #capitaliseSentenceKeepUpperCase(String)}
-     *
+     * 
      * @param string The string to capitalise
      * @return {@link String}
      */
@@ -158,16 +160,16 @@ public final class StringUtil {
      * Example: "hello world" == "Hello World"
      * <p>
      * Example: "hello WORLD" == "Hello WORLD"
-     *
+     * 
      * <p>
      * See Alternate (not keeping uppercase): {@link #capitaliseSentence(String)}
-     *
+     * 
      * <p>
      * Returns a message with capital letters after every whitespace
-     *
+     * 
+     * @since 2.0
      * @param string The string to capitalise
      * @return {@link String}
-     * @since 2.0
      */
     public static String capitaliseSentenceKeepUpperCase(@NotNull String string) {
         return capitaliseSentence(string, true);
@@ -177,7 +179,7 @@ public final class StringUtil {
      * Replace a word with asterisks.
      * <p>
      * The censored word
-     *
+     * 
      * @param word  The word to censor
      * @param regex The characters to not censor
      * @return {@link String}
@@ -201,7 +203,7 @@ public final class StringUtil {
      *
      * <p>
      * The censored word
-     *
+     * 
      * @param word The word to censor
      * @return {@link String}
      */
@@ -213,14 +215,14 @@ public final class StringUtil {
      * Filter "Leet Speak" out of a message
      * <p>
      * Example:
-     *
+     * 
      * <pre>
      * Translation.replaceLeet("50m3 1337 5p34k h3r3") = "some leet speak here"
      * </pre>
-     *
+     * 
      * <p>
      * The filtered message
-     *
+     * 
      * @param message The message to filter
      * @return {@link String}
      */
@@ -236,10 +238,10 @@ public final class StringUtil {
 
     /**
      * Check if many strings equal a single comparison string
-     *
+     * 
      * <p>
      * Whether something matches.
-     *
+     * 
      * @param haystack the string to compare to
      * @param needles  things that may match the comparison string
      * @return {@link Boolean}
@@ -289,7 +291,7 @@ public final class StringUtil {
      * <p>
      * e.x. de8c89e12f25424d8078c6ff58db7d6e &gt;
      * de8c89e1-2f25-424d-8078-c6ff58db7d6e
-     *
+     * 
      * @param uuid to hyphenate
      * @return {@link UUID}
      * @throws NullPointerException     if uuid string is null
@@ -348,10 +350,18 @@ public final class StringUtil {
     }
 
     /**
-     * Replaces &amp; followed by any valid minecraft format code (matching the regex <pre>(?=([a-f]|[0-9]|[klmnor]))</pre> with &#x00a7;
+     * Replaces &amp; followed by any valid minecraft format code (matching the
+     * regex
+     * 
+     * <pre>
+     * (?=([a-f]|[0-9]|[klmnor]))
+     * </pre>
+     * 
+     * with &#x00a7;
      *
      * @param input The input string
-     * @return A string where the relevant ampersands are replaced with section symbols
+     * @return A string where the relevant ampersands are replaced with section
+     *         symbols
      */
     public static String formatChatCodes(String input) {
         return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));
