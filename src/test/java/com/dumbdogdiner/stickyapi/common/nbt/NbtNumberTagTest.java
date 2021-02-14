@@ -28,7 +28,7 @@ class NbtNumberTagTest {
     }
 
     @RepeatedTest(REPEAT)
-    void fromPrimitive() {
+    void testFromPrimitive() {
         System.out.println(MessageFormat.format("i={0,number,#.##########}; f={1,number,#.##########}", i, f));
         JsonPrimitive iPrim = new JsonPrimitive(i);
         JsonPrimitive fPrim = new JsonPrimitive(f);
@@ -37,7 +37,7 @@ class NbtNumberTagTest {
     }
 
     @RepeatedTest(REPEAT)
-    void asPrimitive() {
+    void testAsPrimitive() {
         System.out.println(MessageFormat.format("i={0,number,#.##########}; f={1,number,#.##########}", i, f));
         assertEquals(i, new NbtNumberTag(i).asPrimitive());
         assertEquals(i, NbtNumberTag.fromPrimitive(new JsonPrimitive(i)).asPrimitive());
@@ -46,7 +46,7 @@ class NbtNumberTagTest {
     }
 
     @RepeatedTest(REPEAT)
-    void toJson() {
+    void testToJson() {
         System.out.println(MessageFormat.format("i={0,number,#.##########}; f={1,number,#.##########}", i, f));
         JsonPrimitive iPrim = new JsonPrimitive(i);
         JsonPrimitive fPrim = new JsonPrimitive(f);
@@ -57,7 +57,7 @@ class NbtNumberTagTest {
     }
 
     @RepeatedTest(REPEAT)
-    void toNbtString() {
+    void testToNbtString() {
         System.out.println(MessageFormat.format("i={0,number,#.##########}; f={1,number,#.##########}", i, f));
         String iString = new NbtNumberTag(i).toNbtString();
         String negativeIString = new NbtNumberTag(-i).toNbtString();
@@ -87,7 +87,7 @@ class NbtNumberTagTest {
     }
 
     @RepeatedTest(REPEAT)
-    void notEquals() {
+    void testNotEquals() {
         assertNotEquals(new NbtNumberTag(i), NbtNumberTag.fromPrimitive(new JsonPrimitive(i - 1)));
         assertNotEquals(new NbtNumberTag(f), NbtNumberTag.fromPrimitive(new JsonPrimitive(f + 0.1f)));
     }
