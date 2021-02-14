@@ -160,35 +160,6 @@ tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtr
 tasks.build.dependsOn sources
 tasks.publish.dependsOn build
 
-task rebuild{
-    dependsOn clean
-    finalizedBy build
-}
-
-javadoc {
-    options.addBooleanOption('private', true) // Show all classes and members
-    options.addBooleanOption("-allow-script-in-comments",true)
-    options.overview('src/main/overview.html') // Customized overview HTML
-    outputs.upToDateWhen { false }
-
-    // TODO: Is this line neded?
-    dependsOn delombok
-}
-
-task browseJavadoc {
-    dependsOn javadoc
-    doLast {
-        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
-    }
-}
-
-task browseTests {
-    dependsOn test
-    doLast {
-        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/reports/tests/test/index.html").toString())
-        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/reports/jacoco/test/html/index.html").toString())
-    }
-}
 
 publishing {
     repositories {
