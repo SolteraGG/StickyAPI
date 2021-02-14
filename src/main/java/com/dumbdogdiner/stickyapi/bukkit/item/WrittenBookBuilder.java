@@ -10,8 +10,6 @@ import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
 import com.dumbdogdiner.stickyapi.common.util.TextUtil;
 import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Getter;
@@ -73,12 +71,6 @@ public class WrittenBookBuilder {
     @Getter
     @Setter
     private @Nullable String displayName;
-
-    private static final Gson G = new GsonBuilder()
-            // Make sure things aren't weirdly escaped, may need to turn this back on
-            .disableHtmlEscaping()
-            .create();
-
 
     /**
      * Creates a new BookGenerator from a given JsonObject, representing a book, which can
