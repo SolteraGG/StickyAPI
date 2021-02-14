@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Utilities for text, such as in chat, books, and signs
  *
- * @since 2.1.0
+ * @since TBA (rewritten)
  */
 @UtilityClass
 public class TextUtil {

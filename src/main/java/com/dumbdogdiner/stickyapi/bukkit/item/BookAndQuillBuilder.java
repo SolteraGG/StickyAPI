@@ -33,7 +33,7 @@ import java.util.StringJoiner;
  * This class allows for easy construction of a writable book, which is unfortunately much
  * simpler than a written/signed book, either manually in code, or by loading a JSON object
  *
- * @since 2.1.0
+ * @since TBA
  */
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})

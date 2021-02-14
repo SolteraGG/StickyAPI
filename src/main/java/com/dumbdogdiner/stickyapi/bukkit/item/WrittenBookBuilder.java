@@ -32,7 +32,7 @@ import java.util.StringJoiner;
  * This class allows for easy construction of a Written Book, whether through JSON objects and manual
  * creation, or by loading a full JSON object from a file or other source
  *
- * @since 2.1.0
+ * @since TBA
  */
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Accessors(chain = true)
