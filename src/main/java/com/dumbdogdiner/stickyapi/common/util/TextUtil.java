@@ -9,7 +9,6 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +25,10 @@ import java.util.regex.Pattern;
  *
  * @since TBA (rewritten)
  */
-@UtilityClass
 public class TextUtil {
+    private TextUtil() {
+    }
+
     /** Offset for bold (in each direction) */
     public static final float BOLD_OFFSET = 0.5f;
     /** Offset for shadows (in each direction) */

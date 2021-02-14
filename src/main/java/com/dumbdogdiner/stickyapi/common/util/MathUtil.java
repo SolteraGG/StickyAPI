@@ -6,7 +6,6 @@ package com.dumbdogdiner.stickyapi.common.util;
 
 import com.google.common.primitives.Chars;
 import com.google.common.primitives.Ints;
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.CharacterIterator;
@@ -20,8 +19,9 @@ import java.util.Random;
  * Util class for commonly used math operations.
  * </p>
  */
-@UtilityClass
 public class MathUtil {
+    private MathUtil() {
+    }
 
     private static final Random random = new Random();
 
