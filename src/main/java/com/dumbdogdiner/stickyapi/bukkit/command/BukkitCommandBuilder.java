@@ -62,7 +62,7 @@ public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
     }
 
     /**
-     * Create a new [@link BukkitCommandBuilder} instance
+     * Create a new {@link BukkitCommandBuilder} instance
      * <p>
      * Used to build and register Bukkit commands
      * 

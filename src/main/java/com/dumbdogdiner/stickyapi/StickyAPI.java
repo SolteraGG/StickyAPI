@@ -41,7 +41,7 @@ public class StickyAPI {
      * 
      */
     @Getter
-    private static final String version = "@BUILDINFO_VERSION";
+    private static final String version = "@BUILDINFO_VERSION@";
 
     // Getter not required
     private static final String dateFormat = "@BUILDINFO_DATEFORMAT@";

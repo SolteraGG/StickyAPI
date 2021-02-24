@@ -4,7 +4,10 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -218,5 +221,18 @@ public class StringUtilTest {
         assertThrows(NullPointerException.class, () -> {
             StringUtil.hyphenateUUID(null);
         });
+    }
+
+    @RepeatedTest(100)
+    public void testRandomObfuscatedString() {
+        String rand = StringUtil.randomObfuscatedString(3,3, 0);
+        assertTrue(StringUtil.startsWith(rand, ChatColor.MAGIC.toString()));
+        System.out.println(rand);
+        assertEquals(3, ChatColor.stripColor(rand).length());
+
+        rand = StringUtil.randomObfuscatedString(1, 100, 0);
+        assertTrue(ChatColor.stripColor(rand).length() >= 1 && ChatColor.stripColor(rand).length() <= 100);
+        assertEquals(ChatColor.stripColor(rand).length(), rand.length() - 4);
+        System.out.println(rand);
     }
 }

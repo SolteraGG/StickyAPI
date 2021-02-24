@@ -48,25 +48,41 @@ repositories {
 
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+
+    // Define a Ivy repo for the font width data (that way we don't need another plugin!)
+    def ddd_mc_font = ivy {
+        url 'https://dumbdogdiner.github.io/'
+        patternLayout { artifact '/[module]/[revision]/[classifier].[ext]'}
+        metadataSources { artifact() } 
+    }
+    // Only use the Ivy repo for font width data - speeds up dependency resolution
+    exclusiveContent {
+        forRepositories(ddd_mc_font)
+        filter { includeGroup("dumbdogdiner") }
+    }
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    // Font width data (see above)
+    compile 'dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json'
+
+    compileOnly 'org.projectlombok:lombok:1.18.18'
+    annotationProcessor 'org.projectlombok:lombok:1.18.18'
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.github.classgraph:classgraph:4.8.100'
+    implementation 'io.github.classgraph:classgraph:4.8.102'
     implementation 'com.github.seancfoley:ipaddress:5.3.3'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'com.google.guava:guava:30.1-jre'
 
     // Tests - JUnit 5
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 
     // Tests - Mocking Suite (eg. mocking Bukkit for tests)
     testImplementation("org.mockito:mockito-core:3.7.7")
@@ -151,6 +167,17 @@ task processSourceTokens(type: Sync) {
 // Use the filter task as the input for compileJava
 compileJava.source = processSourceTokens.outputs
 
+// Font Width Info
+task copyMCFontExtractor(type: Copy) {
+    def path = project.configurations.compile.find {it.name.startsWith("mc-font-extractor") }
+    println path
+    from file(path)
+    // into file("src/main/resources")
+    // - Please keep this comment for future reference.
+    // - This is how we would do this if we weren't also adding build info (see processSourceTokens)
+    destinationDir file("src/main/resources/generated/")
+    rename 'mc-font-extractor-main-mojangles_width_data.json', 'mojangles_width_data.json'
+}
 
 // Run the license formatter and font data copier before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, processResources
