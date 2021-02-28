@@ -146,11 +146,36 @@ task rootSources(type: Jar, dependsOn: classes) {
     from subprojects.sourceSets.main.allSource
 }
 
+
+// Generate a combined test report for passing/failing tests project-wide
+// src: https://stackoverflow.com/a/16921750
+task rootTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/allTests")
+    // Include the results from the `test` task in all subprojects
+    reportOn subprojects*.test
+}
+
+// Generate an additional jacoco report project-wide
+// src: https://github.com/gradle/gradle/issues/10708#issuecomment-566279825
+task rootJacocoMergedReport(type: JacocoReport) {
+  //dependsOn = subprojects.test
+  additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+  sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+  classDirectories.setFrom files(subprojects.sourceSets.main.output)
+  executionData.setFrom project.fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+  reports {
+    xml.enabled true
+    html.enabled true
+  }
+}
+
 // Run rootSources after sources to overwrite the empty source file
 tasks.rootSources.dependsOn sources
 
-// Shadow + Root sources: run with build
+// Root build: create uber jar + sources
 tasks.build.dependsOn shadowJar, rootSources
+
+tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport
 
 
 tasks.publish.dependsOn build
