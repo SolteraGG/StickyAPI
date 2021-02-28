@@ -1,14 +1,10 @@
 plugins {
-    id 'java'
     id 'maven-publish'
-    id 'jacoco'
-    id "io.freefair.lombok" version "5.3.0"
-    id "com.github.hierynomus.license" version "0.15.0"
-}
+    id "io.freefair.lombok" version "5.3.0" apply false
+    id "com.github.hierynomus.license" version "0.15.0" apply false
 
-jacoco {
-    // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
-    toolVersion = "0.8.6"
+    // root project - create an uber jar then jars for each module
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 group = 'com.dumbdogdiner'
@@ -20,6 +16,11 @@ allprojects {
     apply plugin: "jacoco"
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.github.hierynomus.license"
+
+    jacoco {
+        // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
+        toolVersion = "0.8.6"
+    }
 
     // License Plugin Options
     license {
@@ -118,6 +119,38 @@ allprojects {
     tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
     tasks.build.dependsOn sources
 }
+
+// Shadow Stuff
+dependencies {
+    // Shadow: create an uber jar
+    compile project(":common")
+    compile project(":bukkit")
+    compile project(":bungee")
+}
+
+// Shadow: removed classifier from output filename
+shadowJar { archiveClassifier.set('') }
+
+// Shadow: Reproducible Builds
+tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+
+
+task rootSources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    // Use source code from all subprojects for sources.
+    // TODO: Use certain subprojects only to allow for multiple jar outputs
+    from subprojects.sourceSets.main.allSource
+}
+
+// Run rootSources after sources to overwrite the empty source file
+tasks.rootSources.dependsOn sources
+
+// Shadow + Root sources: run with build
+tasks.build.dependsOn shadowJar, rootSources
 
 
 tasks.publish.dependsOn build
