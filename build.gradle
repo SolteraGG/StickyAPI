@@ -20,13 +20,6 @@ allprojects {
 
     // Define Maven Central here so that jacoco can deps resolve properly
     repositories { mavenCentral() }
-
-    task sources(type: Jar, dependsOn: classes) {
-        archiveClassifier.set("sources")
-        from sourceSets.main.allSource
-    }
-    
-    tasks.build.dependsOn sources
 }
 
 subprojects {
@@ -113,6 +106,11 @@ subprojects {
         }
     }
 
+    task sources(type: Jar, dependsOn: classes) {
+        archiveClassifier.set("sources")
+        from sourceSets.main.allSource
+    }
+
 
     // Javadoc Fixes
     // Some environments (such as the builder image) do not use UTF-8 as the default encoding!
@@ -125,6 +123,7 @@ subprojects {
 
     // Run the license formatter and font data copier before compiling the source code. 
     tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
+    tasks.build.dependsOn sources
 }
 
 // Root build: create uber jar from subproject outputs
@@ -160,9 +159,6 @@ task rootJacocoMergedReport(type: JacocoReport) {
   }
 }
 
-// Run rootSources after sources to overwrite the empty source file
-tasks.rootSources.dependsOn sources
-
 // Root build: run rootSources during build
 tasks.build.dependsOn rootSources
 
@@ -189,7 +185,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             from(components.java)
-            artifact sources // Publish the output of the sources task
+            artifact rootSources // Publish the output of the sources task
         }
     }
 }
