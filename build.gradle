@@ -9,18 +9,29 @@ plugins {
 
 group = 'com.dumbdogdiner'
 
-version = '2.1.0'
-
 allprojects {
+    version = '2.1.0'
+
     apply plugin: "java"
     apply plugin: "jacoco"
+    
+    // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
+    jacoco { toolVersion = "0.8.6" }
+
+    // Define Maven Central here so that jacoco can deps resolve properly
+    repositories { mavenCentral() }
+
+    task sources(type: Jar, dependsOn: classes) {
+        archiveClassifier.set("sources")
+        from sourceSets.main.allSource
+    }
+    
+    tasks.build.dependsOn sources
+}
+
+subprojects {
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.github.hierynomus.license"
-
-    jacoco {
-        // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
-        toolVersion = "0.8.6"
-    }
 
     // License Plugin Options
     license {
@@ -43,13 +54,13 @@ allprojects {
     }
 
     repositories {
-        mavenCentral()
+        // Note: Maven Central is defined in allprojects
         jcenter()
 
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://papermc.io/repo/repository/maven-public/' }
 
-        // JCX: Subprojects can't have repo overrides to we have to put it here
+        // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
         def ddd_mc_font = ivy {
            url 'https://dumbdogdiner.github.io/'
@@ -67,7 +78,7 @@ allprojects {
         compileOnly 'org.projectlombok:lombok:1.18.18'
         annotationProcessor 'org.projectlombok:lombok:1.18.18'
         
-        // JCX: Common uses both of these...
+        // Note: Common uses both of these... ???
         compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
         compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
 
@@ -102,11 +113,6 @@ allprojects {
         }
     }
 
-    task sources(type: Jar, dependsOn: classes) {
-        archiveClassifier.set("sources")
-        from sourceSets.main.allSource
-    }
-
 
     // Javadoc Fixes
     // Some environments (such as the builder image) do not use UTF-8 as the default encoding!
@@ -119,7 +125,6 @@ allprojects {
 
     // Run the license formatter and font data copier before compiling the source code. 
     tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
-    tasks.build.dependsOn sources
 }
 
 // Root build: create uber jar from subproject outputs
