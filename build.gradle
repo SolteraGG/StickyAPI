@@ -188,6 +188,26 @@ tasks.javadoc.finalizedBy aggregateJavadoc
 // Javadoc fixes (pt. 2, see above entry in subprojects)
 aggregateJavadoc.options.encoding = "UTF-8"
 
+/*
+    Javadoc Fixes, part 3
+
+    Since JDK13 the javadoc html validator was changed, making it impossible to have javadocs
+    that are valid on both pre-13 and post-13 java versions.
+    The original workaround was suggested here: https://bugs.openjdk.java.net/browse/JDK-8223552
+    However, this workaround does not work for us since we are using aggregate-javadoc.
+    So, we are using a workaround for the workaround from:
+        original: https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+        archived: https://web.archive.org/web/20210117193942/https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+    which, in turn, references this: https://github.com/GPars/GPars/blob/7cddf7cf2fec1fd66ef800edccfc03315d078a2b/build.gradle#L209
+ */
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            // options.addStringOption('Xdoclint:-html', '-quiet')
+            options.addBooleanOption("Xdoclint:-html", true)
+        }
+    }
+}
 
 tasks.publish.dependsOn build
 
