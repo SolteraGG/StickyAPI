@@ -3,9 +3,6 @@ plugins {
     id "io.freefair.lombok" version "5.3.0" apply false
     id "com.github.hierynomus.license" version "0.15.0" apply false
 
-    // root project - create an uber jar then jars for each module
-    id "com.github.johnrengelman.shadow" version "6.1.0"
-
     // root project - generate project-wide javadocs
     id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
@@ -123,24 +120,9 @@ allprojects {
     tasks.build.dependsOn sources
 }
 
-// Shadow Stuff
-dependencies {
-    // Shadow: create an uber jar
-    compile project(":common")
-    compile project(":bukkit")
-    compile project(":bungee")
+jar {
+  from subprojects.sourceSets.main.output
 }
-
-// Shadow: removed classifier from output filename
-shadowJar { archiveClassifier.set('') }
-
-// Shadow: Reproducible Builds
-tasks.withType(AbstractArchiveTask) {
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-}
-
-
 
 task rootSources(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
@@ -148,7 +130,6 @@ task rootSources(type: Jar, dependsOn: classes) {
     // TODO: Use certain subprojects only to allow for multiple jar outputs
     from subprojects.sourceSets.main.allSource
 }
-
 
 // Generate a combined test report for passing/failing tests project-wide
 // src: https://stackoverflow.com/a/16921750
@@ -176,7 +157,7 @@ task rootJacocoMergedReport(type: JacocoReport) {
 tasks.rootSources.dependsOn sources
 
 // Root build: create uber jar + sources
-tasks.build.dependsOn shadowJar, rootSources
+tasks.build.dependsOn rootSources
 
 // Root build: generate project wide test, coverage and javadoc results
 tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
