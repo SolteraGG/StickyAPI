@@ -52,4 +52,4 @@ bin
 *.code-workspace
 
 # Generated resources
-src/main/resources/generated/*
+common/src/main/resources/generated/*
