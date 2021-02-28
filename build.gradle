@@ -5,6 +5,9 @@ plugins {
 
     // root project - create an uber jar then jars for each module
     id "com.github.johnrengelman.shadow" version "6.1.0"
+
+    // root project - generate project-wide javadocs
+    id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
 
 group = 'com.dumbdogdiner'
@@ -175,7 +178,11 @@ tasks.rootSources.dependsOn sources
 // Root build: create uber jar + sources
 tasks.build.dependsOn shadowJar, rootSources
 
-tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport
+// Root build: generate project wide test, coverage and javadoc results
+tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
+
+// Root build: also run aggregateJavadoc after javadoc
+tasks.javadoc.finalizedBy aggregateJavadoc
 
 
 tasks.publish.dependsOn build
