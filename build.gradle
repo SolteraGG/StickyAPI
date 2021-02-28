@@ -122,10 +122,10 @@ allprojects {
     tasks.build.dependsOn sources
 }
 
-jar {
-  from subprojects.sourceSets.main.output
-}
+// Root build: create uber jar from subproject outputs
+jar { from subprojects.sourceSets.main.output }
 
+// Root build: create uber sources from subproject sources
 task rootSources(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
     // Use source code from all subprojects for sources.
@@ -158,13 +158,13 @@ task rootJacocoMergedReport(type: JacocoReport) {
 // Run rootSources after sources to overwrite the empty source file
 tasks.rootSources.dependsOn sources
 
-// Root build: create uber jar + sources
+// Root build: run rootSources during build
 tasks.build.dependsOn rootSources
 
 // Root build: generate project wide test, coverage and javadoc results
 tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
 
-// Root build: also run aggregateJavadoc after javadoc
+// Root build: also run aggregateJavadoc after javadoc to generate project-wide javadocs
 tasks.javadoc.finalizedBy aggregateJavadoc
 
 
