@@ -185,6 +185,9 @@ tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
 // Root build: also run aggregateJavadoc after javadoc to generate project-wide javadocs
 tasks.javadoc.finalizedBy aggregateJavadoc
 
+// Javadoc fixes (pt. 2, see above entry in subprojects)
+aggregateJavadoc.options.encoding = "UTF-8"
+
 
 tasks.publish.dependsOn build
 
