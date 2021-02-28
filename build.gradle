@@ -1,5 +1,4 @@
 plugins {
-    id 'maven-publish'
     id "io.freefair.lombok" version "5.3.0" apply false
     id "com.github.hierynomus.license" version "0.15.0" apply false
 
@@ -7,13 +6,18 @@ plugins {
     id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
 
-group = 'com.dumbdogdiner'
-
 allprojects {
-    version = '2.1.0'
+    group = 'com.dumbdogdiner'
+    version = '2.1.0-debug'
 
     apply plugin: "java"
     apply plugin: "jacoco"
+
+    // Apply here instead of in plugins {} above to solve
+    // Maven publication [..] cannot include multiple components
+    // Solution: "I solved it. I put a publishing configuration into subprojects section, but applied plugin to a root project."
+    // Solution source: https://discuss.gradle.org/t/problem-with-publishing-with-maven-publish-in-a-multi-module-project/1695/2
+    apply plugin: "maven-publish"
     
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
     jacoco { toolVersion = "0.8.6" }
@@ -124,6 +128,19 @@ subprojects {
     // Run the license formatter and font data copier before compiling the source code. 
     tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
     tasks.build.dependsOn sources
+
+    // Per-module publishing (eg. stickyapi-common)
+    publishing {
+        publications {
+            gprSubprojects(MavenPublication) {
+                artifactId "${rootProject.name}-${project.name}"
+                println("(jcx debug from ${project.name} gpr2): " + components.java)
+                
+                from(components.java)
+                artifact sources // Publish the output of the sources task
+            }
+        }
+    }
 }
 
 // Root build: create uber jar from subproject outputs
@@ -172,6 +189,7 @@ tasks.javadoc.finalizedBy aggregateJavadoc
 tasks.publish.dependsOn build
 
 publishing {
+    // Main publishing repo
     repositories {
         maven {
             name = "GitHubPackages"
@@ -182,10 +200,11 @@ publishing {
             }
         }
     }
+    // Uber-jar publication
     publications {
-        gpr(MavenPublication) {
+        gprRoot(MavenPublication) {
             from(components.java)
-            artifact rootSources // Publish the output of the sources task
+            artifact rootSources // Publish the output of the (root) sources task
         }
     }
 }
