@@ -28,6 +28,8 @@ allprojects {
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
         mapping("java", "SLASHSTAR_STYLE")
         exclude "**/*.json" // Exclude JSON to keep the font width data valid
+        exclude "**/*.md"
+        exclude "**/*.MockMaker"
     }
 
     tasks.withType(JavaCompile) {
