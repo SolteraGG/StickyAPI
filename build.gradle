@@ -189,8 +189,8 @@ tasks.javadoc.finalizedBy aggregateJavadoc
 tasks.publish.dependsOn build
 
 publishing {
-    // Main publishing repo
     repositories {
+        // Main publishing repo
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
@@ -198,6 +198,11 @@ publishing {
                 username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
                 password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
             }
+        }
+        // Local testing maven repo
+        maven {
+            name = "Testing"
+            url = "${project.projectDir}/build/testing-mvn-repo"
         }
     }
     // Uber-jar publication
