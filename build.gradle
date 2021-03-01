@@ -24,6 +24,25 @@ allprojects {
 
     // Define Maven Central here so that jacoco can deps resolve properly
     repositories { mavenCentral() }
+
+    publishing {
+        repositories {
+            // Main publishing repo
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+                credentials {
+                    username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                    password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+            }
+            // Local testing maven repo
+            maven {
+                name = "Testing"
+                url = "${rootProject.projectDir}/build/testing-mvn-repo"
+            }
+        }
+    }
 }
 
 subprojects {
@@ -212,22 +231,6 @@ if (JavaVersion.current().isJava8Compatible()) {
 tasks.publish.dependsOn build
 
 publishing {
-    repositories {
-        // Main publishing repo
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
-        // Local testing maven repo
-        maven {
-            name = "Testing"
-            url = "${project.projectDir}/build/testing-mvn-repo"
-        }
-    }
     // Uber-jar publication
     publications {
         gprRoot(MavenPublication) {
