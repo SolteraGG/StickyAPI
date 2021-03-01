@@ -29,6 +29,15 @@ jobs:
       with:
         name: java-${{matrix.version}}
         path: build/libs/*
+    - name: Publish to local testing maven repo
+      run: ./gradlew publishAllPublicationsToTestingRepository
+    - name: Display directory structure of testing repo
+      run: ls -R build/testing-mvn-repo
+    - name: Save output from testing repo
+      uses: actions/upload-artifact@v2
+      with:
+        name: java-${{matrix.version}}-testing-mvn-repo
+        path: build/testing-mvn-repo/*
   license-header-check:
     runs-on: ubuntu-latest
     container:
