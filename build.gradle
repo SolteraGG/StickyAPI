@@ -195,27 +195,16 @@ task rootJacocoMergedReport(type: JacocoReport) {
   }
 }
 
-// Create a libs-all folder with submodule jars
+// Create a libs/modules folder with submodule jars
 task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
     // Copy subproject jar and sources
     from(subprojects.jar) 
     from(subprojects.sources)
-    into rootProject.file("build/libs-all/modules")
+    into rootProject.file("build/libs/modules")
 }
 
-// Create a libs-all folder with uber jars
-task copyRootprojectJars(type: Copy, dependsOn: jar) {
-    // Copy root project output (uber jar and uber sources)
-    from(rootProject.jar)
-    from(rootProject.rootSources)
-    into rootProject.file("build/libs-all/uber")
-}
-
-// Merge the two copy jar tasks into one
-task copyJars(dependsOn: [copySubprojectJars, copyRootprojectJars])
-
-// Root build: run copyJars after build
-tasks.build.finalizedBy copyJars
+// Root build: run copySubprojectJars after build
+tasks.build.finalizedBy copySubprojectJars
 
 // Root build: run rootSources during build
 tasks.build.dependsOn rootSources
