@@ -13,6 +13,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+
+/**
+ * @Deprecated This will be superceded and removed in a future release.
+ */
+@Deprecated
 public class BukkitHandler {
     private BukkitHandler() {
     }
