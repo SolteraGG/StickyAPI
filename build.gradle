@@ -76,8 +76,8 @@ subprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
 
-        // Note: Subprojects can"t have repo overrides to we have to put it here
-        // Define a Ivy repo for the font width data (that way we don"t need another plugin!)
+        // Note: Subprojects can't have repo overrides to we have to put it here
+        // Define a Ivy repo for the font width data (that way we don't need another plugin!)
         def ddd_mc_font = ivy {
            url "https://dumbdogdiner.github.io/"
             patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
