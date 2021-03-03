@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 
 
 /**
- * @Deprecated This will be superceded and removed in a future release.
+ * @deprecated This will be superseded and removed in a future release.
  */
 @Deprecated
 public class BukkitHandler {

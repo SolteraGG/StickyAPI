@@ -13,13 +13,13 @@ import java.lang.reflect.Field;
 /**
  * Handles Packet Injection
  * 
- * @Deprecated This will be superceded and removed in a future release.
+ * @deprecated This will be superseded and removed in a future release.
  */
 @Deprecated
 public class PacketInjector {
 
     /**
-     * @Deprecated This will be superceded and removed in a future release.
+     * @deprecated This will be superseded and removed in a future release.
      */
     @Deprecated
     public interface InjectionService {
