@@ -7,8 +7,8 @@ plugins {
 }
 
 allprojects {
-    group = 'com.dumbdogdiner'
-    version = '2.1.0-debug'
+    group = "com.dumbdogdiner"
+    version = "2.1.0-debug"
 
     apply plugin: "java"
     apply plugin: "jacoco"
@@ -51,7 +51,7 @@ subprojects {
 
     // License Plugin Options
     license {
-        header = project.rootProject.file('LICENSE_HEADER')
+        header = project.rootProject.file("LICENSE_HEADER")
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
         mapping("java", "SLASHSTAR_STYLE")
         exclude "**/*.json" // Exclude JSON to keep the font width data valid
@@ -73,14 +73,14 @@ subprojects {
         // Note: Maven Central is defined in allprojects
         jcenter()
 
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-        maven { url 'https://papermc.io/repo/repository/maven-public/' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://papermc.io/repo/repository/maven-public/" }
 
-        // Note: Subprojects can't have repo overrides to we have to put it here
-        // Define a Ivy repo for the font width data (that way we don't need another plugin!)
+        // Note: Subprojects can"t have repo overrides to we have to put it here
+        // Define a Ivy repo for the font width data (that way we don"t need another plugin!)
         def ddd_mc_font = ivy {
-           url 'https://dumbdogdiner.github.io/'
-            patternLayout { artifact '/[module]/[revision]/[classifier].[ext]'}
+           url "https://dumbdogdiner.github.io/"
+            patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
             metadataSources { artifact() } 
         }
         // Only use the Ivy repo for font width data - speeds up dependency resolution
@@ -91,17 +91,17 @@ subprojects {
     }
 
     dependencies {
-        compileOnly 'org.projectlombok:lombok:1.18.18'
-        annotationProcessor 'org.projectlombok:lombok:1.18.18'
-        
-        // Note: Common uses both of these... ???
-        compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
-        compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+        compileOnly "org.projectlombok:lombok:1.18.18"
+        annotationProcessor "org.projectlombok:lombok:1.18.18"
 
-        implementation 'org.jetbrains:annotations:20.1.0'
-        implementation 'io.github.classgraph:classgraph:4.8.102'
-        implementation 'com.github.seancfoley:ipaddress:5.3.3'
-    
+        // Note: Common uses both of these... ???
+        compileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
+        compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+
+        implementation "org.jetbrains:annotations:20.1.0"
+        implementation "io.github.classgraph:classgraph:4.8.102"
+        implementation "com.github.seancfoley:ipaddress:5.3.3"
+
         // Tests - JUnit 5
         testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
@@ -188,7 +188,7 @@ task rootJacocoMergedReport(type: JacocoReport) {
   additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   classDirectories.setFrom files(subprojects.sourceSets.main.output)
-  executionData.setFrom project.fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+  executionData.setFrom project.fileTree(dir: ".", include: "**/build/jacoco/test.exec")
   reports {
     xml.enabled true
     html.enabled true
@@ -233,7 +233,7 @@ aggregateJavadoc.options.encoding = "UTF-8"
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {
-            // options.addStringOption('Xdoclint:-html', '-quiet')
+            // options.addStringOption("Xdoclint:-html", "-quiet")
             options.addBooleanOption("Xdoclint:-html", true)
         }
     }

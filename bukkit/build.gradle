@@ -1,6 +1,6 @@
 dependencies {
-        compile project(':common')
-        testCompile project(':common').sourceSets.test.output
+        compile project(":common")
+        testCompile project(":common").sourceSets.test.output
 
-        testImplementation 'com.google.code.gson:gson:2.8.6'
+        testImplementation "com.google.code.gson:gson:2.8.6"
 }

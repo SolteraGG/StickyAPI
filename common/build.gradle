@@ -7,9 +7,9 @@ plugins {
 
 dependencies {
     // Font width data (see above)
-    compile 'dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json'
+    compile "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "com.google.code.gson:gson:2.8.6"
 }
 
 
@@ -34,7 +34,7 @@ def tokensMap = [
 // NOTE: At the moment this replaces tokens *globally* (format eg. @BUILDINFO_COMMIT@ in source code)
 task processSourceTokens(type: Sync) {
     from sourceSets.main.java
-    into 'build/processed/src/main/java'
+    into "build/processed/src/main/java"
     filter(ReplaceTokens, tokens: tokensMap)
     
     // Pretty print the build info
@@ -53,7 +53,7 @@ task copyMCFontExtractor(type: Copy) {
     // - Please keep this comment for future reference.
     // - This is how we would do this if we weren't also adding build info (see processSourceTokens)
     destinationDir file("src/main/resources/generated/")
-    rename 'mc-font-extractor-main-mojangles_width_data.json', 'mojangles_width_data.json'
+    rename "mc-font-extractor-main-mojangles_width_data.json", "mojangles_width_data.json"
 }
 
 // Run the license formatter and font data copier before compiling the source code.
