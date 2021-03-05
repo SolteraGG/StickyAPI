@@ -27,6 +27,8 @@ public class LocaleProviderTest {
 
     private static final File localeDirectoryGroup1 = new File("src/test/resources/localeprovider/group1");
 
+    private static final File nonExistentDirectory = new File("build/localeprovider-newfolder");
+
     private LocaleProvider localeProviderGroup1;
 
     // Used for tests 2/3
@@ -36,8 +38,14 @@ public class LocaleProviderTest {
     public void setup() {
         // Enable the StickyAPI debugger
         Debugger.setEnabled(true);
+        
         // Create locale providers
         localeProviderGroup1 = new LocaleProvider(localeDirectoryGroup1);
+
+        // Delete the non-existent testing directory if it exists
+        if (nonExistentDirectory.exists()) {
+            assertTrue(nonExistentDirectory.delete()); // Attempt to delete the directory
+        }
     }
 
     @Test
@@ -112,5 +120,18 @@ public class LocaleProviderTest {
         // Should return false and debug "encountered an error - skipping"
         assertFalse(localeProviderGroup1.loadLocale("invalid.yml"));
     }*/
+
+    @Test
+    public void testCreateLocaleProviderWithNonExistentFolder() {
+        // Make sure the file does not exist
+        assertFalse(nonExistentDirectory.exists());
+        
+        // Create a new instance of LocaleProvider (will create the directory)
+        new LocaleProvider(nonExistentDirectory);
+        
+        // Make sure that it now exists and is a directory
+        assertTrue(nonExistentDirectory.exists());
+        assertTrue(nonExistentDirectory.isDirectory());
+    }
 
 }
