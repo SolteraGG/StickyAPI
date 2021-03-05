@@ -4,8 +4,22 @@
  */
 package com.dumbdogdiner.stickyapi.common.configuration;
 
+/**
+ * Base interface for a configuration.
+ */
 public interface Configuration {
+    /**
+     * Gets the given string from the path, returning the given default value if not found.
+     * @param path The path of the string to get
+     * @param def The default value if the path is not found or is not a string
+     * @return The requested string.
+     */
     public String getString(String path, String def);
-
+    
+    /**
+     * Gets the given string from the path.
+     * @param path The path of the string to get
+     * @return The requested string, or null.
+     */
     public String getString(String path);
 }
