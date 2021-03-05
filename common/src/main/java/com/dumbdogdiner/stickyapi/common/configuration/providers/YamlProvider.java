@@ -4,6 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.common.configuration.providers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,11 +21,8 @@ import org.yaml.snakeyaml.Yaml;
 public class YamlProvider implements FileConfiguration {
 
     private Map<String, Object> data;
-    private YamlProvider(Map<String, Object> data) {
-        this.data = data;
-    }
 
-    public static FileConfiguration load(InputStream stream) {
+    public YamlProvider(InputStream stream) {
         Validate.notNull(stream, "InputStream cannot be null!");
 
         // Attempt to load the stream
@@ -31,7 +31,12 @@ public class YamlProvider implements FileConfiguration {
 
         Map<String, Object> obj = yaml.load(stream);
 
-        return new YamlProvider(obj);
+        this.data = obj;
+        
+    }
+
+    public YamlProvider(File file) throws FileNotFoundException {
+        this(new FileInputStream(file));
     }
 
 	@Override

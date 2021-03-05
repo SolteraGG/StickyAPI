@@ -40,7 +40,7 @@ public class Locale {
     public Locale(@NotNull File localeFile) {
         this.localeFile = localeFile;
         try {
-            YamlProvider.load(new FileInputStream(localeFile));
+            localeConfig = new YamlProvider(localeFile);
             isValid = true;
         } catch (Exception e) {
             e.printStackTrace();
