@@ -5,9 +5,8 @@
 package com.dumbdogdiner.stickyapi.common.translation;
 
 import java.io.File;
-import java.io.FileInputStream;
 
-import com.dumbdogdiner.stickyapi.common.configuration.Configuration;
+import com.dumbdogdiner.stickyapi.common.configuration.FileConfiguration;
 import com.dumbdogdiner.stickyapi.common.configuration.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 
@@ -28,7 +27,7 @@ public class Locale {
     File localeFile;
 
     @Getter
-    Configuration localeConfig;
+    FileConfiguration localeConfig;
 
     /**
      * Create a new locale object
