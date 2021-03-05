@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.common.translation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -35,6 +36,10 @@ public class LocaleProviderTest {
 
     // Used for tests 2/3
     private ConcurrentHashMap<String, Locale> loadedLocales;
+
+    private enum Values {
+        NETWORK_NAME
+    }
 
     @BeforeAll
     public void setup() {
@@ -180,6 +185,41 @@ public class LocaleProviderTest {
         assertNull(localeProviderGroup1.translateNoColor(null, new HashMap<>()));
     }
 
+    @Test
+    @Order(19)
+    public void testGetEnum() {
+        // Sanity check - make sure translation works as expected
+        assertEquals("network-name", Values.NETWORK_NAME.name().toLowerCase().replace("_", "-"));
+        // Should translate to network-name and return the given value
+        assertEquals("&bDumb Dog Diner", localeProviderGroup1.get(Values.NETWORK_NAME));
+    }
+
+    @Test
+    @Order(20)
+    public void testGetWithNameAndNode() {
+        assertEquals("&bDumb Dog Diner", localeProviderGroup1.get("messages.en_us", "network-name"));
+    }
+
+    @Test
+    @Order(21)
+    public void testGetWithNameAndNodeUnloadedLocale() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            localeProviderGroup1.get("non-existent-locale", "network-name");
+        });
+    }
+
+    @Test
+    @Order(22)
+    public void testGetDefault() {
+        assertEquals("&bDumb Dog Diner", localeProviderGroup1.getDefault("network-name", "&bExample Server"));
+    }
+
+    @Test
+    @Order(23)
+    public void testGetDefaultNoNode() {
+        assertEquals("default value", localeProviderGroup1.getDefault("non-existent", "default value"));
+    }
+
     /*
     Cannot be tested right now...
     
@@ -187,6 +227,13 @@ public class LocaleProviderTest {
         // Should return false and debug "encountered an error - skipping"
         assertFalse(localeProviderGroup1.loadLocale("invalid.yml"));
     }*/
+
+    @Test
+    public void testGetNoDefaultLocale() {
+        LocaleProvider localeProvider = new LocaleProvider(localeDirectoryGroup1);
+        assertNull(localeProvider.get("player-has-not-joined")); // Valid node
+        assertNull(localeProvider.get("")); // Invalid node
+    }
 
     @Test
     public void testCreateLocaleProviderWithNonExistentFolder() {
