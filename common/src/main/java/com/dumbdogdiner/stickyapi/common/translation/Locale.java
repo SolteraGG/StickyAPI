@@ -5,9 +5,10 @@
 package com.dumbdogdiner.stickyapi.common.translation;
 
 import java.io.File;
+import java.io.FileInputStream;
 
-import com.dumbdogdiner.stickyapi.common.configuration.file.FileConfiguration;
-import com.dumbdogdiner.stickyapi.common.configuration.file.YamlConfiguration;
+import com.dumbdogdiner.stickyapi.common.configuration.Configuration;
+import com.dumbdogdiner.stickyapi.common.configuration.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public class Locale {
     File localeFile;
 
     @Getter
-    FileConfiguration localeConfig = new YamlConfiguration();
+    Configuration localeConfig;
 
     /**
      * Create a new locale object
@@ -39,7 +40,7 @@ public class Locale {
     public Locale(@NotNull File localeFile) {
         this.localeFile = localeFile;
         try {
-            localeConfig.load(this.localeFile);
+            YamlProvider.load(new FileInputStream(localeFile));
             isValid = true;
         } catch (Exception e) {
             e.printStackTrace();
