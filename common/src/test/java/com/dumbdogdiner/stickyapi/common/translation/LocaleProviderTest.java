@@ -192,13 +192,21 @@ public class LocaleProviderTest {
     public void testCreateLocaleProviderWithNonExistentFolder() {
         // Make sure the file does not exist
         assertFalse(nonExistentDirectory.exists());
-        
         // Create a new instance of LocaleProvider (will create the directory)
         new LocaleProvider(nonExistentDirectory);
-        
         // Make sure that it now exists and is a directory
         assertTrue(nonExistentDirectory.exists());
         assertTrue(nonExistentDirectory.isDirectory());
+    }
+    
+    @Test
+    public void testCreateLocaleProviderAndLoadAllLocales() {
+        LocaleProvider localeProvider = new LocaleProvider(localeDirectoryGroup1);
+
+        // Load all locales, and assert that only one was loaded.
+        // There are 2 files in the given directory, one .yml file and one .txt
+        // This should return 1 and ignore the txt file
+        assertEquals(1, localeProvider.loadAllLocales());
     }
 
 }
