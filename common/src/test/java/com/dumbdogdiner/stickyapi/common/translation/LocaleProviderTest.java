@@ -6,9 +6,11 @@ package com.dumbdogdiner.stickyapi.common.translation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
@@ -111,6 +113,71 @@ public class LocaleProviderTest {
     public void testLoadLocaleNonExistentFile() {
         // Should return false and debug "could not find file"
         assertFalse(localeProviderGroup1.loadLocale("non-existent-locale.yml"));
+    }
+
+    @Test
+    @Order(11)
+    public void testTranslate() {
+        String output = localeProviderGroup1.translate("player-has-not-joined", new HashMap<String, String>() {{
+            put("prefix", "Msg>");
+            put("target", "Notch");
+        }});
+
+        // Translate changes & to § for ChatColor codes 
+        assertEquals("Msg>§cError! The player Notch has not joined before!", output);
+    }
+
+    @Test
+    @Order(12)
+    public void testTranslateNonExistentNode() {
+        // should return null and debug "node does not exist"
+        assertNull(localeProviderGroup1.translate("non-existent", new HashMap<>()));
+    }
+
+    @Test
+    @Order(13)
+    public void testTranslateEmptyNode() {
+        // should return null and debug "invalid node name"
+        assertNull(localeProviderGroup1.translate("", new HashMap<>()));
+    }
+
+    @Test
+    @Order(14)
+    public void testTranslateNullNode() {
+        // should return null and debug "invalid node name"
+        assertNull(localeProviderGroup1.translate(null, new HashMap<>()));
+    }
+
+    @Test
+    @Order(15)
+    public void testTranslateNoColor() {
+        String output = localeProviderGroup1.translateNoColor("player-has-not-joined", new HashMap<String, String>() {{
+            put("prefix", "Msg>");
+            put("target", "Notch");
+        }});
+
+        assertEquals("Msg>&cError! The player Notch has not joined before!", output);
+    }
+
+    @Test
+    @Order(16)
+    public void testTranslateNoColorNonExistentNode() {
+        // should return null and debug "node does not exist"
+        assertNull(localeProviderGroup1.translateNoColor("non-existent", new HashMap<>()));
+    }
+
+    @Test
+    @Order(17)
+    public void testTranslateNoColorEmptyNode() {
+        // should return null and debug "invalid node name"
+        assertNull(localeProviderGroup1.translateNoColor("", new HashMap<>()));
+    }
+
+    @Test
+    @Order(18)
+    public void testTranslateNoColorNullNode() {
+        // should return null and debug "invalid node name"
+        assertNull(localeProviderGroup1.translateNoColor(null, new HashMap<>()));
     }
 
     /*
