@@ -259,49 +259,6 @@ public class LocaleProvider {
     }
 
     /**
-     * Save an internal resource to the data file.
-     * 
-     * @param in           File inputstream
-     * @param resourcePath The path to which the resource should be saved
-     * @param replace      Whether or not to replace the file if it already exists
-     * @throws IllegalArgumentException
-     * @throws IOException
-     */
-    public void writeLocaleStream(@NotNull InputStream in, @NotNull String resourcePath, @NotNull boolean replace)
-            throws IllegalArgumentException, IOException {
-        if (resourcePath == null || resourcePath.equals("")) {
-            throw new IllegalArgumentException("Resource path cannot be null or empty");
-        }
-
-        resourcePath = resourcePath.replace('\\', '/');
-        if (in == null) {
-            throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found");
-        }
-
-        File outFile = new File(localeFolder, resourcePath);
-        int lastIndex = resourcePath.lastIndexOf('/');
-        File outDir = new File(localeFolder, resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
-
-        if (!outDir.exists()) {
-            outDir.mkdirs();
-        }
-
-        if (outFile.exists() && !replace) {
-            System.out.println("resource already exists");
-            return;
-        }
-
-        OutputStream out = new FileOutputStream(outFile);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        out.close();
-        in.close();
-    }
-
-    /**
      * Checks if a locale with the given name is loaded. Throws
      * `IllegalArgumentException` if not found.
      */
