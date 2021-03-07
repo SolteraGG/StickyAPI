@@ -20,6 +20,7 @@ import lombok.Setter;
  * 
  * @author DumbDogDiner (dumbdogdiner.com)
  */
+@SuppressWarnings("ConstantConditions")
 public class StickyAPI {
     private StickyAPI() {
     }

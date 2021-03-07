@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class StickyAPITest {
 
-    @Test
+   /* @Test
     public void debugPrintAll() {
         System.out.printf("Version\t %s", StickyAPI.getVersion());
         System.out.printf("\nTimestamp\t %s", StickyAPI.getTimestamp().toString());
@@ -60,5 +60,5 @@ public class StickyAPITest {
     // This test is kinda useless?
     public void testGetIsDirty() {
         assertTrue(StickyAPI.getIsDirty() instanceof Boolean);
-    }
+    }*/
 }

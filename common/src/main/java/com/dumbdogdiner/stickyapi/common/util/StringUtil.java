@@ -289,8 +289,10 @@ public final class StringUtil {
     /**
      * Put hyphens into a uuid
      * <p>
-     * e.x. de8c89e12f25424d8078c6ff58db7d6e &gt;
+     * e.x. de8c89e12f25424d8078c6ff58db7d6e -&gt;
      * de8c89e1-2f25-424d-8078-c6ff58db7d6e
+     *
+     * @see #unhyphenateUUID(UUID)
      * 
      * @param uuid to hyphenate
      * @return {@link UUID}
@@ -305,6 +307,19 @@ public final class StringUtil {
         } else {
             return UUID.fromString(uuid);
         }
+    }
+
+    /**
+     * Remove hyphons from a UUID object and return a string
+     * <p>
+     * e.x. de8c89e1-2f25-424d-8078-c6ff58db7d6e -&gt;
+     * de8c89e12f25424d8078c6ff58db7d6e
+     *
+     * @param uuid the UUID to de-hyphenate
+     * @return a string representation of the UUID, without any hyphens
+     */
+    public static String unhyphenateUUID(@NotNull UUID uuid){
+        return uuid.toString().replace("-","");
     }
 
     /**

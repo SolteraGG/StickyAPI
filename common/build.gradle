@@ -1,13 +1,32 @@
+buildscript {
+    dependencies{
+        classpath files('libs-tmp/StickyGradleTasks-0.0.0.jar')
+    }
+}
+
+import com.dumbdogdiner.stickygradletasks.*
+
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
+    // For intellij, to mark generated sources properly
+    id 'idea'
 }
+
+
+apply plugin: StickyGradleTasks
 
 dependencies {
     // Font width data (see above)
     compile "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
     implementation "com.google.code.gson:gson:2.8.6"
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
+    implementation("de.skuzzle:semantic-version:2.1.0")
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 }
 
 /*
@@ -45,6 +64,16 @@ def tokensMap = [
     ]
 
 // Create task to replace the tokens with their actual values
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs += 'generated-src/main/java'
+        }
+    }
+}
+
 // NOTE: At the moment this replaces tokens *globally* (format eg. @BUILDINFO_COMMIT@ in source code)
 task processSourceTokens(type: Sync) {
     from sourceSets.main.java
@@ -80,3 +109,28 @@ task copyMCFontExtractor(type: Copy) {
 
 // Run the license formatter and font data copier before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtractor
+
+
+idea {
+    module {
+        sourceDirs += file('/generated-src/main/java')
+        generatedSourceDirs  += file('/generated-src/main/java')
+    }
+}
+task DownloadFileTest(type: DownloadTask){
+    sourceUrl = new URL("https://dumbdogdiner.github.io/mc-heads-resource/textures.json")
+    target = file("src/main/resources/generated/textures.json")
+}
+
+
+
+task buildInfo(type: GenerateBuildInfoTask) {
+    buildInfoJavaLocation = file("/generated-src/main/java")
+    version = project.rootProject.version
+
+    timestamp = tokensMap["BUILDINFO_TIMESTAMP"]
+    commit = versioning.info.commit
+    branch = versioning.info.branch
+    dirty = versioning.info.dirty.toString()
+    group = "com.dumbdogdiner.stickyapi"
+}
