@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.common.configuration;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -12,7 +14,24 @@ import java.io.IOException;
 public interface FileConfiguration extends Configuration {
 
     /**
-     * Save the configuration to the given location.
+     * Save the configuration to the given string path.
+     * 
+     * @param path {@link String} output filename path
+     * @return Returns a {@link Boolean} value depending on if the save was successful or not
      */
-    public void save(String path) throws IOException;
+    public boolean save(String path);
+
+    /**
+     * 
+     * @param output {@link File} to output to
+     * @return Returns a {@link Boolean} value depending on if the save was successful or not
+     */
+    public boolean save(File output);
+
+    /**
+     * Save the configuration to the given FileWriter.
+     * 
+     * @param output {@link FileWriter} to output to
+     */
+    public void save(FileWriter output);
 }

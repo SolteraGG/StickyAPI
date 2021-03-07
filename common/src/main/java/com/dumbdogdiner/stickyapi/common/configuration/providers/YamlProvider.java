@@ -52,7 +52,43 @@ public class YamlProvider implements FileConfiguration {
 	}
 
     @Override
-    public void save(String path) throws IOException {
+    public boolean save(String path) {
+        FileWriter fileWriter;
+        try {
+            // Attempt to create the FileWriter object (can throw IOException)
+            fileWriter = new FileWriter(path);
+
+            // Save the config
+            save(fileWriter);
+
+            // Saved successfully, return true
+            return true;
+        } catch (IOException e) {
+            // creating the FileWriter errored, so return false
+            return false;
+        }
+
+    }
+
+    public boolean save(File output) {
+        FileWriter fileWriter;
+        try {
+            // Attempt to create the FileWriter object (can throw IOException)
+            fileWriter = new FileWriter(output);
+
+            // Save the config
+            save(fileWriter);
+
+            // Saved successfully, return true
+            return true;
+        } catch (IOException e) {
+            // creating the FileWriter errored, so return false
+            return false;
+        }
+    }
+
+    @Override
+    public void save(FileWriter output) {
         // Generate dumper options
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -63,8 +99,7 @@ public class YamlProvider implements FileConfiguration {
         Yaml yaml = new Yaml(options);
 
         // Write the data
-        FileWriter fileWriter = new FileWriter(path);
-        yaml.dump(data, fileWriter);
-
+        yaml.dump(data, output);
+        
     }
 }
