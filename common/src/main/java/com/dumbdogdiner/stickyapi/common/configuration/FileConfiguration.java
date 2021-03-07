@@ -6,12 +6,13 @@ package com.dumbdogdiner.stickyapi.common.configuration;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Interface for File-based Configurations.
  */
 public interface FileConfiguration extends Configuration {
+
+    public void reload();
 
     /**
      * Save the configuration to the given string path.

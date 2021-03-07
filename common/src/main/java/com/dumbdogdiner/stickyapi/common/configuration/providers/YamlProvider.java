@@ -22,21 +22,27 @@ public class YamlProvider implements FileConfiguration {
 
     private Map<String, Object> data;
 
+    private InputStream inputStream;
+
     public YamlProvider(InputStream stream) {
         Validate.notNull(stream, "InputStream cannot be null!");
 
-        // Attempt to load the stream
-
-        Yaml yaml = new Yaml();
-
-        Map<String, Object> obj = yaml.load(stream);
-
-        this.data = obj;
-        
+        this.inputStream = stream;
+        this.reload();        
     }
 
     public YamlProvider(File file) throws FileNotFoundException {
         this(new FileInputStream(file));
+    }
+
+    public void reload() {
+        // Attempt to (re)load the stream
+
+        Yaml yaml = new Yaml();
+
+        Map<String, Object> obj = yaml.load(this.inputStream);
+
+        this.data = obj;
     }
 
 	@Override
