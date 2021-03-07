@@ -5,7 +5,9 @@
 package com.dumbdogdiner.stickyapi.common.configuration.providers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +26,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 public class YamlProviderTest {
 
     private static final String exampleConfigPath = "src/test/resources/example.config.yml";
-    private static final String exampleConfigPathTestOutput = "build/example.config.yml.test-save";
 
     private FileConfiguration exampleFileConfig;
 
@@ -69,10 +70,32 @@ public class YamlProviderTest {
     }
 
     @Test
-    public void testSaveFile() throws IOException {
+    public void testSaveFileInputString() throws IOException {
+        String testOutput = "build/example.config.yml.string.test-save";
         // Write the file
-        exampleFileConfig.save("build/example.config.yml.test-save");
-        // Assert that the original and saved files match (bear in mind that snakeyaml doesn't keep comments!)
-        Files.equal(new File(exampleConfigPath), new File(exampleConfigPathTestOutput));
+        assertTrue(exampleFileConfig.save(testOutput));
+        // Assert that the original and saved files match (note that snakeyaml doesn't keep comments!)
+        // This *could* throw an IOException
+        Files.equal(new File(exampleConfigPath), new File(testOutput));
+    }
+
+    @Test
+    public void testSaveFileInputFile() throws IOException {
+        String testOutput = "build/example.config.yml.file.test-save";
+        // Write the file
+        assertTrue(exampleFileConfig.save(new File(testOutput)));
+        // Assert that the original and saved files match (note that snakeyaml doesn't keep comments!)
+        // This *could* throw an IOException
+        Files.equal(new File(exampleConfigPath), new File(testOutput));
+    }
+
+    @Test
+    public void testSaveFileInputStringInvalid() {
+        assertFalse(exampleFileConfig.save("build"));
+    }
+
+    @Test
+    public void testSaveFileInputFileInvalid() {
+        assertFalse(exampleFileConfig.save(new File("build")));
     }
 }
