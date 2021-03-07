@@ -8,6 +8,7 @@ import java.io.File;
 
 import javax.annotation.Nullable;
 
+import com.dumbdogdiner.stickyapi.common.configuration.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +63,15 @@ public class StartupUtil {
                     .severe("Failed to configure default locale file - perhaps you deleted it? Will create a new one.");
             // FIXME: This is horrible and needs to be improved
             try {
-                localeProvider.writeLocaleStream(plugin.getResource("messages.en_us.yml"), "messages.en_us.yml", true);
+                // Step 1:Load the yml from plugin.getResource (the internal .jar resource)
+                YamlProvider embeddedMessagesResource = new YamlProvider(plugin.getResource("messages.en_us.yml"));
+
+                // Step 2: Create a File instance representing our output dir in the plugin's data folder
+                File outputLocation = new File(localeProvider.getLocaleFolder(), "messages.en_us.yml");
+                // outputLocation should now be something like [..]/plugins/[..]/locale/messages.en_us.yml
+
+                // Step 3: write the embedded messages resource to the plugin data dir
+                embeddedMessagesResource.save(outputLocation);
             } catch (Exception e) {
                 e.printStackTrace();
                 plugin.getLogger().severe("Something went horribly wrong while saving the default locale.");
