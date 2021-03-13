@@ -13,6 +13,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dumbdogdiner.stickyapi.common.configuration.FileConfiguration;
 import com.google.common.io.Files;
@@ -98,4 +102,27 @@ public class YamlProviderTest {
     public void testSaveFileInputFileInvalid() {
         assertFalse(exampleFileConfig.save(new File("build")));
     }
+
+    @Test
+    public void testAsynchronousRead() {
+        // create a new threadpool with n threads.
+        int threadCount = 3;
+        ExecutorService pool = Executors.newFixedThreadPool(threadCount);
+        AtomicBoolean didFail = new AtomicBoolean();
+        // create n tasks and submit them to the pool.
+        for (int i = 0; i < threadCount; i++) {
+            pool.submit(() -> {
+                if (!exampleFileConfig.getString("string").equals("Hello, World!")) {
+                    didFail.set(true);
+                }
+            });
+        }
+        // wait for pool to finish execution.
+        pool.shutdown();
+        assertFalse(didFail.get());
+    }
+
+    // This does not work yet - need to implement write.
+    // @Test
+    // public void testAsynchronousWrite() { }
 }
