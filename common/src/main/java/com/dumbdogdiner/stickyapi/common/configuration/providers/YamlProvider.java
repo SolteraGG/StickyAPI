@@ -50,13 +50,13 @@ public class YamlProvider implements FileConfiguration {
 
 	@Override
 	public String getString(String path, String def) {
-        Object value = data.get(path);
+        Object value = this.data.get(path);
         return (value != null) ? value.toString() : def;
 	}
 
 	@Override
 	public String getString(String path) {
-        Object value = data.get(path);
+        Object value = this.data.get(path);
         return (value != null) ? value.toString() : null;
 	}
 
@@ -68,7 +68,7 @@ public class YamlProvider implements FileConfiguration {
             fileWriter = new FileWriter(path);
 
             // Save the config
-            save(fileWriter);
+            this.save(fileWriter);
 
             // Saved successfully, return true
             return true;
@@ -86,7 +86,7 @@ public class YamlProvider implements FileConfiguration {
             fileWriter = new FileWriter(output);
 
             // Save the config
-            save(fileWriter);
+            this.save(fileWriter);
 
             // Saved successfully, return true
             return true;
