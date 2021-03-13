@@ -12,6 +12,11 @@ import java.io.FileWriter;
  */
 public interface FileConfiguration extends Configuration {
 
+    /**
+     * Reload the current configuration, for example to load new data.
+     * This will reload the configuration file from the filesystem into memory,
+     * overwriting the currently loaded data.
+     */
     public void reload();
 
     /**
