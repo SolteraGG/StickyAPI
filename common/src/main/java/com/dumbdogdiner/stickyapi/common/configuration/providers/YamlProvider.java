@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.dumbdogdiner.stickyapi.common.configuration.FileConfiguration;
 
@@ -20,7 +21,7 @@ import org.yaml.snakeyaml.Yaml;
 
 public class YamlProvider implements FileConfiguration {
 
-    private Map<String, Object> data;
+    private ConcurrentHashMap<String, Object> data;
 
     private InputStream inputStream;
 
@@ -40,9 +41,11 @@ public class YamlProvider implements FileConfiguration {
 
         Yaml yaml = new Yaml();
 
+        // If we load to a ConcurrentHashMap directly, the map doesn't populate with our data
         Map<String, Object> obj = yaml.load(this.inputStream);
 
-        this.data = obj;
+        // Convert the loaded Map to a ConcurrentHashMap
+        this.data = new ConcurrentHashMap<String, Object>(obj);
     }
 
 	@Override
