@@ -5,6 +5,8 @@
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javax.annotation.Nullable;
 
@@ -61,16 +63,22 @@ public class StartupUtil {
         if (!localeEnabled) {
             plugin.getLogger()
                     .severe("Failed to configure default locale file - perhaps you deleted it? Will create a new one.");
-            // FIXME: This is horrible and needs to be improved
             try {
-                // Step 1:Load the yml from plugin.getResource (the internal .jar resource)
+                // Step 1: Make sure the locale file exists (returns null if not found)
+                InputStream localeFile = plugin.getResource("messages.en_us.yml");
+
+                // Step 1.5: Throw an exception if the file doesn't exist
+                if (localeFile == null)
+                    throw new FileNotFoundException("The locale file was not found in our embedded resources!");
+
+                // Step 2: Load the yml from plugin.getResource (the internal .jar resource)
                 YamlProvider embeddedMessagesResource = new YamlProvider(plugin.getResource("messages.en_us.yml"));
 
-                // Step 2: Create a File instance representing our output dir in the plugin's data folder
+                // Step 3: Create a File instance representing our output dir in the plugin's data folder
                 File outputLocation = new File(localeProvider.getLocaleFolder(), "messages.en_us.yml");
                 // outputLocation should now be something like [..]/plugins/[..]/locale/messages.en_us.yml
 
-                // Step 3: write the embedded messages resource to the plugin data dir
+                // Step 4: write the embedded messages resource to the plugin data dir
                 embeddedMessagesResource.save(outputLocation);
             } catch (Exception e) {
                 e.printStackTrace();
