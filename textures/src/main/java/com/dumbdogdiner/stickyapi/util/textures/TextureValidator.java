@@ -79,7 +79,7 @@ public class TextureValidator {
             }
 
             // Needs to have a content type of PNG
-            if (!"image/png".equalsIgnoreCase(resp.header("Content-Type"))) {
+            if (!(resp.header("Content-Type").toLowerCase().startsWith("image/png") || resp.header("Content-Type").toLowerCase().startsWith("binary/octet-stream"))) {
                 resp.close();
                 throw new Exception("Unexpected Content-Type of " + resp.header("Content-Type") + " was received from " + textureURL);
             }

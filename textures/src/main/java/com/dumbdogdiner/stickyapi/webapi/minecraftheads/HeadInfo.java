@@ -27,6 +27,9 @@ import java.util.UUID;
     private @NotNull String value;
     private @Nullable String tags;
 
+    /**
+     * @return The UUID that minecraft-heads.com has specified as the head
+     */
     public @NotNull UUID getUniqueId() {
         return StringUtil.hyphenateUUID(uuid);
     }
