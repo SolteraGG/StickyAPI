@@ -5,7 +5,7 @@
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
-import com.dumbdogdiner.stickyapi.common.util.NotificationType;
+import com.dumbdogdiner.stickyapi.util.NotificationType;
 
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;

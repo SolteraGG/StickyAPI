@@ -11,6 +11,8 @@ import lombok.Getter;
  * <p>
  * These values are subject to change on every new major Minecraft release
  */
+
+// TODO change to code gen
 public enum Sound {
 
     AMBIENT_BASALT_DELTAS_ADDITIONS(1), AMBIENT_BASALT_DELTAS_LOOP(2), AMBIENT_BASALT_DELTAS_MOOD(3), AMBIENT_CAVE(0),

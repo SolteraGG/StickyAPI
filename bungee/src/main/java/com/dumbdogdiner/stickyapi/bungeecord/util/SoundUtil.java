@@ -6,7 +6,7 @@ package com.dumbdogdiner.stickyapi.bungeecord.util;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bungeecord.packet.SoundPacket;
-import com.dumbdogdiner.stickyapi.common.util.NotificationType;
+import com.dumbdogdiner.stickyapi.util.NotificationType;
 
 import org.jetbrains.annotations.NotNull;
 

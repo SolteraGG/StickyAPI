@@ -4,11 +4,10 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
-import com.dumbdogdiner.stickyapi.common.nbt.NbtCompoundTag;
-import com.dumbdogdiner.stickyapi.common.nbt.NbtJsonTag;
-import com.dumbdogdiner.stickyapi.common.nbt.NbtListTag;
-import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
-import com.dumbdogdiner.stickyapi.common.util.StringUtil;
+import com.dumbdogdiner.stickyapi.nbt.NbtCompoundTag;
+import com.dumbdogdiner.stickyapi.nbt.NbtJsonTag;
+import com.dumbdogdiner.stickyapi.nbt.NbtListTag;
+import com.dumbdogdiner.stickyapi.nbt.NbtStringTag;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -20,7 +19,6 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.text.MessageFormat;
 
 public class WrittenBookBuilderTest {
     private static Reader bookReader;

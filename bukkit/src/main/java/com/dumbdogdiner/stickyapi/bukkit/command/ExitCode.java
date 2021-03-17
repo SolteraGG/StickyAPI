@@ -9,9 +9,9 @@ import lombok.Getter;
 /**
  * Enum based exit codes for StickyAPI command classes.
  * 
- * @deprecated use {@link com.dumbdogdiner.stickyapi.common.command.ExitCode} as
+ * @deprecated use {@link com.dumbdogdiner.stickyapi.command.ExitCode} as
  *             this will be removed in the next release
- * @see ExitCode {@link com.dumbdogdiner.stickyapi.common.command.ExitCode}
+ * @see ExitCode {@link com.dumbdogdiner.stickyapi.command.ExitCode}
  */
 @Deprecated
 public enum ExitCode {

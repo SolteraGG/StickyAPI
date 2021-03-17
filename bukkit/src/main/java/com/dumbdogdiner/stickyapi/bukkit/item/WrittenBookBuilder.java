@@ -4,11 +4,11 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.item;
 
-import com.dumbdogdiner.stickyapi.common.nbt.NbtCompoundTag;
-import com.dumbdogdiner.stickyapi.common.nbt.NbtListTag;
-import com.dumbdogdiner.stickyapi.common.nbt.NbtStringTag;
-import com.dumbdogdiner.stickyapi.common.util.TextUtil;
-import com.dumbdogdiner.stickyapi.common.util.StringUtil;
+import com.dumbdogdiner.stickyapi.nbt.NbtCompoundTag;
+import com.dumbdogdiner.stickyapi.nbt.NbtListTag;
+import com.dumbdogdiner.stickyapi.nbt.NbtStringTag;
+import com.dumbdogdiner.stickyapi.util.TextUtil;
+import com.dumbdogdiner.stickyapi.util.StringUtil;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
-import java.util.Collections;
 import java.util.StringJoiner;
 
 /**

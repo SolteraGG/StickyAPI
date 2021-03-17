@@ -2,3 +2,6 @@ rootProject.name = 'stickyapi'
 include ":common"
 include ":bukkit"
 include ":bungee"
+include 'webapi'
+include 'textures'
+

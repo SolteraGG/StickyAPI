@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 
 import com.destroystokyo.paper.Title;
 
-import com.dumbdogdiner.stickyapi.common.translation.Translation;
-import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.translation.Translation;
+import com.dumbdogdiner.stickyapi.util.reflection.ReflectionUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

@@ -13,13 +13,13 @@ import java.util.concurrent.FutureTask;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.bukkit.util.SoundUtil;
-import com.dumbdogdiner.stickyapi.common.arguments.Arguments;
-import com.dumbdogdiner.stickyapi.common.command.CommandBuilder;
-import com.dumbdogdiner.stickyapi.common.command.ExitCode;
-import com.dumbdogdiner.stickyapi.common.ServerVersion;
-import com.dumbdogdiner.stickyapi.common.util.NotificationType;
-import com.dumbdogdiner.stickyapi.common.util.reflection.ReflectionUtil;
-import com.dumbdogdiner.stickyapi.common.util.StringUtil;
+import com.dumbdogdiner.stickyapi.arguments.Arguments;
+import com.dumbdogdiner.stickyapi.command.CommandBuilder;
+import com.dumbdogdiner.stickyapi.command.ExitCode;
+import com.dumbdogdiner.stickyapi.ServerVersion;
+import com.dumbdogdiner.stickyapi.util.NotificationType;
+import com.dumbdogdiner.stickyapi.util.reflection.ReflectionUtil;
+import com.dumbdogdiner.stickyapi.util.StringUtil;
 import com.google.common.collect.ImmutableList;
 
 import org.bukkit.command.Command;

@@ -7,7 +7,7 @@ package com.dumbdogdiner.stickyapi.bungeecord.util;
 import java.io.File;
 
 import com.dumbdogdiner.stickyapi.annotation.Untested;
-import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
+import com.dumbdogdiner.stickyapi.translation.LocaleProvider;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

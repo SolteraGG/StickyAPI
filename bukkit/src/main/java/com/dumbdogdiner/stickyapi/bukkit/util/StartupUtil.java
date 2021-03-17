@@ -8,7 +8,7 @@ import java.io.File;
 
 import javax.annotation.Nullable;
 
-import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
+import com.dumbdogdiner.stickyapi.translation.LocaleProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 

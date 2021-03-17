@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
-import com.dumbdogdiner.stickyapi.common.util.MathUtil;
+import com.dumbdogdiner.stickyapi.util.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
