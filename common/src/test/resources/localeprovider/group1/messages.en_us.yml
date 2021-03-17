@@ -1,0 +1,86 @@
+# SRC: https://github.com/DumbDogDiner/StickyCommands/blob/master/bukkit/src/main/resources/messages.en_us.yml
+# StickyCommands Translation file
+# -------------------------
+
+# Messages.yml - All plugin text is in this file
+#
+# Anything between curley brackets is replaced with the values of the named variables.
+
+# Global variables, you can use these in any message in this file.
+newline: "&8&l» "
+prefix: "&b&lStickyCommands {newline}"
+network-name: "&bDumb Dog Diner"
+website: "dumbdogdiner.com"
+
+# Common error messages used throughout the plugin
+invalid-syntax: "{prefix}&cInvalid Syntax! Please use &f{syntax}&c!"
+server-error: "{prefix}&cThe server encountered an error, please try again later."
+no-permission: "{prefix}&cError! Permission denied!"
+player-does-not-exist: "{prefix}&cError! The player {target} does not exist!"
+player-has-not-joined: "{prefix}&cError! The player {target} has not joined before!"
+must-be-player: "{prefix}&cYou must be a player to execute this command!"
+not-online-player: "{prefix}&c Error! {player} is not online!"
+invalid-group: "{prefix}&cError! Group {GROUP} is invalid!"
+
+# The config supports new lines (\n), it can be used on any node
+whois-message: "{prefix}&bWhois data for {target}\n{newline}&b{target_online|yesno:'&aOnline,&cOffline'} &bsince: &f{target_last_seen|expiry}\n{newline}&bIP: &f{target_ipaddress}\n{newline}&bFirst Login: &f{target_first_seen|expiry}\n{newline}&bLast Login: &f{target_last_seen|expiry}\n{newline}&bLast Server: &f{target_last_server}\n{newline}&bFly/Walk: &f{target_fly_speed}&b / &f{target_walk_speed}"
+seen-message: "{prefix}&f{target} &bhas been {target_online|yesno:'&aOnline,&cOffline'}\n{newline} &bSince: &f{target_last_seen|expiry}\n{newline} &bOn Server: &f{target_last_server}"
+top-message: "{prefix}&bWoosh! You're at the top!"
+jump-message: "{prefix}&bWEEEEE!!!"
+speed-message: "{prefix}&bYour {player_flying|yesno:'fly,walk'} speed has been set to &f{player_speed}&b!"
+reload:
+  configs-success: "{prefix}&aReloaded configuration and messages successfully!"
+  database-success: "{prefix}&aReloaded configuration and messages successfully!"
+  error: "{prefix}&cThere was an error reloading StickyCommands, please see console for details!"
+
+back:
+  no-previous: "{prefix}&cNo previous location found!"
+  teleported: "{prefix}&bYou have been returned to your last location!"
+  teleported-other: "{prefix}&bReturned &f{target} &bto their last location!"
+
+sell:
+  cannot-sell: "{prefix}&cThis item cannot be sold!"
+  bad-worth: "{prefix}&f1 {item} &cis worth a negative amount &f(${single_worth}) &cand cannot be sold &4(Please ask a developer)"
+  worth-message: "{prefix}&f1 {item} &bis worth &f${single_worth} &7(Hand: ${hand_worth}, Inventory: ${inventory_worth})"
+  sell-message: "{prefix}&bYou sold &f{amount} {item} &bfor &f${worth}&b!"
+  must-confirm: "{prefix}&cPlease confirm your sale by typing /sell [inventory/hand] confirm!"
+  log:
+    log-message: "{prefix}&bRecent sale logs"
+    log: "{newline}&7({short_date}) &f{log_player} &bsold &f{amount} {item} &bfor &f${price}"
+    log-hover: "&bSale &f#{saleid}\n&8&l» &bItem Sold:&f {item_enum}\n&8&l» &bAmount Sold:&f {amount}\n&8&l» &bNew Balance:&f &2(+${price})\n&8&l» &bSold:&f {date_duration}\n&8&l» &bTransaction ID:&f {saleid}"
+    no-sales: "{prefix}&bThere have been no sales!"
+    paginator: "{prefix}&bpage &f{current}&b/&f{total}"
+
+afk:
+  not-afk: "&7&o* {player} is no longer AFK!"
+  afk: "&7&o* {player} is now AFK!"
+  afk-kick: "&cYou have been AFK for {time|duration} and have been kicked!"
+
+hat:
+  no-hat: "{prefix}&bYou do not have a hat!"
+  new-hat: "{prefix}&bEnjoy your new hat!"
+  remove-hat: "{prefix}&bYour hat has been removed!"
+item-message: "{prefix}&bGave you &f{amount} {item}&b!"
+
+kill:
+  you-were-killed: "{prefix}&bThou hast been slain!"
+  you-killed: "{prefix}&bYou killed &f{target}"
+  suicide: "{prefix}&bYou magically died!"
+
+smite:
+  smite-other-player: "{prefix}&bYour fury reigns down on &f{target}&b!"
+  smite-block: "{prefix}&bYour fury reigns down on the block at &f{location_x}, {location_y}, {location_z} &bof world &f{world}"
+  smite-message: "{prefix}&bThou hast been smitten!"
+  smite-immune: "{prefix}&f{target}&c is immune to your wrath!"
+  yourself: "{prefix}&bYou have smitten yourself!"
+
+powertool:
+  cleared: "{prefix}&bCleared your powertool!"
+  assigned: "{prefix}&bPowertool created with command &f\"{command}\""
+  cannot-bind-air: "{prefix}&cYou may not bind a command to your hand!"
+  toggled: "{prefix}&bYour powertool has been toggled {toggled|yesno:'&aOn,&cOff'}"
+  no-powertool: "{prefix}&cYou do not have a powertool to toggle!"
+
+player-time:
+  time-reset: "{prefix}&bYour time has been synced with the server &f({time} ticks)&b!"
+  time-set: "{prefix}&bYour time has been set to &f{time} ticks&b{relative|empty_if_false:\" relative to server time\"}!"
