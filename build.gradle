@@ -231,14 +231,14 @@ aggregateJavadoc.options.encoding = "UTF-8"
         archived: https://web.archive.org/web/20210117193942/https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
     which, in turn, references this: https://github.com/GPars/GPars/blob/7cddf7cf2fec1fd66ef800edccfc03315d078a2b/build.gradle#L209
  */
-if (JavaVersion.current().isJava11Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addBooleanOption("Xdoclint:-html", true)
-            options.addBooleanOption("-frames", true)
-        }
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addBooleanOption("Xdoclint:-html", JavaVersion.current().isJava11Compatible())
+        options.addBooleanOption("-frames", JavaVersion.current().isJava11())
     }
 }
+
 
 task browseJavadoc {
     dependsOn javadoc
