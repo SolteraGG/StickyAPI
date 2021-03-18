@@ -133,13 +133,9 @@ public class TextureValidator {
      * @throws InvalidTextureException if the texture is invalid
      */
     public static void validateTextureJson(@NotNull JsonElement json) throws InvalidTextureException{
-        String textureURL = json
-                .getAsJsonObject().get("textures")
-                .getAsJsonObject().get("SKIN")
-                .getAsJsonObject().get("url")
-                .getAsString();
 
-        validateTextureUrl(textureURL);
+
+        validateTextureUrl(TextureHelper.decodeTextureJsonToUrl(json));
     }
 
     /**

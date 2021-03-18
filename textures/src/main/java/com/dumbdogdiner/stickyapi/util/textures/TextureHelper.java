@@ -7,6 +7,7 @@ package com.dumbdogdiner.stickyapi.util.textures;
 import com.dumbdogdiner.stickyapi.util.StringUtil;
 import com.dumbdogdiner.stickyapi.util.http.HttpUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -20,6 +21,7 @@ import org.bukkit.Bukkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -215,7 +217,6 @@ public class TextureHelper {
      * @throws InvalidTextureException if the JSON is invalid
      */
     public static @NotNull String encodeJson(@NotNull JsonObject texture) throws InvalidTextureException {
-
         TextureValidator.validateTextureJson(texture);
         return StringUtil.encodeBase64(HttpUtil.getDefaultGsonInstance().toJson(texture));
     }
@@ -230,6 +231,12 @@ public class TextureHelper {
         return JsonParser.parseString(texture).getAsJsonObject();
     }
 
+    //FIXME javadoc
+    public static @NotNull URL decodeTextureStringToUrl(@NotNull String texture) throws MalformedURLException {
+        return new URL(decodeTextureJsonToUrl(decodeTextureStringToJson(texture)));
+    }
+
+
     /**
      * Converts a category and head to a qualified name (in the form of <code>{category}.{name}</code>
      *
@@ -239,5 +246,14 @@ public class TextureHelper {
      */
     public static @NotNull String toQualifiedName(String category, String name) {
         return String.join(".", category, name).toUpperCase();
+    }
+
+    // FIXME javadoc
+    public static String decodeTextureJsonToUrl(JsonElement json) {
+        return json
+                .getAsJsonObject().get("textures")
+                .getAsJsonObject().get("SKIN")
+                .getAsJsonObject().get("url")
+                .getAsString();
     }
 }
