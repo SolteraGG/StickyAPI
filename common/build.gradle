@@ -4,15 +4,14 @@ plugins {
 }
 
 dependencies {
+    // Depend on serverversion proj
+    compile project(":common:serverversion")
+    testCompile project(":common:serverversion").sourceSets.test.output
+
     // Font width data (see above)
     compile "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
     implementation "com.google.code.gson:gson:2.8.6"
-
-    // TODO: refactor ServerVersion to not depend on these!
-    compileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
-    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
-
 
     // Dependencies available in both bukkit and bungee
     compileOnly "net.md-5:bungeecord-chat:1.16-R0.5-SNAPSHOT"

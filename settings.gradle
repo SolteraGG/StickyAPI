@@ -1,4 +1,5 @@
 rootProject.name = 'stickyapi'
 include ":common"
+include ":common:serverversion"
 include ":bukkit"
 include ":bungee"
