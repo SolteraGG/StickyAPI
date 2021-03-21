@@ -2,7 +2,7 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.configuration.providers;
+package com.dumbdogdiner.stickyapi.common.config.providers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.dumbdogdiner.stickyapi.common.configuration.FileConfiguration;
+import com.dumbdogdiner.stickyapi.common.config.FileConfiguration;
 
 import org.apache.commons.lang.Validate;
 import org.yaml.snakeyaml.DumperOptions;

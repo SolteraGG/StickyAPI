@@ -6,8 +6,8 @@ package com.dumbdogdiner.stickyapi.common.translation;
 
 import java.io.File;
 
-import com.dumbdogdiner.stickyapi.common.configuration.FileConfiguration;
-import com.dumbdogdiner.stickyapi.common.configuration.providers.YamlProvider;
+import com.dumbdogdiner.stickyapi.common.config.FileConfiguration;
+import com.dumbdogdiner.stickyapi.common.config.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
 
 import org.jetbrains.annotations.NotNull;

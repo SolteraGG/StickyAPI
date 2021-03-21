@@ -10,7 +10,7 @@ import java.io.InputStream;
 
 import javax.annotation.Nullable;
 
-import com.dumbdogdiner.stickyapi.common.configuration.providers.YamlProvider;
+import com.dumbdogdiner.stickyapi.common.config.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

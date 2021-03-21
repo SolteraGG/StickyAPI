@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import com.dumbdogdiner.stickyapi.annotation.Untested;
-import com.dumbdogdiner.stickyapi.common.configuration.providers.YamlProvider;
+import com.dumbdogdiner.stickyapi.common.config.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
 
 import org.jetbrains.annotations.NotNull;

@@ -2,7 +2,7 @@
  * Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
  * Licensed under the MIT license, see LICENSE for more information...
  */
-package com.dumbdogdiner.stickyapi.common.configuration.providers;
+package com.dumbdogdiner.stickyapi.common.config.providers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.dumbdogdiner.stickyapi.common.configuration.FileConfiguration;
+import com.dumbdogdiner.stickyapi.common.config.FileConfiguration;
 import com.google.common.io.Files;
 
 import org.junit.jupiter.api.BeforeAll;

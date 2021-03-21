@@ -5,4 +5,4 @@
 /**
  * Classes dedicated to handling a plugin's runtime configuration.
  */
-package com.dumbdogdiner.stickyapi.common.configuration;
+package com.dumbdogdiner.stickyapi.common.config;
