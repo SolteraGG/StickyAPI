@@ -28,7 +28,8 @@ public class MinecraftHeadsAPI {
     private static final HeadDatabaseAPI mcheads;
 
     static {
-        if(ServerVersion.isBukkit())
+        //noinspection ConstantConditions
+        if(ServerVersion.isBukkit() && Bukkit.getServer() != null) {
             if (Bukkit.getPluginManager().getPlugin("HeadDatabase") == null) {
                 Bukkit.getLogger().severe("HeadDatabase Plugin was not found!");
                 usePlugin = false;
@@ -37,7 +38,7 @@ public class MinecraftHeadsAPI {
                 mcheads = new HeadDatabaseAPI();
                 usePlugin = true;
             }
-        else {
+        }else {
             usePlugin = false;
             mcheads = null;
         }
