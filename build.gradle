@@ -2,6 +2,10 @@ plugins {
     id "io.freefair.lombok" version "5.3.0" apply false
     id "com.github.hierynomus.license" version "0.15.0" apply false
 
+    // root project - intellij
+
+    id 'idea'
+
     // root project - generate project-wide javadocs
     id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
@@ -9,6 +13,8 @@ plugins {
 allprojects {
     group = "com.dumbdogdiner"
     version = "2.2.0"
+
+    apply plugin: "idea"
 
     apply plugin: "java"
     apply plugin: "jacoco"
@@ -62,6 +68,7 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+        dependsOn(processResources)
     }
 
     configurations {
@@ -142,7 +149,10 @@ subprojects {
     delombok.encoding = "UTF-8"
     compileJava.options.encoding = "UTF-8"
     compileTestJava.options.encoding = "UTF-8"
-    javadoc.options.encoding = "UTF-8"
+    tasks.withType(Javadoc) {
+        options.addBooleanOption("quiet", true)
+        options.encoding = "UTF-8"
+    }
 
 
     // Run the license formatter and font data copier before compiling the source code. 

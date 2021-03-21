@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group 'com.dumbdogdiner'
+version '2.2.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
+}
+
+dependencies {
+    compile project(":common")
+    testCompile project(":common").sourceSets.test.output
+
+    compile project(":bukkit")
+    testCompile project(":bukkit").sourceSets.test.output
+
+    compile project(":webapi")
+    testCompile project(":webapi").sourceSets.test.output
+
+    compile project(":textures")
+    testCompile project(":textures").sourceSets.test.output
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.25.0'
+    testImplementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+}
+
+test {
+    useJUnitPlatform()
+}

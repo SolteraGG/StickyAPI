@@ -4,7 +4,9 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -308,6 +310,43 @@ public final class StringUtil {
     }
 
     /**
+     * Remove hyphons from a UUID object and return a string
+     * <p>
+     * e.x. de8c89e1-2f25-424d-8078-c6ff58db7d6e -&gt;
+     * de8c89e12f25424d8078c6ff58db7d6e
+     *
+     * @param uuid the UUID to de-hyphenate
+     * @return a string representation of the UUID, without any hyphens
+     */
+    public static @NotNull String unhyphenateUUID(@NotNull UUID uuid){
+        return unhyphenate(uuid.toString());
+    }
+
+    public static @NotNull String unhyphenate(@NotNull String str){
+        return str.replace("-","");
+    }
+
+
+    /**
+     * Utility method to ensure Base64 encoding is done consistently.
+     * @param str The {@link String} to be encoded
+     * @return The encoded {@link String}
+     */
+    public static @NotNull String encodeBase64(@NotNull String str) {
+        return new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Utility method to ensure Base64 decoding is done consistently.
+     * @param str A {@link String} containing the Base64-encoded data
+     * @return A string of UTF-8 Text decoded from the input
+     * @throws IllegalArgumentException if the Base64 decoding fails
+     */
+    public static @NotNull String decodeBase64(String str) throws IllegalArgumentException {
+        return new String(Base64.getDecoder().decode(str), StandardCharsets.UTF_8);
+    }
+
+    /**
      * Creates a random string of "magic" characters of characters
      *
      * @param min               the minimum length of the string (inclusive)
@@ -366,5 +405,4 @@ public final class StringUtil {
     public static String formatChatCodes(String input) {
         return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));
     }
-
 }

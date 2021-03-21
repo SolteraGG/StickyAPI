@@ -1,0 +1,10 @@
+#
+# Copyright (c) 2020-2021 DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+# Licensed under the MIT license, see LICENSE for more information...
+#
+
+name: StickyApiTest
+main: com.dumbdogdiner.stickyapi.mockedplugin.StickyAPIPlugin
+version: 1.0
+api-version: 1.16
+#load: STARTUP
