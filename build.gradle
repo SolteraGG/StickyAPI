@@ -236,6 +236,8 @@ allprojects {
     tasks.withType(Javadoc) {
         options.addBooleanOption("Xdoclint:-html", JavaVersion.current().isJava11Compatible())
         options.addBooleanOption("-frames", JavaVersion.current().isJava11())
+        options.memberLevel = JavadocMemberLevel.PRIVATE
+        options.encoding = "UTF-8"
     }
 }
 
