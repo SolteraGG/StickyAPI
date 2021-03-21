@@ -35,6 +35,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation 'commons-validator:commons-validator:1.7'
 
+    implementation("com.google.guava:guava:30.1.1-jre")
     implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'org.apache.commons:commons-csv:1.8'

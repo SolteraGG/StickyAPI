@@ -6,6 +6,7 @@ package com.dumbdogdiner.stickyapi;
 
 import com.dumbdogdiner.stickyapi.common.util.MathUtil;
 import com.dumbdogdiner.stickyapi.util.textures.TextureValidator;
+import com.google.common.base.CharMatcher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.csv.CSVFormat;
@@ -66,6 +67,8 @@ class MinecraftHeadsAPITest {
         System.out.println("Testing ID " + id + " - " + head.getName());
         String textureString = MinecraftHeadsAPI.getTextureString(id);
         String name = MinecraftHeadsAPI.getName(id);
+        assumeTrue(CharMatcher.ascii().matchesAllOf(name));
+        assumeTrue(CharMatcher.ascii().matchesAllOf(head.getName()));
         assertEquals(head.getName(), name);
         assertTrue(MinecraftHeadsAPI.getTextureUrl(id).toExternalForm().endsWith(head.getTexture()));
 
