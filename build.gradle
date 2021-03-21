@@ -95,10 +95,6 @@ subprojects {
         compileOnly "org.projectlombok:lombok:1.18.18"
         annotationProcessor "org.projectlombok:lombok:1.18.18"
 
-        // Note: Common uses both of these... ???
-        compileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
-        compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
-
         implementation "org.jetbrains:annotations:20.1.0"
         implementation "io.github.classgraph:classgraph:4.8.102"
         implementation "com.github.seancfoley:ipaddress:5.3.3"

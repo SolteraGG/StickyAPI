@@ -2,5 +2,11 @@ dependencies {
         compile project(":common")
         testCompile project(":common").sourceSets.test.output
 
+        compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+
+        // Fun fact: paper/spigot/etc doesn't include netty! (as it's from NMS)
+        // So instead let's use the netty version that we were using before (inherited from bungeecord)
+        compileOnly "io.netty:netty-codec:4.1.58.Final"
+
         testImplementation "com.google.code.gson:gson:2.8.6"
 }
