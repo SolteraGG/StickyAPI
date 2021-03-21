@@ -91,3 +91,21 @@ task copyMCFontExtractor(type: Copy) {
 
 // Run the license formatter and font data copier before compiling the source code.
 tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtractor
+
+
+// Common build: create a jar from the :common & :common:serverversion projects
+jar {
+    from sourceSets.main.output
+    from project(":common:serverversion").sourceSets.main.output
+}
+
+// Common build: create uber sources from subproject sources
+task commonSources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    // Use source code from :common & :common:serverversion projects
+    from sourceSets.main.allSource
+    from project(":common:serverversion").sourceSets.main.allSource
+}
+
+// Common build: override the usual sources output with our one containing ServerVersion
+tasks.sources.finalizedBy commonSources
