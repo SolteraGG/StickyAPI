@@ -1,0 +1,10 @@
+dependencies {
+    // Dependencies available in both bukkit and bungee
+    compileOnly "org.yaml:snakeyaml:1.27"
+
+    // Only included in paper? - could remove dep
+    compileOnly "commons-lang:commons-lang:2.6"
+
+    // YamlProviderTest
+    testImplementation "com.google.guava:guava:30.1.1-jre"
+}

@@ -8,6 +8,14 @@ dependencies {
     compile project(":common:serverversion")
     testCompile project(":common:serverversion").sourceSets.test.output
 
+    // Depend on the config project
+    compile project(":config")
+    testCompile project(":config").sourceSets.test.output
+
+    // LocaleProviderTest - add snakeyaml so YamlProvider (from the :config project) can work properly
+    // testRuntimeOnly = only accessible during the test job
+    testRuntimeOnly "org.yaml:snakeyaml:1.27"
+
     // Font width data (see above)
     compile "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
@@ -15,9 +23,8 @@ dependencies {
 
     // Dependencies available in both bukkit and bungee
     compileOnly "net.md-5:bungeecord-chat:1.16-R0.5-SNAPSHOT"
-    compileOnly "org.yaml:snakeyaml:1.27"
 
-    // Only included in paper? - could remove dep
+    // Only included in paper?  (ShortID.java)
     compileOnly "commons-lang:commons-lang:2.6"
 }
 
