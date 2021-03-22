@@ -35,7 +35,11 @@ public class MinecraftHeadsWebAPI {
      * @throws HttpException if something goes wrong accessing the web api
      */
     public static String getTextureString(int headId) throws HttpException {
-        return getDocument(headId).body().getElementById("UUID-Value").text();
+        try {
+            return getDocument(headId).body().getElementById("UUID-Value").text();
+        } catch (NullPointerException e) {
+            throw new HttpException("Null document", e);
+        }
     }
 
     /**
@@ -54,6 +58,8 @@ public class MinecraftHeadsWebAPI {
             return Jsoup.parse(response.body().string());
         } catch (IOException e){
             throw new HttpException("Error decoding response body", e);
+        } catch (NullPointerException e) {
+            throw new HttpException("Null document", e);
         }
     }
 
