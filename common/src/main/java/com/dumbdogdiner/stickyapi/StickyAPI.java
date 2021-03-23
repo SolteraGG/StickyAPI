@@ -36,7 +36,7 @@ public class StickyAPI {
     /**
      * Get the current version of API.
      * 
-     * @since TBA
+     * @since 3.0
      * @return {@link String} version
      * 
      */
@@ -52,7 +52,7 @@ public class StickyAPI {
     /**
      * Get a string with the latest commit (id) at API's build-time.
      * 
-     * @since TBA
+     * @since 3.0
      * @return {@link String} commit id
      */
     @Getter
@@ -61,7 +61,7 @@ public class StickyAPI {
     /**
      * Get a string with the current branch at API's build-time.
      * 
-     * @since TBA
+     * @since 3.0
      * @return {@link String} branch name
      */
     @Getter
@@ -74,7 +74,7 @@ public class StickyAPI {
     /**
      * Get a Date object showing the current time at API's build-time.
      * 
-     * @since TBA
+     * @since 3.0
      * @return {@link Date} date
      */
     public static Date getTimestamp() {
@@ -91,7 +91,7 @@ public class StickyAPI {
     /**
      * Get a string with the latest commit sha at API's build-time.
      * 
-     * @since TBA
+     * @since 3.0
      * @return {@link String} sha
      */
     public static String getSha() {
@@ -103,7 +103,7 @@ public class StickyAPI {
      * <p>
      * If the working directory was dirty, this will return true, meaning there were modified tracked files and staged changes at build-time.
      * 
-     * @since TBA
+     * @since 3.0
      * @return {@link Boolean} isDirty
      */
     public static Boolean getIsDirty() {
