@@ -362,6 +362,7 @@ public final class StringUtil {
      * @param input The input string
      * @return A string where the relevant ampersands are replaced with section
      *         symbols
+     * @since 3.0
      */
     public static String formatChatCodes(String input) {
         return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));
