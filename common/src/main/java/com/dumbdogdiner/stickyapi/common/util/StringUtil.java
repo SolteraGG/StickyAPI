@@ -278,6 +278,7 @@ public final class StringUtil {
      * @param prefix Prefix of string to compare
      * @return {@link Boolean}
      * @throws NullPointerException if prefix or string is null
+     * @since 3.0
      */
     public static boolean startsWith(@NotNull final String string, @NotNull final String prefix) {
         if (string.length() < prefix.length()) {
@@ -315,6 +316,7 @@ public final class StringUtil {
      * @param minRunBeforeSpace Minimum number of characters before a space can
      *                          appear, set to 0 to disable space
      * @return A string of random characters, where the length
+     * @since 3.0
      */
     public static String randomObfuscatedString(int min, int max, int minRunBeforeSpace) {
         Preconditions.checkArgument(max >= min, "Max cannot be less than min");

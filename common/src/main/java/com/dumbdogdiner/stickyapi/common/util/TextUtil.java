@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Utilities for text, such as in chat, books, and signs
  *
- * @since TBA (rewritten)
+ * @since 3.0 (rewrite)
  */
 public class TextUtil {
     private TextUtil() {

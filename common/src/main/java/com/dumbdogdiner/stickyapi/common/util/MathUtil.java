@@ -164,6 +164,7 @@ public class MathUtil {
 
     /**
      * @see #randomElement(List)
+     * @since 3.0
      */
     public static char randomElement(char @NotNull [] choices) {
         return Objects.requireNonNull(randomElement(Chars.asList(choices)));
@@ -171,6 +172,7 @@ public class MathUtil {
 
     /**
      * @see #randomElement(List)
+     * @since 3.0
      */
     public static int randomElement(int @NotNull [] choices) {
         return Objects.requireNonNull(randomElement(Ints.asList(choices)));
