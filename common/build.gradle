@@ -1,16 +1,19 @@
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
+
+    // for "api" in dependencies { }
+    id "java-library"
 }
 
 dependencies {
     // Depend on serverversion proj
-    compile project(":common:serverversion")
-    testCompile project(":common:serverversion").sourceSets.test.output
+    api project(":common:serverversion") // expose serverversion when implementing :common
+    testImplementation project(":common:serverversion").sourceSets.test.output
 
     // Depend on the config project
-    compile project(":config")
-    testCompile project(":config").sourceSets.test.output
+    api project(":config") // expose config when  implementing :common
+    testImplementation project(":config").sourceSets.test.output
 
     // LocaleProviderTest - add snakeyaml so YamlProvider (from the :config project) can work properly
     // testRuntimeOnly = only accessible during the test job
