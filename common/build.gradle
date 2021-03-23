@@ -99,8 +99,8 @@ task copyMCFontExtractor(type: Copy) {
     rename "mc-font-extractor-main-mojangles_width_data.json", "mojangles_width_data.json"
 }
 
-// Run the license formatter and font data copier before compiling the source code.
-tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtractor
+// Run the font data copier before compiling the source code.
+tasks.compileJava.dependsOn copyMCFontExtractor
 
 
 // Common build: create a jar from the :common & :common:serverversion projects

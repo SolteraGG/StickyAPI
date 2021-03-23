@@ -1,6 +1,7 @@
 plugins {
     id "io.freefair.lombok" version "5.3.0" apply false
-    id "com.github.hierynomus.license" version "0.15.0" apply false
+    // spotless for license headers and linting
+    id "com.diffplug.spotless" version "5.11.0" apply false
 
     // root project - generate project-wide javadocs
     id "io.freefair.aggregate-javadoc" version "5.3.0"
@@ -47,17 +48,14 @@ allprojects {
 
 subprojects {
     apply plugin: "io.freefair.lombok"
-    apply plugin: "com.github.hierynomus.license"
+    apply plugin: "com.diffplug.spotless"
 
-    // License Plugin Options
-    license {
-        header = project.rootProject.file("LICENSE_HEADER")
-        ext.year = Calendar.getInstance().get(Calendar.YEAR)
-        mapping("java", "SLASHSTAR_STYLE")
-        exclude "**/*.json" // Exclude JSON to keep the font width data valid
-        exclude "**/*.md"
-        exclude "**/*.yml"
-        exclude "**/*.MockMaker"
+    // Spotless Options
+    spotless {
+        encoding 'UTF-8' // all formats will be interpreted as UTF-8
+        java {
+            licenseHeaderFile(project.rootProject.file("LICENSE_HEADER"))
+        }
     }
 
     tasks.withType(JavaCompile) {
@@ -144,8 +142,8 @@ subprojects {
     javadoc.options.encoding = "UTF-8"
 
 
-    // Run the license formatter and font data copier before compiling the source code. 
-    tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
+    // Run the linter before compiling the source code. 
+    tasks.compileJava.dependsOn spotlessApply
     tasks.build.dependsOn sources
 
     // Per-module publishing (eg. stickyapi-common)
