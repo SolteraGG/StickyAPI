@@ -17,7 +17,7 @@ dependencies {
     testRuntimeOnly "org.yaml:snakeyaml:1.27"
 
     // Font width data (see above)
-    compile "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
+    dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
     implementation "com.google.code.gson:gson:2.8.6"
 
@@ -86,7 +86,7 @@ compileJava.source = processSourceTokens.outputs
 
 // Font Width Info
 task copyMCFontExtractor(type: Copy) {
-    def path = project.configurations.compile.find {it.name.startsWith("mc-font-extractor") }
+    def path = project.configurations.dddResource.find {it.name.startsWith("mc-font-extractor") }
     println("common: Found font data at: " + path)
     from file(path)
     // into file("src/main/resources")

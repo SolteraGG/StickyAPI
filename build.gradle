@@ -68,6 +68,9 @@ subprojects {
         jaxDoclet
         // give test dependencies access to compileOnly dependencies to emulate providedCompile
         testImplementation.extendsFrom compileOnly
+
+        dddResource // custom configuration for our ivy resources (eg. font info)
+        dddResource.description = "Resources (eg. yml or json data) to be included in jar builds"
     }
 
     repositories {
@@ -79,14 +82,14 @@ subprojects {
 
         // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
-        def ddd_mc_font = ivy {
+        def dddResources = ivy {
            url "https://dumbdogdiner.github.io/"
             patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
             metadataSources { artifact() } 
         }
         // Only use the Ivy repo for font width data - speeds up dependency resolution
         exclusiveContent {
-            forRepositories(ddd_mc_font)
+            forRepositories(dddResources)
             filter { includeGroup("dumbdogdiner") }
         }
     }
