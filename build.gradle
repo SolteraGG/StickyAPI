@@ -151,7 +151,7 @@ subprojects {
         publications {
             gprSubprojects(MavenPublication) {
                 artifactId "${rootProject.name}-${project.name}"
-                println("(jcx debug from ${project.name} gpr2): " + components.java)
+                println("[debug] ${project.name} found component: " + components.java)
                 
                 from(components.java)
                 artifact sources // Publish the output of the sources task
