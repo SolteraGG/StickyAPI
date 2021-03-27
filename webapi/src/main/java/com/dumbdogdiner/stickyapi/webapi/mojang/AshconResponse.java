@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.webapi.mojang;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -22,27 +24,79 @@ import java.util.UUID;
  * Package-local utility class to easily convert the received object from the Cached API to a java object.
  */
 
-
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 class AshconResponse {
     protected String uuid;
 
+    /**
+     * @return The username for the account
+     */
     @Getter
     protected String username;
 
-
+    /**
+     * Internal list of pairs of username with the time changed
+     */
     protected final @NotNull List<Username> username_history = new ArrayList<>();
 
+    /**
+     * @return The base-64 encoded texture string
+     */
     public String getTextureString() {
         return textures.raw.value;
     }
 
+
+
+
+    @Getter
+    private Texture textures;
+
+
+
+    // FIXME BUG BUG BUG Due to the broken-ness of the uuid/username at time thing, created at may be blank
+    // Therefore this may be null, oops uwu
+    private String created_at;
+
+    public @NotNull Instant getCreated() {
+        if (created_at == null)
+            // For now, if it's null, return an instant of -1 i guess?
+            return Instant.ofEpochSecond(-1);
+        return Instant.parse(created_at);
+    }
+
+    public @NotNull UUID getUniqueId() {
+        return UUID.fromString(uuid);
+    }
+
+    public @NotNull SortedMap<Instant, String> getUsernameHistory() {
+        TreeMap<Instant, String> usernameHistory = new TreeMap<>(Instant::compareTo);
+        for (Username username : username_history) {
+            usernameHistory.put(username.getChangedAt(), username.getUsername());
+        }
+        return usernameHistory;
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Internal classes used for GSON
+    //////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Internal class representing the internal properties of the username object
+     */
     private static class Username {
+        /**
+         * @return The username
+         */
         @Getter
         private String username;
         private String changed_at;
 
-        private @NotNull Instant getChangedAt() {
-            if(changed_at == null) {
+        /**
+         * @return When the username was changed
+         */
+        @NotNull Instant getChangedAt() {
+            if (changed_at == null) {
                 // Happens for the very very first username, just set to 0 I guess?
                 return Instant.ofEpochMilli(0L);
             } else {
@@ -50,15 +104,11 @@ class AshconResponse {
             }
         }
 
-
         @Override
-        public String toString(){
+        public String toString() {
             return username;
         }
     }
-
-    @Getter
-    private Texture textures;
     static class Texture {
         @Getter
         private boolean custom;
@@ -66,52 +116,37 @@ class AshconResponse {
         private boolean slim;
         @Getter
         private Skin skin;
+        @Getter
+        Raw raw;
 
+
+        /**
+         * Class for skin data
+         */
         static class Skin {
             private String url;
+
             @SneakyThrows
-            public URL getUrl(){
+            public URL getUrl() {
                 // The URL should always be valid!
                 return new URL(url);
             }
+
             private String data;
 
-            public byte [] getData(){
+            public byte[] getData() {
                 return Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
             }
         }
 
+        /**
+         * Raw
+         */
         @Getter
-        Raw raw;
-
-        static class Raw{
-            @Getter
+        static class Raw {
             private String value;
-            @Getter
             private String signature;
         }
     }
-
-    // FIXME BUG BUG BUG Due to the broken-ness of the uuid/username at time thing, created at may be blank
-    // Therefore this may be null, oops uwu
-    private String created_at;
-    public @NotNull Instant getCreated(){
-        if(created_at == null)
-            // For now, if it's null, return an instant of -1 i guess?
-            return Instant.ofEpochSecond(-1);
-        return Instant.parse(created_at);
-    }
-
-    public @NotNull UUID getUniqueId(){
-        return UUID.fromString(uuid);
-    }
-
-    public @NotNull SortedMap<Instant, String> getUsernameHistory(){
-        TreeMap<Instant, String> usernameHistory = new TreeMap<>(Instant::compareTo);
-        for(Username username : username_history) {
-            usernameHistory.put(username.getChangedAt(), username.getUsername());
-        }
-        return usernameHistory;
-    }
-
 }
+

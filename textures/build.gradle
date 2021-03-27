@@ -13,10 +13,6 @@ repositories {
         url("https://mvn.intellectualsites.com/content/repositories/thirdparty/")
     }
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
-    // Temporary because their cert expired, lmao
-    flatDir {
-        dirs 'libstmp'
-    }
 }
 
 dependencies {

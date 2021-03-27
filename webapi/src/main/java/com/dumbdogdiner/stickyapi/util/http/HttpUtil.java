@@ -48,6 +48,9 @@ public class HttpUtil {
             Response response = defaultClientInstance.newCall(new Request.Builder().url(url).build()).execute();
             if(response.code() != HttpURLConnection.HTTP_OK)
                 throw new HttpStatusException(url.url(), response.code());
+            if(response.body() == null){
+                throw new NullPointerException("The response body was null");
+            }
             if(response.body().contentLength() == 0){
                 throw new HttpException(url.url(), "No content received");
             }

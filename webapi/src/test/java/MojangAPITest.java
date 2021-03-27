@@ -31,12 +31,6 @@ class MojangAPITest {
 //        System.out.println(new MojangAPI(UUID.fromString("ffffffff-f53b-49d1-b8c4-ffffffffffff")).getSkinTexture());
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    void getFullJsonCombinedAPI() throws HttpException {
-        System.out.println(MojangAPI.getJsonResponse(RODWUFF).toString());
-    }
-
     @Test
     void getUsernameHistory() throws HttpException {
         Map<Instant, String> response = MojangAPI.getUsernameHistory(UUID.fromString("9b6d27b3-f53b-49d1-b8c4-fa807f7575e9"));

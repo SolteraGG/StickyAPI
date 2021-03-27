@@ -18,11 +18,11 @@ public class HttpException extends Exception {
     }
 
     public HttpException(HttpUrl url, String error){
-        this(url.url(), error);
+        this(url != null ? url.url() : null, error);
     }
 
     HttpException(URL url, String error){
-        super("An error occurred while accessing " + url.toExternalForm() + ": " + error);
+        super("An error occurred while accessing " + (url != null ? url.toExternalForm() : null) + ": " + error);
     }
 
     public HttpException(String str, Exception e) {

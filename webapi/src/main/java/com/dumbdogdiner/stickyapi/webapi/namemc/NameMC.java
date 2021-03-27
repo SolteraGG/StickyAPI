@@ -8,6 +8,7 @@ import com.dumbdogdiner.stickyapi.util.http.HttpException;
 import com.dumbdogdiner.stickyapi.util.http.HttpUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.experimental.UtilityClass;
 import okhttp3.HttpUrl;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class NameMC {
     private static final HttpUrl SCRAPE_API_BASE_URL = new HttpUrl.Builder()
             .scheme("https")
@@ -89,6 +91,4 @@ public class NameMC {
         jsa.forEach(element -> profiles.add(HttpUtil.getDefaultGsonInstance().fromJson(element, ScrapedProfile.class)));
         return profiles;
     }
-
-
 }

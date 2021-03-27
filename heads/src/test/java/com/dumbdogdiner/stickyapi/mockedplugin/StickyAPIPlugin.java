@@ -26,11 +26,6 @@ public class StickyAPIPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onLoad() {
-
-    }
-
-    @Override
     public void onEnable() {
         if (!StartupUtil.setupConfig(this))
             return;
@@ -41,10 +36,5 @@ public class StickyAPIPlugin extends JavaPlugin {
 
         // Do more stuff??
         getLogger().info("StickyAPI Dummy Plugin started successfully!");
-    }
-
-    @Override
-    public void onDisable() {
-
     }
 }

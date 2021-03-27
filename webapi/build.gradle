@@ -19,7 +19,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     testImplementation("com.squareup.okhttp3:mockwebserver")
 
-
     implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation(project(":textures"))
