@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(":common")
+    // TODO: Investigate why this isn't provided by common.
+    implementation "com.google.guava:guava:30.1.1-jre"
+}
