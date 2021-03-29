@@ -1,2 +1,4 @@
-Copyright (c) 2020-${year} DumbDogDiner <dumbdogdiner.com>. All rights reserved.
-Licensed under the MIT license, see LICENSE for more information...
+/*
+ * Copyright (c) 2020-$YEAR DumbDogDiner <dumbdogdiner.com>. All rights reserved.
+ * Licensed under the MIT license, see LICENSE for more information...
+ */

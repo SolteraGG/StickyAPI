@@ -29,7 +29,16 @@ jobs:
       with:
         name: java-${{matrix.version}}
         path: build/libs/*
-  license-header-check:
+    - name: Publish to local testing maven repo
+      run: ./gradlew publishAllPublicationsToTestingRepository
+    - name: Display directory structure of testing repo
+      run: ls -R build/testing-mvn-repo
+    - name: Save output from testing repo
+      uses: actions/upload-artifact@v2
+      with:
+        name: java-${{matrix.version}}-testing-mvn-repo
+        path: build/testing-mvn-repo/*
+  linting-check:
     runs-on: ubuntu-latest
     container:
       image: jcxldn/openjdk-alpine:11-jdk
@@ -39,8 +48,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Run the license formatter checker
-      run: ./gradlew licenseMain licenseTest
+    - name: Test our code against our spotless formatting options
+      run: ./gradlew spotlessCheck
   javadoc-check:
     runs-on: ubuntu-latest
     container:

@@ -1,181 +1,260 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'jacoco'
-    id "io.freefair.lombok" version "5.3.0"
-    id "com.github.hierynomus.license" version "0.15.0"
-    // Nemerosa Versioning Plugin for the build info
-    id "net.nemerosa.versioning" version "2.14.0"
+    id "io.freefair.lombok" version "5.3.0" apply false
+    // spotless for license headers and linting
+    id "com.diffplug.spotless" version "5.11.0" apply false
+    // generation of project-wide javadocs
+    id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
 
-jacoco {
+allprojects {
+    group = "com.dumbdogdiner"
+    version = "3.0.0"
+
+    apply plugin: "java"
+    apply plugin: "jacoco"
+
+    // Apply here instead of in plugins {} above to solve
+    // Maven publication [..] cannot include multiple components
+    // Solution: "I solved it. I put a publishing configuration into subprojects section, but applied plugin to a root project."
+    // Solution source: https://discuss.gradle.org/t/problem-with-publishing-with-maven-publish-in-a-multi-module-project/1695/2
+    apply plugin: "maven-publish"
+    
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
-    toolVersion = "0.8.6"
-}
+    jacoco { toolVersion = "0.8.6" }
 
-group = 'com.dumbdogdiner'
+    // Define Maven Central here so that jacoco can deps resolve properly
+    repositories { mavenCentral() }
 
-version = '2.1.0'
-
-// License Plugin Options
-license {
-    header = project.file('LICENSE_HEADER')
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
-    mapping("java", "SLASHSTAR_STYLE")
-    exclude "**/*.json" // Exclude JSON to keep the font width data valid
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
-}
-
-configurations {
-    jaxDoclet
-    // give test dependencies access to compileOnly dependencies to emulate providedCompile
-    testImplementation.extendsFrom compileOnly
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'https://papermc.io/repo/repository/maven-public/' }
-
-    // Define a Ivy repo for the font width data (that way we don't need another plugin!)
-    def ddd_mc_font = ivy {
-        url 'https://dumbdogdiner.github.io/'
-        patternLayout { artifact '/[module]/[revision]/[classifier].[ext]'}
-        metadataSources { artifact() } 
-    }
-    // Only use the Ivy repo for font width data - speeds up dependency resolution
-    exclusiveContent {
-        forRepositories(ddd_mc_font)
-        filter { includeGroup("dumbdogdiner") }
-    }
-}
-
-dependencies {
-    // Font width data (see above)
-    compile 'dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json'
-
-    compileOnly 'org.projectlombok:lombok:1.18.18'
-    annotationProcessor 'org.projectlombok:lombok:1.18.18'
-
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT'
-    implementation 'org.jetbrains:annotations:20.1.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'io.github.classgraph:classgraph:4.8.102'
-    implementation 'com.github.seancfoley:ipaddress:5.3.3'
-    
-    // Tests - JUnit 5
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-
-    // Tests - Mocking Suite (eg. mocking Bukkit for tests)
-    testImplementation("org.mockito:mockito-core:3.7.7")
-}
-
-test {
-	useJUnitPlatform()
-	testLogging {
-		events "passed", "skipped", "failed"
-        // Show System.out for code ran by tests
-        showStandardStreams = true
-	}
-    finalizedBy jacocoTestReport // report is always generated after tests run
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-    reports {
-        xml.enabled true
-        html.enabled true
-    }
-}
-
-task sources(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
-}
-
-
-// Javadoc Fixes
-// Some environments (such as the builder image) do not use UTF-8 as the default encoding!
-// This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
-delombok.encoding = "UTF-8"
-compileJava.options.encoding = "UTF-8"
-compileTestJava.options.encoding = "UTF-8"
-javadoc.options.encoding = "UTF-8"
-
-
-// Build Info
-// Set the timestamp format
-def dataBuildTimestamp = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-
-// Import the filter
-import org.apache.tools.ant.filters.ReplaceTokens
-
-// Define the map containing the tokens we want to replace
-def tokensMap = [
-        BUILDINFO_VERSION: project.version,
-        BUILDINFO_DATEFORMAT: dataBuildTimestamp,
-        BUILDINFO_TIMESTAMP: new java.text.SimpleDateFormat(dataBuildTimestamp).format(new Date()),
-        BUILDINFO_COMMIT: versioning.info.commit,
-        BUILDINFO_BRANCH: versioning.info.branch,
-        BUILDINFO_ISDIRTY: versioning.info.dirty.toString()
-    ]
-
-// Create task to replace the tokens with their actual values
-// NOTE: At the moment this replaces tokens *globally* (format eg. @BUILDINFO_COMMIT@ in source code)
-task processSourceTokens(type: Sync) {
-    from sourceSets.main.java
-    into 'build/processed/src/main/java'
-    filter(ReplaceTokens, tokens: tokensMap)
-    
-    // Pretty print the build info
-    println("\n----- StickyAPI Build Info -----\n")
-    tokensMap.each { println "${String.format("%1\$-" + 10 + "s", it.key.replace("BUILDINFO_", "").toLowerCase())}\t${it.value}" }
-}
-// Use the filter task as the input for compileJava
-compileJava.source = processSourceTokens.outputs
-
-// Font Width Info
-task copyMCFontExtractor(type: Copy) {
-    def path = project.configurations.compile.find {it.name.startsWith("mc-font-extractor") }
-    println path
-    from file(path)
-    // into file("src/main/resources")
-    // - Please keep this comment for future reference.
-    // - This is how we would do this if we weren't also adding build info (see processSourceTokens)
-    destinationDir file("src/main/resources/generated/")
-    rename 'mc-font-extractor-main-mojangles_width_data.json', 'mojangles_width_data.json'
-}
-
-
-// Run the license formatter and font data copier before compiling the source code.
-tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, copyMCFontExtractor
-tasks.build.dependsOn sources
-tasks.publish.dependsOn build
-
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
-            credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+    publishing {
+        repositories {
+            // Main publishing repo
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+                credentials {
+                    username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                    password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+            }
+            // Local testing maven repo
+            maven {
+                name = "Testing"
+                url = "${rootProject.projectDir}/build/testing-mvn-repo"
             }
         }
     }
+
+    tasks.withType(Javadoc) {
+        /*
+          Javadoc Fixes, part 3
+          Since JDK13 the javadoc html validator was changed, making it impossible to have javadocs
+          that are valid on both pre-13 and post-13 java versions.
+          The original workaround was suggested here: https://bugs.openjdk.java.net/browse/JDK-8223552
+          However, this workaround does not work for us since we are using aggregate-javadoc.
+          So, we are using a workaround for the workaround from:
+            original: https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+            archived: https://web.archive.org/web/20210117193942/https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+          which, in turn, references this: https://github.com/GPars/GPars/blob/7cddf7cf2fec1fd66ef800edccfc03315d078a2b/build.gradle#L209
+        */
+        options.addBooleanOption("Xdoclint:-html", JavaVersion.current().isJava11Compatible())
+
+        // Enable frames support if running on java 11
+        options.addBooleanOption("-frames", JavaVersion.current().isJava11())
+
+        // Include private and protected in the javadocs
+        options.memberLevel = JavadocMemberLevel.PRIVATE
+    }
+}
+
+subprojects {
+    apply plugin: "io.freefair.lombok"
+    apply plugin: "com.diffplug.spotless"
+
+    // Spotless Options
+    spotless {
+        encoding 'UTF-8' // all formats will be interpreted as UTF-8
+        java {
+            licenseHeaderFile(project.rootProject.file("LICENSE_HEADER"))
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+    }
+
+    configurations {
+        jaxDoclet
+        // give test dependencies access to compileOnly dependencies to emulate providedCompile
+        testImplementation.extendsFrom compileOnly
+
+        dddResource // custom configuration for our ivy resources (eg. font info)
+        dddResource.description = "Resources (eg. yml or json data) to be included in jar builds"
+    }
+
+    repositories {
+        // Note: Maven Central is defined in allprojects
+        jcenter()
+
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://papermc.io/repo/repository/maven-public/" }
+
+        // Note: Subprojects can't have repo overrides to we have to put it here
+        // Define a Ivy repo for the font width data (that way we don't need another plugin!)
+        def dddResources = ivy {
+           url "https://dumbdogdiner.github.io/"
+            patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
+            metadataSources { artifact() } 
+        }
+        // Only use the Ivy repo for font width data - speeds up dependency resolution
+        exclusiveContent {
+            forRepositories(dddResources)
+            filter { includeGroup("dumbdogdiner") }
+        }
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:1.18.18"
+        annotationProcessor "org.projectlombok:lombok:1.18.18"
+
+        implementation "org.jetbrains:annotations:20.1.0"
+        implementation "io.github.classgraph:classgraph:4.8.104"
+        implementation "com.github.seancfoley:ipaddress:5.3.3"
+
+        // Tests - JUnit 5
+        testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.1"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.1"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
+
+        // Tests - Mocking Suite (eg. mocking Bukkit for tests)
+        testImplementation "org.mockito:mockito-core:3.7.7"
+    }
+
+    test {
+	    useJUnitPlatform()
+	    testLogging {
+		    events "passed", "skipped", "failed"
+            // Show System.out for code ran by tests
+            showStandardStreams = true
+	    }
+        finalizedBy jacocoTestReport // report is always generated after tests run
+    }
+
+    jacocoTestReport {
+        dependsOn test // tests are required to run before generating the report
+        reports {
+            xml.enabled true
+            html.enabled true
+        }
+    }
+
+    task sources(type: Jar, dependsOn: classes) {
+        archiveClassifier.set("sources")
+        from sourceSets.main.allSource
+    }
+
+
+    // Javadoc Fixes
+    // Some environments (such as the builder image) do not use UTF-8 as the default encoding!
+    // This sets UTF-8 as the encoding for the following tasks: delombok, compileJava, compileTestJava and javadoc.
+    delombok.encoding = "UTF-8"
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+    javadoc.options.encoding = "UTF-8"
+
+
+    // Run the linter before compiling the source code. 
+    tasks.compileJava.dependsOn spotlessApply
+    tasks.build.dependsOn sources
+
+    // Per-module publishing (eg. stickyapi-common)
+    if (project.name != "serverversion") { // Ignore :common:serverversion (already included in :common)
+        publishing {
+            publications {
+                gprSubprojects(MavenPublication) {
+                    artifactId "${rootProject.name}-${project.name}"
+                    println("[debug] ${project.name} found component: " + components.java)
+
+                    from(components.java)
+                    artifact sources // Publish the output of the sources task
+                }
+            }
+        }
+    }
+}
+
+// Root build: create uber jar from subproject outputs
+jar { from subprojects.sourceSets.main.output }
+
+// Root build: create uber sources from subproject sources
+task rootSources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    // Use source code from all subprojects for sources.
+    // TODO: Use certain subprojects only to allow for multiple jar outputs
+    from subprojects.sourceSets.main.allSource
+}
+
+// Generate a combined test report for passing/failing tests project-wide
+// src: https://stackoverflow.com/a/16921750
+task rootTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/allTests")
+    // Include the results from the `test` task in all subprojects
+    reportOn subprojects*.test
+}
+
+// Generate an additional jacoco report project-wide
+// src: https://github.com/gradle/gradle/issues/10708#issuecomment-566279825
+task rootJacocoMergedReport(type: JacocoReport) {
+  //dependsOn = subprojects.test
+  additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+  sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+  classDirectories.setFrom files(subprojects.sourceSets.main.output)
+  executionData.setFrom project.fileTree(dir: ".", include: "**/build/jacoco/test.exec")
+  reports {
+    xml.enabled true
+    html.enabled true
+  }
+}
+
+// Create a libs/modules folder with submodule jars
+task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
+    // Copy subproject jar and sources
+    from(subprojects.jar) 
+    from(subprojects.sources)
+    into rootProject.file("build/libs/modules")
+}
+
+// Root build: run copySubprojectJars after build
+tasks.build.finalizedBy copySubprojectJars
+
+// Root build: run rootSources during build
+tasks.build.dependsOn rootSources
+
+// Root build: generate project wide test, coverage and javadoc results
+tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, javadoc
+
+// Root build: also run aggregateJavadoc after javadoc to generate project-wide javadocs
+tasks.javadoc.finalizedBy aggregateJavadoc
+
+// Javadoc fixes (pt. 2, see above entries)
+aggregateJavadoc.options.encoding = "UTF-8"
+
+task browseJavadoc {
+    dependsOn javadoc
+    description "Browse javadoc"
+    group = "documentation"
+    doLast {
+        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
+    }
+}
+
+tasks.publish.dependsOn build
+
+publishing {
+    // Uber-jar publication
     publications {
-        gpr(MavenPublication) {
+        gprRoot(MavenPublication) {
             from(components.java)
-            artifact sources // Publish the output of the sources task
+            artifact rootSources // Publish the output of the (root) sources task
         }
     }
 }
