@@ -6,7 +6,7 @@ dependencies {
 
         // Fun fact: paper/spigot/etc doesn't include netty! (as it's from NMS)
         // So instead let's use the netty version that we were using before (inherited from bungeecord)
-        compileOnly "io.netty:netty-codec:4.1.58.Final"
+        compileOnly "io.netty:netty-codec:4.1.60.Final"
 
         testImplementation "com.google.code.gson:gson:2.8.6"
 }
