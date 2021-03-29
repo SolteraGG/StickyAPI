@@ -167,14 +167,16 @@ subprojects {
     tasks.build.dependsOn sources
 
     // Per-module publishing (eg. stickyapi-common)
-    publishing {
-        publications {
-            gprSubprojects(MavenPublication) {
-                artifactId "${rootProject.name}-${project.name}"
-                println("[debug] ${project.name} found component: " + components.java)
-                
-                from(components.java)
-                artifact sources // Publish the output of the sources task
+    if (project.name != "serverversion") { // Ignore :common:serverversion (already included in :common)
+        publishing {
+            publications {
+                gprSubprojects(MavenPublication) {
+                    artifactId "${rootProject.name}-${project.name}"
+                    println("[debug] ${project.name} found component: " + components.java)
+
+                    from(components.java)
+                    artifact sources // Publish the output of the sources task
+                }
             }
         }
     }
