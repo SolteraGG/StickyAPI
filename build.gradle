@@ -205,7 +205,9 @@ javaPlatform.allowDependencies()
 // Root build: Add api dependency to all projects we wanna include
 dependencies {
     project.subprojects.each {
-        if (it.name != "serverversion") api it
+        if (it.name != "serverversion") api (it) {
+            exclude group: "com.dumbdogdiner", module: "serverversion"
+        }
     }
 }
 
