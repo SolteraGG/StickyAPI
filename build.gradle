@@ -97,7 +97,6 @@ subprojects {
 
     repositories {
         // Note: Maven Central is defined in allprojects
-        //jcenter()
 
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
@@ -221,9 +220,8 @@ task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
 // Generate an additional jacoco report project-wide
 // src: https://github.com/gradle/gradle/issues/10708#issuecomment-566279825
 task rootJacocoMergedReport(type: JacocoReport) {
-  //dependsOn = subprojects.test
-
   // Gradle 7 implicit dependency fixes
+  // -------------------------
   dependsOn(allprojects.test)
   dependsOn(allprojects.javadoc)
 
@@ -233,11 +231,7 @@ task rootJacocoMergedReport(type: JacocoReport) {
   dependsOn(aggregateJavadoc)
   dependsOn(copySubprojectJars)
   dependsOn(rootTestReport)
-
-//  dependsOn(subprojects.sources)
-//  dependsOn(rootSources)
-//  dependsOn(subprojects.test)
-//  dependsOn(subprojects.compileTestJava)
+  // -------------------------
 
   additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
