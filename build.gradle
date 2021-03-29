@@ -182,17 +182,6 @@ subprojects {
 
                     from(components.java)
                     artifact sources // Publish the output of the sources task
-
-                    // 3.0.1 hotfix: Exclude serverversion from the outputted pom (since it's unresolvable outside of this repo)
-                    pom.withXml {
-                        Node pomNode = asNode()
-                        pomNode.dependencies.'*'.findAll() {
-                            it.groupId.text() == "com.dumbdogdiner"
-                            it.artifactId.text() == "serverversion"
-                        }.each() {
-                            it.parent().remove(it)
-                        }
-                    }
                 }
             }
         }
