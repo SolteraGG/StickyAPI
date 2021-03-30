@@ -247,6 +247,9 @@ tasks.build.dependsOn rootSources
 // Root build: generate project wide test, coverage and javadoc results
 tasks.build.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
 
+// Subproject Javadoc: Finalize :javadoc meta-task with :aggregateJavadoc
+task javadoc { finalizedBy aggregateJavadoc }
+
 // Javadoc fixes (pt. 2, see above entries)
 aggregateJavadoc.options.encoding = "UTF-8"
 
