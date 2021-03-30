@@ -2,6 +2,9 @@ dependencies {
         implementation project(":common")
         testImplementation project(":common").sourceSets.test.output
 
+        // 3.0.1: serverversion is not transistive from common
+        implementation project(":common:serverversion")
+
         compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
 
         // Fun fact: paper/spigot/etc doesn't include netty! (as it's from NMS)
