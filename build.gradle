@@ -252,7 +252,7 @@ aggregateJavadoc.options.encoding = "UTF-8"
 
 // Root Javadoc: Set title and output dir
 aggregateJavadoc.title = "StickyAPI $project.version API (Aggregated)"
-aggregateJavadoc.destinationDir = project.file("$buildDir/docs/javadoc")
+aggregateJavadoc.destinationDir = file("$buildDir/docs/javadoc")
 
 task browseJavadoc {
     dependsOn aggregateJavadoc
