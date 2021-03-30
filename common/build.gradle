@@ -13,7 +13,7 @@ dependencies {
 
     // LocaleProviderTest - add snakeyaml so YamlProvider (from the :config project) can work properly
     // testRuntimeOnly = only accessible during the test job
-    testRuntimeOnly "org.yaml:snakeyaml:1.27"
+    testRuntimeOnly "org.yaml:snakeyaml:1.28"
 
     // Font width data (see above)
     dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"

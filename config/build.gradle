@@ -1,6 +1,6 @@
 dependencies {
     // Dependencies available in both bukkit and bungee
-    compileOnly "org.yaml:snakeyaml:1.27"
+    compileOnly "org.yaml:snakeyaml:1.28"
 
     // Only included in paper? - could remove dep
     compileOnly "commons-lang:commons-lang:2.6"
