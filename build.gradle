@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group = "com.dumbdogdiner"
-    version = "3.0.1"
+    version = "3.0.2"
 
     // java plugin is applied in subprojects
     apply plugin: "jacoco"
@@ -67,6 +67,44 @@ allprojects {
         // Include private and protected in the javadocs
         options.memberLevel = JavadocMemberLevel.PRIVATE
     }
+
+    // -------------------------
+    // Check for unresolvable packages (works on root and subprojects)
+    // -------------------------
+    // Define unresolvable packages here
+    def unresolvablePackages = ["serverversion"]
+    // Define the default configuration to check (in this case the one from the "java" plugin used in our subprojects)
+    def configurationToCheck = "runtimeClasspath"
+    // Define the task itself
+    task checkForUnresolvablePackages {
+        // Set metadata
+        description = "Check that no unresolvable packages are in the given configuration"
+        group = "verification"
+        doLast {
+            println("Checking project '$project.name' for unresolvable packages...")
+            // Root project: "runtimeClasspath" not available, use "classpath" configuration instead
+            if (project.name == rootProject.name) configurationToCheck = "classpath"
+            println("Using configuration '$configurationToCheck'")
+            // Iterate through each dependency in the given configuration
+            configurations[configurationToCheck].allDependencies.each {
+                println("[debug] Checking '$it.group:$it.name:$it.version'")
+                // Check if it's in our list AND has the same group as the root project
+                // (To make sure it's actually from this codebase)
+                if (unresolvablePackages.contains(it.name) && it.group == rootProject.group) {
+                    // Print to console, and also call ant.fail to fail the entire build.
+                    def errMsg = "Found unresolvable dependency '$it.group:$it.name' in project '$project.name'!"
+                    println(errMsg)
+                    ant.fail(errMsg)
+                }
+            }
+            // Otherwise, the check passed!
+            println("Unresolvable packages check for project '$name' completed successfully!")
+        }
+    }
+    
+    // Finalize the build task with this task on every project.
+    build.finalizedBy checkForUnresolvablePackages
+    // -------------------------
 }
 
 subprojects {
