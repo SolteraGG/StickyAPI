@@ -250,6 +250,10 @@ tasks.build.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
 // Javadoc fixes (pt. 2, see above entries)
 aggregateJavadoc.options.encoding = "UTF-8"
 
+// Root Javadoc: Set title and output dir
+aggregateJavadoc.title = "StickyAPI $project.version API (Aggregated)"
+aggregateJavadoc.destinationDir = project.file("$buildDir/docs/javadoc")
+
 task browseJavadoc {
     dependsOn aggregateJavadoc
     description "Browse javadoc"
