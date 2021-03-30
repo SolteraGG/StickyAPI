@@ -167,6 +167,8 @@ subprojects {
     compileTestJava.options.encoding = "UTF-8"
     javadoc.options.encoding = "UTF-8"
 
+    // Javadoc: Add rootproject name in title for consistency
+    javadoc.title = "$rootProject.name-$project.name $project.version API"
 
     // Run the linter before compiling the source code. 
     tasks.compileJava.dependsOn spotlessApply
