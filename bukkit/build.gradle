@@ -1,10 +1,5 @@
-plugins {
-    // for "api" in dependencies { }
-    id "java-library"
-}
-
 dependencies {
-        implementation project(":common")
+        api project(":common") // api - transistively expose common dependency when implementing :bukkit
         testImplementation project(":common").sourceSets.test.output
 
         // 3.0.2: serverversion is not transistive from common
