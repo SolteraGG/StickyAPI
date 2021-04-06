@@ -70,9 +70,8 @@ subprojects {
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.diffplug.spotless"
 
-    // Use the edge version of lombok for java 16 compatibility until a release is made
-    // see: https://github.com/rzwitserloot/lombok/issues/2681
-    lombok { version = "edge-SNAPSHOT" }
+    // Use 1.18.20+ for Java 16 compatability
+    lombok { version = "1.18.20" }
 
     // Spotless Options
     spotless {
