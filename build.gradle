@@ -110,6 +110,28 @@ allprojects {
     // Finalize the build task with this task on every project.
     build.finalizedBy checkForUnresolvablePackages
     // -------------------------
+
+    // Set pom metadata for every publication
+    publishing.publications.withType(MavenPublication) {
+        pom {
+            // Set scm metadata (in the hope that dependabot will pick it up!)
+            // See: https://github.com/dependabot/dependabot-core/blob/8c63c95770ecc84ac9597df6d53754b5d41638f9/gradle/lib/dependabot/gradle/metadata_finder.rb#L51
+            scm {
+                connection = "scm:git:https://github.com/DumbDogDiner/StickyAPI.git"
+                developerConnection = "scm:git:https://github.com/DumbDogDiner/StickyAPI.git"
+                url = "https://github.com/DumbDogDiner/StickyAPI"
+            }
+            // Also set issue & ci management metadata
+            issueManagement {
+                system = "GitHub Issues"
+                url = "https://github.com/DumbDogDiner/StickyAPI/issues"
+            }
+            ciManagement {
+                system = "GitHub Actions"
+                url = "https://github.com/DumbDogDiner/StickyAPI/actions"
+            }
+        }
+    }
 }
 
 subprojects {
