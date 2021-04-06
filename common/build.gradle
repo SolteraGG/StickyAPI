@@ -7,12 +7,8 @@ plugins {
 }
 
 dependencies {
-    // Depend on serverversion proj
-    api project(":common:serverversion") // expose serverversion when implementing :common
-    testImplementation project(":common:serverversion").sourceSets.test.output
-
     // Depend on the config project
-    api project(":config") // expose config when  implementing :common
+    api project(":config") // api - transistively expose config dependency when implementing :common
     testImplementation project(":config").sourceSets.test.output
 
     // LocaleProviderTest - add snakeyaml so YamlProvider (from the :config project) can work properly

@@ -1,6 +1,13 @@
 dependencies {
-        implementation project(":common")
+        api project(":common") // api - transistively expose common dependency when implementing :bukkit
         testImplementation project(":common").sourceSets.test.output
+
+        // 3.0.2: serverversion is not transistive from common
+        // Since we depend on common, the class is still available at runtime
+        // -------------------------
+        // Why: "compileOnly" | This typically includes dependencies which are shaded when found at runtime.
+        // Source: https://docs.gradle.org/6.8.3/userguide/java_library_plugin.html
+        compileOnly project(":common:serverversion")
 
         compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
 

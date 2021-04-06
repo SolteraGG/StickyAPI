@@ -1,16 +1,19 @@
 plugins {
     id "io.freefair.lombok" version "5.3.0" apply false
     // spotless for license headers and linting
-    id "com.diffplug.spotless" version "5.11.0" apply false
+    id "com.diffplug.spotless" version "5.11.1" apply false
     // generation of project-wide javadocs
     id "io.freefair.aggregate-javadoc" version "5.3.0"
+
+    // pom packaging for root
+    id "java-platform"
 }
 
 allprojects {
     group = "com.dumbdogdiner"
-    version = "3.0.0"
+    version = "3.0.2"
 
-    apply plugin: "java"
+    // java plugin is applied in subprojects
     apply plugin: "jacoco"
 
     // Apply here instead of in plugins {} above to solve
@@ -64,11 +67,82 @@ allprojects {
         // Include private and protected in the javadocs
         options.memberLevel = JavadocMemberLevel.PRIVATE
     }
+
+    // -------------------------
+    // Check for unresolvable packages (works on root and subprojects)
+    // -------------------------
+    // Define unresolvable packages here
+    def unresolvablePackages = ["serverversion"]
+    // Define the default configuration to check (in this case ones from the "java" plugin used in our subprojects)
+    // 3.X.X: Add "api" check for compile-time transistive deps (eg bukkit -> common when depending on bukkit only)
+    // See: https://docs.gradle.org/6.8.3/userguide/java_library_plugin.html#sec:java_library_configurations_graph
+    def configurationsToCheck = ["runtimeClasspath", "api"]
+    // Define the task itself
+    task checkForUnresolvablePackages {
+        // Set metadata
+        description = "Check that no unresolvable packages are in the given configuration"
+        group = "verification"
+        doLast {
+            println("Checking project '$project.name' for unresolvable packages...")
+            // Root project: "runtimeClasspath" not available, use "classpath" configuration instead
+            if (project.name == rootProject.name) configurationsToCheck = ["classpath"]
+            // Iterate through each specified configuration
+            configurationsToCheck.each { config ->
+                println("\nUsing configuration '$config'")
+                // Iterate through each dependency in the given configuration
+                configurations[config].allDependencies.each {
+                    println("[debug] Checking '$it.group:$it.name:$it.version'")
+                    // Check if it's in our list AND has the same group as the root project
+                    // (To make sure it's actually from this codebase)
+                    if (unresolvablePackages.contains(it.name) && it.group == rootProject.group) {
+                        // Print to console, and also call ant.fail to fail the entire build.
+                        def errMsg = "Found unresolvable dependency '$it.group:$it.name' in project '$project.name'!"
+                        println(errMsg)
+                        ant.fail(errMsg)
+                    }
+                }
+            }
+            // Otherwise, the check passed!
+            println("Unresolvable packages check for project '$project.name' completed successfully!")
+        }
+    }
+    
+    // Finalize the build task with this task on every project.
+    build.finalizedBy checkForUnresolvablePackages
+    // -------------------------
+
+    // Set pom metadata for every publication
+    publishing.publications.withType(MavenPublication) {
+        pom {
+            // Set scm metadata (in the hope that dependabot will pick it up!)
+            // See: https://github.com/dependabot/dependabot-core/blob/8c63c95770ecc84ac9597df6d53754b5d41638f9/gradle/lib/dependabot/gradle/metadata_finder.rb#L51
+            scm {
+                connection = "scm:git:https://github.com/DumbDogDiner/StickyAPI.git"
+                developerConnection = "scm:git:https://github.com/DumbDogDiner/StickyAPI.git"
+                url = "https://github.com/DumbDogDiner/StickyAPI"
+            }
+            // Also set issue & ci management metadata
+            issueManagement {
+                system = "GitHub Issues"
+                url = "https://github.com/DumbDogDiner/StickyAPI/issues"
+            }
+            ciManagement {
+                system = "GitHub Actions"
+                url = "https://github.com/DumbDogDiner/StickyAPI/actions"
+            }
+        }
+    }
 }
 
 subprojects {
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.diffplug.spotless"
+    
+    // apply the java plugin here since root uses java-platform
+    apply plugin: "java"
+
+    // for "api" in dependencies { }
+    apply plugin: "java-library"
 
     // Use 1.18.20+ for Java 16 compatability
     lombok { version = "1.18.20" }
@@ -160,6 +234,8 @@ subprojects {
     compileTestJava.options.encoding = "UTF-8"
     javadoc.options.encoding = "UTF-8"
 
+    // Javadoc: Add rootproject name in title for consistency
+    javadoc.title = "$rootProject.name-$project.name $project.version API"
 
     // Run the linter before compiling the source code. 
     tasks.compileJava.dependsOn spotlessApply
@@ -181,11 +257,20 @@ subprojects {
     }
 }
 
-// Root build: create uber jar from subproject outputs
-jar { from subprojects.sourceSets.main.output }
+// Root build: include dependencies (see below)
+javaPlatform.allowDependencies()
+
+// Root build: Add api dependency to all projects we wanna include
+dependencies {
+    project.subprojects.each {
+        if (it.name != "serverversion") api (it) {
+            exclude group: "com.dumbdogdiner", module: "serverversion"
+        }
+    }
+}
 
 // Root build: create uber sources from subproject sources
-task rootSources(type: Jar, dependsOn: classes) {
+task rootSources(type: Jar, dependsOn: subprojects.classes) {
     // Gradle 7 implicit dependency fix: depend on special common tasks
     dependsOn(":common:copyMCFontExtractor")
     dependsOn(":common:commonSources")
@@ -249,16 +334,20 @@ tasks.build.finalizedBy copySubprojectJars
 tasks.build.dependsOn rootSources
 
 // Root build: generate project wide test, coverage and javadoc results
-tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, javadoc
+tasks.build.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
 
-// Root build: also run aggregateJavadoc after javadoc to generate project-wide javadocs
-tasks.javadoc.finalizedBy aggregateJavadoc
+// Subproject Javadoc: Finalize :javadoc meta-task with :aggregateJavadoc
+task javadoc { finalizedBy aggregateJavadoc }
 
 // Javadoc fixes (pt. 2, see above entries)
 aggregateJavadoc.options.encoding = "UTF-8"
 
+// Root Javadoc: Set title and output dir
+aggregateJavadoc.title = "StickyAPI $project.version API (Aggregated)"
+aggregateJavadoc.destinationDir = file("$buildDir/docs/javadoc")
+
 task browseJavadoc {
-    dependsOn javadoc
+    dependsOn aggregateJavadoc
     description "Browse javadoc"
     group = "documentation"
     doLast {
@@ -272,7 +361,7 @@ publishing {
     // Uber-jar publication
     publications {
         gprRoot(MavenPublication) {
-            from(components.java)
+            from(components.javaPlatform)
             artifact rootSources // Publish the output of the (root) sources task
         }
     }
