@@ -306,8 +306,8 @@ task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
 task rootJacocoMergedReport(type: JacocoReport) {
   // Gradle 7 implicit dependency fixes
   // -------------------------
-  dependsOn(allprojects.test)
-  dependsOn(allprojects.javadoc)
+  dependsOn(subprojects.test)
+  dependsOn(subprojects.javadoc)
 
   dependsOn(subprojects.delombok)
   dependsOn(subprojects.jacocoTestReport)
