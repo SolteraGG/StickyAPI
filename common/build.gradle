@@ -29,8 +29,8 @@ dependencies {
 
 // Use --add-opens to ensure functionality of FieldUtil [java.lang.reflect.Field] (required in Java 16+)
 // This will export java.lang.reflect to unnamed modules (eg. stickyapi) so that FieldUtil can still function.
-// alternate: ["--illegal-access=warn"] (same functionality as pre Java 16)
-// jep: https://openjdk.java.net/jeps/396
+// Alternative: ["--illegal-access=warn"] (same functionality as pre Java 16)
+// JEP: https://openjdk.java.net/jeps/396
 test.jvmArgs = ["--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"]
 
 /*

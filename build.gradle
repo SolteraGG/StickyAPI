@@ -169,8 +169,7 @@ subprojects {
     }
 
     repositories {
-        // Note: Maven Central is defined in allprojects
-
+        // Maven Central is defined in allprojects (for JaCoCo)
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
 
