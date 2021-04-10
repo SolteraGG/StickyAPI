@@ -27,6 +27,12 @@ dependencies {
     compileOnly "commons-lang:commons-lang:2.6"
 }
 
+// Use --add-opens to ensure functionality of FieldUtil [java.lang.reflect.Field] (required in Java 16+)
+// This will export java.lang.reflect to unnamed modules (eg. stickyapi) so that FieldUtil can still function.
+// Alternative: ["--illegal-access=warn"] (same functionality as pre Java 16)
+// JEP: https://openjdk.java.net/jeps/396
+test.jvmArgs = ["--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"]
+
 /*
     Build Info
     ----------
@@ -95,8 +101,8 @@ task copyMCFontExtractor(type: Copy) {
     rename "mc-font-extractor-main-mojangles_width_data.json", "mojangles_width_data.json"
 }
 
-// Run the font data copier before compiling the source code.
-tasks.compileJava.dependsOn copyMCFontExtractor
+// Run the font data copier
+tasks.processResources.dependsOn copyMCFontExtractor
 
 
 // Common build: create a jar from the :common & :common:serverversion projects

@@ -144,6 +144,9 @@ subprojects {
     // for "api" in dependencies { }
     apply plugin: "java-library"
 
+    // Use 1.18.20+ for Java 16 compatability
+    lombok { version = "1.18.20" }
+
     // Spotless Options
     spotless {
         encoding 'UTF-8' // all formats will be interpreted as UTF-8
@@ -166,9 +169,7 @@ subprojects {
     }
 
     repositories {
-        // Note: Maven Central is defined in allprojects
-        jcenter()
-
+        // Maven Central is defined in allprojects (for JaCoCo)
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
 
@@ -187,9 +188,6 @@ subprojects {
     }
 
     dependencies {
-        compileOnly "org.projectlombok:lombok:1.18.18"
-        annotationProcessor "org.projectlombok:lombok:1.18.18"
-
         implementation "org.jetbrains:annotations:20.1.0"
         implementation "io.github.classgraph:classgraph:4.8.104"
         implementation "com.github.seancfoley:ipaddress:5.3.3"
@@ -272,6 +270,10 @@ dependencies {
 
 // Root build: create uber sources from subproject sources
 task rootSources(type: Jar, dependsOn: subprojects.classes) {
+    // Gradle 7 implicit dependency fix: depend on special common tasks
+    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:commonSources")
+
     archiveClassifier.set("sources")
     // Use source code from all subprojects for sources.
     // TODO: Use certain subprojects only to allow for multiple jar outputs
@@ -286,10 +288,34 @@ task rootTestReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
+// Create a libs/modules folder with submodule jars
+task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
+    // Gradle 7 implicit dependency fix: depend on special common tasks
+    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:commonSources")
+
+    // Copy subproject jar and sources
+    from(subprojects.jar) 
+    from(subprojects.sources)
+    into rootProject.file("build/libs/modules")
+}
+
 // Generate an additional jacoco report project-wide
 // src: https://github.com/gradle/gradle/issues/10708#issuecomment-566279825
 task rootJacocoMergedReport(type: JacocoReport) {
-  //dependsOn = subprojects.test
+  // Gradle 7 implicit dependency fixes
+  // -------------------------
+  dependsOn(subprojects.test)
+  dependsOn(subprojects.javadoc)
+
+  dependsOn(subprojects.delombok)
+  dependsOn(subprojects.jacocoTestReport)
+
+  dependsOn(aggregateJavadoc)
+  dependsOn(copySubprojectJars)
+  dependsOn(rootTestReport)
+  // -------------------------
+
   additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   classDirectories.setFrom files(subprojects.sourceSets.main.output)
@@ -298,14 +324,6 @@ task rootJacocoMergedReport(type: JacocoReport) {
     xml.enabled true
     html.enabled true
   }
-}
-
-// Create a libs/modules folder with submodule jars
-task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
-    // Copy subproject jar and sources
-    from(subprojects.jar) 
-    from(subprojects.sources)
-    into rootProject.file("build/libs/modules")
 }
 
 // Root build: run copySubprojectJars after build
