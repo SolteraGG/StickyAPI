@@ -200,7 +200,7 @@ subprojects {
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
 
         // Tests - Mocking Suite (eg. mocking Bukkit for tests)
-        testImplementation "org.mockito:mockito-core:3.7.7"
+        testImplementation "org.mockito:mockito-core:3.9.0"
     }
 
     test {
