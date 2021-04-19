@@ -1,9 +1,26 @@
+buildscript {
+    repositories {
+        mavenCentral();
+        jcenter();
+        google();
+    }
+    dependencies {
+        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+        classpath("com.squareup:javapoet:1.13.0")
+        classpath("com.google.guava:guava:30.1-jre")
+        classpath("de.skuzzle:semantic-version:2.1.0")
+        classpath("org.projectlombok:lombok:1.18.20")
+    }
+}
+
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
 
     // for "api" in dependencies { }
     id "java-library"
+
+    id 'idea'
 }
 
 dependencies {
@@ -18,7 +35,9 @@ dependencies {
     // Font width data (see above)
     dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
-    implementation "com.google.code.gson:gson:2.8.6"
+    api "com.google.code.gson:gson:2.8.6"
+    compileOnly "com.google.code.gson:gson:2.8.6"
+    implementation("de.skuzzle:semantic-version:2.1.0")
 
     // Dependencies available in both bukkit and bungee
     compileOnly "net.md-5:bungeecord-chat:1.16-R0.5-SNAPSHOT"
@@ -49,17 +68,18 @@ dependencies {
 def dataBuildTimestamp = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
 // Import the filter
+import de.skuzzle.semantic.Version
 import org.apache.tools.ant.filters.ReplaceTokens
 
 // Define the map containing the tokens we want to replace
 def tokensMap = [
-        BUILDINFO_VERSION: project.rootProject.version,
+        BUILDINFO_VERSION   : project.rootProject.version,
         BUILDINFO_DATEFORMAT: dataBuildTimestamp,
-        BUILDINFO_TIMESTAMP: new java.text.SimpleDateFormat(dataBuildTimestamp).format(new Date()),
-        BUILDINFO_COMMIT: versioning.info.commit,
-        BUILDINFO_BRANCH: versioning.info.branch,
-        BUILDINFO_ISDIRTY: versioning.info.dirty.toString()
-    ]
+        BUILDINFO_TIMESTAMP : new java.text.SimpleDateFormat(dataBuildTimestamp).format(new Date()),
+        BUILDINFO_COMMIT    : versioning.info.commit,
+        BUILDINFO_BRANCH    : versioning.info.branch,
+        BUILDINFO_ISDIRTY   : versioning.info.dirty.toString()
+]
 
 // Create task to replace the tokens with their actual values
 // NOTE: At the moment this replaces tokens *globally* (format eg. @BUILDINFO_COMMIT@ in source code)
@@ -67,7 +87,7 @@ task processSourceTokens(type: Sync) {
     from sourceSets.main.java
     into "build/processed/src/main/java"
     filter(ReplaceTokens, tokens: tokensMap)
-    
+
     // Pretty print the build info
     println("\n----- (Common) StickyAPI Build Info -----\n")
     tokensMap.each { println "${String.format("%1\$-" + 10 + "s", it.key.replace("BUILDINFO_", "").toLowerCase())}\t${it.value}" }
@@ -85,7 +105,7 @@ compileJava.source = processSourceTokens.outputs
 
 // Font Width Info
 task copyMCFontExtractor(type: Copy) {
-    def path = project.configurations.dddResource.find {it.name.startsWith("mc-font-extractor") }
+    def path = project.configurations.dddResource.find { it.name.startsWith("mc-font-extractor") }
     println("common: Found font data at: " + path)
     from file(path)
     // into file("src/main/resources")
@@ -115,3 +135,61 @@ task commonSources(type: Jar, dependsOn: classes) {
 
 // Common build: override the usual sources output with our one containing ServerVersion
 tasks.sources.finalizedBy commonSources
+
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.FieldSpec
+import com.squareup.javapoet.JavaFile
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import lombok.Getter
+
+
+import javax.lang.model.element.Modifier
+import java.text.SimpleDateFormat
+
+task DoBuildInfo {
+    doFirst {
+        TypeSpec buildInfoClass = TypeSpec.classBuilder("BuildInfo")
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addField(FieldSpec.builder(Version.class, "version")
+                        .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                        .addAnnotation(Getter.class)
+                        .initializer("\$T.parseVersion(\$S)", Version.class, Version.parseVersion("3.0.2"))
+                        .build()
+                )
+
+                .addMethod(
+                        MethodSpec.methodBuilder("getTimestamp")
+                                .returns(String)
+                                .addCode(CodeBlock.builder()
+                                        .beginControlFlow("try")
+                                        .addStatement("return new \$T(\$S).parse(\$S).toString()", SimpleDateFormat.class, "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "2021-04-08T14:34:13.901-0600")
+                                        .nextControlFlow("catch (\$T e)", Exception.class)
+                                        .addStatement("e.printStackTrace()")
+                                        .addStatement("return null")
+                                        .endControlFlow()
+                                        .build()
+                                )
+
+                                .addModifiers(Modifier.PUBLIC).build()
+                )
+
+                .addField(FieldSpec.builder(String, "branch")
+                        .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                        .addAnnotation(Getter)
+                        .initializer("\"\$s\"", branch)
+                        .build()
+                )
+
+                .addField(FieldSpec.builder(TypeName.BOOLEAN, "dirty")
+                        .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                        .addAnnotation(Getter)
+                        .initializer("true")
+                        .build()
+                )
+                .build()
+        JavaFile jfile = JavaFile.builder(getProject().getRootProject().getGroup() as String, buildInfoClass).build();
+        jfile.writeTo(getProject().getProjectDir().toPath().resolve("src/main/java").toFile());
+    }
+}

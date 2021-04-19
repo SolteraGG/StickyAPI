@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -61,5 +62,14 @@ public class TextUtilTest {
                 assertFalse(TextUtil.isCharacterSupported(c));
             }
         }
+    }
+
+    @Test
+    void splitLines() {
+    }
+
+    @Test
+    void prettifyText() {
+        Arrays.asList(TextUtil.prettifyText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "al;ksjfuej;iajdf;luwpqo4q394utp98&(*&)(*")).forEach(System.out::println);
     }
 }
