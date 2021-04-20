@@ -153,6 +153,8 @@ subprojects {
         maven { url "https://papermc.io/repo/repository/maven-public/" }
         maven { url "https://repo.codemc.io/repository/maven-public/" }
 
+        maven{ url "https://repo.pl3x.net/"}
+
         // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
         def dddResources = ivy {
