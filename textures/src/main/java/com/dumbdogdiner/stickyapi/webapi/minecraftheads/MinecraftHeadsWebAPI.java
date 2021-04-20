@@ -26,8 +26,10 @@ import java.util.Objects;
  * For now, it doesn't use their API, because their API does not provide IDs
  */
 public class MinecraftHeadsWebAPI {
-    private static final @NotNull HttpUrl CUSTOM_HEAD_BASE = Objects.requireNonNull(HttpUrl.parse("https://minecraft-heads.com/custom-heads/"));
-    private static final @NotNull HttpUrl API_URL = Objects.requireNonNull(HttpUrl.parse("https://minecraft-heads.com/scripts/api.php"));
+    @SuppressWarnings("ConstantConditions")
+    private static final @NotNull HttpUrl CUSTOM_HEAD_BASE = HttpUrl.parse("https://minecraft-heads.com/custom-heads/");
+    @SuppressWarnings("ConstantConditions")
+    private static final @NotNull HttpUrl API_URL = HttpUrl.parse("https://minecraft-heads.com/scripts/api.php");
     /**
      * Gets the texture string for a given HeadID, using the web api
      * @param headId The HDB ID
@@ -54,7 +56,7 @@ public class MinecraftHeadsWebAPI {
 
     private static Document getDocument(int headId) throws HttpException {
         try {
-            Response response = HttpUtil.getResponse(CUSTOM_HEAD_BASE.newBuilder().addPathSegment(Integer.toString(headId)).build());
+            Response response = HttpUtil.getResponse(CUSTOM_HEAD_BASE.resolve(Integer.toString(headId)));
             return Jsoup.parse(response.body().string());
         } catch (IOException e){
             throw new HttpException("Error decoding response body", e);

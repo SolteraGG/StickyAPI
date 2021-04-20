@@ -158,7 +158,7 @@ public class MojangAPI {
         return StringUtil.hyphenateUUID(HttpUtil.getResponseAsJson(url).getAsJsonObject().get("id").getAsString());
     }
 
-    // Internal Utility funcitons
+    // Internal Utility functions
 
     private AshconResponse getCachedResponse(UUID uniqueId) throws HttpException{
         try {
