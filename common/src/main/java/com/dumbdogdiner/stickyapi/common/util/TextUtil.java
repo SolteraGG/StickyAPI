@@ -6,50 +6,85 @@ package com.dumbdogdiner.stickyapi.common.util;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
+
+import static net.md_5.bungee.api.ChatColor.BOLD;
+import static net.md_5.bungee.api.ChatColor.RESET;
 
 /**
  * Utilities for text, such as in chat, books, and signs
  *
  * @since 3.0 (rewrite)
  */
+@UtilityClass
 public class TextUtil {
-    private TextUtil() {
-    }
+    /**
+     * Offset for bold (in each direction) in half-pixels
+     */
+    public static final int BOLD_OFFSET = 1;
 
-    /** Offset for bold (in each direction) */
-    public static final float BOLD_OFFSET = 0.5f;
-    /** Offset for shadows (in each direction) */
-    public static final float SHADOW_OFFSET = 0.5f;
-
-    /** Number of pixels per line of a book */
+    /**
+     * Number of pixels per line of a book
+     */
     public static final int PIXELS_PER_BOOK_LINE = 113;
-    /** Number of half-pixels per book line */
+    /**
+     * Number of half-pixels per book line
+     */
     public static final int HALF_PIXELS_PER_BOOK_LINE = PIXELS_PER_BOOK_LINE * 2;
 
-    /** Number of lines in a page of a book */
+    /**
+     * Number of lines in a page of a book
+     */
     public static final int LINES_PER_PAGE = 14;
-    /** Number of pages in a book */
+    /**
+     * Number of pages in a book
+     */
     public static final int PAGES_PER_BOOK = 50;
 
-    /** Number of pixels per line of a sign */
+    /**
+     * Number of pixels per line of a sign
+     */
     // TODO verify via minecraft source code
     public static final int PIXELS_PER_SIGN_LINE = 96;
-    /** Number of lines per sign */
+    /**
+     * Number of half-pixels per line of a sign
+     */
+    public static final int HALF_PIXELS_PER_SIGN_LINE = PIXELS_PER_SIGN_LINE * 2;
+    /**
+     * Number of lines per sign
+     */
     public static final int LINES_PER_SIGN = 4;
 
+    /**
+     * Number of pixels per line of chat
+     */
+    public static final int PIXELS_PER_CHAT_LINE = 250;
+    /**
+     * Number of half-pixels per line of chat
+     */
+    public static final int HALF_PIXELS_PER_CHAT_LINE = PIXELS_PER_CHAT_LINE * 2;
+
     private static final HashMap<Character, Integer> widths = new HashMap<>();
+
+    private static final int SPACE_WIDTH;
 
     /**
      * Internal class to parse the width data json file
@@ -88,11 +123,13 @@ public class TextUtil {
             "<>fk\u00b7".chars().forEach(c -> widths.put((char) c, 10));
             "@~".chars().forEach(c -> widths.put((char) c, 14));
         }
+
+        SPACE_WIDTH = getCharacterWidth(' ');
     }
 
     /**
      * Check if the given character is supported in-game.
-     * 
+     *
      * @param c The character to check
      * @return A boolean representing if the character is supported or not
      */
@@ -113,41 +150,139 @@ public class TextUtil {
      * @return The width of the character in half-pixels
      * @throws IllegalArgumentException if the character is out of range
      */
-    public static int getCharacterWidth(char c) throws IllegalArgumentException{
-        Preconditions.checkArgument(widths.containsKey(c), "Unsupported character: " + c + " code: " +  String.format("%04x", (int) c));
+    public static int getCharacterWidth(char c) throws IllegalArgumentException {
+        Preconditions.checkArgument(widths.containsKey(c), "Unsupported character: " + c + " code: " + String.format("%04x", (int) c));
 
         return widths.get(c);
+    }
+
+    /**
+     * @param c The character to measure
+     * @param bold If the character is bold
+     * @return The width of the character in half-pixels
+     * @throws IllegalArgumentException if the character is out of range
+     */
+    public static int getCharacterWidth(char c, boolean bold) throws IllegalArgumentException {
+        Preconditions.checkArgument(widths.containsKey(c), "Unsupported character: " + c + " code: " + String.format("%04x", (int) c));
+
+        return widths.get(c) + (bold ? 2 * BOLD_OFFSET : 0);
     }
 
     /**
      * Measure the width of a string, assuming it is in the default Minecraft font.
      *
      * @param text The string to measure
-     * @param isBold If the string is bold
      * @return The width of the string, in half-pixels
      */
-    public static int getStringWidth(@NonNull String text, boolean isBold) {
-        text = ChatColor.stripColor(text);
+    public static int getStringWidth(@NonNull String text) {
         int width = 0;
-
-        for (char c : text.toCharArray()) {
-            width += TextUtil.getCharacterWidth(c);
+        BaseComponent[] components = TextComponent.fromLegacyText(text);
+        for (BaseComponent component : components) {
+            for (char c : component.toPlainText().toCharArray()) {
+                width += getCharacterWidth(c);
+            }
+            // TODO double check this calculation, based off of koda's code and something i read but cant find anymore
+            if (component.isBold()) {
+                width += (component.toPlainText().length() + 1) * 2;
+            }
         }
-
-        if (isBold)
-            width += 2 *  text.length();
 
         return width;
     }
 
-    /**
-     Measure the width of a string, assuming it is in the default Minecraft font.
-     *
-     * @param text The string to measure
-     * @return The width of the string, in half-pixels
-     * @see #getStringWidth(String, boolean)
-     */
-    public static int getStringWidth(@NonNull String text) {
-        return getStringWidth(text, false);
+    public static String[] splitLines(String... lines) {
+
+        List<String> processedLines = new ArrayList<>();
+        for (String line : lines) {
+            StringBuilder processedLine = new StringBuilder();
+            ChatFormatStack formatStack = new ChatFormatStack();
+            boolean chatCode = false;
+            int width = 0;
+            for (char c : line.toCharArray()) {
+                if (c == ChatColor.COLOR_CHAR) {
+                    chatCode = true;
+                    processedLine.append(c);
+                } else if (chatCode) {
+                    if(formatStack.push(ChatColor.getByChar(c)) == null) {
+                        // Remove format code if it's not valid
+                        processedLine.deleteCharAt(processedLine.length() - 1);
+                    } else {
+                        // Put in the code if it is valid
+                        processedLine.append(c);
+                    }
+                    chatCode = false;
+                } else {
+                    int charWidth = getCharacterWidth(c, formatStack.isBold());
+                    if (width + charWidth > HALF_PIXELS_PER_CHAT_LINE) {
+                        // Start a new line!
+                        processedLines.add(processedLine.toString());
+
+                        processedLine = new StringBuilder();
+                        width = 0;
+
+                        processedLine.append(formatStack.toString());
+                    }
+                    // Append to the current (possibly new) line
+                    processedLine.append(c);
+                    width += charWidth;
+                }
+            }
+            processedLines.add(processedLine.toString());
+        }
+
+        return processedLines.toArray(new String[0]);
+    }
+
+    public static String[] prettifyText(String... text) {
+        text = splitLines(text);
+        for (int i = 0; i < text.length; i++) {
+            int width = getStringWidth(text[i]);
+            int pad = Math.round((HALF_PIXELS_PER_CHAT_LINE - width) / 2f / SPACE_WIDTH) / 2;
+            text[i] = Strings.padStart("", pad, ' ') + text[i];
+        }
+        return text;
+    }
+
+
+    @SuppressWarnings("UnusedReturnValue")
+    private static final class ChatFormatStack {
+        private final ArrayDeque<ChatColor> stack;
+        public ChatFormatStack() {
+            stack = new ArrayDeque<>();
+            //push(RESET);
+        }
+
+        public ChatColor push(ChatColor c) {
+            if(c == null)
+                return c;
+            if (c == RESET)
+                stack.clear();
+
+            stack.addLast(c);
+
+            return c;
+        }
+
+        public ChatColor pop(ChatColor c) {
+            return stack.removeLast();
+        }
+
+        public void clear() {
+            stack.clear();
+        }
+
+        /**
+         * @return If the formats that are to be applied include Bold
+         */
+        public boolean isBold(){
+            return stack.contains(BOLD);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            stack.forEach(sb::append);
+            return sb.toString();
+        }
     }
 }
