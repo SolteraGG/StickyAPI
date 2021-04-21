@@ -141,7 +141,7 @@ public class MojangAPI {
 
     /**
      * Provides the UUID associated with a given username at a given time.
-     * FIXME: This is currently broken, with an <a href="https://bugs.mojang.com/browse/WEB-3367>open bug report at Mojang</a>
+     * FIXME: This is currently broken, with an <a href="https://bugs.mojang.com/browse/WEB-3367">open bug report at Mojang</a>
      *
      * @param username  The username to check
      * @param timestamp The timestamp of when you wish to check. FIXME: Currently, Mojang sets this to 0 due to a bug

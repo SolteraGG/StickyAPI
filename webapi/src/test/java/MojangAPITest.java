@@ -9,6 +9,7 @@ import com.dumbdogdiner.stickyapi.webapi.mojang.MojangAPI;
 import com.dumbdogdiner.stickyapi.webapi.mojang.MojangStatus;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

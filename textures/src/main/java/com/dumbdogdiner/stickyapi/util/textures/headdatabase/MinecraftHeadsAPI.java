@@ -52,12 +52,10 @@ public class MinecraftHeadsAPI {
     public static String getTextureString(int headId) throws InvalidTextureException {
         if(usePlugin)
             return getTextureStringPlugin(headId);
-        else {
-            try {
-                return MinecraftHeadsWebAPI.getTextureString(headId);
-            } catch (HttpException e) {
-                throw new InvalidTextureException(e);
-            }
+        try {
+            return MinecraftHeadsWebAPI.getTextureString(headId);
+        } catch (HttpException e) {
+            throw new InvalidTextureException(e);
         }
     }
 

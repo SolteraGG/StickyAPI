@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 
+/**
+ * Allows checking if we are on Mojang's blacklist
+ */
 @UtilityClass
 public class BlacklistChecks {
     @SuppressWarnings("ConstantConditions")

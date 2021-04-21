@@ -47,18 +47,18 @@ class SkullBuilderTest {
         SkullBuilder sb = new SkullBuilder();
 
         Assertions.assertEquals(sb, sb.category("MHF"));
-        Assertions.assertEquals("MHF", sb.getCategory());
+        Assertions.assertEquals("MHF", sb.category());
 //        Assertions.assertEquals(sb, sb.filter("MHFAA"));
 //        Assertions.assertEquals("MHF", sb.getFilter());
 
         Assertions.assertEquals(sb, sb.head("Alex"));
-        Assertions.assertEquals("ALEX", sb.getHead());
+        Assertions.assertEquals("ALEX", sb.head());
 
 //        Assertions.assertEquals(sb, sb.head("lmaono"));
 //        Assertions.assertEquals("MHF_ALEX", sb.getHead());
 
         Assertions.assertEquals(sb, sb.quantity(5));
-        Assertions.assertEquals(5, sb.getQuantity());
+        Assertions.assertEquals(5, sb.quantity());
 //        Assertions.assertEquals(sb, sb.quantity(99));
 //        Assertions.assertEquals(5, sb.getQuantity());
 //        Assertions.assertEquals(sb, sb.quantity(-1));

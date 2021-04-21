@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 plugins {
     id "io.freefair.lombok" version "5.3.0" apply false
     id "com.github.hierynomus.license" version "0.15.0" apply false
@@ -257,7 +259,7 @@ task browseJavadoc {
     description "Browse javadoc"
     group = "documentation"
     doLast {
-        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
+        java.awt.Desktop.desktop.browse getProjectDir().toPath().resolve("build/docs/javadoc/index.html").toUri()
     }
 }
 

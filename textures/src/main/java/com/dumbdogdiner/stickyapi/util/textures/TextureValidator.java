@@ -5,6 +5,8 @@
 package com.dumbdogdiner.stickyapi.util.textures;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
+import com.dumbdogdiner.stickyapi.util.http.UrlValidator;
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -13,7 +15,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.NullArgumentException;
-import org.apache.commons.validator.routines.UrlValidator;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -22,9 +24,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
-
+import java.util.regex.Pattern;
+import java.util.stream.Collector;
 
 
 @UtilityClass
@@ -32,14 +44,19 @@ public class TextureValidator {
     /**
      * Byte array containing the file signature of a PNG image
      */
-    private static final byte[] PNG_SIGNATURE = new byte[] {
+    private static final byte[] PNG_SIGNATURE = new byte[]{
             (byte) 0x89,
             'P', 'N', 'G',
             (byte) 0x0D, (byte) 0x0A, (byte) 0x1A, (byte) 0x0A
     };
 
+
+    private static final UrlValidator URL_VALIDATOR = UrlValidator.withDomains("*.minecraft.net", "*.mojang.com");
+    ;
+
     /**
      * Validates a URL to make sure it is a valid, loadable Minecraft texture
+     *
      * @param textureURL the URL to test
      * @return if the texture is valid
      */
@@ -55,20 +72,15 @@ public class TextureValidator {
 
     /**
      * Validates a URL to make sure it is a valid, loadable Minecraft texture
+     *
      * @param textureURL the URL to test
      * @throws InvalidTextureException if the texture is not valid
      */
-    public static void validateTextureUrl(@NotNull String textureURL) throws InvalidTextureException{
+    public static void validateTextureUrl(@NotNull String textureURL) throws InvalidTextureException {
         try {
-            // Make sure URL scheme is valid
-            if (!UrlValidator.getInstance().isValid(textureURL)) {
-                throw new MalformedURLException("The texture URL " + textureURL + " is not a valid URL");
-            }
-
-            // Needs to be from minecraft.net or mojang.com
-            @NotNull String host = HttpUrl.get(textureURL).host().toLowerCase();
-            if (!(host.endsWith("mojang.com") || host.endsWith("minecraft.net"))) {
-                throw new MalformedURLException("The texture URL " + textureURL + " specified a host other than minecraft.net or mojang.com");
+            // Make sure URL scheme is valid and that the domain is allowed
+            if (URL_VALIDATOR.isValid(textureURL)) {
+                throw new MalformedURLException("The texture URL " + textureURL + " specified a domain other than minecraft.net or mojang.com, or is an invalid URL (It does not match the regex of: " + URL_VALIDATOR.getUrlRegex().pattern() + ")");
             }
 
             // Needs to be resolvable
@@ -132,7 +144,7 @@ public class TextureValidator {
      * @param json JSON representing the texture
      * @throws InvalidTextureException if the texture is invalid
      */
-    public static void validateTextureJson(@NotNull JsonElement json) throws InvalidTextureException{
+    public static void validateTextureJson(@NotNull JsonElement json) throws InvalidTextureException {
 
 
         validateTextureUrl(TextureHelper.decodeTextureJsonToUrl(json));

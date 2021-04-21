@@ -27,11 +27,13 @@ import java.util.logging.Level;
 /**
  * This class provides an easy way to construct Player Heads from existing players, whether online or offline
  */
-public class PlayerHeadBuilder extends SkullBuilder {
+public class PlayerHeadBuilder {
     private @NotNull SkullMeta meta = (SkullMeta) (new ItemStack(Material.PLAYER_HEAD, 1)).getItemMeta();
     private final UUID playerId;
     private final @NotNull PlayerProfile ownerProfile;
     private boolean frozen;
+    // Internal builder
+    private SkullBuilder builder;
 
 
     /**
@@ -77,7 +79,7 @@ public class PlayerHeadBuilder extends SkullBuilder {
         // We check this almost immediately after, so it's OK if it's null temporarily
         //noinspection ConstantConditions
         ownerProfile = meta.getPlayerProfile();
-        name(meta.getDisplayName());
+        builder.name(meta.getDisplayName());
         Preconditions.checkNotNull(ownerProfile, "The player head must have a PlayerProfile attached");
         if (!Objects.requireNonNull(ownerProfile).hasTextures()) {
             if (!ownerProfile.complete()) {
@@ -95,7 +97,7 @@ public class PlayerHeadBuilder extends SkullBuilder {
             try {
                 String textureString = MojangAPI.getTextureString(playerId);
                 assert textureString != null;
-                super.texture(textureString);
+                builder.texture(textureString);
                 frozen = true;
             } catch (HttpException e){
                 Bukkit.getLogger().log(Level.WARNING, e.getMessage());
@@ -109,9 +111,8 @@ public class PlayerHeadBuilder extends SkullBuilder {
      *
      * @return A new player head {@link ItemStack}
      */
-    @Override
     public @NotNull ItemStack build() {
-        meta.setDisplayName(Objects.requireNonNullElseGet(name, () -> {
+        meta.setDisplayName(Objects.requireNonNullElseGet(builder.name(), () -> {
             try {
                 return ChatColor.YELLOW + MojangAPI.getUsername(playerId) + "'s Head";
             } catch (HttpException e) {
@@ -121,62 +122,16 @@ public class PlayerHeadBuilder extends SkullBuilder {
         }));
 
         if (frozen) {
-            ownerProfile.setProperty(new ProfileProperty("texture", texture));
+            ownerProfile.setProperty(new ProfileProperty("texture", builder.texture()));
         }
-        @NotNull ItemStack head = new ItemStack(Material.PLAYER_HEAD, quantity);
+        @NotNull ItemStack head = new ItemStack(Material.PLAYER_HEAD, builder.quantity());
         head.setItemMeta(meta);
 
         return head;
     }
 
-
-    // Disable methods of superclass:
-
-    /**
-     * This is unsupported.
-     *
-     * @throws UnsupportedOperationException if ran
-     */
-    @DoNotCall
-    @Override
-    @Deprecated
-    public @NotNull SkullBuilder texture(@NotNull String str) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This is unsupported.
-     *
-     * @throws UnsupportedOperationException if ran
-     */
-    @DoNotCall
-    @Override
-    @Deprecated
-    public @NotNull SkullBuilder head(@NotNull String str) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This is unsupported.
-     *
-     * @throws UnsupportedOperationException if ran
-     */
-    @DoNotCall
-    @Override
-    @Deprecated
-    public @NotNull SkullBuilder texture(java.net.@NotNull URL url) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This is unsupported.
-     *
-     * @throws UnsupportedOperationException if ran
-     */
-    @DoNotCall
-    @Deprecated
-    @Override
-    public @NotNull SkullBuilder category(@NotNull String str) {
-        throw new UnsupportedOperationException();
+    public PlayerHeadBuilder quantity(int qty) {
+        builder.quantity(qty);
+        return this;
     }
 }

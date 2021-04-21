@@ -8,6 +8,7 @@ import com.dumbdogdiner.stickyapi.common.util.StringUtil;
 import com.dumbdogdiner.stickyapi.util.textures.TextureHelper;
 import com.dumbdogdiner.stickyapi.util.textures.TextureValidator;
 import com.google.common.base.Preconditions;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,29 +34,28 @@ import java.util.UUID;
  */
 
 @SuppressWarnings("UnusedReturnValue")
+@Accessors(fluent = true, chain = true)
 public class SkullBuilder {
     @Getter
     @NotNull
     @VisibleForTesting
     private String category = "*";
     @Getter
-    @VisibleForTesting
-    protected int quantity = 1;
+    private int quantity = 1;
     @Getter
     private String head;
 
 
     @SuppressWarnings("DanglingJavadoc") // For lombok
-    @Accessors(fluent = true, chain = true)
     @Setter
     @Getter
     /**
      * @param name The displayed name of the head
      * @return The displayed name of the head
      */
-    protected String name;
+    private String name;
     @Getter
-    protected String texture;
+    private String texture;
 
     /**
      * Sets the category of the head type (Defaults to *, which is first match)
