@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class MinecraftHeadsAPITest {
-    private static final int TEST_REPS = 300;
+    private static final int TEST_REPS = 30;
     private static List<HeadThing> heads = new ArrayList<>();
 
     @BeforeAll
@@ -75,7 +75,7 @@ class MinecraftHeadsAPITest {
             assumeTrue(CharMatcher.ascii().matchesAllOf(head.getName()), "Web name is not ascii");
             assertEquals(head.getName(), name);
             assertTrue(MinecraftHeadsAPI.getTextureUrl(id).toExternalForm().endsWith(head.getTexture()));
-            assumeTrue(TextureValidator.isValidTextureUrl("http://textures.minecraft.net/texture/" + head.getTexture()), "Original texture is not valid");
+            assumeTrue(TextureValidator.isValidTextureUrl("https://textures.minecraft.net/texture/" + head.getTexture()), "Original texture is not valid");
             assertTrue(TextureValidator.isValidTextureString(textureString));
         } catch (InvalidTextureException e) {
             Throwable th = e.getCause();
