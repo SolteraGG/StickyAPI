@@ -7,7 +7,11 @@ plugins {
 
     // pom packaging for root
     id "java-platform"
+
+    id "idea"
 }
+
+apply from: 'gradle/downloadTask.gradle'
 
 allprojects {
     group = "com.dumbdogdiner"
@@ -173,6 +177,9 @@ subprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
 
+        maven { url "https://repo.pl3x.net/" }
+        maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"}
+
         // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
         def dddResources = ivy {
@@ -241,19 +248,18 @@ subprojects {
     tasks.build.dependsOn sources
 
     // Per-module publishing (eg. stickyapi-common)
-    if (project.name != "serverversion") { // Ignore :common:serverversion (already included in :common)
-        publishing {
-            publications {
-                gprSubprojects(MavenPublication) {
-                    artifactId "${rootProject.name}-${project.name}"
-                    println("[debug] ${project.name} found component: " + components.java)
+    publishing {
+        publications {
+            gprSubprojects(MavenPublication) {
+                artifactId "${rootProject.name}-${project.name}"
+                println("[debug] ${project.name} found component: " + components.java)
 
-                    from(components.java)
-                    artifact sources // Publish the output of the sources task
-                }
+                from(components.java)
+                artifact sources // Publish the output of the sources task
             }
         }
     }
+
 }
 
 // Root build: include dependencies (see below)

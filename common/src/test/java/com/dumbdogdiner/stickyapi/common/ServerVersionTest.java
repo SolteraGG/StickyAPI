@@ -7,8 +7,11 @@ package com.dumbdogdiner.stickyapi.common;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.mockito.Mockito.*;
 
@@ -79,6 +82,7 @@ public class ServerVersionTest {
         try (MockedStatic<ServerVersion> mocked = mockStatic(ServerVersion.class)) {
             // Set stub return values when methods are called
             mocked.when(ServerVersion::isBukkit).thenReturn(false);
+            mocked.when(ServerVersion::isBungee).thenReturn(true);
             mocked.when(ServerVersion::isWaterfall).thenReturn(true);
             mocked.when(ServerVersion::getServerType).thenCallRealMethod(); // Bypass mocking
 
@@ -96,6 +100,7 @@ public class ServerVersionTest {
             // Set stub return values when methods are called
             mocked.when(ServerVersion::isBukkit).thenReturn(false);
             mocked.when(ServerVersion::isWaterfall).thenReturn(false);
+            mocked.when(ServerVersion::isBungee).thenReturn(true);
             mocked.when(ServerVersion::getServerType).thenCallRealMethod(); // Bypass mocking
 
             assertTrue(ServerVersion.getServerType().equals(ServerType.BUNGEE));

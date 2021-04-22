@@ -7,9 +7,8 @@ dependencies {
         // -------------------------
         // Why: "compileOnly" | This typically includes dependencies which are shaded when found at runtime.
         // Source: https://docs.gradle.org/6.8.3/userguide/java_library_plugin.html
-        compileOnly project(":common:serverversion")
 
-        compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+        //compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
 
         // Fun fact: paper/spigot/etc doesn't include netty! (as it's from NMS)
         // So instead let's use the netty version that we were using before (inherited from bungeecord)
