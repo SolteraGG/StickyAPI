@@ -11,8 +11,6 @@ plugins {
     id "idea"
 }
 
-apply from: 'gradle/downloadTask.gradle'
-
 allprojects {
     group = "com.dumbdogdiner"
     version = "3.0.2"
@@ -176,6 +174,7 @@ subprojects {
         // Maven Central is defined in allprojects (for JaCoCo)
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
+        maven { url "https://repo.codemc.io/repository/maven-public/" }
 
         maven { url "https://repo.pl3x.net/" }
         maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"}
@@ -226,9 +225,14 @@ subprojects {
         }
     }
 
-    task sources(type: Jar, dependsOn: classes) {
+    task sourcesJar(type: Jar, dependsOn: classes) {
         archiveClassifier.set("sources")
         from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        from javadoc
+        archiveClassifier.set('javadoc')
     }
 
 
@@ -245,7 +249,10 @@ subprojects {
 
     // Run the linter before compiling the source code. 
     tasks.compileJava.dependsOn spotlessApply
-    tasks.build.dependsOn sources
+    tasks.build.dependsOn sourcesJar
+    tasks.javadoc.finalizedBy(javadocJar)
+
+
 
     // Per-module publishing (eg. stickyapi-common)
     publishing {
@@ -255,7 +262,8 @@ subprojects {
                 println("[debug] ${project.name} found component: " + components.java)
 
                 from(components.java)
-                artifact sources // Publish the output of the sources task
+                artifact sourcesJar // Publish the output of the sourcesJar task
+                artifact javadocJar // Publish the output of the javadocJar task
             }
         }
     }
@@ -302,7 +310,8 @@ task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
 
     // Copy subproject jar and sources
     from(subprojects.jar) 
-    from(subprojects.sources)
+    from(subprojects.sourcesJar)
+    from(subprojects.javadocJar)
     into rootProject.file("build/libs/modules")
 }
 

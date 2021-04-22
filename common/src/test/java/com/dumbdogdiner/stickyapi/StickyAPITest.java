@@ -16,10 +16,10 @@ public class StickyAPITest {
     @Test
     public void debugPrintAll() {
         System.out.printf("Version\t %s", StickyAPI.getVersion());
-        System.out.printf("\nTimestamp\t %s", StickyAPI.getTimestamp().toString());
+        System.out.printf("\nTimestamp\t %s", BuildInfo.getTimestamp().toString());
         System.out.printf("\nCommit\t %s", StickyAPI.getCommit());
         System.out.printf("\nBranch\t %s", StickyAPI.getBranch());
-        System.out.printf("\nDirty ws?\t %b", StickyAPI.getIsDirty());
+        System.out.printf("\nDirty ws?\t %b", StickyAPI.isDirty());
     }
 
     @Test
@@ -28,11 +28,6 @@ public class StickyAPITest {
         
         assertNotNull(version);
         assertFalse(version.length() == 0);
-    }
-
-    @Test
-    public void testGetTimestamp() {
-        assertNotNull(StickyAPI.getTimestamp());
     }
 
     @Test
@@ -54,11 +49,5 @@ public class StickyAPITest {
 
         assertNotNull(branch);
         assertTrue(branch.length() != 0);
-    }
-
-    @Test
-    // This test is kinda useless?
-    public void testGetIsDirty() {
-        assertTrue(StickyAPI.getIsDirty() instanceof Boolean);
     }
 }

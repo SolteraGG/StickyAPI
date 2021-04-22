@@ -6,32 +6,37 @@ package com.dumbdogdiner.stickyapi.common.util;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * Utilities for text, such as in chat, books, and signs
  *
  * @since 3.0 (rewrite)
  */
+@UtilityClass
 public class TextUtil {
-    private TextUtil() {
-    }
-
-    /** Offset for bold (in each direction) */
-    public static final float BOLD_OFFSET = 0.5f;
-    /** Offset for shadows (in each direction) */
-    public static final float SHADOW_OFFSET = 0.5f;
+    /** Offset for bold (in each direction) in half-pixels */
+    public static final int BOLD_OFFSET = 1;
 
     /** Number of pixels per line of a book */
     public static final int PIXELS_PER_BOOK_LINE = 113;
@@ -46,8 +51,15 @@ public class TextUtil {
     /** Number of pixels per line of a sign */
     // TODO verify via minecraft source code
     public static final int PIXELS_PER_SIGN_LINE = 96;
+    /** Number of half-pixels per line of a sign */
+    public static final int HALF_PIXELS_PER_SIGN_LINE = PIXELS_PER_SIGN_LINE * 2;
     /** Number of lines per sign */
     public static final int LINES_PER_SIGN = 4;
+
+    /** Number of pixels per line of chat */
+    public static final int PIXELS_PER_CHAT_LINE = 250;
+    /** Number of half-pixels per line of chat */
+    public static final int HALF_PIXELS_PER_CHAT_LINE = PIXELS_PER_CHAT_LINE * 2;
 
     private static final HashMap<Character, Integer> widths = new HashMap<>();
 
@@ -123,31 +135,67 @@ public class TextUtil {
      * Measure the width of a string, assuming it is in the default Minecraft font.
      *
      * @param text The string to measure
-     * @param isBold If the string is bold
      * @return The width of the string, in half-pixels
      */
-    public static int getStringWidth(@NonNull String text, boolean isBold) {
-        text = ChatColor.stripColor(text);
+    public static int getStringWidth(@NonNull String text) {
         int width = 0;
-
-        for (char c : text.toCharArray()) {
-            width += TextUtil.getCharacterWidth(c);
+        BaseComponent [] components = TextComponent.fromLegacyText(text);
+        for(BaseComponent component : components){
+            for (char c : component.toPlainText().toCharArray()) {
+                width += getCharacterWidth(c);
+            }
+            // TODO double check this calculation, based off of koda's code and something i read but cant find anymore
+            if(component.isBold()) {
+                width += (component.toPlainText().length() + 1) * 2;
+            }
         }
-
-        if (isBold)
-            width += 2 *  text.length();
 
         return width;
     }
 
-    /**
-     Measure the width of a string, assuming it is in the default Minecraft font.
-     *
-     * @param text The string to measure
-     * @return The width of the string, in half-pixels
-     * @see #getStringWidth(String, boolean)
-     */
-    public static int getStringWidth(@NonNull String text) {
-        return getStringWidth(text, false);
+    public static String[] splitLines(String ... lines){
+        List<String> processedLines = new ArrayList<>();
+        for(String line : lines) {
+            StringBuilder processedLine = new StringBuilder();
+            boolean chatCode = false;
+            ChatColor lineColor = ChatColor.RESET;
+            int width = 0;
+            for(char c : line.toCharArray()) {
+                if(c == ChatColor.COLOR_CHAR) {
+                    chatCode = true;
+                    processedLine.append(c);
+                } else if(chatCode) {
+                    lineColor = ChatColor.getByChar(c);
+                    chatCode = false;
+                    processedLine.append(c);
+                } else {
+                    int charWidth = getCharacterWidth(c);
+                    if(width + charWidth > HALF_PIXELS_PER_CHAT_LINE) {
+                        // Start a new line!
+                        processedLines.add(processedLine.toString());
+                        processedLine = new StringBuilder();
+                        width = 0;
+
+                        // Don't forget to continue formatting! FIXME this is bugged for now I need to test how stupid components work aaa
+                        processedLine.append(lineColor);
+                    }
+                    // Append to the current (possibly new) line
+                    processedLine.append(c);
+                    width += charWidth;
+                }
+            }
+        }
+
+        return (String[]) processedLines.toArray();
+    }
+
+    public static String [] prettifyText(String ... text) {
+        text = splitLines(text);
+        for(int i = 0; i < text.length; i++){
+            int width = getStringWidth(text[i]);
+            int pad = (HALF_PIXELS_PER_CHAT_LINE - width) / 2;
+            text[i] = Strings.padStart(text[i], pad, ' ');
+        }
+        return text;
     }
 }

@@ -1,0 +1,161 @@
+buildscript {
+    repositories {
+        mavenCentral();
+    }
+    dependencies {
+        //classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+        classpath("com.squareup:javapoet:1.13.0")
+        classpath("com.google.guava:guava:30.1-jre")
+        classpath("de.skuzzle:semantic-version:2.1.0")
+        classpath("org.projectlombok:lombok:1.18.20")
+        classpath("org.jetbrains:annotations:20.1.0")
+    }
+}
+
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.FieldSpec
+import com.squareup.javapoet.JavaFile
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import de.skuzzle.semantic.Version
+import lombok.Getter
+import lombok.experimental.UtilityClass
+import org.jetbrains.annotations.NotNull;
+import java.time.Instant;
+
+import javax.lang.model.element.Modifier
+import java.text.SimpleDateFormat
+
+class BuildInfo extends DefaultTask {
+    @TaskAction
+    void doTask() {
+        FieldSpec builtAt = FieldSpec.builder(Instant.class, "builtAt")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                .addAnnotation(Getter.class)
+                .addAnnotation(NotNull.class)
+                .initializer("\$T.ofEpochSecond(\$L)", Instant.class, Instant.now().getEpochSecond())
+                .addJavadoc("@return When the code was built")
+                .build()
+        FieldSpec dateFormat = FieldSpec.builder(SimpleDateFormat.class, "dateFormat")
+                .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                .addAnnotation(NotNull.class)
+                .addJavadoc("An {@link \$T} in <a href=\"https://www.ionos.com/digitalguide/websites/web-development/iso-8601/\">ISO 8601</a> format", SimpleDateFormat.class)
+                .initializer("new \$T(\$S)", SimpleDateFormat.class, "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .build()
+        FieldSpec version = FieldSpec.builder(Version.class, "version")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                .addAnnotation(Getter.class)
+                .addAnnotation(NotNull.class)
+                .addJavadoc("@return What version of the project this is")
+                .initializer("\$T.parseVersion(\$S)", Version.class, project.rootProject.version)
+                .build()
+        MethodSpec getTimeStamp = MethodSpec.methodBuilder("getTimestamp")
+                .addJavadoc(CodeBlock.builder()
+                        .addStatement("Gets the timestamp (as a String) of when the project was built")
+                        .addStatement("@return The timestamp string of when the project was built")
+                        .build()
+                )
+                .returns(String)
+                .addCode(CodeBlock.builder()
+                        .addStatement("return \$N.format(\$T.from(\$N))", dateFormat, Date.class, builtAt)
+                        .build()
+                )
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .build()
+        FieldSpec branch = FieldSpec.builder(String, "branch")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                .addAnnotation(Getter)
+                .addAnnotation(NotNull.class)
+                .initializer("\$S", project.versioning.info.branch)
+                .addJavadoc("@return Which branch the build is from")
+                .build()
+        FieldSpec dirty = FieldSpec.builder(TypeName.BOOLEAN, "dirty")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                .addAnnotation(Getter)
+                .initializer("\$L", project.versioning.info.dirty)
+                .addJavadoc("@return If the branch built from is considered dirty")
+                .build()
+        FieldSpec commit = FieldSpec.builder(String.class, "commit")
+                .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                .addAnnotation(Getter.class)
+                .addAnnotation(NotNull.class)
+                .addJavadoc("@return The hash of the commit the build is from")
+                .initializer("\$S", project.versioning.info.commit)
+                .build()
+        MethodSpec getMajor = MethodSpec.methodBuilder("getMajor")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("@return the major version of the code")
+                .returns(int.class)
+                .addCode(CodeBlock.builder()
+                        .addStatement("return \$N.getMajor()", version)
+                        .build()
+                )
+                .build()
+        MethodSpec getMinor = MethodSpec.methodBuilder("getMinor")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("@return the minor version of the code")
+                .returns(int.class)
+                .addCode(CodeBlock.builder()
+                        .addStatement("return \$N.getMinor()", version)
+                        .build()
+                )
+                .build()
+        MethodSpec getPatch = MethodSpec.methodBuilder("getPatch")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("@return the patch version of the code")
+                .returns(int.class)
+                .addCode(CodeBlock.builder()
+                        .addStatement("return \$N.getPatch()", version)
+                        .build()
+                )
+                .build()
+
+        TypeSpec buildInfoClass = TypeSpec.classBuilder("BuildInfo")
+                .addJavadoc(CodeBlock.builder()
+                        .addStatement("This class is generated at build-time and contains info about the current build")
+                        .addStatement("@since @3.1.0")
+                        .build()
+                )
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addAnnotation(UtilityClass.class)
+                .addField(version)
+                .addField(dirty)
+                .addField(builtAt)
+                .addField(branch)
+                .addField(dateFormat)
+                .addField(commit)
+                .addMethod(getTimeStamp)
+                .addMethod(getMajor)
+                .addMethod(getMinor)
+                .addMethod(getPatch)
+                .build()
+        JavaFile jfile = JavaFile.builder((getProject().getRootProject().getGroup() as String) + "." + getProject().getRootProject().getName(), buildInfoClass).build();
+        jfile.writeTo(getProject().getProjectDir().toPath().resolve("src/gen/java").toFile());
+    }
+}
+
+tasks.register('buildInfo', BuildInfo)
+
+buildInfo {
+    doFirst {
+        // Set the timestamp format
+        def dataBuildTimestamp = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+
+        // Define the map containing the tokens we want to replace
+        def tokensMap = [
+                BUILDINFO_VERSION   : project.rootProject.version,
+                BUILDINFO_DATEFORMAT: dataBuildTimestamp,
+                BUILDINFO_TIMESTAMP : new SimpleDateFormat(dataBuildTimestamp).format(new Date()),
+                BUILDINFO_COMMIT    : versioning.info.commit,
+                BUILDINFO_BRANCH    : versioning.info.branch,
+                BUILDINFO_ISDIRTY   : versioning.info.dirty.toString(),
+        ]
+
+        // Pretty print the build info
+        println("\n----- (Common) StickyAPI Build Info -----\n")
+        tokensMap.each { println "${String.format("%1\$-" + 10 + "s", it.key.replace("BUILDINFO_", "").toLowerCase())}\t${it.value}" }
+    }
+    group("build")
+    dependsOn(versionDisplay)
+}
