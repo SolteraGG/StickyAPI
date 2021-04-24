@@ -112,7 +112,7 @@ public final class NumberUtil {
 	 * @return <code>true</code> if the numbers are within 1 part in a million of each other.
 	 */
 	public static boolean almostEquals(double a, double b) {
-		return Math.abs(a-b)< 10e-6;
+		return Math.abs(a - b) < 10e-6;
 	}
 
 	/**
