@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class OrdinalTest {
-	@Test()
+	@Test
 	void testFirst() {
 		Assertions.assertEquals("st", Ordinal.getOrdinal(1));
 		// mod 10
@@ -17,7 +17,7 @@ class OrdinalTest {
 		Assertions.assertEquals("st", Ordinal.getOrdinal(101));
 	}
 
-	@Test()
+	@Test
 	void testSecond() {
 		Assertions.assertEquals("nd", Ordinal.getOrdinal(2));
 		// mod 10
@@ -26,7 +26,7 @@ class OrdinalTest {
 		Assertions.assertEquals("nd", Ordinal.getOrdinal(102));
 	}
 
-	@Test()
+	@Test
 	void testThird() {
 		Assertions.assertEquals("rd", Ordinal.getOrdinal(3));
 		// mod 10
@@ -35,7 +35,7 @@ class OrdinalTest {
 		Assertions.assertEquals("rd", Ordinal.getOrdinal(103));
 	}
 
-	@Test()
+	@Test
 	void testTeenException() {
 		Assertions.assertEquals("th", Ordinal.getOrdinal(11));
 		Assertions.assertEquals("th", Ordinal.getOrdinal(12));
@@ -44,7 +44,7 @@ class OrdinalTest {
 		Assertions.assertEquals("th", Ordinal.getOrdinal(111));
 	}
 
-	@Test()
+	@Test
 	void testGeneral() {
 		Assertions.assertEquals("th", Ordinal.getOrdinal(4));
 		// mod 10

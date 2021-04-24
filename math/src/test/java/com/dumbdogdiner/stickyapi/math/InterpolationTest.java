@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class InterpolationTest {
-	@Test()
+	@Test
 	void testUnclampedLerp() {
 		// test lerp 0 => 1, t = 0.5
 		Assertions.assertEquals(0.5, Interpolation.lerpUnclamped(0, 1, 0.5));
@@ -18,7 +18,7 @@ class InterpolationTest {
 		Assertions.assertEquals(2.0, Interpolation.lerpUnclamped(0, 1, 2));
 	}
 
-	@Test()
+	@Test
 	void testClamp() {
 		// test clamp 0 => 1, t = 0.5
 		Assertions.assertEquals(0.5, Interpolation.clamp(0, 1, 0.5));
@@ -28,7 +28,7 @@ class InterpolationTest {
 		Assertions.assertEquals(1.0, Interpolation.clamp(0, 1, 2));
 	}
 
-	@Test()
+	@Test
 	void testLerp() {
 		// test clamp 0 => 1, t = 0.5
 		Assertions.assertEquals(0.5, Interpolation.lerp(0, 1, 0.5));

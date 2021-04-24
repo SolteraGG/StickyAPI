@@ -8,6 +8,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * Utility class for interpolating between values.
+ * TODO: Inaccuracy issues for longs.
  */
 public final class Interpolation {
 	private Interpolation() {}

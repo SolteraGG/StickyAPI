@@ -76,8 +76,8 @@ public final class Averages {
 		if (dataset.size() % 2 == 1) {
 			return dataset.get(center).doubleValue();
 		}
-		// median is between two values
-		return (dataset.get(center).doubleValue() + dataset.get(center + 1).doubleValue()) / 2;
+		// median is between two values - TODO: comment about the minus sign below vvvv
+		return (dataset.get(center).doubleValue() + dataset.get(center - 1).doubleValue()) / 2;
 	}
 
 	/**
