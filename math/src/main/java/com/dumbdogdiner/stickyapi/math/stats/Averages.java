@@ -24,9 +24,11 @@ public final class Averages {
 	 */
 	public static double getMean(@NotNull List<@NotNull Number> dataset) {
 		Preconditions.checkNotNull(dataset);
+		Preconditions.checkArgument(dataset.isEmpty(), "Cannot compute mean of an empty dataset");
 		double acc = 0;
 		// iterate over dataset and add values to accumulator
 		for (Number val : dataset) {
+			Preconditions.checkNotNull(val, "Cannot compute mean of a dataset containing a null value");
 			acc += val.doubleValue();
 		}
 		// return acc / length
@@ -67,6 +69,8 @@ public final class Averages {
 	 */
 	public static double getMedian(@NotNull List<@NotNull Number> dataset) {
 		Preconditions.checkNotNull(dataset);
+		Preconditions.checkArgument(dataset.isEmpty(), "Cannot compute median of an empty dataset");
+
 		// sort the dataset
 		dataset = dataset.stream().sorted().collect(Collectors.toList());
 		// compute the center index of the dataset
@@ -74,10 +78,17 @@ public final class Averages {
 		int center = dataset.size() / 2;
 		// median exists within the dataset
 		if (dataset.size() % 2 == 1) {
-			return dataset.get(center).doubleValue();
+			Number value = dataset.get(center);
+			// ensure value is not null
+			Preconditions.checkNotNull(value, "Cannot compute median of a dataset containing a null value");
+			return value.doubleValue();
 		}
 		// median is between two values - TODO: comment about the minus sign below vvvv
-		return (dataset.get(center).doubleValue() + dataset.get(center - 1).doubleValue()) / 2;
+		Number upper = dataset.get(center);
+		Number lower = dataset.get(center - 1);
+		Preconditions.checkNotNull(upper,"Cannot compute median of a dataset containing a null value");
+		Preconditions.checkNotNull(lower,"Cannot compute median of a dataset containing a null value");
+		return (upper.doubleValue() + lower.doubleValue()) / 2;
 	}
 
 	/**
@@ -123,7 +134,7 @@ public final class Averages {
 			// iterate over the dataset again and compare
 			for (Number number : dataset) {
 				// only need to check for null here, since this will catch the outer loop anyway.
-				Preconditions.checkNotNull(number);
+				Preconditions.checkNotNull(number, "Cannot compute mode of a dataset containing a null value");
 				if (number.equals(target)) count++;
 			}
 			// if count of this value is greater than the max, set it as new max

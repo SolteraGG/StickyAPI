@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class AveragesTest {
-	@Test()
+	@Test
 	void testMean() {
 		// primitive lists
 		int[] primitiveIntDataset = {1, 2, 3};
@@ -26,7 +26,7 @@ class AveragesTest {
 		Assertions.assertEquals(2, Averages.getMean(dataset));
 	}
 
-	@Test()
+	@Test
 	void testMedian() {
 		// primitive lists
 		int[] primitiveIntDataset = {1, 2, 3};
