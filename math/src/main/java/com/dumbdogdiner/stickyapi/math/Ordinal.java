@@ -21,7 +21,7 @@ public final class Ordinal {
 		Preconditions.checkArgument(number > 0);
 		// store modulo 10 and 100 of target - useful for calculating things
 		int mod10 = number % 10;
-		int mod100= number % 100;
+		int mod100 = number % 100;
 		// st is used with numbers ending in 1 (e.g. 1st, pronounced first)
 		if (mod10 == 1 && mod100 != 11) {
 			return "st";
