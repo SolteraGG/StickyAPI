@@ -24,7 +24,7 @@ public final class Averages {
 	 */
 	public static double getMean(@NotNull List<@NotNull Number> dataset) {
 		Preconditions.checkNotNull(dataset);
-		Preconditions.checkArgument(dataset.isEmpty(), "Cannot compute mean of an empty dataset");
+		Preconditions.checkArgument(!dataset.isEmpty(), "Cannot compute mean of an empty dataset");
 		double acc = 0;
 		// iterate over dataset and add values to accumulator
 		for (Number val : dataset) {
@@ -69,7 +69,7 @@ public final class Averages {
 	 */
 	public static double getMedian(@NotNull List<@NotNull Number> dataset) {
 		Preconditions.checkNotNull(dataset);
-		Preconditions.checkArgument(dataset.isEmpty(), "Cannot compute median of an empty dataset");
+		Preconditions.checkArgument(!dataset.isEmpty(), "Cannot compute median of an empty dataset");
 
 		// sort the dataset
 		dataset = dataset.stream().sorted().collect(Collectors.toList());
@@ -126,6 +126,7 @@ public final class Averages {
 	 */
 	public static double getMode(@NotNull List<@NotNull Number> dataset) {
 		Preconditions.checkNotNull(dataset);
+		Preconditions.checkArgument(!dataset.isEmpty(), "Cannot compute mode of an empty dataset");
 		double mode = -1;
 		int maxCount = 0;
 		// iterate over the dataset
