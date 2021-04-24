@@ -93,6 +93,29 @@ public final class NumberUtil {
 	}
 
 	/**
+	 * Utility method for checking if two doubles are very very almost equal. Useful for getting rid
+	 * of floating point inaccuracies.
+	 * @param a The first double
+	 * @param b The second double
+	 * @param eps The maximum difference between them
+	 * @return <code>true</code> if the numbers are within <code>epsilon</code> of each other.
+	 */
+	public static boolean almostEquals(double a, double b, double eps) {
+		return Math.abs(a-b)<eps;
+	}
+
+	/**
+	 * Utility method for checking if two doubles are very very almost equal. Useful for getting rid
+	 * of floating point inaccuracies.
+	 * @param a The first double
+	 * @param b The second double
+	 * @return <code>true</code> if the numbers are within 1 part in a million of each other.
+	 */
+	public static boolean almostEquals(double a, double b) {
+		return Math.abs(a-b)< 10e-6;
+	}
+
+	/**
 	 * Get a number as the percentage of another.
 	 *
 	 * @param x The number who's percentage of the total this method will return

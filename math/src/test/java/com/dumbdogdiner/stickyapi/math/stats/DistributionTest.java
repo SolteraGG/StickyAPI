@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.math.stats;
 
+import com.dumbdogdiner.stickyapi.math.NumberUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +32,6 @@ class DistributionTest {
 
 	@Test
 	void testPCC() {
-		Assertions.assertEquals(-1, Distribution.pcc(DATASET_X, DATASET_Y));
+		Assertions.assertTrue(NumberUtil.almostEquals(-1, Distribution.pcc(DATASET_X, DATASET_Y)));
 	}
 }
