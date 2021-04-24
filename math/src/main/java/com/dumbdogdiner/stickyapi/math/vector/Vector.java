@@ -81,7 +81,7 @@ abstract class Vector<T> implements Cloneable {
 	 * @return The vector from this vector to the target vector.
 	 */
 	@NotNull Vector<T> to(@NotNull Vector<T> vector) {
-		return vector.subtract(vector);
+		return vector.subtract(this);
 	};
 
 	/**

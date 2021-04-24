@@ -82,13 +82,13 @@ public class Vector3 extends Vector<Vector3> {
 	@Override
 	@NotNull
 	Vector3 add(@NotNull Vector<Vector3> vector) {
-		return new Vector3(this.x + vector.getDimension(0), this.y + vector.getDimension(1), this.z + vector.getDimension(3));
+		return new Vector3(this.x + vector.getDimension(0), this.y + vector.getDimension(1), this.z + vector.getDimension(2));
 	}
 
 	@Override
 	@NotNull
 	Vector3 subtract(@NotNull Vector<Vector3> vector) {
-		return new Vector3(this.x - vector.getDimension(0), this.y - vector.getDimension(1), this.z - vector.getDimension(3));
+		return new Vector3(this.x - vector.getDimension(0), this.y - vector.getDimension(1), this.z - vector.getDimension(2));
 	}
 
 	@Override
