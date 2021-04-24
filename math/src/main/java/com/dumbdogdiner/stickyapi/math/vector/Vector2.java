@@ -16,13 +16,13 @@ public class Vector2 extends Vector<Vector2> {
 	 * The x value of this vector.
 	 */
 	@Getter
-	private final double x;
+	private double x;
 
 	/**
 	 * The y value of this vector.
 	 */
 	@Getter
-	private final double y;
+	private double y;
 
 	/**
 	 * Construct a new 2D vector.
@@ -45,6 +45,16 @@ public class Vector2 extends Vector<Vector2> {
 		Preconditions.checkNotNull(y);
 		this.x = x.doubleValue();
 		this.y = y.doubleValue();
+	}
+
+	/**
+	 * Construct a new 2D vector from an existing vector.
+	 * @param target The existing vector
+	 */
+	public Vector2(@NotNull Vector2 target) {
+		Preconditions.checkNotNull(target);
+		this.x = target.x;
+		this.y = target.y;
 	}
 
 	@Override

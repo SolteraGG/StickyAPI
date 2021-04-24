@@ -58,6 +58,17 @@ public class Vector3 extends Vector<Vector3> {
 		this.z = z.doubleValue();
 	}
 
+	/**
+	 * Construct a new 3D vector from an existing vector.
+	 * @param target The existing vector
+	 */
+	public Vector3(@NotNull Vector3 target) {
+		Preconditions.checkNotNull(target);
+		this.x = target.x;
+		this.y = target.y;
+		this.z = target.z;
+	}
+
 	@Override
 	protected int getDimensions() {
 		return 3;

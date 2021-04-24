@@ -6,12 +6,13 @@ package com.dumbdogdiner.stickyapi.math.vector;
 
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base abstract class for an immutable vector.
  * @param <T>
  */
-abstract class Vector<T> {
+abstract class Vector<T> implements Cloneable {
 	/**
 	 * @return The number of dimensions this vector has.
 	 */
@@ -31,6 +32,33 @@ abstract class Vector<T> {
 	protected double getDimension(int index) {
 		Preconditions.checkArgument(index < this.getDimensions(), "Index out of range for vector dimension.");
 		return this.getValues()[index];
+	}
+
+	@Override
+	public boolean equals(Object vector) {
+		// check if vector is null or is not a vector
+		if (!(vector instanceof Vector)) {
+			return false;
+		}
+		// iterate over each dimension and append square to accumulator
+		for (int i = 0; i < this.getDimensions(); i++) {
+			if (this.getDimension(i) != ((Vector<?>)vector).getDimension(i)) {
+				return false;
+			}
+		}
+		// all dimensions equal - must be same vector.
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		// use two prime numbers because they're hot and sexy and help with uniqueness
+		int hash = 7;
+		// iterate over each dimension and append hash to accumulator
+		for (int i = 0; i < this.getDimensions(); i++) {
+			hash = 31 * hash + Double.hashCode(this.getDimension(i));
+		}
+		return hash;
 	}
 
 	/**
