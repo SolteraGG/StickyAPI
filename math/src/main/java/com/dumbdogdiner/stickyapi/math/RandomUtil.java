@@ -142,8 +142,6 @@ public class RandomUtil {
 		return String.format("%.1f %ciB", value / 1024.0, ci.current());
 	}
 
-
-
 	/**
 	 * @see #randomElement(List)
 	 * Primitive values cannot be used with type generics, so these methods exist for ease of use.

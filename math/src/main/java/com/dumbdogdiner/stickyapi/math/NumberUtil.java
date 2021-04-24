@@ -29,6 +29,20 @@ public final class NumberUtil {
 	}
 
 	/**
+	 * Round a double value
+	 *
+	 * @param value  the value that should be rounded
+	 * @param places amount of decimal places
+	 * @return {@link Double}
+	 */
+	public static double round(double value, int places) {
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
+	/**
 	 * Test if the target string can be considered an integer. Checks if every character is a unicode digit.
 	 *
 	 * <pre>
@@ -97,11 +111,11 @@ public final class NumberUtil {
 	 * of floating point inaccuracies.
 	 * @param a The first double
 	 * @param b The second double
-	 * @param eps The maximum difference between them
+	 * @param epsilon The maximum difference between them
 	 * @return <code>true</code> if the numbers are within <code>epsilon</code> of each other.
 	 */
-	public static boolean almostEquals(double a, double b, double eps) {
-		return Math.abs(a-b)<eps;
+	public static boolean almostEquals(double a, double b, double epsilon) {
+		return Math.abs(a - b) < epsilon;
 	}
 
 	/**
@@ -112,7 +126,7 @@ public final class NumberUtil {
 	 * @return <code>true</code> if the numbers are within 1 part in a million of each other.
 	 */
 	public static boolean almostEquals(double a, double b) {
-		return Math.abs(a - b) < 10e-6;
+		return almostEquals(a, b, 10e-6);
 	}
 
 	/**
@@ -120,29 +134,10 @@ public final class NumberUtil {
 	 *
 	 * @param x The number who's percentage of the total this method will return
 	 * @param total The total
-	 * @param string If this should return as a string with `%` appended to the end
-	 * @return {@link Double}
+	 * @return The percentage value
 	 */
-	public static String getPercentage(double x, double total, boolean string) {
-		double percent = (x / total);
-		StringBuilder out = new StringBuilder();
-		if (string) {
-			out.append(percent * 100).append("%");
-		} else {
-			out.append((percent));
-		}
-		return out.toString();
-	}
-
-	/**
-	 * Get a number as the percentage of another.
-	 *
-	 * @param x     The number who's percentage of the total this method will return
-	 * @param total The total
-	 * @return {@link Double}
-	 */
-	public static Double getPercentage(int x, int total) {
-		return Double.valueOf(getPercentage(x, total, false));
+	public static double getPercentage(Number x, Number total) {
+		return x.doubleValue() / total.doubleValue() * 100;
 	}
 
 	/**
@@ -150,10 +145,34 @@ public final class NumberUtil {
 	 *
 	 * @param x The number who's percentage of the total this method will return
 	 * @param total The total
-	 * @return {@link String}
+	 * @param places The number of decimal places to round to
+	 * @return A rounded percentage value
 	 */
-	public static String getPercentageString(int x, int total) {
-		return getPercentage(x, total, true);
+	public static double getPercentage(Number x, Number total, int places) {
+		return round(getPercentage(x, total), places);
+	}
+
+	/**
+	 * Get a number as the percentage of another.
+	 *
+	 * @param x The number who's percentage of the total this method will return
+	 * @param total The total
+	 * @param places The number of decimal places to return
+	 * @return A formatted {@link String} containing the percentage to the specified number of decimal places.
+	 */
+	public static String getPercentageString(Number x, Number total, int places) {
+		return getPercentage(x, total, places) + "%";
+	}
+
+	/**
+	 * Get a number as the percentage of another.
+	 *
+	 * @param x The number who's percentage of the total this method will return
+	 * @param total The total
+	 * @return A formatted {@link String} containing the percentage to 2 decimal places.
+	 */
+	public static String getPercentageString(Number x, Number total) {
+		return getPercentageString(x, total, 2);
 	}
 
 	/**
