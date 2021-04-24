@@ -8,21 +8,26 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class Vector3Test {
-	@Test()
+	@Test
+	void testVector3Equal() {
+		Assertions.assertEquals(new Vector3(1, 2, 3), new Vector3(1, 2, 3));
+	}
+
+	@Test
 	void testVector3Add() {
 		Vector3 a = new Vector3(0, 1, 2);
 		Vector3 b = new Vector3(1, 1, 1);
 		Assertions.assertEquals(new Vector3(1, 2, 3), a.add(b));
 	}
 
-	@Test()
+	@Test
 	void testVector3Subtract() {
 		Vector3 a = new Vector3(0, 1, 2);
 		Vector3 b = new Vector3(1, 1, 1);
 		Assertions.assertEquals(new Vector3(-1, 0, 1), a.subtract(b));
 	}
 
-	@Test()
+	@Test
 	void testVector3Scale() {
 		Vector3 a = new Vector3(10, 5, 20);
 		// check unitary scale
@@ -33,11 +38,11 @@ class Vector3Test {
 		Assertions.assertEquals(new Vector3(-10, -5, -20), a.scale(-1));
 	}
 
-	@Test()
+	@Test
 	void testVector3To() {
 		Vector3 a = new Vector3(0, 1, 2);
 		Vector3 b = new Vector3(1, 1, 1);
 		// TODO: skye do some math and work out what this should be you lazy hoe
-		Assertions.assertEquals(new Vector3(1, -1, -1), a.to(b));
+		Assertions.assertEquals(new Vector3(1, 0, -1), a.to(b));
 	}
 }
