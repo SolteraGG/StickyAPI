@@ -24,8 +24,8 @@ public final class NumberUtil {
 	 * @param max The maximum value (inclusive)
 	 * @return <code>true</code> if given number is in the given range.
 	 */
-	public static boolean inRange(int number, int min, int max) {
-		return number >= min && number <= max;
+	public static boolean inRange(Number number, Number min, Number max) {
+		return number.doubleValue() >= min.doubleValue() && number.doubleValue() <= max.doubleValue();
 	}
 
 	/**

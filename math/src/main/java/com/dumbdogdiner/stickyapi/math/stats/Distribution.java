@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.math.stats;
 
+import com.dumbdogdiner.stickyapi.math.NumberUtil;
 import com.google.common.base.Preconditions;
 
 /**
@@ -75,5 +76,27 @@ public final class Distribution {
 	public static double pcc(double[] x, double[] y) {
 		Preconditions.checkArgument(x.length == y.length, "Datasets must be of equal size to compute PCC.");
 		return covariance(x, y) / (standardDeviation(x) * standardDeviation(y));
+	}
+
+	/**
+	 * Test if two datasets are associated with the specified confidence.
+	 * @param x The first dataset
+	 * @param y The second dataset
+	 * @param confidence The confidence to test with
+	 * @return <code>true</code> if the two datasets are associated.
+	 */
+	public static boolean isAssociated(double[] x, double[] y, double confidence) {
+		Preconditions.checkArgument(NumberUtil.inRange(0, 1, confidence));
+		return Math.abs(pcc(x, y)) > confidence;
+	}
+
+	/**
+	 * Test if two datasets are associated with the specified confidence.
+	 * @param x The first dataset
+	 * @param y The second dataset
+	 * @return <code>true</code> if the two datasets are associated.
+	 */
+	public static boolean isAssociated(double[] x, double[] y) {
+		return isAssociated(x, y, 0.8);
 	}
 }
