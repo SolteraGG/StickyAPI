@@ -4,23 +4,25 @@
  */
 package com.dumbdogdiner.stickyapi.math.vector;
 
+import com.google.common.base.Preconditions;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents a two dimensional vector.
+ * Represents a two-dimensional immutable vector.
  */
 public class Vector2 extends Vector<Vector2> {
 	/**
 	 * The x value of this vector.
 	 */
 	@Getter
-	private double x;
+	private final double x;
 
 	/**
 	 * The y value of this vector.
 	 */
 	@Getter
-	private double y;
+	private final double y;
 
 	/**
 	 * Construct a new 2D vector.
@@ -32,33 +34,47 @@ public class Vector2 extends Vector<Vector2> {
 		this.y = y;
 	}
 
+	/**
+	 * Construct a new 2D vector.
+	 * @param x The x value
+	 * @param y The y value
+	 */
+	public Vector2(@NotNull Number x, @NotNull Number y) {
+		// ensure arguments are not null
+		Preconditions.checkNotNull(x);
+		Preconditions.checkNotNull(y);
+		this.x = x.doubleValue();
+		this.y = y.doubleValue();
+	}
+
 	@Override
-	int getDimensions() {
+	protected int getDimensions() {
 		return 2;
 	}
 
 	@Override
-	Vector<Vector2> add(Vector<Vector2> vector) {
-		return new Vector2(this.x + vector.x, this.y + vector.y);
+	protected double[] getValues() {
+		return new double[]{this.x, this.y};
 	}
 
 	@Override
-	Vector<Vector2> subtract(Vector<Vector2> vector) {
-		return null;
+	@NotNull
+	Vector2 add(@NotNull Vector<Vector2> vector) {
+		Preconditions.checkNotNull(vector);
+		return new Vector2(this.x + vector.getDimension(0), this.y + vector.getDimension(1));
 	}
 
 	@Override
-	Vector2 scale(Number scalar) {
+	@NotNull
+	Vector2 subtract(@NotNull Vector<Vector2> vector) {
+		Preconditions.checkNotNull(vector);
+		return new Vector2(this.x - vector.getDimension(0), this.y - vector.getDimension(1));
+	}
+
+	@Override
+	@NotNull
+	Vector2 scale(@NotNull Number scalar) {
+		Preconditions.checkNotNull(scalar);
 		return new Vector2(this.x * scalar.doubleValue(), this.y * scalar.doubleValue());
-	}
-
-	@Override
-	double abs() {
-		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
-	}
-
-	@Override
-	double dot(Vector2 vec) {
-		return this.x * vec.x + this.y * vec.y;
 	}
 }
