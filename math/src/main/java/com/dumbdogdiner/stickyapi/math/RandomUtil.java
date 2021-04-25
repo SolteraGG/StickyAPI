@@ -107,7 +107,7 @@ public class RandomUtil {
 		if (array.length < 1) return null;
 		// pick random index, return element at index
 		// have to minus 1 here since this would throw an out of bounds exception
-		return array[randomInt(array.length - 1)];
+		return array[randomIntExclusive(array.length)];
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class RandomUtil {
 		if (list.isEmpty()) return null;
 		// pick random index, return element at index
 		// have to minus 1 here since this would throw an out of bounds exception
-		return list.get(randomInt(list.size() - 1));
+		return list.get(randomIntExclusive(list.size()));
 	}
 
 	/**
