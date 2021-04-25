@@ -27,12 +27,13 @@ public class RandomUtil {
 	private static final Random random = new Random();
 
 	/**
-	 * Get a random number between 0 and the specified maximum value.
+	 * Get a random number between 0 and the specified maximum value (exclusive).
 	 *
 	 * @param max The maximum value
 	 * @return A random integer between 0 and the specified maximum value.
 	 */
 	public static int randomInt(int max) {
+		Preconditions.checkArgument(max >= 0, "Argument must be positive");
 		return random.nextInt(max);
 	}
 
@@ -50,6 +51,7 @@ public class RandomUtil {
 		// exception case
 		if (min == max)
 			return min;
+		// add 1 here to ensure inclusivity
 		return min + randomInt(1 + max - min);
 	}
 
@@ -77,7 +79,9 @@ public class RandomUtil {
 		// exception case
 		if (min == max)
 			return min;
-		return min + (1 + max - min) * random.nextDouble();
+		// don't need to add 1 here since doubles will be inclusive as they
+		// are continuous, unlike integers.
+		return min + randomDouble(max - min);
 	}
 
 	/**
@@ -104,42 +108,6 @@ public class RandomUtil {
 		if (list.isEmpty()) return null;
 		// pick random index, return element at index
 		return list.get(randomInt(list.size()));
-	}
-
-	/**
-	 * Round a double value.
-	 *
-	 * @param value  the value that should be rounded
-	 * @param places amount of decimal places
-	 * @return {@link Double}
-	 */
-	public static double round(double value, int places) {
-		long factor = (long) Math.pow(10, places);
-		value = value * factor;
-		long tmp = Math.round(value);
-		return (double) tmp / factor;
-	}
-
-	/**
-	 * Convert a number of bytes to a human-readable value.
-	 * TODO: How the absolute fuck does this work?
-	 *
-	 * @param bytes the value that should be converted
-	 * @return a human-readable byte value
-	 */
-	public static String bytesToReadable(long bytes) {
-		long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
-		if (absB < 1024) {
-			return bytes + " B";
-		}
-		long value = absB;
-		CharacterIterator ci = new StringCharacterIterator("KMGTPE");
-		for (int i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
-			value >>= 10;
-			ci.next();
-		}
-		value *= Long.signum(bytes);
-		return String.format("%.1f %ciB", value / 1024.0, ci.current());
 	}
 
 	/**
