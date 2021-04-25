@@ -13,16 +13,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Vector2 extends Vector<Vector2> {
 	/**
+	 * Create a new Vector2 from polar co-ordinates.
+	 * @param r The radius of the vector
+	 * @param theta The angle from the initial line
+	 * @return A {@link Vector2}
+	 */
+	public static Vector2 fromPolar(double r, double theta) {
+		return new Vector2(r * Math.cos(theta), r * Math.sin(theta));
+	}
+
+	/**
 	 * The x value of this vector.
 	 */
 	@Getter
-	private double x;
+	private final double x;
 
 	/**
 	 * The y value of this vector.
 	 */
 	@Getter
-	private double y;
+	private final double y;
 
 	/**
 	 * Construct a new 2D vector.

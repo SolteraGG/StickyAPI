@@ -56,4 +56,29 @@ class RandomUtilTest {
 		double value = RandomUtil.randomDouble(3, 7);
 		Assertions.assertTrue(value >= 3 && value <= 7);
 	}
+
+	@RepeatedTest(100)
+	void testRandomAngle() {
+		double value = RandomUtil.randomAngle();
+		Assertions.assertTrue(value >= 0 && value <= Math.PI * 2);
+	}
+
+	@RepeatedTest(100)
+	void testRandomDualAngle() {
+		double value = RandomUtil.randomDualAngle();
+		Assertions.assertTrue(value >= -Math.PI && value <= Math.PI);
+	}
+
+	@RepeatedTest(100)
+	void testRandomVector2() {
+		Assertions.assertTrue(NumberUtil.almostEquals(RandomUtil.randomVector2().abs(), 1));
+		Assertions.assertTrue(NumberUtil.almostEquals(RandomUtil.randomVector2(2).abs(), 2));
+	}
+
+	@RepeatedTest(100)
+	void testRandomVector3() {
+		System.out.println(RandomUtil.randomVector3().abs());
+		Assertions.assertTrue(NumberUtil.almostEquals(RandomUtil.randomVector3().abs(), 1));
+		Assertions.assertTrue(NumberUtil.almostEquals(RandomUtil.randomVector3(2).abs(), 2));
+	}
 }

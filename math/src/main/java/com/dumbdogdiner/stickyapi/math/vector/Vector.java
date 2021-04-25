@@ -94,7 +94,7 @@ abstract class Vector<T> implements Cloneable {
 	/**
  	 * @return The magnitude of this vector.
 	 */
-	double abs() {
+	public double abs() {
 		double acc = 0;
 		// iterate over each dimension and append square to accumulator
 		for (int i = 0; i < this.getDimensions(); i++) {

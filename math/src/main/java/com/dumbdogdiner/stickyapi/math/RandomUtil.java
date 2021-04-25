@@ -4,6 +4,8 @@
  */
 package com.dumbdogdiner.stickyapi.math;
 
+import com.dumbdogdiner.stickyapi.math.vector.Vector2;
+import com.dumbdogdiner.stickyapi.math.vector.Vector3;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Chars;
 import com.google.common.primitives.Ints;
@@ -126,5 +128,55 @@ public class RandomUtil {
 	 */
 	public static int randomElement(int [] choices) {
 		return Objects.requireNonNull(randomElement(Ints.asList(choices)));
+	}
+
+	/**
+	 * @return A random angle between 0 and 2pi.
+	 */
+	public static double randomAngle() {
+		return randomDouble(0, Math.PI * 2);
+	}
+
+	/**
+	 * @return A random angle between -pi and pi.
+	 */
+	public static double randomDualAngle() {
+		return randomDouble(-Math.PI, Math.PI);
+	}
+
+	/**
+	 * Return a random {@link Vector2} with magnitude <code>r</code>.
+	 * @param r The radius, or magnitude of the vector
+	 * @return A random {@link Vector2} with magnitude <code>r</code>.
+	 */
+	public static Vector2 randomVector2(double r) {
+		return Vector2.fromPolar(r, randomAngle());
+	}
+
+	/**
+	 * Return a random unit {@link Vector2}. This vector will always
+	 * have a magnitude of <code>1</code>.
+	 * @return A random {@link Vector2} with magnitude 1.
+	 */
+	public static Vector2 randomVector2() {
+		return randomVector2(1);
+	}
+
+	/**
+	 * Return a random {@link Vector3} with magnitude <code>r</code>.
+	 * @param r The radius, or magnitude of the vector
+	 * @return A random {@link Vector3} with magnitude <code>r</code>.
+	 */
+	public static Vector3 randomVector3(double r) {
+		return Vector3.fromPolar(r, randomAngle(), randomAngle());
+	}
+
+	/**
+	 * Return a random unit {@link Vector3}. This vector will always
+	 * have a magnitude of <code>1</code>.
+	 * @return A random {@link Vector3} with magnitude 1.
+	 */
+	public static Vector3 randomVector3() {
+		return randomVector3(1);
 	}
 }
