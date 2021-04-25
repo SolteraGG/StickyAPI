@@ -10,7 +10,9 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Provides extra functionality for Java Number classes.
  * </p>
- */
+ *  @deprecated in favor of the stickyapi:math module.
+*/
+@Deprecated(since = "3.1")
 public final class NumberUtil {
     private NumberUtil() {
     }

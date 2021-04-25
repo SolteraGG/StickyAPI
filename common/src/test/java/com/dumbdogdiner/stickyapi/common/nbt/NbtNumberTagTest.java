@@ -4,6 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.common.nbt;
 
+import com.dumbdogdiner.stickyapi.math.RandomUtil;
 import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -11,8 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 
-import static com.dumbdogdiner.stickyapi.common.util.MathUtil.randomDouble;
-import static com.dumbdogdiner.stickyapi.common.util.MathUtil.randomInt;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
 
@@ -23,8 +22,8 @@ class NbtNumberTagTest {
 
     @BeforeEach
     public void setUp(){
-        i = randomInt(-256,  4096);
-        f = (float) randomDouble(-256, 8192);
+        i = RandomUtil.randomInt(-256,  4096);
+        f = (float) RandomUtil.randomDouble(-256, 8192);
     }
 
     @RepeatedTest(REPEAT)

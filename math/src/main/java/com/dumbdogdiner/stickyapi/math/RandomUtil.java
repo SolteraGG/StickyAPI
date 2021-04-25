@@ -63,6 +63,16 @@ public class RandomUtil {
 	}
 
 	/**
+	 * Get a random number between 0 and 1. This method is exclusive, as doubles are
+	 * (approximately) continuous. While it could generate a value equal to the maximum,
+	 * this is really unlikely
+	 * @return A random double between 0 and 1.
+	 */
+	public static double randomDouble() {
+		return random.nextDouble();
+	}
+
+	/**
 	 * Get a random number between 0 and the specified maximum value. This method
 	 * is exclusive, as doubles are (approximately) continuous. While it could generate
 	 * a value equal to the maximum, this is really unlikely.
@@ -135,6 +145,15 @@ public class RandomUtil {
 	 */
 	public static int randomElement(int [] choices) {
 		return Objects.requireNonNull(randomElement(Ints.asList(choices)));
+	}
+
+	/**
+	 * Return a random boolean with probability <code>p</code> of being <code>true</code>.
+	 * @param probability The probability of returning <code></code>
+	 * @return A random boolean with probability <code>p</code> of being <code>true</code>.
+	 */
+	public static boolean probability(double probability) {
+		return randomDouble() > probability;
 	}
 
 	/**

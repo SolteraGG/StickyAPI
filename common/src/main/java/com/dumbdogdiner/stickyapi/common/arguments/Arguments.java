@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
-import com.dumbdogdiner.stickyapi.common.util.NumberUtil;
 import com.dumbdogdiner.stickyapi.common.util.TimeUtil;
 
+import com.dumbdogdiner.stickyapi.math.NumberUtil;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -356,7 +356,7 @@ public class Arguments {
 
     private Arguments optionalIntImplementation(@NotNull String name, @NotNull Integer fallback) {
         debug.print("Looking for optional integer " + name + "...");
-        if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
+        if (unparsedArgs.size() > position && NumberUtil.isInteger(unparsedArgs.get(position), false)) {
             parsedArgs.put(name, unparsedArgs.get(position));
             position++;
             debug.print("Found int at position " + String.valueOf(position) + " - new args size = "
@@ -405,7 +405,7 @@ public class Arguments {
     public Arguments requiredInt(@NotNull String name) {
         debug.print("Looking for optional required " + name + "...");
 
-        if (unparsedArgs.size() > position && NumberUtil.isNumeric(unparsedArgs.get(position))) {
+        if (unparsedArgs.size() > position && NumberUtil.isInteger(unparsedArgs.get(position, false))) {
             parsedArgs.put(name, unparsedArgs.get(position));
             position++;
             debug.print("Found int at position " + String.valueOf(position) + " - new args size = "

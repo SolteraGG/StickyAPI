@@ -4,7 +4,7 @@
  */
 package com.dumbdogdiner.stickyapi.bukkit.util;
 
-import com.dumbdogdiner.stickyapi.common.util.MathUtil;
+import com.dumbdogdiner.stickyapi.math.RandomUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -101,7 +101,7 @@ public class PlayerSelector {
      */
     public static Player selectRandom(Predicate<Player> condition) {
         List<Player> list = selectPlayers(condition);
-        return list.get(MathUtil.randomInt(list.size()));
+        return RandomUtil.randomElement(list);
     }
 
     /**
