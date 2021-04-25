@@ -97,13 +97,30 @@ public final class NumberUtil {
 	private static final Pattern NUMERIC_REGEX = Pattern.compile("-?[0-9]+\\.?[0-9]+(?:e-?[0-9]+)?$");
 
 	/**
-	 * Checks if the string is considered numeric.
-	 *
-	 * @param string the String to check, may be null
+	 * Checks if the string is considered numeric. This method accounts for signed integers
+	 * and engineering notation (i.e. <code>12e3</code>).
+	 * <pre>
+	 * NumberUtil.isNumeric("123")         = true
+	 * NumberUtil.isNumeric("-123")        = true
+	 * NumberUtil.isNumeric("12.3")        = true
+	 * NumberUtil.isNumeric("12e3")        = true
+	 * NumberUtil.isNumeric("12e-3")       = true
+	 * NumberUtil.isNumeric(null)          = false
+	 * NumberUtil.isNumeric("")            = false
+	 * NumberUtil.isNumeric("  ")          = false
+	 * NumberUtil.isNumeric("12 3")        = false
+	 * NumberUtil.isNumeric("ab2c")        = false
+	 * NumberUtil.isNumeric("12-3")        = false
+	 * </pre>
+	 * @param string the string to check
 	 * @return <code>true</code> if the string is numeric
 	 */
-	public static boolean isNumeric(@NotNull String string) {
-		Preconditions.checkNotNull(string);
+	public static boolean isNumeric(@Nullable String string) {
+		// check for null
+		if (string == null) {
+			return false;
+		}
+		// match string with regex
 		return NUMERIC_REGEX.matcher(string).matches();
 	}
 
