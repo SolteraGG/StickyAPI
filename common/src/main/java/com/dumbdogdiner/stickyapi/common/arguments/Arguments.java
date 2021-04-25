@@ -405,7 +405,7 @@ public class Arguments {
     public Arguments requiredInt(@NotNull String name) {
         debug.print("Looking for optional required " + name + "...");
 
-        if (unparsedArgs.size() > position && NumberUtil.isInteger(unparsedArgs.get(position, false))) {
+        if (unparsedArgs.size() > position && NumberUtil.isInteger(unparsedArgs.get(position), false)) {
             parsedArgs.put(name, unparsedArgs.get(position));
             position++;
             debug.print("Found int at position " + String.valueOf(position) + " - new args size = "
