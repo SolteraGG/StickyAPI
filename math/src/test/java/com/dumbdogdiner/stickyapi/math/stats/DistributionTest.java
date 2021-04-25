@@ -34,4 +34,10 @@ class DistributionTest {
 	void testPCC() {
 		Assertions.assertTrue(NumberUtil.almostEquals(-1, Distribution.pcc(DATASET_X, DATASET_Y)));
 	}
+
+	@Test
+	void testIsAssociated() {
+		Assertions.assertTrue(NumberUtil.almostEquals(-1, Distribution.pcc(DATASET_X, DATASET_Y)));
+		Assertions.assertTrue(Distribution.isAssociated(DATASET_X, DATASET_Y));
+	}
 }

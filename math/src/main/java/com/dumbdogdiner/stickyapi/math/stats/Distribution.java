@@ -86,7 +86,7 @@ public final class Distribution {
 	 * @return <code>true</code> if the two datasets are associated.
 	 */
 	public static boolean isAssociated(double[] x, double[] y, double confidence) {
-		Preconditions.checkArgument(NumberUtil.inRange(0, 1, confidence));
+		Preconditions.checkArgument(NumberUtil.inRange(confidence, 0, 1));
 		return Math.abs(pcc(x, y)) > confidence;
 	}
 
