@@ -14,6 +14,11 @@ class Vector3Test {
 	}
 
 	@Test
+	void testVector3Zero() {
+		Assertions.assertEquals(new Vector3(0 ,0, 0), Vector3.zero());
+	}
+
+	@Test
 	void testVector3Add() {
 		Vector3 a = new Vector3(0, 1, 2);
 		Vector3 b = new Vector3(1, 1, 1);

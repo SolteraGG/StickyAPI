@@ -145,12 +145,22 @@ public class RandomUtil {
 	}
 
 	/**
+	 * Return a random {@link Vector2} with magnitude <code>r</code> centered about <code>center</code>.
+	 * @param r The radius, or magnitude of the vector
+	 * @param center The vector around which the output vector will be centered
+	 * @return A random {@link Vector2} with magnitude <code>r</code>.
+	 */
+	public static Vector2 randomVector2(double r, Vector2 center) {
+		return Vector2.fromPolar(r, randomAngle()).add(center);
+	}
+
+	/**
 	 * Return a random {@link Vector2} with magnitude <code>r</code>.
 	 * @param r The radius, or magnitude of the vector
 	 * @return A random {@link Vector2} with magnitude <code>r</code>.
 	 */
 	public static Vector2 randomVector2(double r) {
-		return Vector2.fromPolar(r, randomAngle());
+		return randomVector2(r, Vector2.zero());
 	}
 
 	/**
@@ -163,12 +173,22 @@ public class RandomUtil {
 	}
 
 	/**
+	 * Return a random {@link Vector3} with magnitude <code>r</code> centered about <code>center</code>.
+	 * @param r The radius, or magnitude of the vector
+	 * @param center The vector around which the output vector will be centered
+	 * @return A random {@link Vector3} with magnitude <code>r</code>.
+	 */
+	public static Vector3 randomVector3(double r, Vector3 center) {
+		return Vector3.fromPolar(r, randomAngle(), randomAngle()).add(center);
+	}
+
+	/**
 	 * Return a random {@link Vector3} with magnitude <code>r</code>.
 	 * @param r The radius, or magnitude of the vector
 	 * @return A random {@link Vector3} with magnitude <code>r</code>.
 	 */
 	public static Vector3 randomVector3(double r) {
-		return Vector3.fromPolar(r, randomAngle(), randomAngle());
+		return randomVector3(r, Vector3.zero());
 	}
 
 	/**

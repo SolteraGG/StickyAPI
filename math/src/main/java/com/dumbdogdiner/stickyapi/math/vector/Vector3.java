@@ -13,6 +13,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Vector3 extends Vector<Vector3> {
 	/**
+	 * @return A zero vector.
+	 */
+	public static Vector3 zero() {
+		return new Vector3(0, 0, 0);
+	}
+
+	/**
 	 * Create a new Vector3 from polar co-ordinates.
 	 * @param r The radius of the vector
 	 * @param theta The 1st angle from the initial line
@@ -96,7 +103,7 @@ public class Vector3 extends Vector<Vector3> {
 
 	@Override
 	@NotNull
-	Vector3 add(@NotNull Vector<Vector3> vector) {
+	public Vector3 add(@NotNull Vector<Vector3> vector) {
 		return new Vector3(this.x + vector.getDimension(0), this.y + vector.getDimension(1), this.z + vector.getDimension(2));
 	}
 

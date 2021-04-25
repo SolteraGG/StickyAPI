@@ -13,6 +13,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Vector2 extends Vector<Vector2> {
 	/**
+	 * @return A zero vector.
+	 */
+	public static Vector2 zero() {
+		return new Vector2(0, 0);
+	}
+
+	/**
 	 * Create a new Vector2 from polar co-ordinates.
 	 * @param r The radius of the vector
 	 * @param theta The angle from the initial line
@@ -79,7 +86,7 @@ public class Vector2 extends Vector<Vector2> {
 
 	@Override
 	@NotNull
-	Vector2 add(@NotNull Vector<Vector2> vector) {
+	public Vector2 add(@NotNull Vector<Vector2> vector) {
 		Preconditions.checkNotNull(vector);
 		return new Vector2(this.x + vector.getDimension(0), this.y + vector.getDimension(1));
 	}

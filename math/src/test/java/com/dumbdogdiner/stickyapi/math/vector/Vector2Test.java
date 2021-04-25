@@ -14,6 +14,11 @@ class Vector2Test {
 	}
 
 	@Test
+	void testVector2Zero() {
+		Assertions.assertEquals(new Vector2(0 ,0), Vector2.zero());
+	}
+
+	@Test
 	void testVector2Add() {
 		Vector2 a = new Vector2(0, 1);
 		Vector2 b = new Vector2(1, 1);
