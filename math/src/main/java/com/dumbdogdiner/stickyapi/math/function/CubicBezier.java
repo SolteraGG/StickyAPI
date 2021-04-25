@@ -6,9 +6,9 @@ import com.dumbdogdiner.stickyapi.math.vector.Vector2;
  * Represents a cubic bezier curve.
  */
 public class CubicBezier {
-	private Vector2 a;
-	private Vector2 b;
-	private Vector2 c;
+	private final Vector2 a;
+	private final Vector2 b;
+	private final Vector2 c;
 	private Vector2 d;
 
 	/**
@@ -24,11 +24,11 @@ public class CubicBezier {
 
 	/**
 	 * Construct a new cubic bezier with the specified vector parameters.
-	 * @param a The first vector
-	 * @param b The second vector
+	 * @param b The first vector
+	 * @param c The second vector
 	 */
-	public CubicBezier(Vector2 a, Vector2 b) {
-		this(Vector2.zero(), a, b, Vector2.one());
+	public CubicBezier(Vector2 b, Vector2 c) {
+		this(Vector2.zero(), b, c, Vector2.one());
 	}
 
 	/**
