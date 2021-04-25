@@ -9,7 +9,7 @@ public class CubicBezier {
 	private final Vector2 a;
 	private final Vector2 b;
 	private final Vector2 c;
-	private Vector2 d;
+	private final Vector2 d;
 
 	/**
 	 * Construct a new cubic bezier with the specified parameters
@@ -60,7 +60,7 @@ public class CubicBezier {
 		).add(
 			this.c.scale(3 * q * Math.pow(t, 2))
 		).add(
-			this.c.scale(Math.pow(t, 3))
+			this.d.scale(Math.pow(t, 3))
 		);
 	}
 }
