@@ -14,40 +14,6 @@ public final class Interpolation {
 	private Interpolation() {}
 
 	/**
-	 * Represents a cubic bezier curve.
-	 */
-	public class CubicBezier {
-		private double a;
-		private double b;
-		private double c;
-		private double d;
-
-		/**
-		 * Construct a new cubic bezier with the specified parameters
-		 * @param a The first parameter
-		 * @param b The second parameter
-		 * @param c The third parameter
-		 * @param d The fourth parameter
-		 */
-		public CubicBezier(double a, double b, double c, double d) {
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			this.d = d;
-		}
-
-		/**
-		 * Evaluate this cubic bezier for time t.
-		 * @param t The time parameter
-		 * @return A value based on the cubic bezier.
-		 * TODO: Implement this
-		 */
-		public double evaluate(Number t) {
-			return t.doubleValue();
-		}
-	}
-
-	/**
 	 * Clamp the value `t` between `min` and `max`.
 	 * @param max The minimum value
 	 * @param min The maximum value
@@ -86,5 +52,18 @@ public final class Interpolation {
 		Preconditions.checkNotNull(b);
 		Preconditions.checkNotNull(t);
 		return b.doubleValue() * t.doubleValue() + (1 - t.doubleValue()) * a.doubleValue();
+	}
+
+	/**
+	 * Sinusoidaly interpolate between <code>a</code> and <code>b</code> with time parameter <code>t</code>.
+	 * @param a The first value
+	 * @param b The second value
+	 * @param t The time parameter
+	 * @return The sinusoidaly interpolated value.
+	 */
+	public static double sinusoidal(Number a, Number b, Number t) {
+		// calculate sinusoidal param
+		double param = Math.pow(Math.sin(t.doubleValue() * Math.PI / 2), 2);
+		return lerp(a, b, param);
 	}
 }

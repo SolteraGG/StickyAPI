@@ -20,6 +20,13 @@ public class Vector2 extends Vector<Vector2> {
 	}
 
 	/**
+	 * @return A one vector.
+	 */
+	public static Vector2 one() {
+		return new Vector2(1, 1);
+	}
+
+	/**
 	 * Create a new Vector2 from polar co-ordinates.
 	 * @param r The radius of the vector
 	 * @param theta The angle from the initial line
@@ -100,7 +107,7 @@ public class Vector2 extends Vector<Vector2> {
 
 	@Override
 	@NotNull
-	Vector2 scale(@NotNull Number scalar) {
+	public Vector2 scale(@NotNull Number scalar) {
 		Preconditions.checkNotNull(scalar);
 		return new Vector2(this.x * scalar.doubleValue(), this.y * scalar.doubleValue());
 	}
