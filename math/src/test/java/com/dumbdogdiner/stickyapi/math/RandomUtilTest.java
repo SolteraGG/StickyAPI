@@ -12,8 +12,14 @@ import org.junit.jupiter.api.Test;;
 class RandomUtilTest {
 	@RepeatedTest(100)
 	void testMaxRandomInt() {
+		// this method is inclusive, so test for inclusivity.
+		Assertions.assertTrue(RandomUtil.randomInt(5) <= 5);
+	}
+
+	@RepeatedTest(100)
+	void testMaxRandomIntExclusive() {
 		// this method is exclusive, so test for exclusivity.
-		Assertions.assertTrue(RandomUtil.randomInt(5) < 5);
+		Assertions.assertTrue(RandomUtil.randomIntExclusive(5) < 5);
 	}
 
 	@Test

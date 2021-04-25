@@ -12,15 +12,12 @@ import com.google.common.primitives.Ints;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 /**
  * Utility class for dealing with randomness.
- * TODO: Consistency issues - randomInt(int max) is exclusive, randomInt(int max, int min) isn't.
  */
 public class RandomUtil {
 	private RandomUtil() {
@@ -29,12 +26,24 @@ public class RandomUtil {
 	private static final Random random = new Random();
 
 	/**
-	 * Get a random number between 0 and the specified maximum value (exclusive).
+	 * Get a random number between 0 and the specified maximum value (inclusive).
 	 *
 	 * @param max The maximum value
 	 * @return A random integer between 0 and the specified maximum value.
 	 */
 	public static int randomInt(int max) {
+		Preconditions.checkArgument(max >= 0, "Argument must be positive");
+		// add 1 to method call - not inclusive, so make it inclusive.
+		return random.nextInt(max + 1);
+	}
+
+	/**
+	 * Get a random number between 0 and the specified maximum value (exclusive).
+	 *
+	 * @param max The maximum value
+	 * @return A random integer between 0 and the specified maximum value.
+	 */
+	public static int randomIntExclusive(int max) {
 		Preconditions.checkArgument(max >= 0, "Argument must be positive");
 		return random.nextInt(max);
 	}
@@ -53,12 +62,13 @@ public class RandomUtil {
 		// exception case
 		if (min == max)
 			return min;
-		// add 1 here to ensure inclusivity
-		return min + randomInt(1 + max - min);
+		return min + randomInt(max - min);
 	}
 
 	/**
-	 * Get a random number between 0 and the specified maximum value.
+	 * Get a random number between 0 and the specified maximum value. This method
+	 * is exclusive, as doubles are (approximately) continuous. While it could generate
+	 * a value equal to the maximum, this is really unlikely.
 	 *
 	 * @param max maximum value
 	 * @return A random double between 0 and the specified maximum value.
@@ -96,7 +106,8 @@ public class RandomUtil {
 		// exception - array is empty
 		if (array.length < 1) return null;
 		// pick random index, return element at index
-		return array[randomInt(array.length)];
+		// have to minus 1 here since this would throw an out of bounds exception
+		return array[randomInt(array.length - 1)];
 	}
 
 	/**
@@ -109,7 +120,8 @@ public class RandomUtil {
 		// exception - list is empty
 		if (list.isEmpty()) return null;
 		// pick random index, return element at index
-		return list.get(randomInt(list.size()));
+		// have to minus 1 here since this would throw an out of bounds exception
+		return list.get(randomInt(list.size() - 1));
 	}
 
 	/**
