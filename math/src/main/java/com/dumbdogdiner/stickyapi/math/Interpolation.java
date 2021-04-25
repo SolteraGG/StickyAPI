@@ -40,6 +40,7 @@ public final class Interpolation {
 		 * Evaluate this cubic bezier for time t.
 		 * @param t The time parameter
 		 * @return A value based on the cubic bezier.
+		 * TODO: Implement this
 		 */
 		public double evaluate(Number t) {
 			return t.doubleValue();

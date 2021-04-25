@@ -20,7 +20,6 @@ public final class NumberUtil {
 
 	/**
 	 * Test whether the specified number is within the specified range.
-	 *
 	 * @param number The specified number
 	 * @param min The minimum value (inclusive)
 	 * @param max The maximum value (inclusive)
@@ -31,22 +30,23 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * Round a double value
-	 *
+	 * Round a double value.
 	 * @param value  the value that should be rounded
 	 * @param places amount of decimal places
 	 * @return {@link Double}
 	 */
 	public static double round(double value, int places) {
+		// compute power of ten equal to places
 		long factor = (long) Math.pow(10, places);
-		value = value * factor;
+		value *= factor;
+		// chop off remaining decimal places
 		long tmp = Math.round(value);
+		// divide back down to get fixed number of places
 		return (double) tmp / factor;
 	}
 
 	/**
 	 * Test if the target string can be considered an integer. Checks if every character is a unicode digit.
-	 *
 	 * <pre>
 	 * NumberUtil.isInteger("123")         = true
 	 * NumberUtil.isInteger("-123")        = true
@@ -59,7 +59,6 @@ public final class NumberUtil {
 	 * NumberUtil.isInteger("12.3")        = false
 	 * NumberUtil.isInteger("-123", false) = false
 	 * </pre>
-	 *
 	 * @param string The string to check
 	 * @param signed Whether to allow signed numbers
 	 * @return <code>true</code> if the target string can be considered an integer.
@@ -85,8 +84,8 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * Test if the target string can be considered an integer. Checks if every character is a unicode digit.
-	 * Allows signed numbers.
+	 * Test if the target string can be considered an integer by checking if every character is a unicode digit.
+	 * By default, this method allows signed numbers.
 	 * @param string The target string
 	 * @return <code>true</code> if the target string can be considered a signed integer.
 	 */
@@ -168,7 +167,6 @@ public final class NumberUtil {
 
 	/**
 	 * Get a number as the percentage of another.
-	 *
 	 * @param x The number who's percentage of the total this method will return
 	 * @param total The total
 	 * @return A formatted {@link String} containing the percentage to 2 decimal places.
@@ -203,7 +201,6 @@ public final class NumberUtil {
 	/**
 	 * Convert a number of bytes to a human-readable value.
 	 * TODO: How the absolute fuck does this work?
-	 *
 	 * @param bytes the value that should be converted
 	 * @return a human-readable byte value
 	 */

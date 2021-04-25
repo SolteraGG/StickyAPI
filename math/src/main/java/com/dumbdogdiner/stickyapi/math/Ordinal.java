@@ -13,7 +13,7 @@ public final class Ordinal {
 	private Ordinal() {}
 
 	/**
-	 * Get the appropriate ordinal for the
+	 * Get the appropriate ordinal for the specified number.
 	 * @param number The number to fetch the ordinal for
 	 * @return A {@link String} containing the appropriate ordinal.
 	 */

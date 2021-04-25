@@ -27,7 +27,6 @@ public class RandomUtil {
 
 	/**
 	 * Get a random number between 0 and the specified maximum value (inclusive).
-	 *
 	 * @param max The maximum value
 	 * @return A random integer between 0 and the specified maximum value.
 	 */
@@ -39,7 +38,6 @@ public class RandomUtil {
 
 	/**
 	 * Get a random number between 0 and the specified maximum value (exclusive).
-	 *
 	 * @param max The maximum value
 	 * @return A random integer between 0 and the specified maximum value.
 	 */
@@ -49,8 +47,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Get a random number within a range.
-	 *
+	 * Get a random number within the specified inclusive range.
 	 * @param min The minimum value (inclusive)
 	 * @param max The maximum value (inclusive)
 	 * @return A random integer within the specified range
@@ -69,7 +66,6 @@ public class RandomUtil {
 	 * Get a random number between 0 and the specified maximum value. This method
 	 * is exclusive, as doubles are (approximately) continuous. While it could generate
 	 * a value equal to the maximum, this is really unlikely.
-	 *
 	 * @param max maximum value
 	 * @return A random double between 0 and the specified maximum value.
 	 */
@@ -78,11 +74,12 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Get a random double within a range
-	 *
+	 * Get a random double within the specified inclusive range. This method
+	 * is exclusive, as doubles are (approximately) continuous. While it could generate
+	 * a value equal to the maximum, this is really unlikely.
 	 * @param min minimum value
 	 * @param max maximum value
-	 * @return a random double within the specified range
+	 * @return A random double between <code>min</code> and <code>max</code>.
 	 * @throws IllegalArgumentException when min is greater than max
 	 */
 	public static double randomDouble(double min, double max) {
@@ -98,7 +95,6 @@ public class RandomUtil {
 
 	/**
 	 * Get a random element from the target array.
-	 *
 	 * @param array The target array
 	 * @return A random element from the target array.
 	 */
@@ -112,7 +108,6 @@ public class RandomUtil {
 
 	/**
 	 * Get a random element from the target list.
-	 *
 	 * @param list The target list
 	 * @return A random element from the target list.
 	 */
@@ -157,7 +152,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Return a random {@link Vector2} with magnitude <code>r</code> centered about <code>center</code>.
+	 * Generate a random {@link Vector2} with magnitude <code>r</code> centered about <code>center</code>.
 	 * @param r The radius, or magnitude of the vector
 	 * @param center The vector around which the output vector will be centered
 	 * @return A random {@link Vector2} with magnitude <code>r</code>.
@@ -167,7 +162,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Return a random {@link Vector2} with magnitude <code>r</code>.
+	 * Generate a random {@link Vector2} with magnitude <code>r</code>.
 	 * @param r The radius, or magnitude of the vector
 	 * @return A random {@link Vector2} with magnitude <code>r</code>.
 	 */
@@ -176,7 +171,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Return a random unit {@link Vector2}. This vector will always
+	 * Generate a random unit {@link Vector2}. This vector will always
 	 * have a magnitude of <code>1</code>.
 	 * @return A random {@link Vector2} with magnitude 1.
 	 */
@@ -185,7 +180,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Return a random {@link Vector3} with magnitude <code>r</code> centered about <code>center</code>.
+	 * Generate a random {@link Vector3} with magnitude <code>r</code> centered about <code>center</code>.
 	 * @param r The radius, or magnitude of the vector
 	 * @param center The vector around which the output vector will be centered
 	 * @return A random {@link Vector3} with magnitude <code>r</code>.
@@ -195,7 +190,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Return a random {@link Vector3} with magnitude <code>r</code>.
+	 * Generate a random {@link Vector3} with magnitude <code>r</code>.
 	 * @param r The radius, or magnitude of the vector
 	 * @return A random {@link Vector3} with magnitude <code>r</code>.
 	 */
@@ -204,7 +199,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * Return a random unit {@link Vector3}. This vector will always
+	 * Generate a random unit {@link Vector3}. This vector will always
 	 * have a magnitude of <code>1</code>.
 	 * @return A random {@link Vector3} with magnitude 1.
 	 */

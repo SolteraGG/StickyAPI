@@ -6,7 +6,6 @@ package com.dumbdogdiner.stickyapi.math.vector;
 
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Base abstract class for an immutable vector.
@@ -20,7 +19,7 @@ abstract class Vector<T> implements Cloneable {
 
 	/**
 	 * Get an array of values representing this vector.
-	 * @return An array of values.
+	 * @return An array of values representing this vector's components.
 	 */
 	protected abstract double[] getValues();
 
