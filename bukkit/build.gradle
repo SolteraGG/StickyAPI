@@ -1,8 +1,9 @@
 dependencies {
-        api project(":common") // api - transistively expose common dependency when implementing :bukkit
+        api project(":common").configurations.apiElements // api - transistively expose common dependency when implementing :bukkit
         // I don't know why i need to do this rn, i have to figure it out???
         //compileOnly project(":common").sourceSets.serverVersion.output
         testImplementation project(":common").sourceSets.test.output
+
 
         // 3.0.2: serverversion is not transistive from common
         // Since we depend on common, the class is still available at runtime

@@ -11,6 +11,8 @@ buildscript {
     }
 }
 
+// TODO: use features, and publish only the combined feature with BOTH serverversion and genreated
+
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
@@ -22,17 +24,17 @@ plugins {
     id "idea"
 }
 
+// For now: we will just combine the output directory of each sourceset
 sourceSets {
     generated {
         java.outputDir = file('build/classes/main')
         java.srcDir file('src/gen/java')
         resources.srcDir file('src/gen/resources')
-        compileClasspath += main.compileClasspath
+        //compileClasspath += main.compileClasspath
     }
 
     serverVersion {
         java.outputDir = file('build/classes/main')
-
         java.srcDir file('src/serverVersion/java')
         // No resources necessary
         //resources.srcDir file('src/serverVersion/resources')
@@ -53,12 +55,20 @@ sourceSets {
         runtimeClasspath += serverVersion.output
     }
 }
-
+//System.out.println(sourceSets.generated.getApiConfigurationName())
 configurations {
-    generatedCompileOnly.extendsFrom(compileOnly)
-    generatedImplementation.extendsFrom(implementation)
-    // this one doesnt do what is expected
-    generatedApi.extendsFrom(api)
+    generatedCompile.extendsFrom(compile)
+
+    serverVersionCompile.extendsFrom(compile)
+    generatedApi
+
+//
+//    generatedApi{
+//        extendsFrom(generatedCompile)
+//        canBeResolved = false
+//        canBeConsumed = true
+//    }
+
     testImplementation.extendsFrom compileOnly
 }
 
@@ -86,9 +96,9 @@ dependencies {
     // Needed for Buildinfo, explicitly
     generatedCompileClasspath("org.jetbrains:annotations:20.1.0")
 
-    // Can be condensed with some magic that I need to look into
-    generatedImplementation("de.skuzzle:semantic-version:2.1.0")
+    // For buildinfo versioning; we want api so that it gets exposed to consuming thingies
     api("de.skuzzle:semantic-version:2.1.0")
+    generatedImplementation("de.skuzzle:semantic-version:2.1.0")
 
     // Include the most generic forms possible, used only by ServerVersion
     serverVersionCompileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
@@ -96,6 +106,7 @@ dependencies {
 
     testImplementation "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
     testImplementation "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+    testImplementation ('org.eclipse.jgit:org.eclipse.jgit:2.2.0.201212191850-r')
 }
 
 
@@ -121,23 +132,7 @@ idea {
 }
 
 
-/*
-    Build Info
-    ----------
-    The following lines (and the processSourceTokens task) serve to embed build information
-    such as versions, timestamps, commit details, as well as branch and working tree status
-    into StickyAPI during build-time.
 
-    When using StickyAPI, these values can be retrieved from their respective getters at
-    com.dumbdogdiner.stickyapi.Stickyapi
-
-    ----------
-
-    The processSourceTokens task will also print out a list of all the tokens to be added
-    to the build, for debugging reasons (eg. to ensure the info is correct)
-
-    These is also an accompanying test at (test src) com.dumbdogdiner.stickyapi.StickyAPITest
- */
 
 
 /*
@@ -165,17 +160,20 @@ tasks.compileJava.dependsOn(buildInfo)
 
 // Common build: create a jar
 jar {
+    dependsOn generatedClasses
+    dependsOn serverVersionClasses
+    dependsOn classes
     from sourceSets.main.output
-    //from sourceSets.generated.output
-    //from sourceSets.serverVersion.output
+//    from sourceSets.generated.output
+//    from sourceSets.serverVersion.output
 }
 
 // Common build: create uber sources from subproject sources
 task commonSources(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
     from sourceSets.main.allSource
-    //from sourceSets.generated.allSource
-    //from sourceSets.serverVersion.allSource
+//    from sourceSets.generated.allSource
+//    from sourceSets.serverVersion.allSource
 }
 
 task cleanGenerated(type: Delete){

@@ -1,9 +1,12 @@
+/**
+ * This file allows the generation of a source set and Java file that contains information about the version of StickyAPI
+ */
+
 buildscript {
     repositories {
         mavenCentral();
     }
     dependencies {
-        //classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
         classpath("com.squareup:javapoet:1.13.0")
         classpath("com.google.guava:guava:30.1-jre")
         classpath("de.skuzzle:semantic-version:2.1.0")
