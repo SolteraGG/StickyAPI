@@ -11,8 +11,8 @@ buildscript {
     }
 }
 
-// TODO: use features, and publish only the combined feature with BOTH serverversion and genreated
-
+/* TODO: use features, and publish only the combined feature with BOTH serverversion and genreated
+   For now this is fine */
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
