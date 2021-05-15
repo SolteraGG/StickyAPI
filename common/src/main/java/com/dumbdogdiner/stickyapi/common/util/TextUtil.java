@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,8 @@ import java.util.StringJoiner;
 public class TextUtil {
     /** Offset for bold (in each direction) in half-pixels */
     public static final int BOLD_OFFSET = 1;
+    @Getter
+    public static boolean fallback = false;
 
     /** Number of pixels per line of a book */
     public static final int PIXELS_PER_BOOK_LINE = 113;
@@ -83,6 +86,7 @@ public class TextUtil {
                 widths.put((char) (entry.getId() != null ? entry.getId() : '\0'), entry.width);
             }
         } catch (Exception e) {
+            fallback = true;
             StickyAPI.getLogger().severe(e.getMessage());
             // fallback to a minimal configuration, in case anything fails
             for (char c = 32; c <= 126; ++c) {

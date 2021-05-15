@@ -29,6 +29,7 @@ public class TextUtilTest {
     @Test
     public void testIsCharacterSupportedTrueEmojiUtf16() {
         // 0x1F5E1 | "Dagger Knife" Emoji 🗡️
+        assertFalse(TextUtil.isFallback(), "should not be in fallback mode");
         assertTrue(TextUtil.isCharacterSupported((char) 0x1F5E1));
     }
 
