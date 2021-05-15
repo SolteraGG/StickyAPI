@@ -27,14 +27,14 @@ plugins {
 // For now: we will just combine the output directory of each sourceset
 sourceSets {
     generated {
-        java.outputDir = file('build/classes/main')
+//        java.outputDir = file('build/classes/main')
         java.srcDir file('src/gen/java')
         resources.srcDir file('src/gen/resources')
         //compileClasspath += main.compileClasspath
     }
 
     serverVersion {
-        java.outputDir = file('build/classes/main')
+//        java.outputDir = file('build/classes/main')
         java.srcDir file('src/serverVersion/java')
         // No resources necessary
         //resources.srcDir file('src/serverVersion/resources')
