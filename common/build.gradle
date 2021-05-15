@@ -36,12 +36,14 @@ sourceSets {
     serverVersion {
 //        java.outputDir = file('build/classes/main')
         java.srcDir file('src/serverVersion/java')
+
         // No resources necessary
         //resources.srcDir file('src/serverVersion/resources')
     }
 
     main {
         java.outputDir = file('build/classes/main')
+        resources.srcDirs += file('src/gen/resources')
         /*compileClasspath += generated.output
         runtimeClasspath += generated.output
         compileClasspath += serverVersion.output
@@ -51,8 +53,9 @@ sourceSets {
     test {
         compileClasspath += generated.output
         runtimeClasspath += generated.output
-        compileClasspath += serverVersion.output
-        runtimeClasspath += serverVersion.output
+//        compileClasspath += serverVersion.output
+//        runtimeClasspath += serverVersion.output
+//        resources.srcDirs += file('src/gen/resources')
     }
 }
 //System.out.println(sourceSets.generated.getApiConfigurationName())
@@ -153,6 +156,7 @@ task copyMCFontExtractor(type: Copy) {
     into file("src/gen/resources/")
     rename "mc-font-extractor-main-mojangles_width_data.json", "mojangles_width_data.json"
 }
+tasks.processGeneratedResources.dependsOn(copyMCFontExtractor)
 
 
 // Run the font data copier
@@ -167,16 +171,19 @@ jar {
     dependsOn serverVersionClasses
     dependsOn classes
     from sourceSets.main.output
-//    from sourceSets.generated.output
-//    from sourceSets.serverVersion.output
+    from sourceSets.generated.output
+    from sourceSets.serverVersion.output
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
 
 // Common build: create uber sources from subproject sources
 task commonSources(type: Jar, dependsOn: classes) {
+    dependsOn jar
     archiveClassifier.set("sources")
     from sourceSets.main.allSource
-//    from sourceSets.generated.allSource
-//    from sourceSets.serverVersion.allSource
+    from sourceSets.generated.allSource
+    from sourceSets.serverVersion.allSource
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
 
 task cleanGenerated(type: Delete){
