@@ -79,7 +79,7 @@ public class TextUtil {
 
     static {
         Gson gson = new Gson();
-        try (InputStream input = ClassLoader.getSystemResource("mojangles_width_data.json").openStream()) {
+        try (InputStream input = TextUtil.class.getResourceAsStream("mojangles_width_data.json")) {
             WidthEntry[] entries = gson.fromJson(new InputStreamReader(input), WidthEntry[].class);
             for (WidthEntry entry : entries) {
                 if (entry.getId() == null) entry.setId(0);
