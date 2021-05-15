@@ -1,15 +1,87 @@
+buildscript {
+    repositories {
+        mavenCentral();
+    }
+    dependencies {
+        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+        classpath("com.squareup:javapoet:1.13.0")
+        classpath("com.google.guava:guava:30.1-jre")
+        classpath("de.skuzzle:semantic-version:2.1.0")
+        classpath("org.projectlombok:lombok:1.18.20")
+    }
+}
+
+/* TODO: use features, and publish only the combined feature with BOTH serverversion and genreated
+   For now this is fine */
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
 
     // for "api" in dependencies { }
     id "java-library"
+
+    // For IntelliJ
+    id "idea"
+}
+
+// For now: we will just combine the output directory of each sourceset
+sourceSets {
+    generated {
+//        java.outputDir = file('build/classes/main')
+        java.srcDir file('src/gen/java')
+        resources.srcDir file('src/gen/resources')
+        //compileClasspath += main.compileClasspath
+    }
+
+    serverVersion {
+//        java.outputDir = file('build/classes/main')
+        java.srcDir file('src/serverVersion/java')
+
+        // No resources necessary
+        //resources.srcDir file('src/serverVersion/resources')
+    }
+
+    main {
+        java.outputDir = file('build/classes/main')
+        resources.srcDirs += file('src/gen/resources')
+        /*compileClasspath += generated.output
+        runtimeClasspath += generated.output
+        compileClasspath += serverVersion.output
+        runtimeClasspath += serverVersion.output*/
+    }
+
+    test {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+//        compileClasspath += serverVersion.output
+//        runtimeClasspath += serverVersion.output
+//        resources.srcDirs += file('src/gen/resources')
+    }
+}
+//System.out.println(sourceSets.generated.getApiConfigurationName())
+configurations {
+    generatedCompile.extendsFrom(compile)
+
+    serverVersionCompile.extendsFrom(compile)
+    generatedApi
+
+//
+//    generatedApi{
+//        extendsFrom(generatedCompile)
+//        canBeResolved = false
+//        canBeConsumed = true
+//    }
+
+    testImplementation.extendsFrom compileOnly
 }
 
 dependencies {
     // Depend on the config project
     api project(":config") // api - transistively expose config dependency when implementing :common
     testImplementation project(":config").sourceSets.test.output
+
+    api sourceSets.serverVersion.output
+    api sourceSets.generated.output
 
     // LocaleProviderTest - add snakeyaml so YamlProvider (from the :config project) can work properly
     // testRuntimeOnly = only accessible during the test job
@@ -18,14 +90,38 @@ dependencies {
     // Font width data (see above)
     dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
-    implementation "com.google.code.gson:gson:2.8.6"
+    // Explicit GSON
+    api "com.google.code.gson:gson:2.8.6"
 
     // Dependencies available in both bukkit and bungee
     compileOnly "net.md-5:bungeecord-chat:1.16-R0.5-SNAPSHOT"
 
     // Only included in paper?  (ShortID.java)
     compileOnly "commons-lang:commons-lang:2.6"
+
+    // Needed for Buildinfo, explicitly
+    generatedCompileClasspath("org.jetbrains:annotations:20.1.0")
+
+    // For buildinfo versioning; we want api so that it gets exposed to consuming thingies
+    api("de.skuzzle:semantic-version:2.1.0")
+    generatedImplementation("de.skuzzle:semantic-version:2.1.0")
+
+    // Include the most generic forms possible, used only by ServerVersion
+    serverVersionCompileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
+    serverVersionCompileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+
+    testImplementation "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
+    testImplementation "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+    testImplementation ('org.eclipse.jgit:org.eclipse.jgit:2.2.0.201212191850-r')
 }
+
+
+
+test {
+    // Dynamically we can have it grab allllllll of the other dependancy types, this is a todo
+}
+
+
 
 // Use --add-opens to ensure functionality of FieldUtil [java.lang.reflect.Field] (required in Java 16+)
 // This will export java.lang.reflect to unnamed modules (eg. stickyapi) so that FieldUtil can still function.
@@ -33,53 +129,16 @@ dependencies {
 // JEP: https://openjdk.java.net/jeps/396
 test.jvmArgs = ["--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"]
 
-/*
-    Build Info
-    ----------
-    The following lines (and the processSourceTokens task) serve to embed build information
-    such as versions, timestamps, commit details, as well as branch and working tree status
-    into StickyAPI during build-time.
 
-    When using StickyAPI, these values can be retrieved from their respective getters at
-    com.dumbdogdiner.stickyapi.Stickyapi
-
-    ----------
-
-    The processSourceTokens task will also print out a list of all the tokens to be added
-    to the build, for debugging reasons (eg. to ensure the info is correct)
-
-    These is also an accompanying test at (test src) com.dumbdogdiner.stickyapi.StickyAPITest
- */
-
-// Set the timestamp format
-def dataBuildTimestamp = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-
-// Import the filter
-import org.apache.tools.ant.filters.ReplaceTokens
-
-// Define the map containing the tokens we want to replace
-def tokensMap = [
-        BUILDINFO_VERSION: project.rootProject.version,
-        BUILDINFO_DATEFORMAT: dataBuildTimestamp,
-        BUILDINFO_TIMESTAMP: new java.text.SimpleDateFormat(dataBuildTimestamp).format(new Date()),
-        BUILDINFO_COMMIT: versioning.info.commit,
-        BUILDINFO_BRANCH: versioning.info.branch,
-        BUILDINFO_ISDIRTY: versioning.info.dirty.toString()
-    ]
-
-// Create task to replace the tokens with their actual values
-// NOTE: At the moment this replaces tokens *globally* (format eg. @BUILDINFO_COMMIT@ in source code)
-task processSourceTokens(type: Sync) {
-    from sourceSets.main.java
-    into "build/processed/src/main/java"
-    filter(ReplaceTokens, tokens: tokensMap)
-    
-    // Pretty print the build info
-    println("\n----- (Common) StickyAPI Build Info -----\n")
-    tokensMap.each { println "${String.format("%1\$-" + 10 + "s", it.key.replace("BUILDINFO_", "").toLowerCase())}\t${it.value}" }
+idea {
+    module {
+        sourceDirs += file('src/gen/java')
+        generatedSourceDirs += file('src/gen/java')
+    }
 }
-// Use the filter task as the input for compileJava
-compileJava.source = processSourceTokens.outputs
+
+
+
 
 
 /*
@@ -91,33 +150,45 @@ compileJava.source = processSourceTokens.outputs
 
 // Font Width Info
 task copyMCFontExtractor(type: Copy) {
-    def path = project.configurations.dddResource.find {it.name.startsWith("mc-font-extractor") }
+    def path = project.configurations.dddResource.find { it.name.startsWith("mc-font-extractor") }
     println("common: Found font data at: " + path)
     from file(path)
-    // into file("src/main/resources")
-    // - Please keep this comment for future reference.
-    // - This is how we would do this if we weren't also adding build info (see processSourceTokens, above comments)
-    destinationDir file("src/main/resources/generated/")
+    into file("src/gen/resources/")
     rename "mc-font-extractor-main-mojangles_width_data.json", "mojangles_width_data.json"
 }
+tasks.processGeneratedResources.dependsOn(copyMCFontExtractor)
+
 
 // Run the font data copier
 tasks.processResources.dependsOn copyMCFontExtractor
 
+apply from: 'versioning-buildinfo.gradle'
+tasks.compileJava.dependsOn(buildInfo)
 
-// Common build: create a jar from the :common & :common:serverversion projects
+// Common build: create a jar
 jar {
+    dependsOn generatedClasses
+    dependsOn serverVersionClasses
+    dependsOn classes
     from sourceSets.main.output
-    from project(":common:serverversion").sourceSets.main.output
+    from sourceSets.generated.output
+    from sourceSets.serverVersion.output
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
 
 // Common build: create uber sources from subproject sources
 task commonSources(type: Jar, dependsOn: classes) {
+    dependsOn jar
     archiveClassifier.set("sources")
-    // Use source code from :common & :common:serverversion projects
     from sourceSets.main.allSource
-    from project(":common:serverversion").sourceSets.main.allSource
+    from sourceSets.generated.allSource
+    from sourceSets.serverVersion.allSource
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
 
-// Common build: override the usual sources output with our one containing ServerVersion
-tasks.sources.finalizedBy commonSources
+task cleanGenerated(type: Delete){
+    delete 'src/gen/'
+}
+
+tasks.clean.finalizedBy(cleanGenerated)
+tasks.sourcesJar.finalizedBy commonSources

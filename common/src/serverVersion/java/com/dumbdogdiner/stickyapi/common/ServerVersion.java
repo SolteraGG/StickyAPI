@@ -4,15 +4,15 @@
  */
 package com.dumbdogdiner.stickyapi.common;
 
+import lombok.experimental.UtilityClass;
+import static com.dumbdogdiner.stickyapi.common.ServerVersion.ServerType.*;
 /**
  * Utility class for fetching version data.
  */
+@UtilityClass
 public final class ServerVersion {
-    private ServerVersion() {
-    }
-
     public enum ServerType {
-        BUKKIT, SPIGOT, PAPER, BUNGEE, WATERFALL
+        BUKKIT, SPIGOT, PAPER, TUINITY, AIRPLANE, PURPUR, BUNGEE, WATERFALL
     }
 
     /**
@@ -22,20 +22,64 @@ public final class ServerVersion {
      */
     public static ServerType getServerType() {
         if (isBukkit()) {
-            if (isPaper()) {
-                return ServerType.PAPER;
-            }
-            if (isSpigot()) {
-                return ServerType.SPIGOT;
-            }
-            return ServerType.BUKKIT;
+            if(isPurpur())
+                return PURPUR;
+            else if(isAirplane())
+                return AIRPLANE;
+            else if(isTuinity())
+                return TUINITY;
+            else if (isPaper())
+                return PAPER;
+            else if (isSpigot())
+                return SPIGOT;
+            else
+                return BUKKIT;
+        } else if(isBungee()) {
+            if (isWaterfall())
+                return WATERFALL;
+            return BUNGEE;
         }
 
-        if (isWaterfall()) {
-            return ServerType.WATERFALL;
-        }
+        throw new UnsupportedOperationException("Unknown server type, is this even a server??");
+    }
 
-        return ServerType.BUNGEE;
+    /**
+     * Returns true if the server is running tuinity.
+     *
+     * @return Whether or not the server is running tuinity
+     */
+    public static boolean isTuinity() {
+        try {
+            return Class.forName("com.tuinity.tuinity.config.TuinityConfig") != null;
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns true if the server is running airplane.
+     *
+     * @return Whether or not the server is running airplane
+     */
+    public static boolean isAirplane() {
+        try {
+            return Class.forName("gg.airplane.AirplaneCommand") != null;
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns true if the server is running purpur.
+     *
+     * @return Whether or not the server is running purpur
+     */
+    public static boolean isPurpur() {
+        try {
+            return Class.forName("net.pl3x.purpur.PurpurVersionFetcher") != null;
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+            return false;
+        }
     }
 
     /**

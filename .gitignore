@@ -50,6 +50,9 @@ bin
 .project
 .idea
 *.code-workspace
+*.ipr
+*.iws
 
 # Generated resources
-common/src/main/resources/generated/*
+**/src/main/resources/generated/*
+**/src/gen/
