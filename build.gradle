@@ -271,7 +271,7 @@ dependencies {
 // Root build: create uber sources from subproject sources
 task rootSources(type: Jar, dependsOn: subprojects.classes) {
     // Gradle 7 implicit dependency fix: depend on special common tasks
-    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:downloadWidthData")
     dependsOn(":common:commonSources")
 
     archiveClassifier.set("sources")
@@ -291,7 +291,7 @@ task rootTestReport(type: TestReport) {
 // Create a libs/modules folder with submodule jars
 task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
     // Gradle 7 implicit dependency fix: depend on special common tasks
-    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:downloadWidthData")
     dependsOn(":common:commonSources")
 
     // Copy subproject jar and sources
