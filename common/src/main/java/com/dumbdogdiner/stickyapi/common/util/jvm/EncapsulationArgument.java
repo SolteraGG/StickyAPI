@@ -4,26 +4,28 @@
  */
 package com.dumbdogdiner.stickyapi.common.util.jvm;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 // --add-exports <source-module>/<package>=<target-module>(,<target-module>)*
-public class EncapsulationArgument {
+@EqualsAndHashCode
+public final class EncapsulationArgument {
 
     public enum EncapsulationType {
         ADD_OPENS, ADD_EXPORTS
     }
 
     @Getter
-    private EncapsulationType type;
+    private final EncapsulationType type;
 
     @Getter
-    private String sourceModule;
+    private final String sourceModule;
 
     @Getter
-    private String sourcePackage;
+    private final String sourcePackage;
 
     @Getter
-    private String targetModule;
+    private final String targetModule;
 
     public EncapsulationArgument(String argument, EncapsulationType type) {
         // Split out the input argument

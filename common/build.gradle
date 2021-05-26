@@ -25,6 +25,9 @@ dependencies {
 
     // Only included in paper?  (ShortID.java)
     compileOnly "commons-lang:commons-lang:2.6"
+
+    // Easy way to test lombok's @EqualsAndHashCode annotation in EncapsulationArgument
+    testImplementation "nl.jqno.equalsverifier:equalsverifier:3.6.1"
 }
 
 // Use --add-opens to ensure functionality of FieldUtil [java.lang.reflect.Field] (required in Java 16+)
