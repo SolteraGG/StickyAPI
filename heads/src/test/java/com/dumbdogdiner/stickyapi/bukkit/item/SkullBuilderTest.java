@@ -25,20 +25,20 @@ import java.net.URL;
 class SkullBuilderTest {
     static ServerMock svr;
 
-    @BeforeAll
+/*    @BeforeAll
     static void setup() {
         svr = MockBukkit.mock();
         MockBukkit.createMockPlugin();
         //svr.addPlayer();
         MockBukkit.load(StickyAPIPlugin.class);
         //Bukkit.setServer(svr);
-    }
+    }*/
 
-    @AfterAll
+ /*   @AfterAll
     static void tearDown() {
         MockBukkit.unmock();
     }
-
+*/
     /**
      * For now, we can only test the property setting
      */
