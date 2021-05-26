@@ -163,28 +163,12 @@ subprojects {
         jaxDoclet
         // give test dependencies access to compileOnly dependencies to emulate providedCompile
         testImplementation.extendsFrom compileOnly
-
-        dddResource // custom configuration for our ivy resources (eg. font info)
-        dddResource.description = "Resources (eg. yml or json data) to be included in jar builds"
     }
 
     repositories {
         // Maven Central is defined in allprojects (for JaCoCo)
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
-
-        // Note: Subprojects can't have repo overrides to we have to put it here
-        // Define a Ivy repo for the font width data (that way we don't need another plugin!)
-        def dddResources = ivy {
-           url "https://dumbdogdiner.github.io/"
-            patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
-            metadataSources { artifact() } 
-        }
-        // Only use the Ivy repo for font width data - speeds up dependency resolution
-        exclusiveContent {
-            forRepositories(dddResources)
-            filter { includeGroup("dumbdogdiner") }
-        }
     }
 
     dependencies {
@@ -271,7 +255,7 @@ dependencies {
 // Root build: create uber sources from subproject sources
 task rootSources(type: Jar, dependsOn: subprojects.classes) {
     // Gradle 7 implicit dependency fix: depend on special common tasks
-    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:downloadWidthData")
     dependsOn(":common:commonSources")
 
     archiveClassifier.set("sources")
@@ -291,7 +275,7 @@ task rootTestReport(type: TestReport) {
 // Create a libs/modules folder with submodule jars
 task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
     // Gradle 7 implicit dependency fix: depend on special common tasks
-    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:downloadWidthData")
     dependsOn(":common:commonSources")
 
     // Copy subproject jar and sources
