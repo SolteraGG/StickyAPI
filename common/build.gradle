@@ -18,7 +18,7 @@ dependencies {
     // Font width data (see above)
     dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
 
-    implementation "com.google.code.gson:gson:2.8.6"
+    implementation "com.google.code.gson:gson:2.8.7"
 
     // Dependencies available in both bukkit and bungee
     compileOnly "net.md-5:bungeecord-chat:1.16-R0.5-SNAPSHOT"

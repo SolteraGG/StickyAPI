@@ -15,5 +15,5 @@ dependencies {
         // So instead let's use the netty version that we were using before (inherited from bungeecord)
         compileOnly "io.netty:netty-codec:4.1.58.Final"
 
-        testImplementation "com.google.code.gson:gson:2.8.6"
+        testImplementation "com.google.code.gson:gson:2.8.7"
 }
