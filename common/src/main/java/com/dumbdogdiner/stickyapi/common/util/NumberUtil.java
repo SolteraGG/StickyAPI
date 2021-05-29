@@ -4,7 +4,6 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -20,8 +19,10 @@ import java.util.Locale;
  * Provides extra functionality for Java Number classes.
  * </p>
  */
-@UtilityClass
 public final class NumberUtil {
+    private NumberUtil() {
+    }
+
     private static final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
     static {
         moneyFormat.setCurrency(Currency.getInstance(Locale.US));
