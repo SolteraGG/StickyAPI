@@ -8,6 +8,8 @@ import com.google.common.primitives.Chars;
 import com.google.common.primitives.Ints;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;
@@ -119,10 +121,16 @@ public class MathUtil {
      * @return {@link Double}
      */
     public static double round(double value, int places) {
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
+        return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    /**
+     * Rounds a double to 2 decimals
+     * @param d The double to round
+     * @return The rounded double
+     */
+    public static double round2Places(double d){
+        return round(d, 2);
     }
 
     /**
