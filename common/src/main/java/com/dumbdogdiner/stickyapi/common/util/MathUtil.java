@@ -15,10 +15,10 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
- * <p>
  * Util class for commonly used math operations.
- * </p>
+ * @deprecated in favor of the stickyapi:math module.
  */
+@Deprecated(since = "3.1")
 public class MathUtil {
     private MathUtil() {
     }

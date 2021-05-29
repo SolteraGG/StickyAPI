@@ -2,5 +2,6 @@ rootProject.name = "stickyapi"
 include ":common"
 include ":common:serverversion" // subproject that's shaded into common
 include ":config" // common subproject; not included in common jar
+include ":math"
 include ":bukkit"
 include ":bungee"

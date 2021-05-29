@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.dumbdogdiner.stickyapi.math.NumberUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -286,7 +287,7 @@ public final class TimeUtil {
             return null;
 
         // If it's numeric, lets do some extra checks!
-        if (NumberUtil.isNumeric(timePeriod)) {
+        if (NumberUtil.isInteger(timePeriod, false)) {
             // Return null if it's greater 12 characters long
             if (timePeriod.length() > 12)
                 return null;

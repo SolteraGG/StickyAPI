@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.dumbdogdiner.stickyapi.math.RandomUtil;
 import com.google.common.base.Preconditions;
 
 import net.md_5.bungee.api.ChatColor;
@@ -333,16 +334,16 @@ public final class StringUtil {
         };
         StringBuilder obfuscated = new StringBuilder();
 
-        int len = MathUtil.randomInt(min, max);
+        int len = RandomUtil.randomInt(min, max);
         int charsSinceSpace = 0;
         while (obfuscated.length() < len) {
             if (minRunBeforeSpace > 0 && charsSinceSpace > minRunBeforeSpace &&
             // Set a 5% probability of the character being a space
-                    MathUtil.randomInt(1, 100) <= 5) {
+                    RandomUtil.probability(0.05)) {
                 obfuscated.append(' ');
                 charsSinceSpace = 0;
             } else {
-                obfuscated.append(MathUtil.randomElement(choices));
+                obfuscated.append(RandomUtil.randomElement(choices));
                 charsSinceSpace++;
             }
         }
