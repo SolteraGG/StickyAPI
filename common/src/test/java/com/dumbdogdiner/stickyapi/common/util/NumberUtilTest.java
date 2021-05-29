@@ -58,4 +58,15 @@ public class NumberUtilTest {
     public void testIntHelperMin() {
         assertEquals(NumberUtil.longToInt(((long) Integer.MIN_VALUE) - 1L), Integer.MIN_VALUE);
     }
+
+    @Test
+    public void formatPrice() {
+        System.out.println(NumberUtil.formatPrice(1.00001));
+        assertEquals("$1.00", NumberUtil.formatPrice(1.0000001));
+    }
+
+    @Test
+    public void round2Places() {
+        assertEquals(6.51D, MathUtil.round2Places(6.509));
+    }
 }

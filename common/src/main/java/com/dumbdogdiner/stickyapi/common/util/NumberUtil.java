@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -21,13 +22,9 @@ import java.util.Locale;
  */
 @UtilityClass
 public final class NumberUtil {
-    private static final DecimalFormat moneyFormat = new DecimalFormat();
+    private static final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
     static {
-        DecimalFormatSymbols syms = moneyFormat.getDecimalFormatSymbols();
-        syms.setCurrency(Currency.getInstance(Locale.US));
-        syms.setGroupingSeparator(',');
-        syms.setMonetaryDecimalSeparator('.');
-        moneyFormat.setDecimalFormatSymbols(syms);
+        moneyFormat.setCurrency(Currency.getInstance(Locale.US));
     }
 
     /**
@@ -154,11 +151,14 @@ public final class NumberUtil {
     }
 
 
-    public static String formatPrice(double worthPrice) {
-        return moneyFormat.format(worthPrice);
+    /**
+     * Formats a price into US currency format
+     * @param price Price to format
+     * @return Formatted String
+     */
+    public static String formatPrice(double price) {
+        return moneyFormat.format(price);
     }
 
-    public static double round2Places(double d){
-        return new BigDecimal(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
-    }
+
 }
