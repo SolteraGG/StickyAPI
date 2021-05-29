@@ -10,17 +10,15 @@ import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles the playing of cute fox noises for notification purposes.
  */
-
-@SuppressWarnings("UnusedReturnValue")
-@UtilityClass
 public class SoundUtil {
+    private SoundUtil() {
+    }
+
     /**
      * Check if the parsed sender can receive sounds. Returns true if valid.
      * 
