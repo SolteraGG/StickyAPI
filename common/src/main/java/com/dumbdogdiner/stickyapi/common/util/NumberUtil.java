@@ -4,15 +4,30 @@
  */
 package com.dumbdogdiner.stickyapi.common.util;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Currency;
+import java.util.Locale;
 
 /**
  * <p>
  * Provides extra functionality for Java Number classes.
  * </p>
  */
+@UtilityClass
 public final class NumberUtil {
-    private NumberUtil() {
+    private static final DecimalFormat moneyFormat = new DecimalFormat();
+    static {
+        DecimalFormatSymbols syms = moneyFormat.getDecimalFormatSymbols();
+        syms.setCurrency(Currency.getInstance(Locale.US));
+        syms.setGroupingSeparator(',');
+        syms.setMonetaryDecimalSeparator('.');
+        moneyFormat.setDecimalFormatSymbols(syms);
     }
 
     /**
@@ -136,5 +151,14 @@ public final class NumberUtil {
                     throw new ArithmeticException(); // Somehow Long.compare is broken?? This should be impossible
             }
         }
+    }
+
+
+    public static String formatPrice(double worthPrice) {
+        return moneyFormat.format(worthPrice);
+    }
+
+    public static double round2Places(double d){
+        return new BigDecimal(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

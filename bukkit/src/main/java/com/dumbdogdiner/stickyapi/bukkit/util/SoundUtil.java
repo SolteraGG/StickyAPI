@@ -10,15 +10,17 @@ import com.dumbdogdiner.stickyapi.common.util.NotificationType;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles the playing of cute fox noises for notification purposes.
  */
-public class SoundUtil {
-    private SoundUtil() {
-    }
 
+@SuppressWarnings("UnusedReturnValue")
+@UtilityClass
+public class SoundUtil {
     /**
      * Check if the parsed sender can receive sounds. Returns true if valid.
      * 
@@ -38,8 +40,7 @@ public class SoundUtil {
      * @param pitch  The pitch of the sound
      * @param delay  T
      */
-    public static void queueSound(@NotNull Player player, @NotNull Sound sound, @NotNull float volume,
-            @NotNull float pitch, @NotNull Long delay) {
+    public static void queueSound(@NotNull Player player, @NotNull Sound sound, float volume, float pitch, long delay) {
         StickyAPI.getPool().submit(() -> {
             try {
                 Thread.sleep(delay);
@@ -100,7 +101,7 @@ public class SoundUtil {
      * @param type   {@link NotificationType} The type of sound
      * @return {@link java.lang.Boolean}
      */
-    public static Boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {
+    public static boolean send(@NotNull CommandSender sender, @NotNull NotificationType type) {
         if (!validate(sender)) {
             return false;
         }
