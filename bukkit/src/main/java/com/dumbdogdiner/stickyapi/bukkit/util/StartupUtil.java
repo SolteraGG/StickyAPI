@@ -13,15 +13,15 @@ import javax.annotation.Nullable;
 import com.dumbdogdiner.stickyapi.common.config.providers.YamlProvider;
 import com.dumbdogdiner.stickyapi.common.translation.LocaleProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is used for reducing code dupe on plugin startup
  */
-@UtilityClass
 public class StartupUtil {
+    private StartupUtil() {
+    }
+
     /**
      * Generate a configuration datafolder and save the default config if one does
      * not exist
