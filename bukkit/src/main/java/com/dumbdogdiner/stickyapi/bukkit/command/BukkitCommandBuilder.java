@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
  * 
  * @since 2.0
  */
+@Deprecated
 public class BukkitCommandBuilder extends CommandBuilder<BukkitCommandBuilder> {
 
     // Hmm...

@@ -1,6 +1,93 @@
 {
   "pages": [
     [
+      [
+        {
+          "text": "Dumb Dog Diner MC\\nSeason 4 Handbook",
+          "bold": true,
+          "italic": true,
+          "color": "dark_purple"
+        },
+        {
+          "text": "\\n\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Table of Contents:",
+          "bold": true,
+          "italic": true,
+          "underlined": true,
+          "color": "dark_red"
+        },
+        {
+          "text": "\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Page 2: ",
+          "color": "red"
+        },
+        {
+          "text": "Rules\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 3: ",
+          "color": "red"
+        },
+        {
+          "text": "Gameplay\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 5: ",
+          "color": "red"
+        },
+        {
+          "text": "Trading\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 7: ",
+          "color": "red"
+        },
+        {
+          "text": "Commands\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 9: ",
+          "color": "red"
+        },
+        {
+          "text": "Trading\\nCommands\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 10: ",
+          "color": "red"
+        },
+        {
+          "text": "Extras\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 11: ",
+          "color": "red"
+        },
+        {
+          "text": "Getting Help\\n",
+          "color": "reset"
+        },
+        {
+          "text": "Pg. 13: ",
+          "color": "red"
+        },
+        {
+          "text": "Credits",
+          "color": "reset"
+        }
+      ],
       {
         "text": "Dumb Dog Diner MC\\nSurvival Handbook",
         "bold": true,
@@ -444,14 +531,14 @@
   ],
   "title": "\u0026ddddMC Survival Handbook v1.0",
   "author": "Stixil",
-  "lore" : [
+  "lore": [
     {
       "text": "dddMC 2020",
       "bold": true,
       "color": "dark_purple"
     },
     {
-      "text" : "",
+      "text": "",
       "color": "reset"
     }
   ]
