@@ -15,11 +15,19 @@ public interface Configuration {
      * @return The requested string.
      */
     public String getString(String path, String def);
-    
+
     /**
      * Gets the given string from the path.
      * @param path The path of the string to get
      * @return The requested string, or null.
      */
     public String getString(String path);
+
+    Double getDouble(String path);
+
+    double getDouble(String path, double def);
+
+    Integer getInt(String path);
+
+    int getInt(String path, int def);
 }

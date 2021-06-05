@@ -10,17 +10,22 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.dumbdogdiner.stickyapi.common.config.FileConfiguration;
 
 import org.apache.commons.lang.Validate;
+import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 public class YamlProvider implements FileConfiguration {
-
     private ConcurrentHashMap<String, Object> data;
 
     private InputStream inputStream;
@@ -50,15 +55,87 @@ public class YamlProvider implements FileConfiguration {
 
 	@Override
 	public String getString(String path, String def) {
-        Object value = this.data.get(path);
-        return (value != null) ? value.toString() : def;
+        return getAs(path, def);
 	}
 
 	@Override
 	public String getString(String path) {
-        Object value = this.data.get(path);
+        Object value = get(path);
         return (value != null) ? value.toString() : null;
 	}
+
+    @Override
+    public Double getDouble(String path) {
+        Object value = get(path);
+        return (value instanceof Double) ? (double) value : null;
+    }
+
+    @Override
+    public double getDouble(String path, double def) {
+        return Objects.requireNonNullElse(getDouble(path), def);
+    }
+
+    @Override
+    public Integer getInt(String path) {
+        Object value = get(path);
+        return (value instanceof Integer) ? (int) value : null;
+    }
+
+    @Override
+    public int getInt(String path, int def) {
+        return Objects.requireNonNullElse(getInt(path), def);
+    }
+
+    /**
+     * Gets a generic type from the configuration
+     * @param path The path of the object to get in the configuration
+     * @param def The default value
+     * @param <T> The type of the object to get
+     * @return The requested object, or the default value
+     */
+    public <T> T getAs(String path, T def){
+        Object value = get(path);
+        try {
+            return value != null ? (T) value : def;
+        } catch (ClassCastException e) {
+            return def;
+        }
+    }
+
+    /**
+     * Generalized convinience version of {@link #get(String, Map)}
+     * @param path The path of the object
+     * @return The value at the key of the path
+     */
+    private @Nullable Object get(String path){
+        return get(path, data);
+    }
+    
+    /**
+     * Internal method to deal with recursive, nested map params
+     * @param path The path of the object
+     * @param map The map we are working with
+     * @return The value of that key at the path
+     */
+    private @Nullable Object get(String path, Map<String, ?> map){
+        if(path == null)
+            return null;
+        // Split off the head of a path, if it exists
+        String [] splitPath = path.split("\\.", 2);
+        if(splitPath.length == 2 && map.containsKey(splitPath[0]) && map.get(splitPath[0]) instanceof Map){
+            return get(splitPath[1], (Map<String, ?>) map.get(splitPath[0]));
+        }
+
+        return map.containsKey(splitPath[0]) ? map.get(splitPath[0]) : null;
+    }
+
+    /**
+     * Gets a {@link Set<String>} of all of the paths that were loaded
+     * @return A set of all loaded paths
+     */
+    public Set<String> getPaths(){
+        return new HashSet<>(Collections.list(data.keys()));
+    }
 
     @Override
     public boolean save(String path) {

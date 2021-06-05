@@ -5,6 +5,7 @@
 package com.dumbdogdiner.stickyapi.common.translation;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -269,7 +270,7 @@ public class LocaleProvider {
      * 
      * @return {@link java.util.TreeMap}
      */
-    public TreeMap<String, String> newVariables() {
-        return new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+    public static Map<String, String> newVariables() {
+        return new HashMap<>();
     }
 }
