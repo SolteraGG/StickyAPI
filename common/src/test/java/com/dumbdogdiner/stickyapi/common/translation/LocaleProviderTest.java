@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.dumbdogdiner.stickyapi.common.util.Debugger;
@@ -130,6 +131,10 @@ public class LocaleProviderTest {
 
         // Translate changes & to § for ChatColor codes 
         assertEquals("Msg>§cError! The player Notch has not joined before!", output);
+        Map<String, String> vars2 = localeProviderGroup1.newVariables();
+        vars2.put("player", "Rodwuff");
+        System.out.println(
+                localeProviderGroup1.translate("afk.afk-m", vars2));
     }
 
     @Test

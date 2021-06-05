@@ -21,6 +21,10 @@ player-has-not-joined: "{prefix}&cError! The player {target} has not joined befo
 must-be-player: "{prefix}&cYou must be a player to execute this command!"
 not-online-player: "{prefix}&c Error! {player} is not online!"
 invalid-group: "{prefix}&cError! Group {GROUP} is invalid!"
+afk:
+  not-afk: "&7&o* {player} is no longer AFK!"
+  afk-m: "&7&o* {player} is now AFK!"
+  afk-kick: "&cYou have been AFK for {time|duration} and have been kicked!"
 
 # The config supports new lines (\n), it can be used on any node
 whois-message: "{prefix}&bWhois data for {target}\n{newline}&b{target_online|yesno:'&aOnline,&cOffline'} &bsince: &f{target_last_seen|expiry}\n{newline}&bIP: &f{target_ipaddress}\n{newline}&bFirst Login: &f{target_first_seen|expiry}\n{newline}&bLast Login: &f{target_last_seen|expiry}\n{newline}&bLast Server: &f{target_last_server}\n{newline}&bFly/Walk: &f{target_fly_speed}&b / &f{target_walk_speed}"
@@ -51,10 +55,8 @@ sell:
     no-sales: "{prefix}&bThere have been no sales!"
     paginator: "{prefix}&bpage &f{current}&b/&f{total}"
 
-afk:
-  not-afk: "&7&o* {player} is no longer AFK!"
-  afk: "&7&o* {player} is now AFK!"
-  afk-kick: "&cYou have been AFK for {time|duration} and have been kicked!"
+
+
 
 hat:
   no-hat: "{prefix}&bYou do not have a hat!"
