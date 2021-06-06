@@ -56,7 +56,7 @@ public class SoundUtil {
      */
     public static void sendInfo(@NotNull Player player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f, 0L);
-        queueSound(player, Sound.ENTITY_FOX_AMBIENT, 1f, 1f, 500L);
+        //queueSound(player, Sound.ENTITY_FOX_AMBIENT, 1f, 1f, 500L);
     }
 
     /**
@@ -65,7 +65,7 @@ public class SoundUtil {
      * @param player {@link org.bukkit.entity.Player} The target player
      */
     public static void sendQuiet(@NotNull Player player) {
-        queueSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 1f, 1f, 0L);
+        queueSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 0.5f, 1f, 0L);
         // This makes it too loud?
         // queueSound(player, Sound.ENTITY_FOX_SLEEP, 1f, 1f, 500L);
     }
@@ -78,7 +78,7 @@ public class SoundUtil {
     public static void sendError(@NotNull Player player) {
         queueSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.944f, 0L);
         queueSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f, 0L);
-        queueSound(player, Sound.ENTITY_FOX_HURT, 1f, 1f, 0L);
+        queueSound(player, Sound.ENTITY_FOX_HURT, 0.25f, 2f, 0L);
     }
 
     /**

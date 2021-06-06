@@ -4,3 +4,5 @@ include ":common:serverversion" // subproject that's shaded into common
 include ":config" // common subproject; not included in common jar
 include ":bukkit"
 include ":bungee"
+include 'luckperms'
+

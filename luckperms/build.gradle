@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.dumbdogdiner.stickyapi'
+version '3.0.3'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly project(":common")
+    compileOnly project(":common:serverversion")
+    compileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+    compileOnly 'net.luckperms:api:5.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
