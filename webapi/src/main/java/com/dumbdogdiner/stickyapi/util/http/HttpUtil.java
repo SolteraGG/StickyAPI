@@ -73,7 +73,7 @@ public class HttpUtil {
             if(response.body().contentLength() == 0){
                 throw new HttpException(url.url(), "No content received");
             }
-            return JsonParser.parseReader(response.body().charStream());
+            return new JsonParser().parse(response.body().charStream());
         } catch (IOException e){
             throw new HttpConnectionException(url.url(), e);
         } catch (NullPointerException e) {

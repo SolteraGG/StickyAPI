@@ -93,7 +93,7 @@ public class MinecraftHeadsAPI {
         else if(headMeta.hasDisplayName())
             return headMeta.getDisplayName();
         else
-            return head.getI18NDisplayName();
+            return head.getItemMeta().getDisplayName();
     }
 
     /**

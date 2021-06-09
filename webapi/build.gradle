@@ -1,9 +1,3 @@
-plugins {
-    id 'java'
-}
-
-group 'com.dumbdogdiner'
-version '2.2.0'
 
 repositories {
     mavenCentral()
@@ -19,9 +13,10 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     testImplementation("com.squareup.okhttp3:mockwebserver")
 
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.guava:guava:21.0'
 
-    testImplementation(project(":textures"))
+    testImplementation(project(":textures").sourceSets.main.output)
     //testCompile project(":textures").sourceSets.test.output
     //testCompile project(":textures").sourceSets.main.output
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'

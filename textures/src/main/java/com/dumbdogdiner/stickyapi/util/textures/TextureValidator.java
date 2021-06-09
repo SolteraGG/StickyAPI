@@ -6,16 +6,13 @@ package com.dumbdogdiner.stickyapi.util.textures;
 
 import com.dumbdogdiner.stickyapi.StickyAPI;
 import com.dumbdogdiner.stickyapi.util.http.UrlValidator;
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.experimental.UtilityClass;
-import okhttp3.HttpUrl;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.NullArgumentException;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -24,19 +21,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
-import java.util.stream.Collector;
 
 
 @UtilityClass

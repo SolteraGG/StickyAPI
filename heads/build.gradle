@@ -16,6 +16,8 @@ dependencies {
     implementation project(":textures")
     testImplementation project(":textures").sourceSets.test.output
 
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.25.0'
     testImplementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
 }
