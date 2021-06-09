@@ -4,16 +4,12 @@
  */
 package com.dumbdogdiner.stickyapi.common.nbt;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@RunWith(Parameterized.class)
 class NbtBooleanTagTest {
 
     @ParameterizedTest

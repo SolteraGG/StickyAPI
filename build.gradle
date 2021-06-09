@@ -1,24 +1,23 @@
 import java.nio.file.Paths
 
 plugins {
-    id "io.freefair.lombok" version "5.3.0" apply false
-    id "com.github.hierynomus.license" version "0.15.0" apply false
+    id "io.freefair.lombok" version "5.3.3.3" apply false
+    // spotless for license headers and linting
+    id "com.diffplug.spotless" version "5.12.5" apply false
+    // generation of project-wide javadocs
+    id "io.freefair.aggregate-javadoc" version "5.3.3.3"
 
-    // root project - intellij
-
+    // pom packaging for root
+    id "java-platform"
     id 'idea'
-
-    // root project - generate project-wide javadocs
-    id "io.freefair.aggregate-javadoc" version "5.3.0"
 }
 
 allprojects {
     group = "com.dumbdogdiner"
-    version = "2.2.0"
+    version = "3.0.3"
 
     apply plugin: "idea"
-
-    apply plugin: "java"
+    // java plugin is applied in subprojects
     apply plugin: "jacoco"
 
     // Apply here instead of in plugins {} above to solve
@@ -51,21 +50,113 @@ allprojects {
             }
         }
     }
+
+    tasks.withType(Javadoc) {
+        /*
+          Javadoc Fixes, part 3
+          Since JDK13 the javadoc html validator was changed, making it impossible to have javadocs
+          that are valid on both pre-13 and post-13 java versions.
+          The original workaround was suggested here: https://bugs.openjdk.java.net/browse/JDK-8223552
+          However, this workaround does not work for us since we are using aggregate-javadoc.
+          So, we are using a workaround for the workaround from:
+            original: https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+            archived: https://web.archive.org/web/20210117193942/https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+          which, in turn, references this: https://github.com/GPars/GPars/blob/7cddf7cf2fec1fd66ef800edccfc03315d078a2b/build.gradle#L209
+        */
+        options.addBooleanOption("Xdoclint:-html", JavaVersion.current().isJava11Compatible())
+
+        // Enable frames support if running on java 11
+        options.addBooleanOption("-frames", JavaVersion.current().isJava11())
+
+        // Include private and protected in the javadocs
+        options.memberLevel = JavadocMemberLevel.PRIVATE
+    }
+
+    // -------------------------
+    // Check for unresolvable packages (works on root and subprojects)
+    // -------------------------
+    // Define unresolvable packages here
+    def unresolvablePackages = ["serverversion"]
+    // Define the default configuration to check (in this case ones from the "java" plugin used in our subprojects)
+    // 3.X.X: Add "api" check for compile-time transistive deps (eg bukkit -> common when depending on bukkit only)
+    // See: https://docs.gradle.org/6.8.3/userguide/java_library_plugin.html#sec:java_library_configurations_graph
+    def configurationsToCheck = ["runtimeClasspath", "api"]
+    // Define the task itself
+    task checkForUnresolvablePackages {
+        // Set metadata
+        description = "Check that no unresolvable packages are in the given configuration"
+        group = "verification"
+        doLast {
+            println("Checking project '$project.name' for unresolvable packages...")
+            // Root project: "runtimeClasspath" not available, use "classpath" configuration instead
+            if (project.name == rootProject.name) configurationsToCheck = ["classpath"]
+            // Iterate through each specified configuration
+            configurationsToCheck.each { config ->
+                println("\nUsing configuration '$config'")
+                // Iterate through each dependency in the given configuration
+                configurations[config].allDependencies.each {
+                    println("[debug] Checking '$it.group:$it.name:$it.version'")
+                    // Check if it's in our list AND has the same group as the root project
+                    // (To make sure it's actually from this codebase)
+                    if (unresolvablePackages.contains(it.name) && it.group == rootProject.group) {
+                        // Print to console, and also call ant.fail to fail the entire build.
+                        def errMsg = "Found unresolvable dependency '$it.group:$it.name' in project '$project.name'!"
+                        println(errMsg)
+                        ant.fail(errMsg)
+                    }
+                }
+            }
+            // Otherwise, the check passed!
+            println("Unresolvable packages check for project '$project.name' completed successfully!")
+        }
+    }
+    
+    // Finalize the build task with this task on every project.
+    build.finalizedBy checkForUnresolvablePackages
+    // -------------------------
+
+    // Set pom metadata for every publication
+    publishing.publications.withType(MavenPublication) {
+        pom {
+            // Set scm metadata (in the hope that dependabot will pick it up!)
+            // See: https://github.com/dependabot/dependabot-core/blob/8c63c95770ecc84ac9597df6d53754b5d41638f9/gradle/lib/dependabot/gradle/metadata_finder.rb#L51
+            scm {
+                connection = "scm:git:https://github.com/DumbDogDiner/StickyAPI.git"
+                developerConnection = "scm:git:https://github.com/DumbDogDiner/StickyAPI.git"
+                url = "https://github.com/DumbDogDiner/StickyAPI"
+            }
+            // Also set issue & ci management metadata
+            issueManagement {
+                system = "GitHub Issues"
+                url = "https://github.com/DumbDogDiner/StickyAPI/issues"
+            }
+            ciManagement {
+                system = "GitHub Actions"
+                url = "https://github.com/DumbDogDiner/StickyAPI/actions"
+            }
+        }
+    }
 }
 
 subprojects {
     apply plugin: "io.freefair.lombok"
-    apply plugin: "com.github.hierynomus.license"
+    apply plugin: "com.diffplug.spotless"
+    
+    // apply the java plugin here since root uses java-platform
+    apply plugin: "java"
 
-    // License Plugin Options
-    license {
-        header = project.rootProject.file("LICENSE_HEADER")
-        ext.year = Calendar.getInstance().get(Calendar.YEAR)
-        mapping("java", "SLASHSTAR_STYLE")
-        exclude "**/*.json" // Exclude JSON to keep the font width data valid
-        exclude "**/*.md"
-        exclude "**/*.yml"
-        exclude "**/*.MockMaker"
+    // for "api" in dependencies { }
+    apply plugin: "java-library"
+
+    // Use 1.18.20+ for Java 16 compatability
+    lombok { version = "1.18.20" }
+
+    // Spotless Options
+    spotless {
+        encoding 'UTF-8' // all formats will be interpreted as UTF-8
+        java {
+            licenseHeaderFile(project.rootProject.file("LICENSE_HEADER"))
+        }
     }
 
     tasks.withType(JavaCompile) {
@@ -77,48 +168,46 @@ subprojects {
         jaxDoclet
         // give test dependencies access to compileOnly dependencies to emulate providedCompile
         testImplementation.extendsFrom compileOnly
+
+        dddResource // custom configuration for our ivy resources (eg. font info)
+        dddResource.description = "Resources (eg. yml or json data) to be included in jar builds"
     }
 
     repositories {
-        // Note: Maven Central is defined in allprojects
-        jcenter()
-
+        // Maven Central is defined in allprojects (for JaCoCo)
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "https://papermc.io/repo/repository/maven-public/" }
 
         // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
-        def ddd_mc_font = ivy {
+        def dddResources = ivy {
            url "https://dumbdogdiner.github.io/"
             patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
             metadataSources { artifact() } 
         }
         // Only use the Ivy repo for font width data - speeds up dependency resolution
         exclusiveContent {
-            forRepositories(ddd_mc_font)
+            forRepositories(dddResources)
             filter { includeGroup("dumbdogdiner") }
+        }
+        maven {
+            name = "HeadDatabase-API"
+            url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty/")
         }
     }
 
     dependencies {
-        compileOnly "org.projectlombok:lombok:1.18.18"
-        annotationProcessor "org.projectlombok:lombok:1.18.18"
-
-        // Note: Common uses both of these... ???
-        compileOnly "net.md-5:bungeecord-api:1.16-R0.5-SNAPSHOT"
-        compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
-
-        implementation "org.jetbrains:annotations:20.1.0"
-        implementation "io.github.classgraph:classgraph:4.8.102"
+        implementation "org.jetbrains:annotations:21.0.1"
+        implementation "io.github.classgraph:classgraph:4.8.105"
         implementation "com.github.seancfoley:ipaddress:5.3.3"
 
         // Tests - JUnit 5
-        testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.1"
-        testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.1"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.2"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"
 
         // Tests - Mocking Suite (eg. mocking Bukkit for tests)
-        testImplementation "org.mockito:mockito-core:3.7.7"
+        testImplementation "org.mockito:mockito-core:3.10.0"
     }
 
     test {
@@ -156,30 +245,47 @@ subprojects {
         options.encoding = "UTF-8"
     }
 
+    // Javadoc: Add rootproject name in title for consistency
+    javadoc.title = "$rootProject.name-$project.name $project.version API"
 
-    // Run the license formatter and font data copier before compiling the source code. 
-    tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest
+    // Run the linter before compiling the source code. 
+    tasks.compileJava.dependsOn spotlessApply
     tasks.build.dependsOn sources
 
     // Per-module publishing (eg. stickyapi-common)
-    publishing {
-        publications {
-            gprSubprojects(MavenPublication) {
-                artifactId "${rootProject.name}-${project.name}"
-                println("(jcx debug from ${project.name} gpr2): " + components.java)
-                
-                from(components.java)
-                artifact sources // Publish the output of the sources task
+    if (project.name != "serverversion") { // Ignore :common:serverversion (already included in :common)
+        publishing {
+            publications {
+                gprSubprojects(MavenPublication) {
+                    artifactId "${rootProject.name}-${project.name}"
+                    println("[debug] ${project.name} found component: " + components.java)
+
+                    from(components.java)
+                    artifact sources // Publish the output of the sources task
+                }
             }
         }
     }
 }
 
-// Root build: create uber jar from subproject outputs
-jar { from subprojects.sourceSets.main.output }
+// Root build: include dependencies (see below)
+javaPlatform.allowDependencies()
+
+// Root build: Add api dependency to all projects we wanna include
+dependencies {
+    project.subprojects.each {
+        if (it.name != "serverversion") api (it) {
+            exclude group: "com.dumbdogdiner", module: "serverversion"
+        }
+    }
+}
 
 // Root build: create uber sources from subproject sources
-task rootSources(type: Jar, dependsOn: classes) {
+task rootSources(type: Jar, dependsOn: subprojects.classes) {
+    // Gradle 7 implicit dependency fix: depend on special common tasks
+    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:commonSources")
+
     archiveClassifier.set("sources")
     // Use source code from all subprojects for sources.
     // TODO: Use certain subprojects only to allow for multiple jar outputs
@@ -194,10 +300,34 @@ task rootTestReport(type: TestReport) {
     reportOn subprojects*.test
 }
 
+// Create a libs/modules folder with submodule jars
+task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
+    // Gradle 7 implicit dependency fix: depend on special common tasks
+    dependsOn(":common:copyMCFontExtractor")
+    dependsOn(":common:commonSources")
+
+    // Copy subproject jar and sources
+    from(subprojects.jar) 
+    from(subprojects.sources)
+    into rootProject.file("build/libs/modules")
+}
+
 // Generate an additional jacoco report project-wide
 // src: https://github.com/gradle/gradle/issues/10708#issuecomment-566279825
 task rootJacocoMergedReport(type: JacocoReport) {
-  //dependsOn = subprojects.test
+  // Gradle 7 implicit dependency fixes
+  // -------------------------
+  dependsOn(subprojects.test)
+  dependsOn(subprojects.javadoc)
+
+  dependsOn(subprojects.delombok)
+  dependsOn(subprojects.jacocoTestReport)
+
+  dependsOn(aggregateJavadoc)
+  dependsOn(copySubprojectJars)
+  dependsOn(rootTestReport)
+  // -------------------------
+
   additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
   classDirectories.setFrom files(subprojects.sourceSets.main.output)
@@ -208,14 +338,6 @@ task rootJacocoMergedReport(type: JacocoReport) {
   }
 }
 
-// Create a libs/modules folder with submodule jars
-task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
-    // Copy subproject jar and sources
-    from(subprojects.jar) 
-    from(subprojects.sources)
-    into rootProject.file("build/libs/modules")
-}
-
 // Root build: run copySubprojectJars after build
 tasks.build.finalizedBy copySubprojectJars
 
@@ -223,17 +345,18 @@ tasks.build.finalizedBy copySubprojectJars
 tasks.build.dependsOn rootSources
 
 // Root build: generate project wide test, coverage and javadoc results
-tasks.test.finalizedBy rootTestReport, rootJacocoMergedReport, javadoc
+tasks.build.finalizedBy rootTestReport, rootJacocoMergedReport, aggregateJavadoc
 
-// Root build: also run aggregateJavadoc after javadoc to generate project-wide javadocs
-tasks.javadoc.finalizedBy aggregateJavadoc
+// Subproject Javadoc: Finalize :javadoc meta-task with :aggregateJavadoc
+task javadoc { finalizedBy aggregateJavadoc }
 
-// Javadoc fixes (pt. 2, see above entry in subprojects)
+// Javadoc fixes (pt. 2, see above entries)
 aggregateJavadoc.options.encoding = "UTF-8"
 
+// Root Javadoc: Set title and output dir
+aggregateJavadoc.title = "StickyAPI $project.version API (Aggregated)"
+aggregateJavadoc.destinationDir = file("$buildDir/docs/javadoc")
 /*
-    Javadoc Fixes, part 3
-
     Since JDK13 the javadoc html validator was changed, making it impossible to have javadocs
     that are valid on both pre-13 and post-13 java versions.
     The original workaround was suggested here: https://bugs.openjdk.java.net/browse/JDK-8223552
@@ -251,10 +374,7 @@ allprojects {
         options.memberLevel = JavadocMemberLevel.PRIVATE
         options.encoding = "UTF-8"
     }
-}
-
-
-task browseJavadoc {
+    task browseJavadoc {
     dependsOn javadoc
     description "Browse javadoc"
     group = "documentation"
@@ -262,6 +382,8 @@ task browseJavadoc {
         java.awt.Desktop.desktop.browse getProjectDir().toPath().resolve("build/docs/javadoc/index.html").toUri()
     }
 }
+}
+
 
 tasks.publish.dependsOn build
 
@@ -269,7 +391,7 @@ publishing {
     // Uber-jar publication
     publications {
         gprRoot(MavenPublication) {
-            from(components.java)
+            from(components.javaPlatform)
             artifact rootSources // Publish the output of the (root) sources task
         }
     }

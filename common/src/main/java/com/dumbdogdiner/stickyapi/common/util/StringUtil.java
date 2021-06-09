@@ -280,6 +280,7 @@ public final class StringUtil {
      * @param prefix Prefix of string to compare
      * @return {@link Boolean}
      * @throws NullPointerException if prefix or string is null
+     * @since 3.0
      */
     public static boolean startsWith(@NotNull final String string, @NotNull final String prefix) {
         if (string.length() < prefix.length()) {
@@ -354,6 +355,7 @@ public final class StringUtil {
      * @param minRunBeforeSpace Minimum number of characters before a space can
      *                          appear, set to 0 to disable space
      * @return A string of random characters, where the length
+     * @since 3.0
      */
     public static String randomObfuscatedString(int min, int max, int minRunBeforeSpace) {
         Preconditions.checkArgument(max >= min, "Max cannot be less than min");
@@ -401,6 +403,7 @@ public final class StringUtil {
      * @param input The input string
      * @return A string where the relevant ampersands are replaced with section
      *         symbols
+     * @since 3.0
      */
     public static String formatChatCodes(String input) {
         return input.replaceAll("&(?=([a-f]|[0-9]|[klmnor]))", Character.toString(ChatColor.COLOR_CHAR));

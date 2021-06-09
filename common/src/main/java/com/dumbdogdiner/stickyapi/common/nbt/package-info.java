@@ -4,6 +4,7 @@
  */
 /**
  * This package contains classes designed to help work with SNBT
+ * @since 3.0
  */
 
 package com.dumbdogdiner.stickyapi.common.nbt;

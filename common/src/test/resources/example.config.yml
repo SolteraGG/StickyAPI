@@ -1,4 +1,0 @@
-string: "Hello, World!"
-parent:
-  child:
-    child2: "value"

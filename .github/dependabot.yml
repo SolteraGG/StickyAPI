@@ -1,0 +1,18 @@
+version: 2
+
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "12:00"
+  open-pull-requests-limit: 16
+  ignore:
+    # Using upstream minecraft version
+  - dependency-name: io.netty:netty-codec
+    versions:
+    - "> 4.1.58.Final"
+    # Using upstream minecraft version
+  - dependency-name: org.yaml:snakeyaml
+    versions:
+    - "> 1.27"

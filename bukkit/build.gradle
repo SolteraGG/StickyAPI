@@ -1,6 +1,19 @@
 dependencies {
-        compile project(":common")
-        testCompile project(":common").sourceSets.test.output
+        api project(":common") // api - transistively expose common dependency when implementing :bukkit
+        testImplementation project(":common").sourceSets.test.output
 
-        testImplementation "com.google.code.gson:gson:2.8.6"
+        // 3.0.2: serverversion is not transistive from common
+        // Since we depend on common, the class is still available at runtime
+        // -------------------------
+        // Why: "compileOnly" | This typically includes dependencies which are shaded when found at runtime.
+        // Source: https://docs.gradle.org/6.8.3/userguide/java_library_plugin.html
+        compileOnly project(":common:serverversion")
+
+        compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+
+        // Fun fact: paper/spigot/etc doesn't include netty! (as it's from NMS)
+        // So instead let's use the netty version that we were using before (inherited from bungeecord)
+        compileOnly "io.netty:netty-codec:4.1.58.Final"
+
+        testImplementation "com.google.code.gson:gson:2.8.7"
 }

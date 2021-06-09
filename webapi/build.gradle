@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    compile project(":common")
-    testCompile project(":common").sourceSets.test.output
+    implementation project(":common")
+    testImplementation project(":common").sourceSets.test.output
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
 

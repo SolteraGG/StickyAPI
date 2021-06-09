@@ -7,9 +7,8 @@ package com.dumbdogdiner.stickyapi.common.util;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.Setter;
 import lombok.Getter;

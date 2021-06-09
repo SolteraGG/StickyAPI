@@ -1,28 +1,24 @@
 plugins {
-    id 'java-library'
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
-
-group 'com.dumbdogdiner'
-version '2.2.0'
-
 repositories {
-    mavenCentral()
+ mavenCentral()
+    // that should work dont touch for now
     maven {
-        name("headdatabase-api")
-        url("https://mvn.intellectualsites.com/content/repositories/thirdparty/")
+        name = "HeadDatabase-API"
+        url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty/")
     }
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
 }
 
 dependencies {
-    compile project(":common")
-    testCompile project(":common").sourceSets.test.output
+    implementation project(":common")
+    testImplementation(project(":common").sourceSets.test.output)
 
-    compile project(":webapi")
-    testCompile project(":webapi").sourceSets.test.output
+    implementation project(":webapi")
+    testImplementation project(":webapi").sourceSets.test.output
 
-    compileOnly("me.arcaniax:HeadDatabase-API:1.1.0")
+    implementation("me.arcaniax:HeadDatabase-API:1.1.0")
 
     implementation("org.jsoup:jsoup:1.13.1")
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))

@@ -1,14 +1,37 @@
 plugins {
     // Nemerosa Versioning Plugin for the build info
     id "net.nemerosa.versioning" version "2.14.0"
+
+    // for "api" in dependencies { }
+    id "java-library"
 }
 
 dependencies {
-    // Font width data (see above)
-    compile "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
+    // Depend on the config project
+    api project(":config") // api - transistively expose config dependency when implementing :common
+    testImplementation project(":config").sourceSets.test.output
 
-    implementation "com.google.code.gson:gson:2.8.6"
+    // LocaleProviderTest - add snakeyaml so YamlProvider (from the :config project) can work properly
+    // testRuntimeOnly = only accessible during the test job
+    testRuntimeOnly "org.yaml:snakeyaml:1.27"
+
+    // Font width data (see above)
+    dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
+
+    implementation "com.google.code.gson:gson:2.8.7"
+
+    // Dependencies available in both bukkit and bungee
+    compileOnly "net.md-5:bungeecord-chat:1.16-R0.5-SNAPSHOT"
+
+    // Only included in paper?  (ShortID.java)
+    compileOnly "commons-lang:commons-lang:2.6"
 }
+
+// Use --add-opens to ensure functionality of FieldUtil [java.lang.reflect.Field] (required in Java 16+)
+// This will export java.lang.reflect to unnamed modules (eg. stickyapi) so that FieldUtil can still function.
+// Alternative: ["--illegal-access=warn"] (same functionality as pre Java 16)
+// JEP: https://openjdk.java.net/jeps/396
+test.jvmArgs = ["--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"]
 
 /*
     Build Info
@@ -63,44 +86,35 @@ compileJava.source = processSourceTokens.outputs
  * Task to clean generated resources
  */
 
-task cleanGeneratedResources(type: Delete) {
-    delete("src/main/resources/generated/")
+// Font Width Info
+task copyMCFontExtractor(type: Copy) {
+    def path = project.configurations.dddResource.find {it.name.startsWith("mc-font-extractor") }
+    println("common: Found font data at: " + path)
+    from file(path)
+    // into file("src/main/resources")
+    // - Please keep this comment for future reference.
+    // - This is how we would do this if we weren't also adding build info (see processSourceTokens, above comments)
+    destinationDir file("src/main/resources/generated/")
+    rename "mc-font-extractor-main-mojangles_width_data.json", "mojangles_width_data.json"
 }
 
-clean {
-    dependsOn(cleanGeneratedResources)
-}
-configure(cleanGeneratedResources){
-    group = "Build"
-    description = "Clean generated/downloaded resource files"
-}
+// Run the font data copier
+tasks.processResources.dependsOn copyMCFontExtractor
 
-// Run the license formatter and font data copier before compiling the source code.
-tasks.compileJava.dependsOn licenseFormatMain, licenseFormatTest, processResources
 
-task downloadTextures(type: Download){
-    sourceUrl = "https://dumbdogdiner.github.io/mc-heads-resource/textures.json"
-    target = file("src/main/resources/generated/textures.json")
+// Common build: create a jar from the :common & :common:serverversion projects
+jar {
+    from sourceSets.main.output
+    from project(":common:serverversion").sourceSets.main.output
 }
 
-task downloadFontWidths(type: Download){
-    sourceUrl = "https://dumbdogdiner.github.io/mc-font-extractor/main/mojangles_width_data.json"
-    target = file("src/main/resources/generated/mojangles_width_data.json")
+// Common build: create uber sources from subproject sources
+task commonSources(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    // Use source code from :common & :common:serverversion projects
+    from sourceSets.main.allSource
+    from project(":common:serverversion").sourceSets.main.allSource
 }
 
-processResources {
-    dependsOn(downloadTextures, downloadFontWidths)
-}
-
-class Download extends DefaultTask {
-    @Input
-    String sourceUrl
-
-    @OutputFile
-    File target
-
-    @TaskAction
-    void download() {
-        ant.get(src: sourceUrl, dest: target, verbose: true)
-    }
-}
+// Common build: override the usual sources output with our one containing ServerVersion
+tasks.sources.finalizedBy commonSources
