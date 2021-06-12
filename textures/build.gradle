@@ -1,0 +1,75 @@
+plugins {
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+}
+apply plugin: 'java-library'
+repositories {
+ mavenCentral()
+    // that should work dont touch for now
+    maven {
+        name = "HeadDatabase-API"
+        url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty/")
+    }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
+}
+
+dependencies {
+    api project(":common")
+    api project(":common:serverversion")
+    testImplementation(project(":common").sourceSets.test.output)
+
+    api project(":webapi")
+    testImplementation project(":webapi").sourceSets.test.output
+
+    implementation("me.arcaniax:HeadDatabase-API:1.1.0")
+
+    implementation("org.jsoup:jsoup:1.13.1")
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
+
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    //implementation 'commons-validator:commons-validator:1.7'
+
+    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // No idea why the heck i need to do this, it doesn tmake sense???
+    testImplementation(project(":textures").sourceSets.main.output)
+
+    testImplementation 'org.apache.commons:commons-csv:1.8'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation("com.squareup.okhttp3:mockwebserver")
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+clean {
+    delete 'src/main/resources/generated'
+}
+
+task downloadTextures(type: Download){
+    sourceUrl = "https://dumbdogdiner.github.io/mc-heads-resource/textures.json"
+    target = file("src/main/resources/generated/textures.json")
+}
+
+shadowJar {
+    archiveClassifier.set("")
+}
+
+jar.finalizedBy(shadowJar)
+processResources.dependsOn tasks.withType(Download)
+
+class Download extends DefaultTask {
+    @Input
+    String sourceUrl
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void download() {
+        ant.get(src: sourceUrl, dest: target, verbose: true)
+    }
+}

@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 plugins {
     id "io.freefair.lombok" version "5.3.3.3" apply false
     // spotless for license headers and linting
@@ -7,12 +9,14 @@ plugins {
 
     // pom packaging for root
     id "java-platform"
+    id 'idea'
 }
 
 allprojects {
     group = "com.dumbdogdiner"
     version = "3.0.3"
 
+    apply plugin: "idea"
     // java plugin is applied in subprojects
     apply plugin: "jacoco"
 
@@ -157,6 +161,7 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-XDignore.symbol.file"
+        dependsOn(processResources)
     }
 
     configurations {
@@ -184,6 +189,10 @@ subprojects {
         exclusiveContent {
             forRepositories(dddResources)
             filter { includeGroup("dumbdogdiner") }
+        }
+        maven {
+            name = "HeadDatabase-API"
+            url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty/")
         }
     }
 
@@ -231,7 +240,10 @@ subprojects {
     delombok.encoding = "UTF-8"
     compileJava.options.encoding = "UTF-8"
     compileTestJava.options.encoding = "UTF-8"
-    javadoc.options.encoding = "UTF-8"
+    tasks.withType(Javadoc) {
+        options.addBooleanOption("quiet", true)
+        options.encoding = "UTF-8"
+    }
 
     // Javadoc: Add rootproject name in title for consistency
     javadoc.title = "$rootProject.name-$project.name $project.version API"
@@ -275,6 +287,7 @@ task rootSources(type: Jar, dependsOn: subprojects.classes) {
     dependsOn(":common:commonSources")
 
     archiveClassifier.set("sources")
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     // Use source code from all subprojects for sources.
     // TODO: Use certain subprojects only to allow for multiple jar outputs
     from subprojects.sourceSets.main.allSource
@@ -344,15 +357,34 @@ aggregateJavadoc.options.encoding = "UTF-8"
 // Root Javadoc: Set title and output dir
 aggregateJavadoc.title = "StickyAPI $project.version API (Aggregated)"
 aggregateJavadoc.destinationDir = file("$buildDir/docs/javadoc")
+/*
+    Since JDK13 the javadoc html validator was changed, making it impossible to have javadocs
+    that are valid on both pre-13 and post-13 java versions.
+    The original workaround was suggested here: https://bugs.openjdk.java.net/browse/JDK-8223552
+    However, this workaround does not work for us since we are using aggregate-javadoc.
+    So, we are using a workaround for the workaround from:
+        original: https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+        archived: https://web.archive.org/web/20210117193942/https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+    which, in turn, references this: https://github.com/GPars/GPars/blob/7cddf7cf2fec1fd66ef800edccfc03315d078a2b/build.gradle#L209
+ */
 
-task browseJavadoc {
-    dependsOn aggregateJavadoc
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addBooleanOption("Xdoclint:-html", JavaVersion.current().isJava11Compatible())
+        options.addBooleanOption("-frames", JavaVersion.current().isJava11())
+        options.memberLevel = JavadocMemberLevel.PRIVATE
+        options.encoding = "UTF-8"
+    }
+    task browseJavadoc {
+    dependsOn javadoc
     description "Browse javadoc"
     group = "documentation"
     doLast {
-        java.awt.Desktop.desktop.browse new URI(("file:///" << System.getProperty("user.dir").replace('\\','/') << "/build/docs/javadoc/index.html").toString())
+        java.awt.Desktop.desktop.browse getProjectDir().toPath().resolve("build/docs/javadoc/index.html").toUri()
     }
 }
+}
+
 
 tasks.publish.dependsOn build
 

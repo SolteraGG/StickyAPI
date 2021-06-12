@@ -33,6 +33,12 @@ jobs:
       run: ./gradlew publishAllPublicationsToTestingRepository
     - name: Display directory structure of testing repo
       run: ls -R build/testing-mvn-repo
+    - name: Upload info if failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: java-${{matrix.version}}-failed-build
+        path: build/*
     - name: Save output from testing repo
       uses: actions/upload-artifact@v2
       with:

@@ -1,0 +1,23 @@
+repositories {
+    mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/public/' }
+}
+
+dependencies {
+    implementation project(":common")
+    testImplementation project(":common").sourceSets.test.output
+
+    implementation project(":bukkit")
+    testImplementation project(":bukkit").sourceSets.test.output
+
+    implementation project(":webapi")
+    testImplementation project(":webapi").sourceSets.test.output
+
+    implementation project(":textures")
+    testImplementation project(":textures").sourceSets.test.output
+
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.25.0'
+    testImplementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+}
