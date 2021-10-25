@@ -1,6 +1,6 @@
 plugins {
     // Nemerosa Versioning Plugin for the build info
-    id "net.nemerosa.versioning" version "2.14.0"
+    id "net.nemerosa.versioning" version "2.15.1"
 
     // for "api" in dependencies { }
     id "java-library"
