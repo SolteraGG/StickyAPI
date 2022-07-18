@@ -10,7 +10,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.dumbdogdiner"
+    group = "gg.soltera"
     version = "3.0.3a"
 
     // java plugin is applied in subprojects
