@@ -16,7 +16,7 @@ dependencies {
     testRuntimeOnly "org.yaml:snakeyaml:1.27"
 
     // Font width data (see above)
-    dddResource "dumbdogdiner:mc-font-extractor:main:mojangles_width_data@json"
+    dddResource "solteragg:mc-font-extractor:main:mojangles_width_data@json"
 
     implementation "com.google.code.gson:gson:2.8.7"
 

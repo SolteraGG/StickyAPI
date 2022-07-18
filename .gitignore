@@ -53,3 +53,5 @@ bin
 
 # Generated resources
 common/src/main/resources/generated/*
+
+textures/src/main/resources/generated/

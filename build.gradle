@@ -176,14 +176,14 @@ subprojects {
         // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
         def dddResources = ivy {
-           url "https://dumbdogdiner.github.io/"
+           url "https://solteragg.github.io/"
             patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
             metadataSources { artifact() } 
         }
         // Only use the Ivy repo for font width data - speeds up dependency resolution
         exclusiveContent {
             forRepositories(dddResources)
-            filter { includeGroup("dumbdogdiner") }
+            filter { includeGroup("solteragg") }
         }
     }
 
