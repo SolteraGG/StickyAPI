@@ -42,7 +42,7 @@ jobs:
           echo "name:        ${{ steps.import_gpg.outputs.name }}"
           echo "email:       ${{ steps.import_gpg.outputs.email }}"
       - name: Deploy Docs
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@v4.3.4
         with:
           ACCESS_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}
           BRANCH: gh-pages
