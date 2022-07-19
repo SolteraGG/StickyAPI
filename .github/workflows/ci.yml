@@ -79,10 +79,4 @@ jobs:
       with:
         name: failed-javadocs-options-file
         path: build/tmp/javadoc/javadoc.options
-  dependabot-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: validate-dependabot
-        uses: marocchino/validate-dependabot@v1.1.0
 
