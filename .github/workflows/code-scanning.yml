@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Initialize CodeQL # (GitHub default): Initializes the CodeQL tools for scanning.
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: java
         queries: security-extended,security-and-quality
