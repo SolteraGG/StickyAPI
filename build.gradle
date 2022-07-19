@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group = "gg.soltera"
-    version = "3.0.3a"
+    version = "3.0.3b"
 
     // java plugin is applied in subprojects
     apply plugin: "jacoco"
@@ -21,7 +21,7 @@ allprojects {
     // Solution: "I solved it. I put a publishing configuration into subprojects section, but applied plugin to a root project."
     // Solution source: https://discuss.gradle.org/t/problem-with-publishing-with-maven-publish-in-a-multi-module-project/1695/2
     apply plugin: "maven-publish"
-    
+
     // Use JaCoCo 0.8.6 for (experimental) support for Java 15 class files.
     jacoco { toolVersion = "0.8.6" }
 
@@ -33,7 +33,7 @@ allprojects {
             // Main publishing repo
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/DumbDogDiner/StickyAPI")
+                url = uri("https://maven.pkg.github.com/SolteraGG/StickyAPI")
                 credentials {
                     username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
                     password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
@@ -106,7 +106,7 @@ allprojects {
             println("Unresolvable packages check for project '$project.name' completed successfully!")
         }
     }
-    
+
     // Finalize the build task with this task on every project.
     build.finalizedBy checkForUnresolvablePackages
     // -------------------------
@@ -137,7 +137,7 @@ allprojects {
 subprojects {
     apply plugin: "io.freefair.lombok"
     apply plugin: "com.diffplug.spotless"
-    
+
     // apply the java plugin here since root uses java-platform
     apply plugin: "java"
 
@@ -176,9 +176,9 @@ subprojects {
         // Note: Subprojects can't have repo overrides to we have to put it here
         // Define a Ivy repo for the font width data (that way we don't need another plugin!)
         def dddResources = ivy {
-           url "https://solteragg.github.io/"
+            url "https://solteragg.github.io/"
             patternLayout { artifact "/[module]/[revision]/[classifier].[ext]"}
-            metadataSources { artifact() } 
+            metadataSources { artifact() }
         }
         // Only use the Ivy repo for font width data - speeds up dependency resolution
         exclusiveContent {
@@ -202,12 +202,12 @@ subprojects {
     }
 
     test {
-	    useJUnitPlatform()
-	    testLogging {
-		    events "passed", "skipped", "failed"
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
             // Show System.out for code ran by tests
             showStandardStreams = true
-	    }
+        }
         finalizedBy jacocoTestReport // report is always generated after tests run
     }
 
@@ -295,7 +295,7 @@ task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
     dependsOn(":common:commonSources")
 
     // Copy subproject jar and sources
-    from(subprojects.jar) 
+    from(subprojects.jar)
     from(subprojects.sources)
     into rootProject.file("build/libs/modules")
 }
@@ -303,27 +303,27 @@ task copySubprojectJars(type: Copy, dependsOn: subprojects.jar) {
 // Generate an additional jacoco report project-wide
 // src: https://github.com/gradle/gradle/issues/10708#issuecomment-566279825
 task rootJacocoMergedReport(type: JacocoReport) {
-  // Gradle 7 implicit dependency fixes
-  // -------------------------
-  dependsOn(subprojects.test)
-  dependsOn(subprojects.javadoc)
+    // Gradle 7 implicit dependency fixes
+    // -------------------------
+    dependsOn(subprojects.test)
+    dependsOn(subprojects.javadoc)
 
-  dependsOn(subprojects.delombok)
-  dependsOn(subprojects.jacocoTestReport)
+    dependsOn(subprojects.delombok)
+    dependsOn(subprojects.jacocoTestReport)
 
-  dependsOn(aggregateJavadoc)
-  dependsOn(copySubprojectJars)
-  dependsOn(rootTestReport)
-  // -------------------------
+    dependsOn(aggregateJavadoc)
+    dependsOn(copySubprojectJars)
+    dependsOn(rootTestReport)
+    // -------------------------
 
-  additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
-  sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
-  classDirectories.setFrom files(subprojects.sourceSets.main.output)
-  executionData.setFrom project.fileTree(dir: ".", include: "**/build/jacoco/test.exec")
-  reports {
-    xml.enabled true
-    html.enabled true
-  }
+    additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.setFrom files(subprojects.sourceSets.main.output)
+    executionData.setFrom project.fileTree(dir: ".", include: "**/build/jacoco/test.exec")
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
 }
 
 // Root build: run copySubprojectJars after build
