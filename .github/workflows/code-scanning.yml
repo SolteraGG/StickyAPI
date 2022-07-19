@@ -8,7 +8,7 @@ on:
 jobs:
   # https://github.com/github/codeql-action
   codeql-analyze:
-    runs-on: ubuntu-20.04 # Run directly on Ubuntu 20.04 for CodeQL compatibility
+    runs-on: ubuntu-latest # Run directly on Ubuntu 20.04 for CodeQL compatibility
     strategy:
       fail-fast: false
     steps:
@@ -26,7 +26,7 @@ jobs:
       uses: github/codeql-action/analyze@v2
   # https://github.com/codacy/codacy-analysis-cli-action
   codacy-analyze:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
@@ -42,6 +42,6 @@ jobs:
         max-allowed-issues: 2147483647
     # Upload the SARIF file generated in the previous step
     - name: Upload SARIF results file
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: results.sarif

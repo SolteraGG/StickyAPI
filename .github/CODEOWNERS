@@ -1,5 +1,5 @@
 # StickyAPI CODEOWNERS file.
 
 # When editing files that edit CI / publishing behaviour, enforce a review first.
-/.github/workflows/ @DumbDogDiner/ci-ops
-/settings.gradle @DumbDogDiner/ci-ops
+/.github/workflows/ @SolteraGG/ci-ops
+/settings.gradle @SolteraGG/ci-ops
