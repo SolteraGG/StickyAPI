@@ -1,5 +1,5 @@
 plugins {
-    id "io.freefair.lombok" version "6.5.0.3" apply false
+    id "io.freefair.lombok" version "6.6.1" apply false
     // spotless for license headers and linting
     id "com.diffplug.spotless" version "6.8.0" apply false
     // generation of project-wide javadocs
